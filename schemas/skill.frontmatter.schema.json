@@ -8,27 +8,31 @@
   "properties": {
     "name": {
       "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
     },
     "description": {
       "type": "string",
-      "pattern": "^Use when\\b.+",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "license": {
+      "type": "string",
+      "minLength": 1
+    },
+    "compatibility": {
+      "type": "string",
+      "minLength": 1,
       "maxLength": 500
     },
-    "maturity": {
-      "type": "string",
-      "enum": ["experimental", "stable", "deprecated"]
+    "metadata": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
     },
-    "platform": {
+    "allowed-tools": {
       "type": "string",
-      "enum": ["canonical", "claude-code", "codex", "cursor", "opencode"]
-    },
-    "requires": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
-      }
+      "minLength": 1
     }
   }
 }

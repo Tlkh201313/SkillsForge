@@ -1,6 +1,6 @@
 ---
 name: bad-description
-description: Run this process step by step.
+description: ""
 ---
 
 # Bad Description

@@ -1,77 +1,57 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
+import { loadJson, validateWithSchema } from '../scripts/schema-lib.mjs';
 
-async function loadJson(path) {
-  return JSON.parse(await readFile(new URL(`../${path}`, import.meta.url), 'utf8'));
-}
+const root = fileURLToPath(new URL('..', import.meta.url));
+const fromRoot = (...parts) => join(root, ...parts);
 
-function validate(schema, value) {
-  const errors = [];
-  if (schema.type === 'object' && (value === null || Array.isArray(value) || typeof value !== 'object')) {
-    errors.push('value must be an object');
-  }
-  for (const name of schema.required ?? []) {
-    if (!(name in value)) errors.push(`${name} is required`);
-  }
-  for (const [name, rules] of Object.entries(schema.properties ?? {})) {
-    if (!(name in value)) continue;
-    const actual = value[name];
-    if (rules.type === 'array') {
-      if (!Array.isArray(actual)) errors.push(`${name} must be an array`);
-      continue;
-    }
-    if (rules.type && typeof actual !== rules.type) errors.push(`${name} must be ${rules.type}`);
-    if (rules.enum && !rules.enum.includes(actual)) errors.push(`${name} must be one of ${rules.enum.join(', ')}`);
-    if (rules.pattern && typeof actual === 'string' && !(new RegExp(rules.pattern).test(actual))) errors.push(`${name} must match ${rules.pattern}`);
-    if (rules.maxLength && typeof actual === 'string' && actual.length > rules.maxLength) errors.push(`${name} must be at most ${rules.maxLength} characters`);
-    if (rules.items?.type && Array.isArray(actual)) {
-      actual.forEach((item, index) => {
-        if (typeof item !== rules.items.type) errors.push(`${name}[${index}] must be ${rules.items.type}`);
-      });
-    }
-  }
-  return errors;
-}
-
-function assertSchemaShape(schema) {
-  assert.equal(schema.$schema, 'https://json-schema.org/draft/2020-12/schema');
-  assert.equal(schema.type, 'object');
-  assert.ok(Array.isArray(schema.required));
-  assert.equal(typeof schema.properties, 'object');
-}
-
-test('skill frontmatter schema accepts a valid skill and rejects invalid metadata', async () => {
-  const schema = await loadJson('schemas/skill.frontmatter.schema.json');
-  assertSchemaShape(schema);
-
+test('canonical Agent Skills schema implements the portable frontmatter contract', async () => {
+  const schema = fromRoot('schemas', 'skill.frontmatter.schema.json');
   const valid = {
     name: 'example-skill',
-    description: 'Use when an agent must handle a concrete repeatable workflow.',
-    maturity: 'stable',
-    platform: 'canonical',
-    requires: ['using-skillsforge']
+    description: 'Review API changes. Use when an agent needs a compatibility assessment.',
+    license: 'MIT',
+    compatibility: 'Requires git.',
+    metadata: { author: 'example-org', version: '1.0' },
+    'allowed-tools': 'Read Bash(git:*)'
   };
-  assert.deepEqual(validate(schema, valid), []);
+  assert.equal((await validateWithSchema(schema, valid)).valid, true);
 
   const invalid = {
-    name: 'Example Skill',
-    description: 'Run a process for things.',
-    maturity: 'ancient',
-    platform: 'spaceship',
-    requires: ['using-skillsforge', 42]
+    ...valid,
+    name: 'Example--Skill',
+    maturity: 'stable',
+    metadata: { version: 1 }
   };
-  assert.match(validate(schema, invalid).join('\n'), /name must match|description must match|maturity must be one of|platform must be one of|requires\[1\] must be string/);
+  const result = await validateWithSchema(schema, invalid);
+  assert.equal(result.valid, false);
+  assert.match(result.errors.join('\n'), /unsupported field maturity|pattern|must be string/);
 });
 
-test('plugin schema accepts product manifests and rejects incomplete manifests', async () => {
-  const schema = await loadJson('schemas/plugin.schema.json');
-  assertSchemaShape(schema);
+test('plugin manifest matches the Claude Code metadata contract', async () => {
+  const schema = fromRoot('schemas', 'plugin.schema.json');
+  const plugin = await loadJson(fromRoot('.claude-plugin', 'plugin.json'));
+  assert.equal((await validateWithSchema(schema, plugin)).valid, true);
 
-  const plugin = await loadJson('.claude-plugin/plugin.json');
-  const marketplace = await loadJson('.claude-plugin/marketplace.json');
-  assert.deepEqual(validate(schema, plugin), []);
-  assert.deepEqual(validate(schema, marketplace), []);
+  const invalid = { ...plugin, author: 'SkillsForge' };
+  const result = await validateWithSchema(schema, invalid);
+  assert.equal(result.valid, false);
+  assert.match(result.errors.join('\n'), /author.*object/);
+});
 
-  assert.match(validate(schema, { name: 'skillsforge' }).join('\n'), /version is required|description is required|license is required/);
+test('marketplace manifest lists at least one sourced plugin', async () => {
+  const schema = fromRoot('schemas', 'marketplace.schema.json');
+  const marketplace = await loadJson(fromRoot('.claude-plugin', 'marketplace.json'));
+  assert.equal((await validateWithSchema(schema, marketplace)).valid, true);
+
+  const oldInvalidShape = {
+    name: 'skillsforge',
+    version: '0.1.0',
+    plugin: './plugin.json'
+  };
+  const result = await validateWithSchema(schema, oldInvalidShape);
+  assert.equal(result.valid, false);
+  assert.match(result.errors.join('\n'), /owner|plugins|unsupported field/);
 });

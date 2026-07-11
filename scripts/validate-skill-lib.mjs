@@ -1,164 +1,163 @@
-import { access, readFile, readdir, stat } from 'node:fs/promises';
-import { basename, dirname, isAbsolute, join, resolve } from 'node:path';
+import { access, readFile, readdir, realpath, stat } from 'node:fs/promises';
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { parseDocument } from 'yaml';
+import { validateWithSchema } from './schema-lib.mjs';
 
-const maturityValues = ['experimental', 'stable', 'deprecated'];
-const platformValues = ['canonical', 'claude-code', 'codex', 'cursor', 'opencode'];
+const repositoryRoot = fileURLToPath(new URL('..', import.meta.url));
+const schemaByProfile = {
+  canonical: join(repositoryRoot, 'schemas', 'skill.frontmatter.schema.json'),
+  'claude-code': join(repositoryRoot, 'schemas', 'claude-code.frontmatter.schema.json')
+};
 
 export async function validateSkillPaths(paths, options = {}) {
   const root = options.root ?? process.cwd();
+  const profile = options.profile ?? 'canonical';
   const selected = options.all ? await discoverRealSkills(root) : await expandSkillPathPatterns(paths, root);
 
   if (selected.length === 0) {
-    return { ok: true, reports: [], text: 'No skills found.\n' };
+    const ok = options.allowEmpty === true;
+    return {
+      ok,
+      reports: [],
+      text: ok ? 'No skills found.\n' : 'FAIL No skills found.\n'
+    };
   }
 
   const reports = [];
-  for (const path of selected) reports.push(await validateSkillPath(path, { root }));
-  const text = reports.map(formatReport).join('\n') + '\n';
+  for (const path of selected) reports.push(await validateSkillPath(path, { root, profile }));
+  const text = `${reports.map(formatReport).join('\n')}\n`;
   return { ok: reports.every((report) => report.status === 'pass'), reports, text };
 }
 
 export async function validateSkillPath(skillPath, options = {}) {
   const root = options.root ?? process.cwd();
+  const profile = options.profile ?? 'canonical';
+  const schemaPath = schemaByProfile[profile];
+  if (!schemaPath) throw new Error(`Unknown validation profile: ${profile}`);
+
   const absolute = resolve(root, skillPath);
   const name = basename(absolute);
   const file = join(absolute, 'SKILL.md');
   const errors = [];
-  let source = '';
+  let source;
 
   try {
     source = await readFile(file, 'utf8');
   } catch {
-    return { name, path: absolute, status: 'fail', errors: ['SKILL.md must exist'] };
+    return failReport(name, absolute, ['SKILL.md must exist']);
   }
 
   const parsed = parseFrontmatter(source);
-  if (!parsed) {
-    return { name, path: absolute, status: 'fail', errors: ['YAML frontmatter block must exist'] };
+  if (!parsed) return failReport(name, absolute, ['YAML frontmatter block must exist and use complete --- delimiter lines']);
+
+  const document = parseDocument(parsed.yaml, {
+    prettyErrors: true,
+    strict: true,
+    uniqueKeys: true
+  });
+  if (document.errors.length > 0) {
+    errors.push(...document.errors.map((error) => `invalid YAML: ${firstLine(error.message)}`));
   }
 
-  if (parsed.raw.length >= 1024) errors.push('frontmatter block must be under 1024 characters');
-  const data = parseSimpleYaml(parsed.yaml, errors);
-  await validateFrontmatter(data, name, root, errors);
-  await validateBody(parsed.body, absolute, errors);
+  let data;
+  if (document.errors.length === 0) {
+    data = document.toJS();
+    if (!isPlainObject(data)) {
+      errors.push('frontmatter must be a YAML mapping');
+    } else {
+      const schemaResult = await validateWithSchema(schemaPath, data);
+      errors.push(...schemaResult.errors.map((error) => `frontmatter ${error}`));
+      if (typeof data.name === 'string' && data.name !== name) errors.push('name must equal directory name');
+    }
+  }
 
-  return { name, path: absolute, status: errors.length === 0 ? 'pass' : 'fail', errors };
+  await validateBody(parsed.body, absolute, errors);
+  return errors.length === 0
+    ? { name, path: absolute, profile, status: 'pass', errors: [] }
+    : failReport(name, absolute, errors, profile);
 }
 
-function parseFrontmatter(source) {
-  if (!source.startsWith('---\n')) return null;
-  const end = source.indexOf('\n---', 4);
-  if (end === -1) return null;
+export function parseFrontmatter(source) {
+  const normalized = source.startsWith('\uFEFF') ? source.slice(1) : source;
+  const match = normalized.match(/^---[\t ]*\r?\n([\s\S]*?)\r?\n---[\t ]*(?:\r?\n|$)/);
+  if (!match) return null;
   return {
-    raw: source.slice(0, end + 4),
-    yaml: source.slice(4, end),
-    body: source.slice(end + 4)
+    yaml: match[1],
+    body: normalized.slice(match[0].length)
   };
 }
 
-function parseSimpleYaml(yaml, errors) {
-  const data = {};
-  const lines = yaml.split(/\r?\n/);
-  let currentArray = null;
-
-  for (const line of lines) {
-    if (line.trim() === '') continue;
-    const item = line.match(/^\s*-\s+(.+)$/);
-    if (item && currentArray) {
-      data[currentArray].push(coerceYamlValue(item[1].trim()));
-      continue;
-    }
-    const pair = line.match(/^([A-Za-z][A-Za-z0-9_-]*):(?:\s*(.*))?$/);
-    if (!pair) {
-      errors.push(`frontmatter line is not supported: ${line}`);
-      currentArray = null;
-      continue;
-    }
-    const [, key, rawValue] = pair;
-    if (rawValue === undefined || rawValue === '') {
-      data[key] = [];
-      currentArray = key;
-      continue;
-    }
-    data[key] = coerceYamlValue(rawValue.trim());
-    currentArray = null;
-  }
-  return data;
-}
-
-function coerceYamlValue(value) {
-  if (/^\d+$/.test(value)) return Number(value);
-  return value.replace(/^['"]|['"]$/g, '');
-}
-
-async function validateFrontmatter(data, directoryName, root, errors) {
-  if (typeof data.name !== 'string') errors.push('name is required');
-  else {
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(data.name)) errors.push('name must be kebab-case');
-    if (data.name !== directoryName) errors.push('name must equal directory name');
-  }
-
-  if (typeof data.description !== 'string') errors.push('description is required');
-  else {
-    if (!data.description.startsWith('Use when')) errors.push('description must start with "Use when"');
-    if (data.description.length > 500) errors.push('description must be under 500 characters');
-    if (/\b(I|you|we|our|your)\b/i.test(data.description)) errors.push('description must be third person');
-    if (/\b(step|steps|process|workflow)\b/i.test(data.description)) errors.push('description must be a trigger, not a process summary');
-  }
-
-  if ('maturity' in data && !maturityValues.includes(data.maturity)) errors.push(`maturity must be one of ${maturityValues.join(', ')}`);
-  if ('platform' in data && !platformValues.includes(data.platform)) errors.push(`platform must be one of ${platformValues.join(', ')}`);
-  if ('requires' in data) {
-    if (!Array.isArray(data.requires)) errors.push('requires must be a list');
-    else {
-      for (const entry of data.requires) {
-        if (typeof entry !== 'string') {
-          errors.push('requires entries must be strings');
-          continue;
-        }
-        if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry)) errors.push(`requires entry "${entry}" must be kebab-case`);
-        if (!await skillDirectoryExists(root, entry)) errors.push(`requires entry "${entry}" must resolve to an existing skill directory`);
-      }
-    }
-  }
-}
-
 async function validateBody(body, skillDirectory, errors) {
-  if (!body.includes('## Overview')) errors.push('body must contain ## Overview');
-  if (!body.includes('## When to Use')) errors.push('body must contain ## When to Use');
+  if (body.trim() === '') errors.push('body must contain skill instructions');
 
   const links = body.matchAll(/\[[^\]]+\]\(([^)]+)\)/g);
-  for (const [, target] of links) {
-    if (/^[a-z]+:/i.test(target) || target.startsWith('#')) continue;
+  for (const [, rawTarget] of links) {
+    const target = normalizeMarkdownTarget(rawTarget);
+    if (target === '' || target.startsWith('#') || /^(https?|mailto):/i.test(target)) continue;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(target)) {
+      errors.push(`markdown link uses unsupported URI scheme: ${rawTarget}`);
+      continue;
+    }
+
     const clean = target.split('#')[0];
     if (clean === '') continue;
     const resolved = resolve(skillDirectory, clean);
-    if (!resolved.startsWith(skillDirectory)) {
-      errors.push(`relative markdown link must stay inside skill directory: ${target}`);
+    if (!isInside(skillDirectory, resolved)) {
+      errors.push(`relative markdown link must stay inside skill directory: ${rawTarget}`);
       continue;
     }
-    if (!await fileExists(resolved)) errors.push(`relative markdown link must resolve: ${target}`);
+    if (!await fileExists(resolved)) {
+      errors.push(`relative markdown link must resolve: ${rawTarget}`);
+      continue;
+    }
+    if (!await realPathIsInside(skillDirectory, resolved)) {
+      errors.push(`relative markdown link resolves outside skill directory: ${rawTarget}`);
+    }
+  }
+}
+
+function normalizeMarkdownTarget(rawTarget) {
+  const withoutTitle = rawTarget.trim().replace(/^<|>$/g, '').split(/\s+["']/)[0];
+  try {
+    return decodeURIComponent(withoutTitle);
+  } catch {
+    return withoutTitle;
+  }
+}
+
+function isInside(parent, candidate) {
+  const path = relative(resolve(parent), resolve(candidate));
+  return path === '' || (!path.startsWith(`..${sep}`) && path !== '..' && !isAbsolute(path));
+}
+
+async function realPathIsInside(parent, candidate) {
+  try {
+    return isInside(await realpath(parent), await realpath(candidate));
+  } catch {
+    return false;
   }
 }
 
 function formatReport(report) {
-  if (report.status === 'pass') return `PASS ${report.name}`;
+  if (report.status === 'pass') return `PASS ${report.name} (${report.profile})`;
   return [`FAIL ${report.name}`, ...report.errors.map((error) => `  - ${error}`)].join('\n');
 }
 
 export async function expandSkillPathPatterns(patterns, root) {
   const expanded = [];
-  for (const pattern of patterns) {
+  for (const pattern of pathsWithoutDuplicates(patterns)) {
     if (!pattern.includes('*')) {
       expanded.push(pattern);
       continue;
     }
-    const normalized = pattern.replaceAll('\\\\', '/');
+
+    const normalized = pattern.replaceAll('\\', '/');
     const slash = normalized.lastIndexOf('/');
     const parent = slash === -1 ? '.' : normalized.slice(0, slash);
     const namePattern = slash === -1 ? normalized : normalized.slice(slash + 1);
     const regex = new RegExp(`^${namePattern.split('*').map(escapeRegex).join('.*')}$`);
-    let entries = [];
+    let entries;
     try {
       entries = await readdir(resolve(root, parent), { withFileTypes: true });
     } catch {
@@ -186,7 +185,7 @@ async function discoverRealSkills(root) {
         await access(join(candidate, 'SKILL.md'));
         paths.push(candidate);
       } catch {
-        continue;
+        // A non-skill directory under skills/ is ignored.
       }
     }
     return paths;
@@ -195,8 +194,8 @@ async function discoverRealSkills(root) {
   }
 }
 
-async function skillDirectoryExists(root, name) {
-  return await fileExists(join(root, 'skills', name, 'SKILL.md')) || await fileExists(join(root, 'tests', 'fixtures', 'skills', name, 'SKILL.md'));
+function failReport(name, path, errors, profile = 'canonical') {
+  return { name, path, profile, status: 'fail', errors };
 }
 
 function fileExists(path) {
@@ -205,4 +204,16 @@ function fileExists(path) {
 
 function escapeRegex(value) {
   return value.replace(/[|\\{}()[\]^$+?.]/g, '\\$&');
+}
+
+function firstLine(value) {
+  return value.split('\n')[0];
+}
+
+function isPlainObject(value) {
+  return value !== null && !Array.isArray(value) && typeof value === 'object';
+}
+
+function pathsWithoutDuplicates(paths) {
+  return [...new Set(paths)];
 }

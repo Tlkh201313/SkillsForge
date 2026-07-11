@@ -1,15 +1,24 @@
 {
-  "name": "skillsforge",
-  "version": "0.1.0",
-  "description": "Local cross-platform agent capability forge.",
-  "author": "SkillsForge",
-  "homepage": "https://github.com/skillsforge/skillsforge",
-  "license": "MIT",
-  "keywords": [
-    "skills",
-    "marketplace",
-    "agents",
-    "orchestration"
-  ],
-  "plugin": "./plugin.json"
+  "name": "skillsforge-marketplace",
+  "description": "Portable Agent Skills validation tools from SkillsForge.",
+  "owner": {
+    "name": "Tlkh201313",
+    "url": "https://github.com/Tlkh201313"
+  },
+  "plugins": [
+    {
+      "name": "skillsforge",
+      "source": ".",
+      "description": "Validate and review portable Agent Skills packages.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Tlkh201313",
+        "url": "https://github.com/Tlkh201313"
+      },
+      "homepage": "https://github.com/Tlkh201313/SkillsForge",
+      "repository": "https://github.com/Tlkh201313/SkillsForge",
+      "license": "MIT",
+      "keywords": ["skills", "validation", "agent-skills"]
+    }
+  ]
 }

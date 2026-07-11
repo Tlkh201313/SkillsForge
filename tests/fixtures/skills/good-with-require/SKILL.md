@@ -1,16 +1,10 @@
 ---
 name: good-with-require
-description: Use when an agent needs a fixture that depends on another skill.
-requires:
-  - good-basic
+description: Validate structured metadata. Use when testing a second portable skill fixture.
+metadata:
+  related-skill: good-basic
 ---
 
 # Good With Require
 
-## Overview
-
-This skill validates dependency resolution.
-
-## When to Use
-
-Use it as a dependency fixture.
+This skill validates structured portable metadata.
