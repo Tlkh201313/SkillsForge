@@ -1,14 +1,20 @@
 {
   "name": "skillsforge-marketplace",
-  "description": "Portable Agent Skills validation tools from SkillsForge.",
+  "description": "The SkillsForge family: workflow, token economy, usage ledger, domain expertise, and the validator that keeps them honest.",
   "owner": {
     "name": "Tlkh201313",
     "url": "https://github.com/Tlkh201313"
   },
+  "metadata": {
+    "pluginRoot": "./plugins"
+  },
   "plugins": [
     {
       "name": "skillsforge",
-      "source": ".",
+      "source": "./plugins/skillsforge",
+      "category": "developer-tools",
+      "tags": ["skills", "validation", "authoring"],
+      "strict": true,
       "description": "Validate and review portable Agent Skills packages.",
       "version": "0.1.0",
       "author": {
@@ -18,7 +24,7 @@
       "homepage": "https://github.com/Tlkh201313/SkillsForge",
       "repository": "https://github.com/Tlkh201313/SkillsForge",
       "license": "MIT",
-      "keywords": ["skills", "validation", "agent-skills"]
+      "keywords": ["skills", "validation", "agent-skills", "claude-code"]
     }
   ]
 }

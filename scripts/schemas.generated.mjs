@@ -127,6 +127,19 @@ export const schemas = Object.freeze({
       "owner": {
         "$ref": "#/$defs/person"
       },
+      "metadata": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pluginRoot"
+        ],
+        "properties": {
+          "pluginRoot": {
+            "type": "string",
+            "pattern": "^\\./.+"
+          }
+        }
+      },
       "plugins": {
         "type": "array",
         "minItems": 1,
@@ -179,6 +192,18 @@ export const schemas = Object.freeze({
                 "type": "object"
               }
             ]
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tags": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           },
           "description": {
             "type": "string",
