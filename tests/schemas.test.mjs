@@ -32,7 +32,7 @@ test('canonical Agent Skills schema implements the portable frontmatter contract
 
 test('plugin manifest matches the Claude Code metadata contract', async () => {
   const schema = fromRoot('schemas', 'plugin.schema.json');
-  const plugin = await loadJson(fromRoot('.claude-plugin', 'plugin.json'));
+  const plugin = await loadJson(fromRoot('plugins', 'skillsforge', '.claude-plugin', 'plugin.json'));
   assert.equal((await validateWithSchema(schema, plugin)).valid, true);
 
   const invalid = { ...plugin, author: 'SkillsForge' };

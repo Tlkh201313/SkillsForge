@@ -3,12 +3,9 @@ import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'nod
 import { fileURLToPath } from 'node:url';
 import { parseDocument } from 'yaml';
 import { validateWithSchema } from './schema-lib.mjs';
+import { skillSchemasByProfile } from './schemas.generated.mjs';
 
-const repositoryRoot = fileURLToPath(new URL('..', import.meta.url));
-const schemaByProfile = {
-  canonical: join(repositoryRoot, 'schemas', 'skill.frontmatter.schema.json'),
-  'claude-code': join(repositoryRoot, 'schemas', 'claude-code.frontmatter.schema.json')
-};
+const adjacentSkillsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'skills');
 
 export async function validateSkillPaths(paths, options = {}) {
   const root = options.root ?? process.cwd();
@@ -33,8 +30,8 @@ export async function validateSkillPaths(paths, options = {}) {
 export async function validateSkillPath(skillPath, options = {}) {
   const root = options.root ?? process.cwd();
   const profile = options.profile ?? 'canonical';
-  const schemaPath = schemaByProfile[profile];
-  if (!schemaPath) throw new Error(`Unknown validation profile: ${profile}`);
+  const schema = skillSchemasByProfile[profile];
+  if (!schema) throw new Error(`Unknown validation profile: ${profile}`);
 
   const absolute = resolve(root, skillPath);
   const name = basename(absolute);
@@ -66,7 +63,7 @@ export async function validateSkillPath(skillPath, options = {}) {
     if (!isPlainObject(data)) {
       errors.push('frontmatter must be a YAML mapping');
     } else {
-      const schemaResult = await validateWithSchema(schemaPath, data);
+      const schemaResult = await validateWithSchema(schema, data);
       errors.push(...schemaResult.errors.map((error) => `frontmatter ${error}`));
       if (typeof data.name === 'string' && data.name !== name) errors.push('name must equal directory name');
     }
@@ -177,7 +174,25 @@ export async function expandSkillPathPatterns(patterns, root) {
 }
 
 async function discoverRealSkills(root) {
-  const skillsRoot = join(root, 'skills');
+  const skillsRoots = [join(root, 'skills'), adjacentSkillsRoot];
+  const pluginsRoot = join(root, 'plugins');
+  try {
+    const plugins = await readdir(pluginsRoot, { withFileTypes: true });
+    for (const plugin of plugins) {
+      if (plugin.isDirectory()) skillsRoots.push(join(pluginsRoot, plugin.name, 'skills'));
+    }
+  } catch {
+    // A standalone skill library or installed plugin may not have a plugins directory.
+  }
+
+  const paths = [];
+  for (const skillsRoot of pathsWithoutDuplicates(skillsRoots)) {
+    paths.push(...await discoverSkillsInDirectory(skillsRoot));
+  }
+  return pathsWithoutDuplicates(paths);
+}
+
+async function discoverSkillsInDirectory(skillsRoot) {
   try {
     const entries = await readdir(skillsRoot, { withFileTypes: true });
     const paths = [];

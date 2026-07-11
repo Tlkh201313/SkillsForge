@@ -9,10 +9,12 @@ export async function loadJson(path) {
 }
 
 export async function validateWithSchema(schemaPath, value) {
-  let validate = validators.get(schemaPath);
+  const cacheKey = typeof schemaPath === 'string' ? schemaPath : schemaPath.$id ?? schemaPath;
+  let validate = validators.get(cacheKey);
   if (!validate) {
-    validate = ajv.compile(await loadJson(schemaPath));
-    validators.set(schemaPath, validate);
+    const schema = typeof schemaPath === 'string' ? await loadJson(schemaPath) : schemaPath;
+    validate = ajv.compile(schema);
+    validators.set(cacheKey, validate);
   }
 
   const valid = validate(value);

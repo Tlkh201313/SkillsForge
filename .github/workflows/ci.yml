@@ -31,8 +31,8 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
-      - name: Validate manifests
-        run: npm run validate:manifests
+      - name: Validate repository contract
+        run: npm run validate:repo
       - name: Validate production skills
         run: npm run validate
       - name: Run tests
@@ -52,7 +52,11 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
-      - name: Run official Claude plugin validation
-        run: npm run validate:plugin
+      - name: Validate every plugin and the marketplace
+        shell: bash
+        run: |
+          for target in plugins/*/ .; do
+            npx @anthropic-ai/claude-code plugin validate "$target" --strict
+          done
       - name: Verify bundled CLI freshness
         run: npm run build:check
