@@ -174,8 +174,19 @@ export async function expandSkillPathPatterns(patterns, root) {
 }
 
 async function discoverRealSkills(root) {
+  const skillsRoots = [join(root, 'skills'), adjacentSkillsRoot];
+  const pluginsRoot = join(root, 'plugins');
+  try {
+    const plugins = await readdir(pluginsRoot, { withFileTypes: true });
+    for (const plugin of plugins) {
+      if (plugin.isDirectory()) skillsRoots.push(join(pluginsRoot, plugin.name, 'skills'));
+    }
+  } catch {
+    // A standalone skill library or installed plugin may not have a plugins directory.
+  }
+
   const paths = [];
-  for (const skillsRoot of pathsWithoutDuplicates([join(root, 'skills'), adjacentSkillsRoot])) {
+  for (const skillsRoot of pathsWithoutDuplicates(skillsRoots)) {
     paths.push(...await discoverSkillsInDirectory(skillsRoot));
   }
   return pathsWithoutDuplicates(paths);

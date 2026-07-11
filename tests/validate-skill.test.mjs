@@ -86,6 +86,17 @@ test('all mode fails closed when no production skills exist', async (context) =>
   assert.match(result.text, /FAIL No skills found/);
 });
 
+test('all mode discovers skills across plugins', async (context) => {
+  const root = await temporarySkillRoot(context);
+  const skill = join(root, 'plugins', 'example-plugin', 'skills', 'market-skill');
+  await mkdir(skill, { recursive: true });
+  await writeFile(join(skill, 'SKILL.md'), `---\nname: market-skill\ndescription: Validate marketplace discovery. Use when testing skills nested under a plugin.\n---\n\n# Market Skill\n\nRun the requested check.\n`);
+
+  const result = await validateSkillPaths([], { root, all: true });
+  assert.equal(result.ok, true, result.text);
+  assert.deepEqual(result.reports.map((report) => report.name), ['market-skill']);
+});
+
 async function temporarySkillRoot(context) {
   const root = await mkdtemp(join(tmpdir(), 'skillsforge-test-'));
   context.after(() => rm(root, { recursive: true, force: true }));
