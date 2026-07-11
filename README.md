@@ -132,15 +132,18 @@ Exit codes are `0` for success, `1` for validation failure, and `2` for invalid 
 
 ## Verification
 
+Run the same release-contract dry run locally from the repository root:
+
 ```sh
-npm run validate:repo
-npm run validate:plugin
-npm run validate
-npm test
-npm run build:check
+npm ci
+npm run check
+for plugin in plugins/*/; do
+  npx @anthropic-ai/claude-code plugin validate "$plugin" --strict || exit 1
+done
+npx @anthropic-ai/claude-code plugin validate . --strict
 ```
 
-GitHub Actions runs the validation and test suite on Ubuntu, Windows, and macOS with Node.js 20 and 22. A separate release-contract job runs Claude Code's strict plugin validator and verifies the committed CLI bundle.
+GitHub Actions runs the validation and test suite on Ubuntu, Windows, and macOS with Node.js 20 and 22. A separate release-contract job strictly validates every directory under `plugins/`, validates the marketplace root, and verifies the committed CLI bundle.
 
 ## Security boundary
 
