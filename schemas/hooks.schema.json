@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skillsforge.local/schemas/hooks.schema.json",
+  "$comment": "Official reference: https://code.claude.com/docs/en/hooks (verified 2026-07-11). Re-verify that reference and update $defs.events whenever Claude Code hook events change.",
+  "title": "Claude Code plugin hooks",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["hooks"],
+  "properties": {
+    "hooks": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/events"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/matcherGroups"
+      }
+    }
+  },
+  "$defs": {
+    "events": {
+      "enum": [
+        "SessionStart",
+        "Setup",
+        "UserPromptSubmit",
+        "UserPromptExpansion",
+        "PreToolUse",
+        "PermissionRequest",
+        "PermissionDenied",
+        "PostToolUse",
+        "PostToolUseFailure",
+        "PostToolBatch",
+        "Notification",
+        "MessageDisplay",
+        "SubagentStart",
+        "SubagentStop",
+        "TaskCreated",
+        "TaskCompleted",
+        "Stop",
+        "StopFailure",
+        "TeammateIdle",
+        "InstructionsLoaded",
+        "ConfigChange",
+        "CwdChanged",
+        "FileChanged",
+        "WorktreeCreate",
+        "WorktreeRemove",
+        "PreCompact",
+        "PostCompact",
+        "Elicitation",
+        "ElicitationResult",
+        "SessionEnd"
+      ]
+    },
+    "matcherGroups": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/matcherGroup"
+      }
+    },
+    "matcherGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hooks"],
+      "properties": {
+        "matcher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hooks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/handler"
+          }
+        }
+      }
+    },
+    "handler": {
+      "oneOf": [
+        { "$ref": "#/$defs/commandHandler" },
+        { "$ref": "#/$defs/httpHandler" },
+        { "$ref": "#/$defs/mcpToolHandler" },
+        { "$ref": "#/$defs/promptHandler" },
+        { "$ref": "#/$defs/agentHandler" }
+      ]
+    },
+    "commonHandler": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "if": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timeout": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "statusMessage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "once": {
+          "type": "boolean"
+        }
+      }
+    },
+    "commandHandler": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/commonHandler" },
+        {
+          "type": "object",
+          "required": ["command"],
+          "properties": {
+            "type": { "const": "command" },
+            "command": {
+              "type": "string",
+              "minLength": 1
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "async": {
+              "type": "boolean"
+            },
+            "asyncRewake": {
+              "type": "boolean"
+            },
+            "shell": {
+              "enum": ["bash", "powershell"]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "httpHandler": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/commonHandler" },
+        {
+          "type": "object",
+          "required": ["url"],
+          "properties": {
+            "type": { "const": "http" },
+            "url": {
+              "type": "string",
+              "pattern": "^https?://[^\\s]+$"
+            },
+            "headers": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "allowedEnvVars": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "mcpToolHandler": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/commonHandler" },
+        {
+          "type": "object",
+          "required": ["server", "tool"],
+          "properties": {
+            "type": { "const": "mcp_tool" },
+            "server": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tool": {
+              "type": "string",
+              "minLength": 1
+            },
+            "input": {
+              "type": "object"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "promptHandler": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/commonHandler" },
+        {
+          "type": "object",
+          "required": ["prompt"],
+          "properties": {
+            "type": { "const": "prompt" },
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "model": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "agentHandler": {
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/$defs/commonHandler" },
+        {
+          "type": "object",
+          "required": ["prompt"],
+          "properties": {
+            "type": { "const": "agent" },
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "model": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}

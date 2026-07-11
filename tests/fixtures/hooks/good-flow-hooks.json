@@ -1,0 +1,59 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git *)",
+            "timeout": 15,
+            "statusMessage": "Checking command",
+            "once": false,
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/check.mjs"],
+            "async": false,
+            "asyncRewake": false,
+            "shell": "powershell"
+          },
+          {
+            "type": "http",
+            "url": "https://hooks.example.com/claude",
+            "headers": {
+              "Authorization": "Bearer $HOOK_TOKEN"
+            },
+            "allowedEnvVars": ["HOOK_TOKEN"]
+          },
+          {
+            "type": "mcp_tool",
+            "server": "quality",
+            "tool": "review",
+            "input": {
+              "strict": true
+            }
+          },
+          {
+            "type": "prompt",
+            "prompt": "Decide whether this tool call is safe.",
+            "model": "claude-sonnet-4-5"
+          },
+          {
+            "type": "agent",
+            "prompt": "Inspect the affected files and return a decision.",
+            "model": "claude-sonnet-4-5"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/cleanup.mjs"
+          }
+        ]
+      }
+    ]
+  }
+}

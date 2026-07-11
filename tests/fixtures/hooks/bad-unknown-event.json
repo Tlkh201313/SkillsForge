@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "ToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo unsupported"
+          }
+        ]
+      }
+    ]
+  }
+}
