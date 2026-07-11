@@ -33,6 +33,18 @@ test('every lockstep version source is enforced', async (context) => {
   }
 });
 
+test('unrelated version wording does not suppress lockstep pass reporting', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'skillsforge-repo-'));
+  context.after(() => rm(root, { recursive: true, force: true }));
+  await writeFixtureRepository(root, { unrelatedVersionError: true });
+
+  const result = await validateRepository(root);
+
+  assert.equal(result.ok, false);
+  assert.match(result.errors.join('\n'), /unsupported field version note/);
+  assert.ok(result.passes.includes('version lockstep 0.1.0'));
+});
+
 async function writeFixtureRepository(root, overrides = {}) {
   const expected = '0.1.0';
   const pluginRoot = join(root, 'plugins', 'skillsforge', '.claude-plugin');
@@ -68,6 +80,7 @@ async function writeFixtureRepository(root, overrides = {}) {
       strict: true
     }]
   };
+  if (overrides.unrelatedVersionError) marketplace['version note'] = 'unrelated';
 
   await Promise.all([
     writeFile(join(root, 'VERSION'), `${overrides.versionFile ?? expected}\n`),

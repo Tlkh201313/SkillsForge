@@ -48,10 +48,12 @@ export async function validateRepository(root = process.cwd()) {
 
   const expected = versions.find(([label]) => label === 'VERSION')?.[1];
   if (expected) {
+    const versionMismatches = [];
     for (const [label, actual] of versions) {
-      if (actual !== expected) errors.push(`${label} version ${actual} does not match VERSION ${expected}`);
+      if (actual !== expected) versionMismatches.push(`${label} version ${actual} does not match VERSION ${expected}`);
     }
-    if (!errors.some((error) => error.includes('version '))) passes.push(`version lockstep ${expected}`);
+    errors.push(...versionMismatches);
+    if (versionMismatches.length === 0) passes.push(`version lockstep ${expected}`);
   }
 
   const ok = errors.length === 0;
