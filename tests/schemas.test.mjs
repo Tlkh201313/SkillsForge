@@ -30,6 +30,15 @@ test('canonical Agent Skills schema implements the portable frontmatter contract
   assert.match(result.errors.join('\n'), /unsupported field maturity|pattern|must be string/);
 });
 
+test('reuses a schema validator when the schema object is followed by its path', async () => {
+  const schemaPath = fromRoot('schemas', 'plugin.schema.json');
+  const schema = await loadJson(schemaPath);
+  const plugin = await loadJson(fromRoot('plugins', 'skillsforge', '.claude-plugin', 'plugin.json'));
+
+  assert.equal((await validateWithSchema(schema, plugin)).valid, true);
+  assert.equal((await validateWithSchema(schemaPath, plugin)).valid, true);
+});
+
 test('plugin manifest matches the Claude Code metadata contract', async () => {
   const schema = fromRoot('schemas', 'plugin.schema.json');
   const plugin = await loadJson(fromRoot('plugins', 'skillsforge', '.claude-plugin', 'plugin.json'));
