@@ -62,6 +62,7 @@ This document is self-sufficient: an executing agent with access to the repo nee
 | `forge-guard` | security | Security & adversarial review pack | ≤ 900 tok |
 | `forge-data` | data | Data/ML/AI pack | ≤ 900 tok |
 | `forge-scribe` | writing | Research/writing/business pack | ≤ 900 tok |
+| `forge-ops` | devops | DevOps/platform pack (wave 2 — §13.1) | ≤ 900 tok |
 
 No hard inter-plugin `dependencies`. Cross-plugin cooperation is runtime-detected with fallbacks (e.g. forge-lean reads forge-gauge's ledger if present, else parses transcripts directly).
 
@@ -331,6 +332,12 @@ Legend: each task = **ID · title → files · Done-when**. Execute in order; ta
 - **P0.7 Version bump 0.2.0 + docs** → VERSION/package/plugin/marketplace/README badge; CHANGELOG entry ("restructured as multi-plugin marketplace; no action for installed users"); README install matrix. *Done-when:* `npm run check` green.
 - **P0.8 CI loop** → release-contract iterates `plugins/*` + marketplace root. *Done-when:* workflow YAML lints (`npx yaml-lint` or actionlint if available) and dry-run steps documented.
 
+### Phase 0.R — Post-review fixes (REQUIRED before Phase 1; findings detailed in §12)
+- **R0.1 README roadmap alignment** → replace the README "Plugin availability" table rows with the real §2.1 family (forge-flow, forge-lean, forge-gauge, forge-web, forge-guard, forge-data, forge-scribe, forge-ops — all "Planned"); delete the invented `skill-author`/`skill-reviewer`/`skill-router`/`skill-sync`/`skill-adapters`/`skill-orchestrator` rows. *Done-when:* `grep -cE "skill-(author|reviewer|router|sync|adapters|orchestrator)" README.md` prints 0 and `grep -c "forge-flow" README.md` ≥ 1.
+- **R0.2 schema-lib $id-keyed cache** → in `scripts/schema-lib.mjs`, key the compile cache and Ajv registration on the schema's `$id` regardless of whether the caller passed a path or an object (load → look up by `$id` → reuse; or construct Ajv with `addUsedSchema: false`). Confirmed repro that must stop throwing: validate with the generated `schemas.plugin` object, then with the `schemas/plugin.schema.json` path, in one process → currently throws `schema with key or id … already exists`. *Done-when:* regression test covering object-then-path double use passes in `tests/schemas.test.mjs`.
+- **R0.3 lockstep pass reporting** → `scripts/validate-repo-lib.mjs:54` decides the lockstep PASS by substring-matching `'version '` across ALL error strings; an unrelated schema error mentioning "version " suppresses it. Track parity mismatches in a dedicated list. *Done-when:* unit test proves an unrelated error containing "version " does not affect the lockstep PASS/FAIL line.
+- **R0.4 source-kind consistency** → `schemas/marketplace.schema.json` allows object sources while `validate-repo-lib.mjs:34` rejects non-string sources generically. Pick one intent for THIS marketplace (recommended: tighten our schema's `source` to the local `./plugins/<name>` string pattern) and align the error message. *Done-when:* `validate-repo.test.mjs` asserts the chosen behavior.
+
 ### Phase 1 — Validator extension
 - **P1.1 Schema refactor** ($defs/core + profiles, unevaluatedProperties) → *Done-when:* existing 7 skill fixtures produce identical pass/fail results as before (regression test).
 - **P1.2 ∥ agent schema + lib + fixtures** → `schemas/agent.frontmatter.schema.json`, `scripts/validate-agent-lib.mjs`, `tests/fixtures/agents/{good-minimal,good-full,bad-missing-desc,bad-permissionMode,bad-isolation-value}`. *Done-when:* `node scripts/… agents tests/fixtures/agents/*` matches expected in `validate-agents.test.mjs`.
@@ -387,6 +394,19 @@ Legend: each task = **ID · title → files · Done-when**. Execute in order; ta
 - **P10.2 Docs** → README plugin matrix + quickstarts; CHANGELOG 0.3.0; CONTRIBUTING with interactive smoke checklist (§10).
 - **P10.3 Full gate** → §10 all green; lockstep bump to 0.3.0; tag.
 
+### Phase 11 — forge-ops (wave 2, after 0.3.0; spec §13.1)
+- **P11.1 Plugin scaffold + manifest entry** (9th plugin). *Done-when:* `npm run validate:repo` green (parity + entry).
+- **P11.2 Skills** (10 per §13.1, each per §3.1 with references/). *Done-when:* `skillsforge-validate plugin plugins/forge-ops` green incl. lint budgets.
+- **P11.3 Agents** (pipeline-reviewer, infra-reviewer). *Done-when:* validate + `claude plugin validate plugins/forge-ops --strict` green.
+
+### Phase 12 — Wave-2 additions + release 0.4.0 (spec §13.2)
+- **P12.1 forge-flow +3 skills** (parallel-worklines, bisect-regression, spike-timebox); budget raises to ≤1,250. *Done-when:* plugin validate + lint green.
+- **P12.2 forge-lean +2 skills** (fork-first, session-split); budget raises to ≤550. *Done-when:* plugin validate + lint green.
+- **P12.3 forge-gauge upgrades** — new tools `usage_watch` (vs `userConfig.budget_usd_daily`), `report_export{format,path}`, `ledger_compact` (fold months >90d into rollups); `usage_report` gains `group_by: "agent"`; new skill `budget-sentinel`. *Done-when:* stdio tools/list shows the new tools; unit tests for export/compact/watch thresholds green.
+- **P12.4 Meta +2 skills** (probe-triggers, adopt-skill). *Done-when:* probe-triggers produces a scored report over 3 existing skills in a fixture run; plugin validate green.
+- **P12.5 Single-skill additions** — forge-guard `mcp-config-review`; forge-web `realtime-patterns`; forge-data `agent-eval-traces`; forge-scribe `slide-storyline`. *Done-when:* each plugin validates green.
+- **P12.6 Release 0.4.0** → §10 full gate; lockstep bump; CHANGELOG; README plugin/cost tables refreshed.
+
 ---
 
 ## 10. Release gate (end-to-end verification)
@@ -420,3 +440,41 @@ Interactive smoke (document in CONTRIBUTING): `claude plugin marketplace add ./`
 
 ### Critical existing files
 `scripts/validate-skill-lib.mjs` (engine; lines 7–11 root-coupling, discovery fn) · `scripts/validate-manifests.mjs` (→ superseded by validate-repo.mjs) · `scripts/build.mjs` (→ multi-entry) · `.claude-plugin/marketplace.json` (→ 8-entry marketplace) · `skills/validate-agent-skill/SKILL.md` (→ moves under plugins/skillsforge/) · `.github/workflows/ci.yml` (→ per-plugin strict loop + mcp-smoke).
+
+---
+
+## 12. Phase 0 strict-review record (2026-07-11, against merge 8476c79 on main)
+
+**Verified green (all re-run, not assumed):** `npm run check` (validate:repo + `--all` skill validation + 27 tests + build:check incl. generated-schema freshness) · official `claude plugin validate --strict` on `plugins/skillsforge` AND the marketplace root · P0.1 gate `grep -c "schemas/skill.frontmatter" scripts/validate-skill-lib.mjs` = 0 · multi-plugin `--all` discovery (incl. new unit test) · 5-way lockstep drift tests (VERSION, package.json, plugin.json, marketplace entry, README badge each individually rejected). Bundle is self-contained (runs without node_modules). Phase 0 quality is high overall.
+
+**Findings (fix via Phase 0.R tasks, same IDs):**
+
+| ID | Sev | Location | Finding |
+|---|---|---|---|
+| R0.1 | medium | `README.md` "Plugin availability" table | Lists six invented plugins (`skill-author`, `skill-reviewer`, `skill-router`, `skill-sync`, `skill-adapters`, `skill-orchestrator`) that contradict §2.1's forge-* family — the repo now carries two conflicting roadmaps |
+| R0.2 | medium (latent, repro-confirmed) | `scripts/schema-lib.mjs:11-18` | Compile cache keyed by path-string OR object-`$id`; reaching the same schema via both routes in one process throws Ajv `schema with key or id "…" already exists`. Not triggered today (each process uses one route) but Phase 1's multi-subcommand CLI will mix routes |
+| R0.3 | low | `scripts/validate-repo-lib.mjs:54` | Lockstep PASS decided by substring-matching `'version '` over unrelated error strings — brittle reporting (correctness of exit code unaffected) |
+| R0.4 | low | `schemas/marketplace.schema.json` `$defs/plugin.source` vs `scripts/validate-repo-lib.mjs:34` | Schema admits object sources; repo validator rejects any non-string source with a generic message — intent mismatch |
+
+**Known gap, already scheduled (no new task):** plugins-dir ↔ marketplace-entry bijection arrives at P1.7; until then an unlisted `plugins/<dir>` escapes `validate:repo` (CI's `plugins/*/` strict loop still touches it).
+
+---
+
+## 13. Wave 2 — expanded coverage (after 0.3.0; ships as 0.4.0)
+
+### 13.1 NEW plugin `forge-ops` — DevOps/platform (10 skills, 2 agents, category `devops`, budget ≤900)
+Skills (each per §3.1, depth in references/):
+`dockerfile-hygiene` (multi-stage builds, layer caching, non-root user, pinned base digests) · `compose-local-stack` (healthchecks, profiles, volumes, local secret handling) · `k8s-manifest-review` (probes, resource requests/limits, securityContext, PDBs, common misconfigs) · `terraform-plan-review` (reading plans for destructive changes, drift, state hygiene, module boundaries) · `ci-pipeline-design` (stage graphs, caching, matrix strategy, flaky-test quarantine, artifact flow) · `actions-hardening` (pinned action SHAs, least-privilege GITHUB_TOKEN/OIDC, untrusted-input injection in workflows) · `release-discipline` (semver, tags, provenance, rollback plans) · `observability-floor` (structured logs, RED/USE metrics, trace propagation — the minimum bar) · `incident-triage` (severity classification, mitigate-first, timeline capture, blameless notes) · `runbook-author` (executable runbooks: preconditions, checked steps, escalation paths).
+Agents: `pipeline-reviewer` (sonnet; preloads ci-pipeline-design + actions-hardening) · `infra-reviewer` (sonnet; preloads k8s-manifest-review + terraform-plan-review).
+
+### 13.2 Feature additions to shipped plugins
+- **forge-flow +3** (budget → ≤1,250): `parallel-worklines` (split truly independent workstreams across background agents; Non-negotiable: reconcile edits and run the full suite before any workline closes) · `bisect-regression` (scripted `git bisect` driven by a reproducer check command) · `spike-timebox` (timeboxed throwaway exploration; Non-negotiable: spike code never ships — the deliverable is the written brief).
+- **forge-lean +2** (budget → ≤550): `fork-first` (route heavy exploration/subtasks to `context: fork` subagents by default; main context stays lean) · `session-split` (choose compact vs fresh-session by open-loop count; export the anchor either way).
+- **forge-gauge upgrades**: tools `usage_watch` (alert when session/day cost crosses `userConfig.budget_usd_daily`) · `report_export{format: csv|markdown, path}` · `ledger_compact` (fold months older than 90 days into rollups) · `usage_report` gains `group_by: "agent"` (attribute cost to subagents/sidechains where transcripts carry it); new skill `budget-sentinel` (explain and act on watch alerts).
+- **skillsforge meta +2**: `probe-triggers` (paraphrase-probe battery — generate N phrasings of each skill's trigger scenarios, score whether the listing would select it, report per skill; complements `tune-triggers` which rewrites) · `adopt-skill` (import an external skill safely: license check FIRST, rewrite-don't-copy, validate, stamp `metadata.provenance`).
+- **forge-guard +1**: `mcp-config-review` (audit `.mcp.json`/connector configs: over-broad env exposure, untrusted URLs, unpinned commands, plugin-scoped naming).
+- **forge-web +1**: `realtime-patterns` (SSE vs WebSocket vs polling decision, reconnect/backoff, idempotent event handling).
+- **forge-data +1**: `agent-eval-traces` (evaluating agentic apps: trajectory scoring, tool-call correctness, cost/latency budgets inside evals).
+- **forge-scribe +1**: `slide-storyline` (deck narrative arc: claim → evidence → transition per slide, generated from a brief).
+
+Wave-2 execution = Phases 11–12 in §9. Wave-3 candidates (do NOT start without a new plan round): forge-mobile (RN/Expo), tRPC/GraphQL pack, dbt/warehouse pack, localization pack.
