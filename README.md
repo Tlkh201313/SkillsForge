@@ -37,12 +37,14 @@ The parser accepts valid BOM, CRLF, comments, quoted values, and multiline YAML.
 | Plugin | Purpose | Version 0.2.0 | Install command |
 |---|---|:---:|---|
 | `skillsforge` | Validate portable and Claude Code skill packages | Available | `/plugin install skillsforge@skillsforge-marketplace` |
-| `skill-author` | Guided skill authoring | Planned | — |
-| `skill-reviewer` | Qualitative skill review | Planned | — |
-| `skill-router` | Skill selection and routing | Planned | — |
-| `skill-sync` | Cross-environment synchronization | Planned | — |
-| `skill-adapters` | Format adapters | Planned | — |
-| `skill-orchestrator` | Multi-skill orchestration | Planned | — |
+| `forge-flow` | Engineering workflow | Planned | — |
+| `forge-lean` | Token economy and context hygiene | Planned | — |
+| `forge-gauge` | Skill management and usage accounting | Planned | — |
+| `forge-web` | Full-stack web development | Planned | — |
+| `forge-guard` | Security and adversarial review | Planned | — |
+| `forge-data` | Data, machine learning, and AI | Planned | — |
+| `forge-scribe` | Research, writing, and business | Planned | — |
+| `forge-ops` | DevOps and platform engineering | Planned | — |
 
 Only `skillsforge` is installable in this release.
 
