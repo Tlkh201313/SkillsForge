@@ -1,15 +1,18 @@
 {
   "name": "skillsforge",
   "version": "0.1.0",
-  "description": "Local cross-platform agent capability forge.",
-  "author": "SkillsForge",
-  "homepage": "https://github.com/skillsforge/skillsforge",
+  "description": "Validate and review portable Agent Skills packages.",
+  "author": {
+    "name": "Tlkh201313",
+    "url": "https://github.com/Tlkh201313"
+  },
+  "homepage": "https://github.com/Tlkh201313/SkillsForge",
+  "repository": "https://github.com/Tlkh201313/SkillsForge",
   "license": "MIT",
   "keywords": [
     "skills",
-    "agents",
-    "forge",
-    "orchestration",
-    "adapters"
+    "validation",
+    "agent-skills",
+    "claude-code"
   ]
 }

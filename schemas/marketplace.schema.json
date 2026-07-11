@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skillsforge.local/schemas/marketplace.schema.json",
+  "title": "Claude Code plugin marketplace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "owner", "plugins"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "description": { "type": "string", "minLength": 1 },
+    "owner": { "$ref": "#/$defs/person" },
+    "plugins": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/plugin" }
+    }
+  },
+  "$defs": {
+    "person": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "email": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "minLength": 1 }
+      }
+    },
+    "plugin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "source"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "source": {
+          "anyOf": [
+            { "type": "string", "pattern": "^(\\.|\\./.+)$" },
+            { "type": "object" }
+          ]
+        },
+        "description": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "author": { "$ref": "#/$defs/person" },
+        "homepage": { "type": "string", "minLength": 1 },
+        "repository": { "type": "string", "minLength": 1 },
+        "license": { "type": "string", "minLength": 1 },
+        "keywords": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "strict": { "type": "boolean" }
+      }
+    }
+  }
+}

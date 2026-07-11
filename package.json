@@ -1,17 +1,30 @@
 {
   "name": "skillsforge",
   "version": "0.1.0",
-  "description": "Local cross-platform agent capability forge.",
+  "description": "Validate and forge portable Agent Skills packages.",
   "type": "module",
+  "bin": {
+    "skillsforge-validate": "./bin/skillsforge-validate"
+  },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "validate": "node scripts/validate-skill.mjs --all",
+    "validate:manifests": "node scripts/validate-manifests.mjs",
+    "validate:plugin": "claude plugin validate . --strict",
     "test": "node scripts/test.mjs",
-    "route": "node scripts/route.mjs",
-    "sync": "node scripts/sync.mjs",
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "build:check": "node scripts/build.mjs --check",
+    "check": "npm run validate:manifests && npm run validate && npm test && npm run build:check"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "@anthropic-ai/claude-code": "^2.1.207",
+    "esbuild": "^0.28.1"
+  }
 }

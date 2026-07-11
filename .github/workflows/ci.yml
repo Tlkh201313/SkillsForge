@@ -4,28 +4,55 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  validate-and-test:
-    name: Validate and test
-    runs-on: ubuntu-latest
+  test:
+    name: Test (${{ matrix.os }}, Node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [20, 22]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-      - name: Install package metadata
-        run: npm install --package-lock-only --ignore-scripts
-      - name: Validate skills
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Validate manifests
+        run: npm run validate:manifests
+      - name: Validate production skills
         run: npm run validate
       - name: Run tests
         run: npm test
 
-  phase-4-sync-freshness:
-    name: Phase 4 sync freshness gate
+  release-contract:
+    name: Plugin and bundle contract
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Phase 4 pending
-        run: |
-          echo "Phase 4 will replace this labeled gate with npm run sync plus git diff --exit-code."
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run official Claude plugin validation
+        run: npm run validate:plugin
+      - name: Verify bundled CLI freshness
+        run: npm run build:check
