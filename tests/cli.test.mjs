@@ -3,7 +3,7 @@ import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
 import test from 'node:test';
 
-const binary = join(process.cwd(), 'bin', 'skillsforge-validate');
+const binary = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge-validate');
 
 test('bundled CLI validates a portable skill without installed runtime dependencies', () => {
   const result = spawnSync(process.execPath, [binary, 'tests/fixtures/skills/good-basic'], {

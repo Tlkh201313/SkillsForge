@@ -1,8 +1,11 @@
 import { access, readFile, readdir, realpath, stat } from 'node:fs/promises';
-import { basename, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { parseDocument } from 'yaml';
 import { validateWithSchema } from './schema-lib.mjs';
 import { skillSchemasByProfile } from './schemas.generated.mjs';
+
+const adjacentSkillsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'skills');
 
 export async function validateSkillPaths(paths, options = {}) {
   const root = options.root ?? process.cwd();
@@ -171,7 +174,14 @@ export async function expandSkillPathPatterns(patterns, root) {
 }
 
 async function discoverRealSkills(root) {
-  const skillsRoot = join(root, 'skills');
+  const paths = [];
+  for (const skillsRoot of pathsWithoutDuplicates([join(root, 'skills'), adjacentSkillsRoot])) {
+    paths.push(...await discoverSkillsInDirectory(skillsRoot));
+  }
+  return pathsWithoutDuplicates(paths);
+}
+
+async function discoverSkillsInDirectory(skillsRoot) {
   try {
     const entries = await readdir(skillsRoot, { withFileTypes: true });
     const paths = [];

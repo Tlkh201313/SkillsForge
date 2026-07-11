@@ -14481,7 +14481,8 @@ var require__ = __commonJS({
 // scripts/validate-skill-lib.mjs
 var import_yaml = __toESM(require_dist(), 1);
 import { access, readFile as readFile2, readdir, realpath, stat } from "node:fs/promises";
-import { basename, isAbsolute, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 
 // scripts/schema-lib.mjs
 var import__ = __toESM(require__(), 1);
@@ -14644,6 +14645,19 @@ var schemas = Object.freeze({
       "owner": {
         "$ref": "#/$defs/person"
       },
+      "metadata": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pluginRoot"
+        ],
+        "properties": {
+          "pluginRoot": {
+            "type": "string",
+            "pattern": "^\\./.+"
+          }
+        }
+      },
       "plugins": {
         "type": "array",
         "minItems": 1,
@@ -14696,6 +14710,18 @@ var schemas = Object.freeze({
                 "type": "object"
               }
             ]
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tags": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           },
           "description": {
             "type": "string",
@@ -14856,6 +14882,7 @@ var skillSchemasByProfile = Object.freeze({
 });
 
 // scripts/validate-skill-lib.mjs
+var adjacentSkillsRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "skills");
 async function validateSkillPaths(paths, options = {}) {
   const root = options.root ?? process.cwd();
   const profile2 = options.profile ?? "canonical";
@@ -15002,7 +15029,13 @@ async function expandSkillPathPatterns(patterns, root) {
   return expanded;
 }
 async function discoverRealSkills(root) {
-  const skillsRoot = join(root, "skills");
+  const paths = [];
+  for (const skillsRoot of pathsWithoutDuplicates([join(root, "skills"), adjacentSkillsRoot])) {
+    paths.push(...await discoverSkillsInDirectory(skillsRoot));
+  }
+  return pathsWithoutDuplicates(paths);
+}
+async function discoverSkillsInDirectory(skillsRoot) {
   try {
     const entries = await readdir(skillsRoot, { withFileTypes: true });
     const paths = [];
