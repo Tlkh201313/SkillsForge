@@ -4,6 +4,7 @@ import { schemas } from './schemas.generated.mjs';
 import { validateWithSchema } from './schema-lib.mjs';
 
 const readmeBadgePattern = /img\.shields\.io\/badge\/version-([0-9]+\.[0-9]+\.[0-9]+)-/;
+const marketplaceSourcePattern = /^\.\/plugins\/[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export async function validateRepository(root = process.cwd()) {
   const repositoryRoot = resolve(root);
@@ -31,8 +32,8 @@ export async function validateRepository(root = process.cwd()) {
 
   for (const entry of marketplace?.plugins ?? []) {
     if (entry.version) versions.push([`marketplace entry ${entry.name}`, entry.version]);
-    if (typeof entry.source !== 'string') {
-      errors.push(`marketplace entry ${entry.name ?? '<unnamed>'} must use a local string source`);
+    if (typeof entry.source !== 'string' || !marketplaceSourcePattern.test(entry.source)) {
+      errors.push(`marketplace entry ${entry.name ?? '<unnamed>'} source must be a string matching ./plugins/<name>`);
       continue;
     }
     const pluginRoot = resolve(repositoryRoot, entry.source);

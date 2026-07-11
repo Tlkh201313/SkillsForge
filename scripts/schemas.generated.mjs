@@ -183,15 +183,8 @@ export const schemas = Object.freeze({
             "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
           },
           "source": {
-            "anyOf": [
-              {
-                "type": "string",
-                "pattern": "^(\\.|\\./.+)$"
-              },
-              {
-                "type": "object"
-              }
-            ]
+            "type": "string",
+            "pattern": "^\\./plugins/[a-z0-9]+(?:-[a-z0-9]+)*$"
           },
           "category": {
             "type": "string",

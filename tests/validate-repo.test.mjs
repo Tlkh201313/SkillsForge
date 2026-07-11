@@ -45,6 +45,28 @@ test('unrelated version wording does not suppress lockstep pass reporting', asyn
   assert.ok(result.passes.includes('version lockstep 0.1.0'));
 });
 
+test('marketplace sources must use the local ./plugins/<name> string form', async (context) => {
+  const parent = await mkdtemp(join(tmpdir(), 'skillsforge-repo-'));
+  context.after(() => rm(parent, { recursive: true, force: true }));
+  const expectedError = 'marketplace entry skillsforge source must be a string matching ./plugins/<name>';
+  const cases = [
+    ['object source', { path: './plugins/skillsforge' }],
+    ['invalid string shape', './other/place']
+  ];
+
+  for (const [label, marketplaceSource] of cases) {
+    await context.test(`rejects ${label}`, async () => {
+      const root = join(parent, label.replaceAll(' ', '-'));
+      await writeFixtureRepository(root, { marketplaceSource });
+
+      const result = await validateRepository(root);
+
+      assert.equal(result.ok, false, `${label} unexpectedly passed`);
+      assert.ok(result.errors.includes(expectedError), result.text);
+    });
+  }
+});
+
 async function writeFixtureRepository(root, overrides = {}) {
   const expected = '0.1.0';
   const pluginRoot = join(root, 'plugins', 'skillsforge', '.claude-plugin');
@@ -69,7 +91,7 @@ async function writeFixtureRepository(root, overrides = {}) {
     metadata: { pluginRoot: './plugins' },
     plugins: [{
       name: 'skillsforge',
-      source: './plugins/skillsforge',
+      source: overrides.marketplaceSource ?? './plugins/skillsforge',
       version: overrides.entryVersion ?? expected,
       description: plugin.description,
       author,
