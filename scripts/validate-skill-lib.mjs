@@ -2,8 +2,11 @@ import { access, readFile, readdir, realpath, stat } from 'node:fs/promises';
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseDocument } from 'yaml';
+import { firstLine, isPlainObject, parseFrontmatter } from './frontmatter-lib.mjs';
 import { registerSchemas, validateWithSchema } from './schema-lib.mjs';
 import { skillSchemasByProfile } from './schemas.generated.mjs';
+
+export { parseFrontmatter } from './frontmatter-lib.mjs';
 
 const adjacentSkillsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'skills');
 const skillSchemasRegistered = registerSchemas(Object.values(skillSchemasByProfile));
@@ -75,16 +78,6 @@ export async function validateSkillPath(skillPath, options = {}) {
   return errors.length === 0
     ? { name, path: absolute, profile, status: 'pass', errors: [] }
     : failReport(name, absolute, errors, profile);
-}
-
-export function parseFrontmatter(source) {
-  const normalized = source.startsWith('\uFEFF') ? source.slice(1) : source;
-  const match = normalized.match(/^---[\t ]*\r?\n([\s\S]*?)\r?\n---[\t ]*(?:\r?\n|$)/);
-  if (!match) return null;
-  return {
-    yaml: match[1],
-    body: normalized.slice(match[0].length)
-  };
 }
 
 async function validateBody(body, skillDirectory, errors) {
@@ -224,14 +217,6 @@ function fileExists(path) {
 
 function escapeRegex(value) {
   return value.replace(/[|\\{}()[\]^$+?.]/g, '\\$&');
-}
-
-function firstLine(value) {
-  return value.split('\n')[0];
-}
-
-function isPlainObject(value) {
-  return value !== null && !Array.isArray(value) && typeof value === 'object';
 }
 
 function pathsWithoutDuplicates(paths) {

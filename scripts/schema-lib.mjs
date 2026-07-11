@@ -52,5 +52,8 @@ export function formatAjvError(error) {
   if (error.keyword === 'unevaluatedProperties') {
     return `${location} contains unsupported field ${error.params.unevaluatedProperty}`;
   }
+  if (error.keyword === 'const') {
+    return `${location} must equal ${JSON.stringify(error.params.allowedValue)}`;
+  }
   return `${location} ${error.message}`;
 }

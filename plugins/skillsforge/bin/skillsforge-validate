@@ -14484,6 +14484,23 @@ import { access, readFile as readFile2, readdir, realpath, stat } from "node:fs/
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
+// scripts/frontmatter-lib.mjs
+function parseFrontmatter(source) {
+  const normalized = source.startsWith("\uFEFF") ? source.slice(1) : source;
+  const match = normalized.match(/^---[\t ]*\r?\n([\s\S]*?)\r?\n---[\t ]*(?:\r?\n|$)/);
+  if (!match) return null;
+  return {
+    yaml: match[1],
+    body: normalized.slice(match[0].length)
+  };
+}
+function firstLine(value) {
+  return value.split("\n")[0];
+}
+function isPlainObject(value) {
+  return value !== null && !Array.isArray(value) && typeof value === "object";
+}
+
 // scripts/schema-lib.mjs
 var import__ = __toESM(require__(), 1);
 import { readFile } from "node:fs/promises";
@@ -14533,11 +14550,87 @@ function formatAjvError(error) {
   if (error.keyword === "unevaluatedProperties") {
     return `${location} contains unsupported field ${error.params.unevaluatedProperty}`;
   }
+  if (error.keyword === "const") {
+    return `${location} must equal ${JSON.stringify(error.params.allowedValue)}`;
+  }
   return `${location} ${error.message}`;
 }
 
 // scripts/schemas.generated.mjs
 var schemas = Object.freeze({
+  "agent.frontmatter": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://skillsforge.local/schemas/agent.frontmatter.schema.json",
+    "title": "Claude Code plugin agent frontmatter",
+    "type": "object",
+    "required": [
+      "name",
+      "description"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": {
+        "type": "string",
+        "minLength": 1
+      },
+      "model": {
+        "type": "string",
+        "minLength": 1
+      },
+      "effort": {
+        "type": "string",
+        "minLength": 1
+      },
+      "maxTurns": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "tools": {
+        "$ref": "#/$defs/toolList"
+      },
+      "disallowedTools": {
+        "$ref": "#/$defs/toolList"
+      },
+      "skills": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "memory": {
+        "type": "string",
+        "minLength": 1
+      },
+      "background": {
+        "type": "boolean"
+      },
+      "isolation": {
+        "const": "worktree"
+      }
+    },
+    "additionalProperties": false,
+    "$defs": {
+      "toolList": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ]
+      }
+    }
+  },
   "claude-code.frontmatter": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://skillsforge.local/schemas/claude-code.frontmatter.schema.json",
@@ -14963,15 +15056,6 @@ async function validateSkillPath(skillPath, options = {}) {
   await validateBody(parsed.body, absolute, errors);
   return errors.length === 0 ? { name, path: absolute, profile: profile2, status: "pass", errors: [] } : failReport(name, absolute, errors, profile2);
 }
-function parseFrontmatter(source) {
-  const normalized = source.startsWith("\uFEFF") ? source.slice(1) : source;
-  const match = normalized.match(/^---[\t ]*\r?\n([\s\S]*?)\r?\n---[\t ]*(?:\r?\n|$)/);
-  if (!match) return null;
-  return {
-    yaml: match[1],
-    body: normalized.slice(match[0].length)
-  };
-}
 async function validateBody(body, skillDirectory, errors) {
   if (body.trim() === "") errors.push("body must contain skill instructions");
   const links = body.matchAll(/\[[^\]]+\]\(([^)]+)\)/g);
@@ -15093,12 +15177,6 @@ function fileExists(path) {
 }
 function escapeRegex(value) {
   return value.replace(/[|\\{}()[\]^$+?.]/g, "\\$&");
-}
-function firstLine(value) {
-  return value.split("\n")[0];
-}
-function isPlainObject(value) {
-  return value !== null && !Array.isArray(value) && typeof value === "object";
 }
 function pathsWithoutDuplicates(paths) {
   return [...new Set(paths)];
