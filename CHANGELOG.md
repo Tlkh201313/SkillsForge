@@ -2,6 +2,15 @@
 
 All notable changes to SkillsForge are recorded here.
 
+## [0.2.0] - 2026-07-11
+
+### Changed
+
+- Restructured as a multi-plugin marketplace; no action for installed users.
+- Moved the existing validator plugin under `plugins/skillsforge` without changing its marketplace or skill names.
+- Added repository-wide version lockstep checks and multi-plugin skill discovery.
+- Embedded generated schemas in the standalone validator so installed plugins do not depend on repository source files.
+
 ## [0.1.0] - 2026-07-11
 
 ### Added

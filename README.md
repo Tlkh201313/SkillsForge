@@ -1,11 +1,11 @@
 ![SkillsForge — Portable Agent Skills validation](assets/skillsforge-banner.svg)
 
 [![CI](https://github.com/Tlkh201313/SkillsForge/actions/workflows/ci.yml/badge.svg)](https://github.com/Tlkh201313/SkillsForge/actions/workflows/ci.yml)
-![Version](https://img.shields.io/badge/version-0.1.0-7c3aed)
+![Version](https://img.shields.io/badge/version-0.2.0-7c3aed)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 
-SkillsForge validates portable [Agent Skills](https://agentskills.io/specification) packages and supported Claude Code extensions. The current release is deliberately focused: one production skill, one bundled validator, two explicit validation profiles, and no placeholder features.
+SkillsForge is a multi-plugin marketplace for portable Agent Skills. Version 0.2.0 ships one production plugin: a bundled validator for [Agent Skills](https://agentskills.io/specification) packages and supported Claude Code extensions. Planned plugins are listed separately and are not presented as available.
 
 ## What ships today
 
@@ -32,6 +32,20 @@ flowchart LR
 
 The parser accepts valid BOM, CRLF, comments, quoted values, and multiline YAML. Profile validation uses Draft 2020-12 JSON Schema. Resource checks reject missing files, unsupported URI schemes, sibling-prefix escapes, and links whose real path leaves the skill directory.
 
+## Plugin availability
+
+| Plugin | Purpose | Version 0.2.0 | Install command |
+|---|---|:---:|---|
+| `skillsforge` | Validate portable and Claude Code skill packages | Available | `/plugin install skillsforge@skillsforge-marketplace` |
+| `skill-author` | Guided skill authoring | Planned | — |
+| `skill-reviewer` | Qualitative skill review | Planned | — |
+| `skill-router` | Skill selection and routing | Planned | — |
+| `skill-sync` | Cross-environment synchronization | Planned | — |
+| `skill-adapters` | Format adapters | Planned | — |
+| `skill-orchestrator` | Multi-skill orchestration | Planned | — |
+
+Only `skillsforge` is installable in this release.
+
 ## Install in Claude Code
 
 ```text
@@ -54,22 +68,22 @@ npm ci
 npm run build
 
 # Portable Agent Skills specification
-./bin/skillsforge-validate path/to/skill
+./plugins/skillsforge/bin/skillsforge-validate path/to/skill
 
 # Portable fields plus supported Claude Code extensions
-./bin/skillsforge-validate --profile claude-code path/to/skill
+./plugins/skillsforge/bin/skillsforge-validate --profile claude-code path/to/skill
 
 # Machine-readable diagnostics
-./bin/skillsforge-validate --json path/to/skill
+./plugins/skillsforge/bin/skillsforge-validate --json path/to/skill
 
-# Every production skill under ./skills
-./bin/skillsforge-validate --all
+# Every production skill under plugins/*/skills
+./plugins/skillsforge/bin/skillsforge-validate --all
 ```
 
 On Windows PowerShell, use Node explicitly:
 
 ```powershell
-node .\bin\skillsforge-validate path\to\skill
+node .\plugins\skillsforge\bin\skillsforge-validate path\to\skill
 ```
 
 ## Profiles
@@ -119,7 +133,7 @@ Exit codes are `0` for success, `1` for validation failure, and `2` for invalid 
 ## Verification
 
 ```sh
-npm run validate:manifests
+npm run validate:repo
 npm run validate:plugin
 npm run validate
 npm test
@@ -134,7 +148,7 @@ GitHub Actions runs the validation and test suite on Ubuntu, Windows, and macOS 
 - Local Markdown resources must remain inside the skill directory after real-path resolution.
 - Only HTTP, HTTPS, mailto, fragment, and valid local links are accepted.
 - Empty production skill libraries fail closed unless `--allow-empty` is explicitly supplied.
-- Manifest versions must match across `package.json`, `plugin.json`, and `marketplace.json`.
+- `VERSION`, `package.json`, every plugin and marketplace entry, and the README badge must use the same release version.
 
 ## License
 
