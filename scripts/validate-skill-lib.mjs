@@ -2,10 +2,11 @@ import { access, readFile, readdir, realpath, stat } from 'node:fs/promises';
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseDocument } from 'yaml';
-import { validateWithSchema } from './schema-lib.mjs';
+import { registerSchemas, validateWithSchema } from './schema-lib.mjs';
 import { skillSchemasByProfile } from './schemas.generated.mjs';
 
 const adjacentSkillsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'skills');
+const skillSchemasRegistered = registerSchemas(Object.values(skillSchemasByProfile));
 
 export async function validateSkillPaths(paths, options = {}) {
   const root = options.root ?? process.cwd();
@@ -32,6 +33,7 @@ export async function validateSkillPath(skillPath, options = {}) {
   const profile = options.profile ?? 'canonical';
   const schema = skillSchemasByProfile[profile];
   if (!schema) throw new Error(`Unknown validation profile: ${profile}`);
+  await skillSchemasRegistered;
 
   const absolute = resolve(root, skillPath);
   const name = basename(absolute);

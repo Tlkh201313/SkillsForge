@@ -19,6 +19,9 @@ test('canonical Agent Skills schema implements the portable frontmatter contract
   };
   assert.equal((await validateWithSchema(schema, valid)).valid, true);
 
+  const invalidToolList = await validateWithSchema(schema, { ...valid, 'allowed-tools': ['Read'] });
+  assert.equal(invalidToolList.valid, false);
+
   const invalid = {
     ...valid,
     name: 'Example--Skill',
@@ -28,6 +31,51 @@ test('canonical Agent Skills schema implements the portable frontmatter contract
   const result = await validateWithSchema(schema, invalid);
   assert.equal(result.valid, false);
   assert.match(result.errors.join('\n'), /unsupported field maturity|pattern|must be string/);
+});
+
+test('skill profiles compose the canonical core without duplicating shared fields', async () => {
+  const canonical = await loadJson(fromRoot('schemas', 'skill.frontmatter.schema.json'));
+  const claude = await loadJson(fromRoot('schemas', 'claude-code.frontmatter.schema.json'));
+  const shared = ['name', 'description', 'license', 'compatibility', 'metadata', 'allowed-tools'];
+
+  assert.ok(canonical.$defs?.core);
+  assert.deepEqual(Object.keys(canonical.$defs.core.properties), shared);
+  assert.deepEqual(canonical.$defs.core.required, ['name', 'description']);
+  assert.equal(canonical.unevaluatedProperties, false);
+  assert.ok(canonical.allOf.some((entry) => entry.$ref === '#/$defs/core'));
+
+  assert.equal(claude.unevaluatedProperties, false);
+  assert.ok(claude.allOf.some((entry) => entry.$ref === `${canonical.$id}#/$defs/core`));
+  const claudeOwnProperties = claude.allOf.flatMap((entry) => Object.keys(entry.properties ?? {}));
+  assert.deepEqual(claudeOwnProperties.filter((property) => shared.includes(property)), []);
+});
+
+test('registers generated schemas repeatedly and resolves the Claude external core ref', async () => {
+  const schemaLib = await import('../scripts/schema-lib.mjs');
+  assert.equal(typeof schemaLib.registerSchemas, 'function');
+
+  const canonicalPath = fromRoot('schemas', 'skill.frontmatter.schema.json');
+  const claudePath = fromRoot('schemas', 'claude-code.frontmatter.schema.json');
+  const canonical = await loadJson(canonicalPath);
+  const claude = await loadJson(claudePath);
+  await schemaLib.registerSchemas([canonical, claude]);
+  await schemaLib.registerSchemas([canonicalPath, claudePath]);
+
+  const valid = await validateWithSchema(claude, {
+    name: 'claude-skill',
+    description: 'Use Claude Code extensions.',
+    'allowed-tools': ['Read', 'Bash(git:*)'],
+    'disable-model-invocation': true
+  });
+  assert.equal(valid.valid, true, valid.errors.join('\n'));
+
+  const invalid = await validateWithSchema(claudePath, {
+    name: 'claude-skill',
+    description: 'Reject fields outside either composed schema.',
+    maturity: 'stable'
+  });
+  assert.equal(invalid.valid, false);
+  assert.match(invalid.errors.join('\n'), /unsupported field maturity/);
 });
 
 test('reuses a schema validator when the schema object is followed by its path', async () => {

@@ -14489,15 +14489,31 @@ var import__ = __toESM(require__(), 1);
 import { readFile } from "node:fs/promises";
 var ajv = new import__.default({ allErrors: true, strict: true });
 var validators = /* @__PURE__ */ new Map();
+var registeredSchemaIds = /* @__PURE__ */ new Set();
 async function loadJson(path) {
   return JSON.parse(await readFile(path, "utf8"));
+}
+async function registerSchemas(schemaSources) {
+  const schemas2 = await Promise.all(schemaSources.map((source) => typeof source === "string" ? loadJson(source) : source));
+  for (const schema of schemas2) {
+    if (!schema.$id) throw new Error("Registered schemas must define $id");
+    if (registeredSchemaIds.has(schema.$id)) continue;
+    ajv.addSchema(schema);
+    registeredSchemaIds.add(schema.$id);
+  }
 }
 async function validateWithSchema(schemaPath, value) {
   const schema = typeof schemaPath === "string" ? await loadJson(schemaPath) : schemaPath;
   const cacheKey = schema.$id ?? schema;
   let validate = validators.get(cacheKey);
   if (!validate) {
-    validate = ajv.compile(schema);
+    if (schema.$id) {
+      await registerSchemas([schema]);
+      validate = ajv.getSchema(schema.$id);
+      if (!validate) throw new Error(`Registered schema could not be compiled: ${schema.$id}`);
+    } else {
+      validate = ajv.compile(schema);
+    }
     validators.set(cacheKey, validate);
   }
   const valid = validate(value);
@@ -14514,6 +14530,9 @@ function formatAjvError(error) {
   if (error.keyword === "additionalProperties") {
     return `${location} contains unsupported field ${error.params.additionalProperty}`;
   }
+  if (error.keyword === "unevaluatedProperties") {
+    return `${location} contains unsupported field ${error.params.unevaluatedProperty}`;
+  }
   return `${location} ${error.message}`;
 }
 
@@ -14524,85 +14543,60 @@ var schemas = Object.freeze({
     "$id": "https://skillsforge.local/schemas/claude-code.frontmatter.schema.json",
     "title": "Agent Skills frontmatter with Claude Code extensions",
     "type": "object",
-    "additionalProperties": false,
-    "required": [
-      "name",
-      "description"
-    ],
-    "properties": {
-      "name": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 64,
-        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    "allOf": [
+      {
+        "$ref": "https://skillsforge.local/schemas/skill.frontmatter.schema.json#/$defs/core"
       },
-      "description": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 1024
-      },
-      "license": {
-        "type": "string",
-        "minLength": 1
-      },
-      "compatibility": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 500
-      },
-      "metadata": {
+      {
         "type": "object",
-        "additionalProperties": {
-          "type": "string"
-        }
-      },
-      "allowed-tools": {
-        "$ref": "#/$defs/toolList"
-      },
-      "disallowed-tools": {
-        "$ref": "#/$defs/toolList"
-      },
-      "when_to_use": {
-        "type": "string",
-        "minLength": 1
-      },
-      "argument-hint": {
-        "type": "string"
-      },
-      "arguments": {
-        "anyOf": [
-          {
+        "properties": {
+          "disallowed-tools": {
+            "$ref": "#/$defs/toolList"
+          },
+          "when_to_use": {
+            "type": "string",
+            "minLength": 1
+          },
+          "argument-hint": {
             "type": "string"
           },
-          {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "arguments": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "disable-model-invocation": {
+            "type": "boolean"
+          },
+          "user-invocable": {
+            "type": "boolean"
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "context": {
+            "const": "fork"
+          },
+          "agent": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hooks": {
+            "type": "object"
           }
-        ]
-      },
-      "disable-model-invocation": {
-        "type": "boolean"
-      },
-      "user-invocable": {
-        "type": "boolean"
-      },
-      "model": {
-        "type": "string",
-        "minLength": 1
-      },
-      "context": {
-        "const": "fork"
-      },
-      "agent": {
-        "type": "string",
-        "minLength": 1
-      },
-      "hooks": {
-        "type": "object"
+        }
       }
-    },
+    ],
+    "unevaluatedProperties": false,
     "$defs": {
       "toolList": {
         "anyOf": [
@@ -14830,41 +14824,75 @@ var schemas = Object.freeze({
     "$id": "https://skillsforge.local/schemas/skill.frontmatter.schema.json",
     "title": "SkillsForge skill frontmatter",
     "type": "object",
-    "additionalProperties": false,
-    "required": [
-      "name",
-      "description"
-    ],
-    "properties": {
-      "name": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 64,
-        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    "allOf": [
+      {
+        "$ref": "#/$defs/core"
       },
-      "description": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 1024
-      },
-      "license": {
-        "type": "string",
-        "minLength": 1
-      },
-      "compatibility": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 500
-      },
-      "metadata": {
+      {
         "type": "object",
-        "additionalProperties": {
-          "type": "string"
+        "properties": {
+          "allowed-tools": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    ],
+    "unevaluatedProperties": false,
+    "$defs": {
+      "core": {
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "license": {
+            "type": "string",
+            "minLength": 1
+          },
+          "compatibility": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "allowed-tools": {
+            "$ref": "#/$defs/toolList"
+          }
         }
       },
-      "allowed-tools": {
-        "type": "string",
-        "minLength": 1
+      "toolList": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ]
       }
     }
   }
@@ -14876,6 +14904,7 @@ var skillSchemasByProfile = Object.freeze({
 
 // scripts/validate-skill-lib.mjs
 var adjacentSkillsRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "skills");
+var skillSchemasRegistered = registerSchemas(Object.values(skillSchemasByProfile));
 async function validateSkillPaths(paths, options = {}) {
   const root = options.root ?? process.cwd();
   const profile2 = options.profile ?? "canonical";
@@ -14899,6 +14928,7 @@ async function validateSkillPath(skillPath, options = {}) {
   const profile2 = options.profile ?? "canonical";
   const schema = skillSchemasByProfile[profile2];
   if (!schema) throw new Error(`Unknown validation profile: ${profile2}`);
+  await skillSchemasRegistered;
   const absolute = resolve(root, skillPath);
   const name = basename(absolute);
   const file = join(absolute, "SKILL.md");

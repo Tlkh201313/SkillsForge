@@ -6,85 +6,60 @@ export const schemas = Object.freeze({
     "$id": "https://skillsforge.local/schemas/claude-code.frontmatter.schema.json",
     "title": "Agent Skills frontmatter with Claude Code extensions",
     "type": "object",
-    "additionalProperties": false,
-    "required": [
-      "name",
-      "description"
-    ],
-    "properties": {
-      "name": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 64,
-        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    "allOf": [
+      {
+        "$ref": "https://skillsforge.local/schemas/skill.frontmatter.schema.json#/$defs/core"
       },
-      "description": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 1024
-      },
-      "license": {
-        "type": "string",
-        "minLength": 1
-      },
-      "compatibility": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 500
-      },
-      "metadata": {
+      {
         "type": "object",
-        "additionalProperties": {
-          "type": "string"
-        }
-      },
-      "allowed-tools": {
-        "$ref": "#/$defs/toolList"
-      },
-      "disallowed-tools": {
-        "$ref": "#/$defs/toolList"
-      },
-      "when_to_use": {
-        "type": "string",
-        "minLength": 1
-      },
-      "argument-hint": {
-        "type": "string"
-      },
-      "arguments": {
-        "anyOf": [
-          {
+        "properties": {
+          "disallowed-tools": {
+            "$ref": "#/$defs/toolList"
+          },
+          "when_to_use": {
+            "type": "string",
+            "minLength": 1
+          },
+          "argument-hint": {
             "type": "string"
           },
-          {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "arguments": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "disable-model-invocation": {
+            "type": "boolean"
+          },
+          "user-invocable": {
+            "type": "boolean"
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "context": {
+            "const": "fork"
+          },
+          "agent": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hooks": {
+            "type": "object"
           }
-        ]
-      },
-      "disable-model-invocation": {
-        "type": "boolean"
-      },
-      "user-invocable": {
-        "type": "boolean"
-      },
-      "model": {
-        "type": "string",
-        "minLength": 1
-      },
-      "context": {
-        "const": "fork"
-      },
-      "agent": {
-        "type": "string",
-        "minLength": 1
-      },
-      "hooks": {
-        "type": "object"
+        }
       }
-    },
+    ],
+    "unevaluatedProperties": false,
     "$defs": {
       "toolList": {
         "anyOf": [
@@ -312,41 +287,75 @@ export const schemas = Object.freeze({
     "$id": "https://skillsforge.local/schemas/skill.frontmatter.schema.json",
     "title": "SkillsForge skill frontmatter",
     "type": "object",
-    "additionalProperties": false,
-    "required": [
-      "name",
-      "description"
-    ],
-    "properties": {
-      "name": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 64,
-        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    "allOf": [
+      {
+        "$ref": "#/$defs/core"
       },
-      "description": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 1024
-      },
-      "license": {
-        "type": "string",
-        "minLength": 1
-      },
-      "compatibility": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 500
-      },
-      "metadata": {
+      {
         "type": "object",
-        "additionalProperties": {
-          "type": "string"
+        "properties": {
+          "allowed-tools": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    ],
+    "unevaluatedProperties": false,
+    "$defs": {
+      "core": {
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "license": {
+            "type": "string",
+            "minLength": 1
+          },
+          "compatibility": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "allowed-tools": {
+            "$ref": "#/$defs/toolList"
+          }
         }
       },
-      "allowed-tools": {
-        "type": "string",
-        "minLength": 1
+      "toolList": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ]
       }
     }
   }

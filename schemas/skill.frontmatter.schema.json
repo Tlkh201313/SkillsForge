@@ -3,36 +3,56 @@
   "$id": "https://skillsforge.local/schemas/skill.frontmatter.schema.json",
   "title": "SkillsForge skill frontmatter",
   "type": "object",
-  "additionalProperties": false,
-  "required": ["name", "description"],
-  "properties": {
-    "name": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 64,
-      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
-    },
-    "description": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 1024
-    },
-    "license": {
-      "type": "string",
-      "minLength": 1
-    },
-    "compatibility": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 500
-    },
-    "metadata": {
+  "allOf": [
+    { "$ref": "#/$defs/core" },
+    {
       "type": "object",
-      "additionalProperties": { "type": "string" }
+      "properties": {
+        "allowed-tools": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "core": {
+      "type": "object",
+      "required": ["name", "description"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        },
+        "compatibility": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "allowed-tools": { "$ref": "#/$defs/toolList" }
+      }
     },
-    "allowed-tools": {
-      "type": "string",
-      "minLength": 1
+    "toolList": {
+      "anyOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      ]
     }
   }
 }

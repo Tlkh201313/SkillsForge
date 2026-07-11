@@ -7,6 +7,20 @@ import { validateSkillPath, validateSkillPaths } from '../scripts/validate-skill
 
 const fixtures = (...parts) => join(process.cwd(), 'tests', 'fixtures', 'skills', ...parts);
 
+test('preserves the production skill fixture status vector', async () => {
+  const names = [
+    'good-basic',
+    'good-with-metadata',
+    'bad-name',
+    'bad-description',
+    'bad-unknown-field',
+    'bad-empty-body',
+    'bad-link'
+  ];
+  const reports = await Promise.all(names.map((name) => validateSkillPath(fixtures(name), { root: process.cwd() })));
+  assert.deepEqual(reports.map((report) => report.status), ['pass', 'pass', 'fail', 'fail', 'fail', 'fail', 'fail']);
+});
+
 test('passes portable skills with standard metadata and local resources', async () => {
   const result = await validateSkillPaths([fixtures('good-basic'), fixtures('good-with-metadata')], { root: process.cwd() });
   assert.equal(result.ok, true, result.text);
