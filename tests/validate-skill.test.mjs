@@ -8,7 +8,7 @@ import { validateSkillPath, validateSkillPaths } from '../scripts/validate-skill
 const fixtures = (...parts) => join(process.cwd(), 'tests', 'fixtures', 'skills', ...parts);
 
 test('passes portable skills with standard metadata and local resources', async () => {
-  const result = await validateSkillPaths([fixtures('good-basic'), fixtures('good-with-require')], { root: process.cwd() });
+  const result = await validateSkillPaths([fixtures('good-basic'), fixtures('good-with-metadata')], { root: process.cwd() });
   assert.equal(result.ok, true, result.text);
   assert.deepEqual(result.reports.map((report) => report.status), ['pass', 'pass']);
   assert.match(result.text, /PASS good-basic \(canonical\)/);
@@ -17,11 +17,8 @@ test('passes portable skills with standard metadata and local resources', async 
 const badCases = [
   ['bad-name', /name must equal directory name/],
   ['bad-description', /description.*must NOT have fewer than 1 characters/],
-  ['bad-frontmatter-size', /unsupported field notes/],
-  ['bad-maturity', /unsupported field maturity/],
-  ['bad-platform', /unsupported field platform/],
-  ['bad-requires', /unsupported field requires/],
-  ['bad-sections', /body must contain skill instructions/],
+  ['bad-unknown-field', /unsupported field maturity/],
+  ['bad-empty-body', /body must contain skill instructions/],
   ['bad-link', /relative markdown link must resolve/]
 ];
 
@@ -70,6 +67,15 @@ test('rejects sibling-prefix path escapes', async (context) => {
   const report = await validateSkillPath(skill, { root });
   assert.equal(report.status, 'fail');
   assert.match(report.errors.join('\n'), /must stay inside skill directory/);
+});
+
+test('rejects executable URI schemes in Markdown links', async (context) => {
+  const root = await temporarySkillRoot(context);
+  const skill = await writeSkill(root, 'unsafe-link', `---\nname: unsafe-link\ndescription: Validate unsafe links. Use when testing URI scheme restrictions.\n---\n\nOpen [unsafe](javascript:alert%281%29).\n`);
+
+  const report = await validateSkillPath(skill, { root });
+  assert.equal(report.status, 'fail');
+  assert.match(report.errors.join('\n'), /unsupported URI scheme/);
 });
 
 test('all mode fails closed when no production skills exist', async (context) => {

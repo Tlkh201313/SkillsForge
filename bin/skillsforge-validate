@@ -14655,7 +14655,13 @@ async function expandSkillPathPatterns(patterns, root) {
       expanded.push(pattern);
       continue;
     }
-    const matches = entries.filter((entry) => entry.isDirectory() && regex.test(entry.name)).map((entry) => join(parent, entry.name)).sort((left, right) => left.localeCompare(right));
+    const matches = [];
+    for (const entry of entries) {
+      if (!entry.isDirectory() || !regex.test(entry.name)) continue;
+      const candidate = join(parent, entry.name);
+      if (await fileExists(resolve(root, candidate, "SKILL.md"))) matches.push(candidate);
+    }
+    matches.sort((left, right) => left.localeCompare(right));
     expanded.push(...matches.length === 0 ? [pattern] : matches);
   }
   return expanded;
