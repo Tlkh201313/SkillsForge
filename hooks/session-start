@@ -1,0 +1,2 @@
+#!/usr/bin/env node
+console.log('SkillsForge session start hook becomes active in Phase 1.');

@@ -1,0 +1,17 @@
+{
+  "name": "skillsforge",
+  "version": "0.1.0",
+  "description": "Local cross-platform agent capability forge.",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "validate": "node scripts/validate-skill.mjs --all",
+    "test": "node scripts/test.mjs",
+    "route": "node scripts/route.mjs",
+    "sync": "node scripts/sync.mjs",
+    "build": "node scripts/build.mjs"
+  },
+  "license": "MIT"
+}
