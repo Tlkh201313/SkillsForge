@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate-and-test:
+    name: Validate and test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install package metadata
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Validate skills
+        run: npm run validate
+      - name: Run tests
+        run: npm test
+
+  phase-4-sync-freshness:
+    name: Phase 4 sync freshness gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Phase 4 pending
+        run: |
+          echo "Phase 4 will replace this labeled gate with npm run sync plus git diff --exit-code."
