@@ -1,0 +1,15 @@
+{
+  "name": "skillsforge",
+  "version": "0.1.0",
+  "description": "Local cross-platform agent capability forge.",
+  "author": "SkillsForge",
+  "homepage": "https://github.com/skillsforge/skillsforge",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "marketplace",
+    "agents",
+    "orchestration"
+  ],
+  "plugin": "./plugin.json"
+}
