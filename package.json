@@ -11,12 +11,12 @@
   },
   "scripts": {
     "validate": "node plugins/skillsforge/bin/skillsforge-validate --all",
-    "validate:manifests": "node scripts/validate-manifests.mjs",
+    "validate:repo": "node scripts/validate-repo.mjs",
     "validate:plugin": "claude plugin validate . --strict",
     "test": "node scripts/test.mjs",
     "build": "node scripts/build.mjs",
     "build:check": "node scripts/build.mjs --check",
-    "check": "npm run validate:manifests && npm run validate && npm test && npm run build:check"
+    "check": "npm run validate:repo && npm run validate && npm test && npm run build:check"
   },
   "license": "MIT",
   "dependencies": {
