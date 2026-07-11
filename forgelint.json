@@ -1,0 +1,16 @@
+{
+  "listingLengthLimit": 1536,
+  "bodyWarningBudget": 500,
+  "bodyErrorLimit": 2000,
+  "pluginBudgets": {
+    "skillsforge": 350,
+    "forge-flow": 1100,
+    "forge-lean": 450,
+    "forge-gauge": 600,
+    "forge-web": 900,
+    "forge-guard": 900,
+    "forge-data": 900,
+    "forge-scribe": 900,
+    "forge-ops": 900
+  }
+}
