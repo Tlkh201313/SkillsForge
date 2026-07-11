@@ -3209,7 +3209,7 @@ var require_tags = __commonJS({
     var schema$2 = require_schema3();
     var set = require_set();
     var timestamp = require_timestamp();
-    var schemas = /* @__PURE__ */ new Map([
+    var schemas2 = /* @__PURE__ */ new Map([
       ["core", schema.schema],
       ["failsafe", [map.map, seq.seq, string.string]],
       ["json", schema$1.schema],
@@ -3245,7 +3245,7 @@ var require_tags = __commonJS({
       "tag:yaml.org,2002:timestamp": timestamp.timestamp
     };
     function getTags(customTags, schemaName, addMergeTag) {
-      const schemaTags = schemas.get(schemaName);
+      const schemaTags = schemas2.get(schemaName);
       if (schemaTags && !customTags) {
         return addMergeTag && !schemaTags.includes(merge.merge) ? schemaTags.concat(merge.merge) : schemaTags.slice();
       }
@@ -3254,7 +3254,7 @@ var require_tags = __commonJS({
         if (Array.isArray(customTags))
           tags = [];
         else {
-          const keys = Array.from(schemas.keys()).filter((key) => key !== "yaml11").map((key) => JSON.stringify(key)).join(", ");
+          const keys = Array.from(schemas2.keys()).filter((key) => key !== "yaml11").map((key) => JSON.stringify(key)).join(", ");
           throw new Error(`Unknown schema "${schemaName}"; use one of ${keys} or define customTags array`);
         }
       }
@@ -11668,15 +11668,15 @@ var require_core = __commonJS({
         }
         return metaSchema;
       }
-      _removeAllSchemas(schemas, regex) {
-        for (const keyRef in schemas) {
-          const sch = schemas[keyRef];
+      _removeAllSchemas(schemas2, regex) {
+        for (const keyRef in schemas2) {
+          const sch = schemas2[keyRef];
           if (!regex || regex.test(keyRef)) {
             if (typeof sch == "string") {
-              delete schemas[keyRef];
+              delete schemas2[keyRef];
             } else if (sch && !sch.meta) {
               this._cache.delete(sch.schema);
-              delete schemas[keyRef];
+              delete schemas2[keyRef];
             }
           }
         }
@@ -14481,8 +14481,7 @@ var require__ = __commonJS({
 // scripts/validate-skill-lib.mjs
 var import_yaml = __toESM(require_dist(), 1);
 import { access, readFile as readFile2, readdir, realpath, stat } from "node:fs/promises";
-import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
-import { fileURLToPath } from "node:url";
+import { basename, isAbsolute, join, relative, resolve, sep } from "node:path";
 
 // scripts/schema-lib.mjs
 var import__ = __toESM(require__(), 1);
@@ -14493,10 +14492,12 @@ async function loadJson(path) {
   return JSON.parse(await readFile(path, "utf8"));
 }
 async function validateWithSchema(schemaPath, value) {
-  let validate = validators.get(schemaPath);
+  const cacheKey = typeof schemaPath === "string" ? schemaPath : schemaPath.$id ?? schemaPath;
+  let validate = validators.get(cacheKey);
   if (!validate) {
-    validate = ajv.compile(await loadJson(schemaPath));
-    validators.set(schemaPath, validate);
+    const schema = typeof schemaPath === "string" ? await loadJson(schemaPath) : schemaPath;
+    validate = ajv.compile(schema);
+    validators.set(cacheKey, validate);
   }
   const valid = validate(value);
   return {
@@ -14515,12 +14516,346 @@ function formatAjvError(error) {
   return `${location} ${error.message}`;
 }
 
+// scripts/schemas.generated.mjs
+var schemas = Object.freeze({
+  "claude-code.frontmatter": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://skillsforge.local/schemas/claude-code.frontmatter.schema.json",
+    "title": "Agent Skills frontmatter with Claude Code extensions",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "name",
+      "description"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64,
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "description": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024
+      },
+      "license": {
+        "type": "string",
+        "minLength": 1
+      },
+      "compatibility": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      },
+      "metadata": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "allowed-tools": {
+        "$ref": "#/$defs/toolList"
+      },
+      "disallowed-tools": {
+        "$ref": "#/$defs/toolList"
+      },
+      "when_to_use": {
+        "type": "string",
+        "minLength": 1
+      },
+      "argument-hint": {
+        "type": "string"
+      },
+      "arguments": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "disable-model-invocation": {
+        "type": "boolean"
+      },
+      "user-invocable": {
+        "type": "boolean"
+      },
+      "model": {
+        "type": "string",
+        "minLength": 1
+      },
+      "context": {
+        "const": "fork"
+      },
+      "agent": {
+        "type": "string",
+        "minLength": 1
+      },
+      "hooks": {
+        "type": "object"
+      }
+    },
+    "$defs": {
+      "toolList": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ]
+      }
+    }
+  },
+  "marketplace": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://skillsforge.local/schemas/marketplace.schema.json",
+    "title": "Claude Code plugin marketplace",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "name",
+      "owner",
+      "plugins"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "description": {
+        "type": "string",
+        "minLength": 1
+      },
+      "owner": {
+        "$ref": "#/$defs/person"
+      },
+      "plugins": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "$ref": "#/$defs/plugin"
+        }
+      }
+    },
+    "$defs": {
+      "person": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "plugin": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "source"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(\\.|\\./.+)$"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "author": {
+            "$ref": "#/$defs/person"
+          },
+          "homepage": {
+            "type": "string",
+            "minLength": 1
+          },
+          "repository": {
+            "type": "string",
+            "minLength": 1
+          },
+          "license": {
+            "type": "string",
+            "minLength": 1
+          },
+          "keywords": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "strict": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "plugin": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://skillsforge.local/schemas/plugin.schema.json",
+    "title": "SkillsForge plugin manifest",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "name",
+      "version",
+      "description",
+      "author",
+      "repository",
+      "license",
+      "keywords"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "version": {
+        "type": "string",
+        "pattern": "^\\d+\\.\\d+\\.\\d+$"
+      },
+      "description": {
+        "type": "string",
+        "maxLength": 500
+      },
+      "author": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "homepage": {
+        "type": "string",
+        "minLength": 1
+      },
+      "repository": {
+        "type": "string",
+        "minLength": 1
+      },
+      "license": {
+        "type": "string"
+      },
+      "keywords": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "skill.frontmatter": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://skillsforge.local/schemas/skill.frontmatter.schema.json",
+    "title": "SkillsForge skill frontmatter",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "name",
+      "description"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64,
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "description": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024
+      },
+      "license": {
+        "type": "string",
+        "minLength": 1
+      },
+      "compatibility": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      },
+      "metadata": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "allowed-tools": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+});
+var skillSchemasByProfile = Object.freeze({
+  canonical: schemas["skill.frontmatter"],
+  "claude-code": schemas["claude-code.frontmatter"]
+});
+
 // scripts/validate-skill-lib.mjs
-var repositoryRoot = fileURLToPath(new URL("..", import.meta.url));
-var schemaByProfile = {
-  canonical: join(repositoryRoot, "schemas", "skill.frontmatter.schema.json"),
-  "claude-code": join(repositoryRoot, "schemas", "claude-code.frontmatter.schema.json")
-};
 async function validateSkillPaths(paths, options = {}) {
   const root = options.root ?? process.cwd();
   const profile2 = options.profile ?? "canonical";
@@ -14542,8 +14877,8 @@ async function validateSkillPaths(paths, options = {}) {
 async function validateSkillPath(skillPath, options = {}) {
   const root = options.root ?? process.cwd();
   const profile2 = options.profile ?? "canonical";
-  const schemaPath = schemaByProfile[profile2];
-  if (!schemaPath) throw new Error(`Unknown validation profile: ${profile2}`);
+  const schema = skillSchemasByProfile[profile2];
+  if (!schema) throw new Error(`Unknown validation profile: ${profile2}`);
   const absolute = resolve(root, skillPath);
   const name = basename(absolute);
   const file = join(absolute, "SKILL.md");
@@ -14570,7 +14905,7 @@ async function validateSkillPath(skillPath, options = {}) {
     if (!isPlainObject(data)) {
       errors.push("frontmatter must be a YAML mapping");
     } else {
-      const schemaResult = await validateWithSchema(schemaPath, data);
+      const schemaResult = await validateWithSchema(schema, data);
       errors.push(...schemaResult.errors.map((error) => `frontmatter ${error}`));
       if (typeof data.name === "string" && data.name !== name) errors.push("name must equal directory name");
     }
