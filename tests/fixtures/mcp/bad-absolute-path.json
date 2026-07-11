@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "local-only": {
+      "type": "stdio",
+      "command": "C:\\Users\\developer\\server.exe"
+    }
+  }
+}

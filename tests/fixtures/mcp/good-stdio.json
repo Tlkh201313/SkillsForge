@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "portable-tools": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/server/index.mjs",
+        "${CLAUDE_PROJECT_DIR}/config.json"
+      ],
+      "env": {
+        "CACHE_DIR": "${CLAUDE_PLUGIN_DATA}/cache",
+        "NODE_HOME": "${user_config.nodePath}/bin",
+        "USER_HOME": "${HOME}/tools"
+      },
+      "cwd": "${CLAUDE_PLUGIN_ROOT}/server",
+      "timeout": 10,
+      "alwaysLoad": true
+    }
+  }
+}

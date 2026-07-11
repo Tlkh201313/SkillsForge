@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "rooted-command": {
+      "command": "\\Users\\dev\\server.exe"
+    },
+    "rooted-argument": {
+      "command": "node",
+      "args": ["\\??\\C:\\server.exe"]
+    },
+    "posix-argument": {
+      "command": "node",
+      "args": ["/usr/local/bin/server"]
+    },
+    "rooted-environment": {
+      "command": "node",
+      "env": {
+        "SERVER_HOME": "\\Users\\dev\\server"
+      }
+    },
+    "rooted-working-directory": {
+      "command": "node",
+      "cwd": "\\Users\\dev\\server"
+    }
+  }
+}

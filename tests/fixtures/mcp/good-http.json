@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "remote-api": {
+      "type": "http",
+      "url": "https://mcp.example.test/api",
+      "headers": {
+        "Authorization": "Bearer ${MCP_TOKEN}"
+      },
+      "headersHelper": "node ./scripts/headers.mjs",
+      "oauth": {
+        "clientId": "skillsforge"
+      },
+      "timeout": 15,
+      "alwaysLoad": false
+    }
+  }
+}

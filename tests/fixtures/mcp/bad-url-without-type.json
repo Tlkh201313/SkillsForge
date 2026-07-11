@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "ambiguous-remote": {
+      "url": "https://mcp.example.test/api"
+    }
+  }
+}

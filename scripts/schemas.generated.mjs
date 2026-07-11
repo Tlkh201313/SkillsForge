@@ -152,6 +152,118 @@ export const schemas = Object.freeze({
       }
     }
   },
+  "command.frontmatter": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://skillsforge.local/schemas/command.frontmatter.schema.json",
+    "$comment": "Official reference: https://code.claude.com/docs/en/slash-commands (verified 2026-07-11). Legacy flat command identity comes from the Markdown filename and every frontmatter field is optional.",
+    "title": "Claude Code legacy command frontmatter",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64,
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "description": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024
+      },
+      "when_to_use": {
+        "type": "string",
+        "minLength": 1
+      },
+      "license": {
+        "type": "string",
+        "minLength": 1
+      },
+      "compatibility": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      },
+      "metadata": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "argument-hint": {
+        "type": "string"
+      },
+      "arguments": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "disable-model-invocation": {
+        "type": "boolean"
+      },
+      "user-invocable": {
+        "type": "boolean"
+      },
+      "allowed-tools": {
+        "$ref": "#/$defs/toolList"
+      },
+      "disallowed-tools": {
+        "$ref": "#/$defs/toolList"
+      },
+      "model": {
+        "type": "string",
+        "minLength": 1
+      },
+      "context": {
+        "const": "fork"
+      },
+      "agent": {
+        "type": "string",
+        "minLength": 1
+      },
+      "hooks": {
+        "type": "object"
+      },
+      "paths": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "effort": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "$defs": {
+      "toolList": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ]
+      }
+    }
+  },
   "hooks": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://skillsforge.local/schemas/hooks.schema.json",
@@ -576,6 +688,122 @@ export const schemas = Object.freeze({
             }
           },
           "strict": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "mcp": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://skillsforge.local/schemas/mcp.schema.json",
+    "$comment": "Official references: https://code.claude.com/docs/en/plugins-reference#mcp-servers and https://code.claude.com/docs/en/mcp (verified 2026-07-11).",
+    "title": "Claude Code plugin MCP configuration",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "mcpServers"
+    ],
+    "properties": {
+      "mcpServers": {
+        "type": "object",
+        "minProperties": 1,
+        "propertyNames": {
+          "type": "string",
+          "minLength": 1
+        },
+        "additionalProperties": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/stdioServer"
+            },
+            {
+              "$ref": "#/$defs/remoteServer"
+            }
+          ]
+        }
+      }
+    },
+    "$defs": {
+      "stdioServer": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "command"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "stdio"
+            ]
+          },
+          "command": {
+            "type": "string",
+            "minLength": 1
+          },
+          "args": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "env": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "cwd": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timeout": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "alwaysLoad": {
+            "type": "boolean"
+          }
+        }
+      },
+      "remoteServer": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "url"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "http",
+              "streamable-http",
+              "sse",
+              "ws"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "headersHelper": {
+            "type": "string",
+            "minLength": 1
+          },
+          "oauth": {
+            "type": "object"
+          },
+          "timeout": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "alwaysLoad": {
             "type": "boolean"
           }
         }
