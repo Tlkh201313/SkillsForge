@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { access, cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -23,7 +24,7 @@ async function fixtureRepo(context) {
 }
 
 function okEval(overrides = {}) {
-  return {
+  const base = {
     precision: 1,
     recall: 1,
     corpusSha256: 'abc123',
@@ -34,6 +35,12 @@ function okEval(overrides = {}) {
     tn: 1,
     ...overrides
   };
+  if (!base.reportSha256) {
+    base.reportSha256 = createHash('sha256')
+      .update(`${JSON.stringify(base, null, 2)}\n`)
+      .digest('hex');
+  }
+  return base;
 }
 
 test('buildCursorLossiness never treats sidecar routing as full Cursor support', () => {
@@ -106,10 +113,40 @@ test('runBuildDist writes receipt without timestamps when gates pass', async (co
   assert.equal(result.ok, true, JSON.stringify(result.errors));
   const receipt = JSON.parse(await readFile(join(root, 'dist', 'trust-receipt.json'), 'utf8'));
   assert.equal(receipt.evaluation.corpusSha256, 'abc123');
+  assert.ok(receipt.evaluation.reportSha256);
   assert.equal(receipt.evaluation.durationMs, undefined);
+  assert.ok(receipt.package?.packageHash);
   assert.ok(!/"durationMs"|"timestamp"|"createdAt"/i.test(JSON.stringify(receipt)));
   assert.ok(receipt.skills.length >= 1);
   assert.ok(receipt.scanner.rules.includes('undeclared-exec-file'));
+});
+
+test('runBuildDist receipt hashes dist package bytes not source-only tree', async (context) => {
+  const root = await fixtureRepo(context);
+  const skills = await loadAllSkills(root);
+  const result = await runBuildDist({
+    root,
+    skills,
+    evaluation: okEval(),
+    validation: { ok: true, text: 'PASS\n' },
+    hostValidation: { status: 'skipped', reason: 'test' }
+  });
+  assert.equal(result.ok, true, JSON.stringify(result.errors));
+  const receipt = JSON.parse(await readFile(join(root, 'dist', 'trust-receipt.json'), 'utf8'));
+  assert.ok(receipt.package.packageHash);
+  assert.equal(result.packageHash, receipt.package.packageHash);
+
+  const skillName = receipt.skills[0].name;
+  const distSkill = join(root, 'dist', 'claude-code', 'skills', skillName, 'SKILL.md');
+  await writeFile(distSkill, `${await readFile(distSkill, 'utf8')}\n# tampered\n`);
+  const { verifyReceipt } = await import('../lib/capabilities/receipt.mjs');
+  const packaged = await loadAllSkills(join(root, 'dist', 'claude-code'));
+  const verify = await verifyReceipt(join(root, 'dist', 'trust-receipt.json'), packaged, {
+    packageRoot: join(root, 'dist', 'claude-code'),
+    packageOnly: true
+  });
+  assert.equal(verify.ok, false);
+  assert.ok(verify.mismatches.some((item) => /unit hash|package hash/i.test(item)));
 });
 
 test('runBuildDist keeps dist SKILL.md byte-equal to source with PreToolUse', async (context) => {

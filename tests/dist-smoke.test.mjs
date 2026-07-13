@@ -86,9 +86,10 @@ test('cached plugin CLI works without repository root modules', async (context) 
 
   const receipt = await runNode([cli, 'receipt', '--out', join(cache, 'trust-receipt.json')], { cwd: pluginRoot });
   assert.equal(receipt.code, 0, receipt.stderr || receipt.stdout);
-  const verify = await runNode([cli, 'verify-receipt', join(cache, 'trust-receipt.json')], { cwd: pluginRoot });
+  const verify = await runNode([cli, 'verify-receipt', join(cache, 'trust-receipt.json'), '--package-only'], { cwd: pluginRoot });
   assert.equal(verify.code, 0, verify.stderr || verify.stdout);
   assert.match(verify.stdout, /"ok"\s*:\s*true/);
+  assert.match(verify.stdout, /package-only|unverified/i);
 
   const policy = {
     schemaVersion: 1,
@@ -137,4 +138,21 @@ test('dist/claude-code sidecar skills ship committed PreToolUse hooks', async ()
   const doctor = await runNode([cli, 'doctor', '--json'], { cwd: distPlugin });
   assert.equal(doctor.code, 0, doctor.stderr || doctor.stdout);
   assert.equal(JSON.parse(doctor.stdout).ok, true);
+
+  const receiptPath = join(repoRoot, 'dist', 'trust-receipt.json');
+  const evalPath = join(repoRoot, 'artifacts', 'evaluation', 'routing-report.json');
+  const verify = await runNode([
+    cli,
+    'verify-receipt',
+    receiptPath,
+    '--package',
+    distPlugin,
+    '--evaluation',
+    evalPath
+  ], { cwd: distPlugin });
+  assert.equal(verify.code, 0, verify.stderr || verify.stdout);
+  const verifyJson = JSON.parse(verify.stdout);
+  assert.equal(verifyJson.ok, true);
+  assert.equal(verifyJson.packageVerified, true);
+  assert.equal(verifyJson.evaluationVerified, true);
 });

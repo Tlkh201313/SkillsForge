@@ -10327,7 +10327,7 @@ var require_compile = __commonJS({
       const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve8.call(this, root, ref);
+      let _sch = resolve9.call(this, root, ref);
       if (_sch === void 0) {
         const schema = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
         const { schemaId } = this.opts;
@@ -10354,7 +10354,7 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve8(root, ref) {
+    function resolve9(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
@@ -10985,7 +10985,7 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve8(baseURI, relativeURI, options) {
+    function resolve9(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const resolved = resolveComponent(parse(baseURI, schemelessOptions), parse(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
@@ -11243,7 +11243,7 @@ var require_fast_uri = __commonJS({
     var fastUri = {
       SCHEMES,
       normalize: normalize2,
-      resolve: resolve8,
+      resolve: resolve9,
       resolveComponent,
       equal,
       serialize,
@@ -15644,7 +15644,7 @@ __export(eval_exports, {
 });
 import { createHash as createHash2 } from "node:crypto";
 import { mkdir as mkdir2, readFile as readFile7, writeFile as writeFile2 } from "node:fs/promises";
-import { dirname as dirname4, join as join6, resolve as resolve6 } from "node:path";
+import { dirname as dirname4, join as join7, resolve as resolve7 } from "node:path";
 import { fileURLToPath as fileURLToPath2 } from "node:url";
 function percentile(values, p) {
   if (values.length === 0) return null;
@@ -15694,7 +15694,7 @@ function calculateMetrics(cases, select) {
 async function runEvaluation(options = {}) {
   const root = options.root ?? repositoryRoot;
   const corpusName = options.corpus ?? "routing-holdout.json";
-  const corpusPath = join6(root, "evaluation", corpusName);
+  const corpusPath = join7(root, "evaluation", corpusName);
   const corpusSource = await readFile7(corpusPath);
   const corpus = JSON.parse(corpusSource.toString("utf8"));
   const skills = await loadAllSkills(root);
@@ -15722,8 +15722,8 @@ async function runEvaluation(options = {}) {
     durationMs: Date.now() - started
   };
   if (options.write !== false) {
-    await mkdir2(join6(root, "artifacts", "evaluation"), { recursive: true });
-    await writeFile2(join6(root, "artifacts", "evaluation", "routing-report.json"), `${JSON.stringify(report, null, 2)}
+    await mkdir2(join7(root, "artifacts", "evaluation"), { recursive: true });
+    await writeFile2(join7(root, "artifacts", "evaluation", "routing-report.json"), `${JSON.stringify(report, null, 2)}
 `);
   }
   return report;
@@ -15734,8 +15734,8 @@ var init_eval = __esm({
     init_skill_loader();
     init_router();
     modulePath = fileURLToPath2(import.meta.url);
-    repositoryRoot = resolve6(dirname4(modulePath), "..");
-    if (process.argv[1] && resolve6(process.argv[1]) === modulePath) {
+    repositoryRoot = resolve7(dirname4(modulePath), "..");
+    if (process.argv[1] && resolve7(process.argv[1]) === modulePath) {
       const report = await runEvaluation();
       console.log(`routing: ${report.tp}+${report.tn}/${report.total} P=${report.precision?.toFixed(2)} R=${report.recall?.toFixed(2)} p50=${report.latencyMs?.p50?.toFixed(2)}ms p95=${report.latencyMs?.p95?.toFixed(2)}ms`);
       console.log(`metadata-only baseline: ${report.metadataOnlyBaseline.tp}+${report.metadataOnlyBaseline.tn}/${report.total} P=${report.metadataOnlyBaseline.precision?.toFixed(2)} R=${report.metadataOnlyBaseline.recall?.toFixed(2)}`);
@@ -15749,7 +15749,7 @@ var init_eval = __esm({
 init_skill_loader();
 init_router();
 import { access as access5, readFile as readFile8, writeFile as writeFile3, mkdir as mkdir3 } from "node:fs/promises";
-import { dirname as dirname5, join as join7, resolve as resolve7 } from "node:path";
+import { dirname as dirname5, join as join8, resolve as resolve8 } from "node:path";
 import { fileURLToPath as fileURLToPath3 } from "node:url";
 
 // lib/capabilities/forge.mjs
@@ -16134,8 +16134,8 @@ function renderSidecar(spec) {
 
 // lib/capabilities/receipt.mjs
 import { createHash } from "node:crypto";
-import { readFile as readFile5 } from "node:fs/promises";
-import { relative as relative4 } from "node:path";
+import { readdir as readdir4, readFile as readFile5 } from "node:fs/promises";
+import { join as join5, relative as relative4, resolve as resolve5 } from "node:path";
 
 // lib/capabilities/dependency-graph.mjs
 function analyzeDependencies(skills) {
@@ -16182,15 +16182,22 @@ var RECEIPT_VERSION = "0.3.0";
 function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
 }
-function toPosixRelative(skillDirectory, file) {
-  return relative4(skillDirectory, file).replaceAll("\\", "/");
+function toPosixRelative(from, file) {
+  return relative4(from, file).replaceAll("\\", "/");
 }
-function normalizeEvaluation(evaluation) {
+function comparePosixPath(left, right) {
+  if (left < right) return -1;
+  if (left > right) return 1;
+  return 0;
+}
+function normalizeEvaluation(evaluation, options = {}) {
   if (!evaluation || typeof evaluation !== "object") return null;
   const corpusSha256 = evaluation.corpusSha256 ?? null;
   if (!corpusSha256) return null;
+  const reportSha256 = options.reportSha256 ?? evaluation.reportSha256 ?? (options.reportBytes ? sha256(options.reportBytes) : null);
   return {
     corpusSha256,
+    reportSha256: reportSha256 ?? null,
     total: Number(evaluation.total) || 0,
     tp: Number(evaluation.tp) || 0,
     fp: Number(evaluation.fp) || 0,
@@ -16211,10 +16218,29 @@ async function hashSkillFiles(skill) {
   const unitHash = sha256(fileHashes.map((item) => `${item.path}:${item.sha256}`).join("\n"));
   return { files: fileHashes, unitHash };
 }
-function comparePosixPath(left, right) {
-  if (left < right) return -1;
-  if (left > right) return 1;
-  return 0;
+async function collectFilesRecursive(dir) {
+  const out = [];
+  for (const entry of await readdir4(dir, { withFileTypes: true })) {
+    const path = join5(dir, entry.name);
+    if (entry.isDirectory()) out.push(...await collectFilesRecursive(path));
+    else if (entry.isFile()) out.push(path);
+  }
+  return out;
+}
+async function hashPackageTree(packageRoot) {
+  const root = resolve5(packageRoot);
+  const files = await collectFilesRecursive(root);
+  const fileHashes = [];
+  for (const file of files) {
+    const content = await readFile5(file);
+    fileHashes.push({
+      path: toPosixRelative(root, file),
+      sha256: sha256(content)
+    });
+  }
+  fileHashes.sort((a, b) => comparePosixPath(a.path, b.path));
+  const packageHash = sha256(fileHashes.map((item) => `${item.path}:${item.sha256}`).join("\n"));
+  return { files: fileHashes, packageHash };
 }
 async function buildReceipt(skills, options = {}) {
   const graph = analyzeDependencies(skills);
@@ -16240,7 +16266,7 @@ async function buildReceipt(skills, options = {}) {
         skill: skill.name,
         rule: item.rule,
         evidence: item.evidence,
-        limitation: item.fix
+        limitation: item.limitation
       });
     }
     const { files: fileHashes, unitHash } = await hashSkillFiles(skill);
@@ -16261,14 +16287,22 @@ async function buildReceipt(skills, options = {}) {
   if (blocked.length > 0) {
     return { ok: false, errors: blocked.map((item) => `${item.skill}:${item.rule}`), blocked };
   }
-  const evaluation = normalizeEvaluation(options.evaluation);
-  if (options.requireEvaluation && !evaluation) {
-    return { ok: false, errors: ["missing holdout evaluation corpusSha256 + confusion counts"] };
+  const evaluation = normalizeEvaluation(options.evaluation, {
+    reportSha256: options.reportSha256,
+    reportBytes: options.reportBytes
+  });
+  if (options.requireEvaluation && (!evaluation || !evaluation.reportSha256)) {
+    return { ok: false, errors: ["missing holdout evaluation corpusSha256 + reportSha256 + confusion counts"] };
+  }
+  let packageInfo = null;
+  if (options.packageRoot) {
+    packageInfo = await hashPackageTree(options.packageRoot);
   }
   const receipt = {
     version: options.version ?? RECEIPT_VERSION,
     skills: units.sort((a, b) => comparePosixPath(a.name, b.name)),
     dependencyOrder: graph.order,
+    package: packageInfo,
     evaluation,
     lossiness: options.lossiness ?? null,
     hostValidation: options.hostValidation ?? null,
@@ -16285,17 +16319,20 @@ async function buildReceipt(skills, options = {}) {
 }
 async function verifyReceipt(receiptPath, skills, options = {}) {
   const expected = JSON.parse(await readFile5(receiptPath, "utf8"));
+  const packageOnly = Boolean(options.packageOnly);
+  const requireEvaluation = options.requireEvaluation ?? !packageOnly;
+  const mismatches = [];
+  const unverified = [];
+  const packageRoot = options.packageRoot ?? null;
   const rebuilt = await buildReceipt(skills, {
     version: expected.version,
     evaluation: expected.evaluation,
     lossiness: expected.lossiness,
-    hostValidation: expected.hostValidation
+    hostValidation: expected.hostValidation,
+    packageRoot,
+    requireEvaluation: false
   });
-  if (!rebuilt.ok) return { ok: false, errors: rebuilt.errors };
-  const mismatches = [];
-  const expectedHash = sha256(`${JSON.stringify(expected, null, 2)}
-`);
-  if (rebuilt.receiptHash !== expectedHash) mismatches.push("receipt payload mismatch");
+  if (!rebuilt.ok) return { ok: false, errors: rebuilt.errors, mismatches: [], unverified: [] };
   for (const unit of expected.skills ?? []) {
     const actual = rebuilt.receipt.skills.find((item) => item.name === unit.name);
     if (!actual) mismatches.push(`missing skill ${unit.name}`);
@@ -16306,11 +16343,83 @@ async function verifyReceipt(receiptPath, skills, options = {}) {
       mismatches.push(`unexpected skill ${unit.name}`);
     }
   }
+  if (expected.package?.packageHash) {
+    if (!packageRoot) {
+      mismatches.push("missing package root for package hash verification");
+    } else if (rebuilt.receipt.package?.packageHash !== expected.package.packageHash) {
+      mismatches.push("package hash mismatch");
+    }
+  }
+  const hasExternalEval = Boolean(options.evaluation || options.evaluationPath || options.reportBytes);
+  if (packageOnly) {
+    unverified.push({
+      kind: "evaluation",
+      reason: "package-only mode skipped external evaluation authenticity check"
+    });
+  } else if (!hasExternalEval) {
+    if (requireEvaluation) mismatches.push("missing external evaluation report");
+    else {
+      unverified.push({
+        kind: "evaluation",
+        reason: "external evaluation not provided"
+      });
+    }
+  } else {
+    const evalResult = await verifyEvaluationEvidence(expected.evaluation, options);
+    mismatches.push(...evalResult.mismatches);
+    unverified.push(...evalResult.unverified);
+  }
   return {
     ok: mismatches.length === 0,
     mismatches,
-    receiptHash: rebuilt.receiptHash
+    unverified,
+    receiptHash: rebuilt.receiptHash,
+    packageVerified: !mismatches.some((item) => /unit hash|package hash|missing skill|unexpected skill|missing package root/i.test(item)),
+    evaluationVerified: !packageOnly && hasExternalEval && !mismatches.some((item) => /evaluation|corpus|report sha/i.test(item))
   };
+}
+async function verifyEvaluationEvidence(embedded, options) {
+  const mismatches = [];
+  const unverified = [];
+  const hasExternal = Boolean(options.evaluation || options.evaluationPath || options.reportBytes);
+  if (!hasExternal) {
+    return { mismatches, unverified };
+  }
+  let reportBytes = options.reportBytes ?? null;
+  let report = options.evaluation ?? null;
+  if (options.evaluationPath) {
+    reportBytes = reportBytes ?? await readFile5(options.evaluationPath);
+    report = report ?? JSON.parse(reportBytes.toString("utf8"));
+  } else if (report && !reportBytes) {
+    reportBytes = Buffer.from(`${JSON.stringify(report, null, 2)}
+`);
+  }
+  if (!reportBytes || !report) {
+    mismatches.push("missing external evaluation report");
+    return { mismatches, unverified };
+  }
+  if (!embedded) {
+    mismatches.push("receipt missing evaluation");
+    return { mismatches, unverified };
+  }
+  const reportSha256 = sha256(reportBytes);
+  const normalized = normalizeEvaluation(report, { reportSha256 });
+  if (!normalized) {
+    mismatches.push("external evaluation missing corpusSha256 + confusion counts");
+    return { mismatches, unverified };
+  }
+  if (embedded.reportSha256 !== reportSha256) {
+    mismatches.push("evaluation report sha256 mismatch");
+  }
+  if (embedded.corpusSha256 !== normalized.corpusSha256) {
+    mismatches.push("evaluation corpus sha256 mismatch");
+  }
+  for (const key of ["total", "tp", "fp", "fn", "tn"]) {
+    if (Number(embedded[key]) !== Number(normalized[key])) {
+      mismatches.push(`evaluation ${key} mismatch`);
+    }
+  }
+  return { mismatches, unverified };
 }
 function assertNoTimestamps(receipt) {
   const serialized = JSON.stringify(receipt);
@@ -16321,7 +16430,7 @@ function assertNoTimestamps(receipt) {
 
 // lib/capabilities/doctor.mjs
 import { access as access4, readFile as readFile6 } from "node:fs/promises";
-import { join as join5 } from "node:path";
+import { join as join6 } from "node:path";
 
 // lib/capabilities/verify.mjs
 init_validate_skill_lib();
@@ -16474,14 +16583,14 @@ function formatVerifyText(validation, findings) {
 // lib/capabilities/doctor.mjs
 async function runDoctor(root = process.cwd()) {
   const checks = [];
-  const repositoryPluginRoot = join5(root, "plugins", "skillsforge");
-  const monorepo = await pathExists(join5(repositoryPluginRoot, ".claude-plugin", "plugin.json"));
-  const installedPlugin = await pathExists(join5(root, ".claude-plugin", "plugin.json")) && await pathExists(join5(root, "skills"));
+  const repositoryPluginRoot = join6(root, "plugins", "skillsforge");
+  const monorepo = await pathExists(join6(repositoryPluginRoot, ".claude-plugin", "plugin.json"));
+  const installedPlugin = await pathExists(join6(root, ".claude-plugin", "plugin.json")) && await pathExists(join6(root, "skills"));
   const pluginRoot = monorepo || !installedPlugin ? repositoryPluginRoot : root;
-  const manifest = join5(pluginRoot, ".claude-plugin", "plugin.json");
-  const marketplace = join5(root, ".claude-plugin", "marketplace.json");
-  const hooks = join5(pluginRoot, "hooks", "hooks.json");
-  const binary = join5(pluginRoot, "bin", "skillsforge.mjs");
+  const manifest = join6(pluginRoot, ".claude-plugin", "plugin.json");
+  const marketplace = join6(root, ".claude-plugin", "marketplace.json");
+  const hooks = join6(pluginRoot, "hooks", "hooks.json");
+  const binary = join6(pluginRoot, "bin", "skillsforge.mjs");
   checks.push(await fileCheck("plugin manifest", manifest));
   checks.push(monorepo ? await fileCheck("marketplace manifest", marketplace) : await optionalFileCheck("marketplace manifest", marketplace));
   checks.push(await optionalFileCheck("hooks config", hooks));
@@ -16555,7 +16664,7 @@ async function optionalFileCheck(name, path) {
 
 // lib/capabilities/claude-policy-compiler.mjs
 var import_yaml3 = __toESM(require_dist(), 1);
-import { isAbsolute as isAbsolute4, normalize, resolve as resolve5, sep as sep4 } from "node:path";
+import { isAbsolute as isAbsolute4, normalize, resolve as resolve6, sep as sep4 } from "node:path";
 function enforcePolicy(event, policy) {
   const caps = policy?.capabilities ?? {
     exec: { allowed: false, commands: [] },
@@ -16612,14 +16721,14 @@ function enforcePolicy(event, policy) {
     if (caps.write.scope === "none") return deny("write capability scope is none");
     if (caps.write.scope === "skill") {
       const skillRoot = policy.__skillRoot;
-      const candidate = skillRoot && !isAbsolute4(filePath) ? resolve5(skillRoot, filePath) : resolve5(filePath);
+      const candidate = skillRoot && !isAbsolute4(filePath) ? resolve6(skillRoot, filePath) : resolve6(filePath);
       if (skillRoot && !isInside4(skillRoot, candidate)) {
         return deny("write escapes skill scope");
       }
     }
     if (caps.write.scope === "project") {
       const projectRoot = policy.__projectRoot;
-      const candidate = projectRoot && !isAbsolute4(filePath) ? resolve5(projectRoot, filePath) : resolve5(filePath);
+      const candidate = projectRoot && !isAbsolute4(filePath) ? resolve6(projectRoot, filePath) : resolve6(filePath);
       if (projectRoot && !isInside4(projectRoot, candidate)) {
         return deny("write escapes project scope");
       }
@@ -16723,14 +16832,14 @@ function hostAllowed2(host, declaredHosts = []) {
   });
 }
 function isInside4(parent, candidate) {
-  const normalizedParent = normalize(resolve5(parent));
-  const normalizedCandidate = normalize(resolve5(candidate));
+  const normalizedParent = normalize(resolve6(parent));
+  const normalizedCandidate = normalize(resolve6(candidate));
   return normalizedCandidate === normalizedParent || normalizedCandidate.startsWith(normalizedParent.endsWith(sep4) ? normalizedParent : normalizedParent + sep4);
 }
 
 // scripts/skillsforge-cli.mjs
 var modulePath2 = fileURLToPath3(import.meta.url);
-var modulePluginRoot = resolve7(dirname5(modulePath2), "..");
+var modulePluginRoot = resolve8(dirname5(modulePath2), "..");
 async function pathExists2(path) {
   try {
     await access5(path);
@@ -16740,10 +16849,10 @@ async function pathExists2(path) {
   }
 }
 async function isPluginRoot(root) {
-  return await pathExists2(join7(root, ".claude-plugin", "plugin.json")) && await pathExists2(join7(root, "skills"));
+  return await pathExists2(join8(root, ".claude-plugin", "plugin.json")) && await pathExists2(join8(root, "skills"));
 }
 async function isRepositoryRoot(root) {
-  return pathExists2(join7(root, "plugins", "skillsforge", ".claude-plugin", "plugin.json"));
+  return pathExists2(join8(root, "plugins", "skillsforge", ".claude-plugin", "plugin.json"));
 }
 async function resolveRuntimeRoot(options, { explicitPaths = false } = {}) {
   if (options.root) return options.root;
@@ -16758,6 +16867,7 @@ async function main(argv = process.argv.slice(2), options = {}) {
   const command = argv[0];
   if (!command || command === "help" || command === "--help") {
     process.stdout.write("usage: skillsforge <validate|doctor|route|forge|receipt|verify-receipt|enforce|eval> [options]\n");
+    process.stdout.write("  verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only]\n");
     return 0;
   }
   switch (command) {
@@ -16871,17 +16981,42 @@ async function runForge(argv, options) {
     write: argv.includes("--write"),
     dryRun: !argv.includes("--write"),
     force: argv.includes("--force"),
-    outRoot: outIndex >= 0 ? argv[outIndex + 1] : join7(root, ...await isPluginRoot(root) ? ["skills"] : ["plugins", "skillsforge", "skills"])
+    outRoot: outIndex >= 0 ? argv[outIndex + 1] : join8(root, ...await isPluginRoot(root) ? ["skills"] : ["plugins", "skillsforge", "skills"])
   });
   process.stdout.write(`${JSON.stringify(result, null, 2)}
 `);
   return result.ok ? 0 : 1;
 }
+async function resolvePackageRoot(root, packageOption) {
+  if (packageOption) return resolve8(packageOption);
+  if (await isPluginRoot(root)) return root;
+  const distPackage = join8(root, "dist", "claude-code");
+  if (await pathExists2(join8(distPackage, ".claude-plugin", "plugin.json"))) return distPackage;
+  if (await isRepositoryRoot(root)) return join8(root, "plugins", "skillsforge");
+  return root;
+}
 async function runReceipt(argv, options) {
-  const outIndex = argv.indexOf("--out");
+  const args = [...argv];
+  const out = consumeOption(args, "--out");
+  if (out === null) {
+    process.stderr.write("--out requires a value\n");
+    return 2;
+  }
+  const packageOption = consumeOption(args, "--package");
+  if (packageOption === null) {
+    process.stderr.write("--package requires a value\n");
+    return 2;
+  }
+  const evaluationOption = consumeOption(args, "--evaluation");
+  if (evaluationOption === null) {
+    process.stderr.write("--evaluation requires a value\n");
+    return 2;
+  }
+  const requireEvaluation = consumeFlag(args, "--require-evaluation");
   const root = await resolveRuntimeRoot(options);
-  const out = outIndex >= 0 ? argv[outIndex + 1] : join7(root, "dist", "trust-receipt.json");
-  const skills = await loadAllSkills(root);
+  const packageRoot = await resolvePackageRoot(root, packageOption);
+  const receiptOut = out ?? join8(root, "dist", "trust-receipt.json");
+  const skills = await loadAllSkills(packageRoot);
   const graph = analyzeDependencies(skills);
   if (graph.cycles.length || graph.missing.length || graph.duplicates.length) {
     process.stderr.write(`${JSON.stringify(graph, null, 2)}
@@ -16889,32 +17024,68 @@ async function runReceipt(argv, options) {
     return 1;
   }
   let evaluation = null;
+  let reportBytes = null;
+  const evaluationPath = evaluationOption ?? join8(root, "artifacts", "evaluation", "routing-report.json");
   try {
-    evaluation = normalizeEvaluation(
-      JSON.parse(await readFile8(join7(root, "artifacts", "evaluation", "routing-report.json"), "utf8"))
-    );
+    reportBytes = await readFile8(evaluationPath);
+    evaluation = normalizeEvaluation(JSON.parse(reportBytes.toString("utf8")), { reportBytes });
   } catch {
   }
-  const result = await buildReceipt(skills, { evaluation });
+  const result = await buildReceipt(skills, {
+    evaluation,
+    packageRoot,
+    reportBytes,
+    requireEvaluation
+  });
   if (!result.ok) {
     process.stderr.write(`${JSON.stringify(result, null, 2)}
 `);
     return 1;
   }
-  await mkdir3(dirname5(out), { recursive: true });
-  await writeFile3(out, result.text);
-  process.stdout.write(`${JSON.stringify({ ok: true, out, receiptHash: result.receiptHash }, null, 2)}
+  await mkdir3(dirname5(receiptOut), { recursive: true });
+  await writeFile3(receiptOut, result.text);
+  process.stdout.write(`${JSON.stringify({
+    ok: true,
+    out: receiptOut,
+    receiptHash: result.receiptHash,
+    packageHash: result.receipt.package?.packageHash ?? null
+  }, null, 2)}
 `);
   return 0;
 }
 async function runVerifyReceipt(argv, options) {
-  const path = argv.find((item) => !item.startsWith("--"));
-  if (!path) {
-    process.stderr.write("usage: skillsforge verify-receipt <file>\n");
+  const args = [...argv];
+  const packageOnly = consumeFlag(args, "--package-only");
+  const packageOption = consumeOption(args, "--package");
+  if (packageOption === null) {
+    process.stderr.write("--package requires a value\n");
     return 2;
   }
-  const skills = await loadAllSkills(await resolveRuntimeRoot(options));
-  const result = await verifyReceipt(path, skills);
+  const evaluationOption = consumeOption(args, "--evaluation");
+  if (evaluationOption === null) {
+    process.stderr.write("--evaluation requires a value\n");
+    return 2;
+  }
+  const path = args.find((item) => !item.startsWith("--"));
+  if (!path) {
+    process.stderr.write("usage: skillsforge verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only]\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  const packageRoot = await resolvePackageRoot(root, packageOption);
+  const skills = await loadAllSkills(packageRoot);
+  const verifyOptions = {
+    packageRoot,
+    packageOnly,
+    requireEvaluation: !packageOnly
+  };
+  if (!packageOnly && evaluationOption) {
+    verifyOptions.evaluationPath = resolve8(evaluationOption);
+  } else if (!packageOnly) {
+    const defaultEval = join8(root, "artifacts", "evaluation", "routing-report.json");
+    if (await pathExists2(defaultEval)) verifyOptions.evaluationPath = defaultEval;
+  }
+  const result = await verifyReceipt(path, skills, verifyOptions);
   process.stdout.write(`${JSON.stringify(result, null, 2)}
 `);
   return result.ok ? 0 : 1;
@@ -16928,7 +17099,7 @@ async function runEnforce(argv) {
   const chunks = [];
   for await (const chunk of process.stdin) chunks.push(chunk);
   const event = JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
-  const policyPath = resolve7(argv[policyIndex + 1]);
+  const policyPath = resolve8(argv[policyIndex + 1]);
   const policy = JSON.parse(await readFile8(policyPath, "utf8"));
   policy.__skillRoot = dirname5(policyPath);
   policy.__projectRoot = event?.cwd || process.env.CLAUDE_PROJECT_DIR || process.env.CLAUDE_CWD || process.cwd();
@@ -16944,7 +17115,7 @@ async function runEvalCommand(argv, options) {
 `);
   return report.precision >= 0.9 && report.recall >= 0.85 ? 0 : 1;
 }
-if (process.argv[1] && resolve7(process.argv[1]) === modulePath2) {
+if (process.argv[1] && resolve8(process.argv[1]) === modulePath2) {
   process.exitCode = await main();
 }
 export {

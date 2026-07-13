@@ -10,7 +10,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 export async function runBuildDist(options = {}) {
   const buildRoot = options.root ?? root;
-  const skills = options.skills ?? await loadAllSkills(buildRoot);
+  const sourceSkills = options.skills ?? await loadAllSkills(buildRoot);
 
   const validation = options.validation ?? await validateSkillPaths([], {
     root: buildRoot,
@@ -25,9 +25,23 @@ export async function runBuildDist(options = {}) {
   const evaluation = options.evaluation === undefined
     ? await runEvaluation({ root: buildRoot, write: true })
     : options.evaluation;
-  const normalizedEval = normalizeEvaluation(evaluation);
-  if (!normalizedEval) {
-    return { ok: false, errors: ['holdout evaluation missing corpusSha256 + confusion counts'] };
+  const reportPath = join(buildRoot, 'artifacts', 'evaluation', 'routing-report.json');
+  let reportBytes = options.reportBytes ?? null;
+  if (!reportBytes) {
+    try {
+      reportBytes = await readFile(reportPath);
+    } catch {
+      if (evaluation && typeof evaluation === 'object') {
+        reportBytes = Buffer.from(`${JSON.stringify(evaluation, null, 2)}\n`);
+      }
+    }
+  }
+  const normalizedEval = normalizeEvaluation(evaluation, {
+    reportSha256: options.reportSha256 ?? evaluation?.reportSha256,
+    reportBytes
+  });
+  if (!normalizedEval?.reportSha256) {
+    return { ok: false, errors: ['holdout evaluation missing corpusSha256 + reportSha256 + confusion counts'] };
   }
   if ((evaluation.precision ?? 0) < 0.9 || (evaluation.recall ?? 0) < 0.85) {
     return {
@@ -36,8 +50,8 @@ export async function runBuildDist(options = {}) {
     };
   }
 
-  const lossiness = skills.map(buildCursorLossiness);
-  const invalidFullClaims = skills
+  const lossiness = sourceSkills.map(buildCursorLossiness);
+  const invalidFullClaims = sourceSkills
     .filter((skill) => skill.sidecar?.compatibility?.cursor === 'full')
     .filter((skill) => lossiness.find((item) => item.name === skill.name)?.fields.some((field) => field.status === 'unsupported'))
     .map((skill) => skill.name);
@@ -57,7 +71,7 @@ export async function runBuildDist(options = {}) {
     return { ok: false, errors: [`strict host validation failed: ${hostValidation.detail ?? 'unknown'}`] };
   }
 
-  const sidecarSkills = skills.filter((skill) => skill.sidecar);
+  const sidecarSkills = sourceSkills.filter((skill) => skill.sidecar);
   const missingHooks = [];
   for (const skill of sidecarSkills) {
     const sourceSkillPath = join(buildRoot, 'plugins', 'skillsforge', 'skills', skill.name, 'SKILL.md');
@@ -78,21 +92,14 @@ export async function runBuildDist(options = {}) {
     };
   }
 
-  const receipt = await buildReceipt(skills, {
-    evaluation: normalizedEval,
-    lossiness,
-    hostValidation,
-    requireEvaluation: true
-  });
-  if (!receipt.ok) return receipt;
-
   const distRoot = join(buildRoot, 'dist');
+  const packageRoot = join(distRoot, 'claude-code');
   await rm(distRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
-  await mkdir(join(distRoot, 'claude-code'), { recursive: true });
-  await cp(join(buildRoot, 'plugins', 'skillsforge'), join(distRoot, 'claude-code'), { recursive: true });
+  await mkdir(packageRoot, { recursive: true });
+  await cp(join(buildRoot, 'plugins', 'skillsforge'), packageRoot, { recursive: true });
 
   await mkdir(join(distRoot, 'cursor'), { recursive: true });
-  for (const skill of skills) {
+  for (const skill of sourceSkills) {
     const requiresNote = skill.requires.length
       ? `\n\n## Requires\n${skill.requires.map((name) => `- ${name}`).join('\n')}`
       : '';
@@ -101,7 +108,7 @@ export async function runBuildDist(options = {}) {
     await writeFile(join(distRoot, 'cursor', skill.name, 'SKILL.md'), content);
     if (skill.sidecar) {
       const sourceSkillPath = join(buildRoot, 'plugins', 'skillsforge', 'skills', skill.name, 'SKILL.md');
-      const distSkillPath = join(distRoot, 'claude-code', 'skills', skill.name, 'SKILL.md');
+      const distSkillPath = join(packageRoot, 'skills', skill.name, 'SKILL.md');
       try {
         await access(distSkillPath);
       } catch {
@@ -117,6 +124,16 @@ export async function runBuildDist(options = {}) {
       }
     }
   }
+
+  const packagedSkills = await loadAllSkills(packageRoot);
+  const receipt = await buildReceipt(packagedSkills, {
+    evaluation: normalizedEval,
+    lossiness,
+    hostValidation,
+    packageRoot,
+    requireEvaluation: true
+  });
+  if (!receipt.ok) return receipt;
 
   const compiledPolicies = [];
   for (const skill of sidecarSkills) {
@@ -134,10 +151,18 @@ export async function runBuildDist(options = {}) {
     receiptHash: receipt.receiptHash,
     evaluation: normalizedEval,
     hostValidation,
-    compiledPolicies
+    compiledPolicies,
+    packageHash: receipt.receipt.package?.packageHash ?? null
   }, null, 2)}\n`);
 
-  return { ok: true, receiptHash: receipt.receiptHash, evaluation: normalizedEval, lossiness, hostValidation };
+  return {
+    ok: true,
+    receiptHash: receipt.receiptHash,
+    packageHash: receipt.receipt.package?.packageHash ?? null,
+    evaluation: normalizedEval,
+    lossiness,
+    hostValidation
+  };
 }
 
 export function buildCursorLossiness(skill) {
@@ -166,5 +191,5 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     console.error(JSON.stringify(result, null, 2));
     process.exit(1);
   }
-  console.log(`BUILD DIST OK receipt=${result.receiptHash}`);
+  console.log(`BUILD DIST OK receipt=${result.receiptHash} package=${result.packageHash}`);
 }

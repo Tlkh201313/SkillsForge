@@ -47,6 +47,7 @@ export async function main(argv = process.argv.slice(2), options = {}) {
   const command = argv[0];
   if (!command || command === 'help' || command === '--help') {
     process.stdout.write('usage: skillsforge <validate|doctor|route|forge|receipt|verify-receipt|enforce|eval> [options]\n');
+    process.stdout.write('  verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only]\n');
     return 0;
   }
 
@@ -169,43 +170,105 @@ async function runForge(argv, options) {
   return result.ok ? 0 : 1;
 }
 
+async function resolvePackageRoot(root, packageOption) {
+  if (packageOption) return resolve(packageOption);
+  if (await isPluginRoot(root)) return root;
+  const distPackage = join(root, 'dist', 'claude-code');
+  if (await pathExists(join(distPackage, '.claude-plugin', 'plugin.json'))) return distPackage;
+  if (await isRepositoryRoot(root)) return join(root, 'plugins', 'skillsforge');
+  return root;
+}
+
 async function runReceipt(argv, options) {
-  const outIndex = argv.indexOf('--out');
+  const args = [...argv];
+  const out = consumeOption(args, '--out');
+  if (out === null) {
+    process.stderr.write('--out requires a value\n');
+    return 2;
+  }
+  const packageOption = consumeOption(args, '--package');
+  if (packageOption === null) {
+    process.stderr.write('--package requires a value\n');
+    return 2;
+  }
+  const evaluationOption = consumeOption(args, '--evaluation');
+  if (evaluationOption === null) {
+    process.stderr.write('--evaluation requires a value\n');
+    return 2;
+  }
+  const requireEvaluation = consumeFlag(args, '--require-evaluation');
   const root = await resolveRuntimeRoot(options);
-  const out = outIndex >= 0 ? argv[outIndex + 1] : join(root, 'dist', 'trust-receipt.json');
-  const skills = await loadAllSkills(root);
+  const packageRoot = await resolvePackageRoot(root, packageOption);
+  const receiptOut = out ?? join(root, 'dist', 'trust-receipt.json');
+  const skills = await loadAllSkills(packageRoot);
   const graph = analyzeDependencies(skills);
   if (graph.cycles.length || graph.missing.length || graph.duplicates.length) {
     process.stderr.write(`${JSON.stringify(graph, null, 2)}\n`);
     return 1;
   }
   let evaluation = null;
+  let reportBytes = null;
+  const evaluationPath = evaluationOption ?? join(root, 'artifacts', 'evaluation', 'routing-report.json');
   try {
-    evaluation = normalizeEvaluation(
-      JSON.parse(await readFile(join(root, 'artifacts', 'evaluation', 'routing-report.json'), 'utf8'))
-    );
+    reportBytes = await readFile(evaluationPath);
+    evaluation = normalizeEvaluation(JSON.parse(reportBytes.toString('utf8')), { reportBytes });
   } catch {
     // optional unless release gate requires it
   }
-  const result = await buildReceipt(skills, { evaluation });
+  const result = await buildReceipt(skills, {
+    evaluation,
+    packageRoot,
+    reportBytes,
+    requireEvaluation
+  });
   if (!result.ok) {
     process.stderr.write(`${JSON.stringify(result, null, 2)}\n`);
     return 1;
   }
-  await mkdir(dirname(out), { recursive: true });
-  await writeFile(out, result.text);
-  process.stdout.write(`${JSON.stringify({ ok: true, out, receiptHash: result.receiptHash }, null, 2)}\n`);
+  await mkdir(dirname(receiptOut), { recursive: true });
+  await writeFile(receiptOut, result.text);
+  process.stdout.write(`${JSON.stringify({
+    ok: true,
+    out: receiptOut,
+    receiptHash: result.receiptHash,
+    packageHash: result.receipt.package?.packageHash ?? null
+  }, null, 2)}\n`);
   return 0;
 }
 
 async function runVerifyReceipt(argv, options) {
-  const path = argv.find((item) => !item.startsWith('--'));
-  if (!path) {
-    process.stderr.write('usage: skillsforge verify-receipt <file>\n');
+  const args = [...argv];
+  const packageOnly = consumeFlag(args, '--package-only');
+  const packageOption = consumeOption(args, '--package');
+  if (packageOption === null) {
+    process.stderr.write('--package requires a value\n');
     return 2;
   }
-  const skills = await loadAllSkills(await resolveRuntimeRoot(options));
-  const result = await verifyReceipt(path, skills);
+  const evaluationOption = consumeOption(args, '--evaluation');
+  if (evaluationOption === null) {
+    process.stderr.write('--evaluation requires a value\n');
+    return 2;
+  }
+  const path = args.find((item) => !item.startsWith('--'));
+  if (!path) {
+    process.stderr.write('usage: skillsforge verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only]\n');
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  const packageRoot = await resolvePackageRoot(root, packageOption);
+  const skills = await loadAllSkills(packageRoot);
+  const verifyOptions = {
+    packageRoot,
+    packageOnly,
+    requireEvaluation: !packageOnly
+  };
+  if (!packageOnly && evaluationOption) {
+    verifyOptions.evaluationPath = resolve(evaluationOption);
+  } else if (!packageOnly) {
+    const defaultEval = join(root, 'artifacts', 'evaluation', 'routing-report.json');
+    if (await pathExists(defaultEval)) verifyOptions.evaluationPath = defaultEval;
+  }
+  const result = await verifyReceipt(path, skills, verifyOptions);
   process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
   return result.ok ? 0 : 1;
 }
