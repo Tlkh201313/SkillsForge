@@ -4,9 +4,13 @@ import test from 'node:test';
 import { validateSkillPath, validateSkillPaths } from '../scripts/validate-skill-lib.mjs';
 
 const fixtures = (...parts) => join(process.cwd(), 'tests', 'fixtures', 'skills', ...parts);
+const fixtureRoot = join(process.cwd(), 'tests', 'fixtures', 'skills');
 
 test('passes good fixtures with clear per-skill reports', async () => {
-  const result = await validateSkillPaths([fixtures('good-basic'), fixtures('good-with-require')], { root: process.cwd() });
+  const result = await validateSkillPaths(
+    [fixtures('good-basic'), fixtures('good-with-require')],
+    { root: process.cwd(), fixtureRoot }
+  );
   assert.equal(result.ok, true);
   assert.deepEqual(result.reports.map((report) => report.status), ['pass', 'pass']);
   assert.match(result.text, /PASS good-basic/);
@@ -32,8 +36,23 @@ for (const [name, expected] of badCases) {
   });
 }
 
-test('all mode ignores fixture directories and passes when no real skills exist', async () => {
+test('requires must not resolve against test fixtures', async () => {
+  const report = await validateSkillPath(fixtures('bad-fixture-require'), { root: process.cwd() });
+  assert.equal(report.status, 'fail');
+  assert.match(report.errors.join('\n'), /requires entry "good-basic" must resolve/);
+});
+
+test('invalid sidecar fails validation', async () => {
+  const report = await validateSkillPath(fixtures('bad-sidecar'), { root: process.cwd() });
+  assert.equal(report.status, 'fail');
+  assert.ok(report.errors.some((e) => e.includes('skillsforge.json')));
+});
+
+test('all mode discovers real skills under skills/ and ignores fixtures', async () => {
   const result = await validateSkillPaths([], { root: process.cwd(), all: true });
   assert.equal(result.ok, true);
-  assert.match(result.text, /No skills found/);
+  assert.match(result.text, /PASS using-skillsforge/);
+  assert.match(result.text, /PASS author-capability/);
+  assert.match(result.text, /PASS verify-capability/);
+  assert.doesNotMatch(result.text, /good-basic|bad-name/);
 });

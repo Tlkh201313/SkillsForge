@@ -17,6 +17,18 @@ function validate(schema, value) {
   for (const [name, rules] of Object.entries(schema.properties ?? {})) {
     if (!(name in value)) continue;
     const actual = value[name];
+    if (rules.oneOf) {
+      const matches = rules.oneOf.some((option) => {
+        if (option.type === 'string') return typeof actual === 'string';
+        if (option.type === 'object') {
+          return actual !== null && typeof actual === 'object' && !Array.isArray(actual)
+            && (option.required ?? []).every((key) => key in actual);
+        }
+        return false;
+      });
+      if (!matches) errors.push(`${name} must match oneOf`);
+      continue;
+    }
     if (rules.type === 'array') {
       if (!Array.isArray(actual)) errors.push(`${name} must be an array`);
       continue;

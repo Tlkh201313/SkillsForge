@@ -1,0 +1,11 @@
+{
+  "routing": {
+    "triggers": ["loader fixture"],
+    "antiTriggers": ["production"]
+  },
+  "capabilities": {
+    "exec": false,
+    "network": false,
+    "writesOutsideSkill": false
+  }
+}

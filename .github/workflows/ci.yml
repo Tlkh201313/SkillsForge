@@ -6,7 +6,7 @@ on:
 
 jobs:
   validate-and-test:
-    name: Validate and test
+    name: Validate, test, eval, build
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -21,11 +21,7 @@ jobs:
         run: npm run validate
       - name: Run tests
         run: npm test
-
-  phase-4-sync-freshness:
-    name: Phase 4 sync freshness gate
-    runs-on: ubuntu-latest
-    steps:
-      - name: Phase 4 pending
-        run: |
-          echo "Phase 4 will replace this labeled gate with npm run sync plus git diff --exit-code."
+      - name: Evaluate routing corpus
+        run: npm run eval
+      - name: Build packages and trust receipt
+        run: npm run build

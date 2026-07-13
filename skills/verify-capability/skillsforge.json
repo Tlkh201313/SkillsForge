@@ -1,0 +1,15 @@
+{
+  "routing": {
+    "triggers": ["is this skill safe", "audit skill", "routing regression", "undeclared capability", "security audit of skills"],
+    "antiTriggers": ["write documentation", "create a skill"]
+  },
+  "capabilities": {
+    "exec": false,
+    "network": false,
+    "writesOutsideSkill": false
+  },
+  "compat": {
+    "claude-code": "full",
+    "cursor": "partial"
+  }
+}

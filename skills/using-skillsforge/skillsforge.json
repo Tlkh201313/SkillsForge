@@ -1,0 +1,15 @@
+{
+  "routing": {
+    "triggers": ["what is skillsforge", "which command", "skill health", "session start"],
+    "antiTriggers": ["write a new skill", "compile skills"]
+  },
+  "capabilities": {
+    "exec": false,
+    "network": false,
+    "writesOutsideSkill": false
+  },
+  "compat": {
+    "claude-code": "full",
+    "cursor": "full"
+  }
+}

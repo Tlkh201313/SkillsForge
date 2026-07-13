@@ -13,7 +13,7 @@ export async function validateSkillPaths(paths, options = {}) {
   }
 
   const reports = [];
-  for (const path of selected) reports.push(await validateSkillPath(path, { root }));
+  for (const path of selected) reports.push(await validateSkillPath(path, options));
   const text = reports.map(formatReport).join('\n') + '\n';
   return { ok: reports.every((report) => report.status === 'pass'), reports, text };
 }
@@ -39,8 +39,9 @@ export async function validateSkillPath(skillPath, options = {}) {
 
   if (parsed.raw.length >= 1024) errors.push('frontmatter block must be under 1024 characters');
   const data = parseSimpleYaml(parsed.yaml, errors);
-  await validateFrontmatter(data, name, root, errors);
+  await validateFrontmatter(data, name, root, errors, options);
   await validateBody(parsed.body, absolute, errors);
+  await validateSidecar(absolute, errors);
 
   return { name, path: absolute, status: errors.length === 0 ? 'pass' : 'fail', errors };
 }
@@ -91,7 +92,7 @@ function coerceYamlValue(value) {
   return value.replace(/^['"]|['"]$/g, '');
 }
 
-async function validateFrontmatter(data, directoryName, root, errors) {
+async function validateFrontmatter(data, directoryName, root, errors, options = {}) {
   if (typeof data.name !== 'string') errors.push('name is required');
   else {
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(data.name)) errors.push('name must be kebab-case');
@@ -117,9 +118,33 @@ async function validateFrontmatter(data, directoryName, root, errors) {
           continue;
         }
         if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry)) errors.push(`requires entry "${entry}" must be kebab-case`);
-        if (!await skillDirectoryExists(root, entry)) errors.push(`requires entry "${entry}" must resolve to an existing skill directory`);
+        if (!await skillDirectoryExists(root, entry, options)) {
+          errors.push(`requires entry "${entry}" must resolve to an existing skill directory`);
+        }
       }
     }
+  }
+}
+
+async function validateSidecar(skillDirectory, errors) {
+  const path = join(skillDirectory, 'skillsforge.json');
+  if (!await fileExists(path)) return;
+  let sidecar;
+  try {
+    sidecar = JSON.parse(await readFile(path, 'utf8'));
+  } catch {
+    errors.push('skillsforge.json must be valid JSON');
+    return;
+  }
+  if (!sidecar.routing || !Array.isArray(sidecar.routing.triggers) || sidecar.routing.triggers.length === 0) {
+    errors.push('skillsforge.json routing.triggers must be a non-empty array');
+  }
+  if (sidecar.routing && !Array.isArray(sidecar.routing.antiTriggers)) {
+    errors.push('skillsforge.json routing.antiTriggers must be an array');
+  }
+  const caps = sidecar.capabilities;
+  if (!caps || typeof caps.exec !== 'boolean' || typeof caps.network !== 'boolean' || typeof caps.writesOutsideSkill !== 'boolean') {
+    errors.push('skillsforge.json capabilities must declare exec, network, writesOutsideSkill booleans');
   }
 }
 
@@ -195,8 +220,10 @@ async function discoverRealSkills(root) {
   }
 }
 
-async function skillDirectoryExists(root, name) {
-  return await fileExists(join(root, 'skills', name, 'SKILL.md')) || await fileExists(join(root, 'tests', 'fixtures', 'skills', name, 'SKILL.md'));
+async function skillDirectoryExists(root, name, options = {}) {
+  if (await fileExists(join(root, 'skills', name, 'SKILL.md'))) return true;
+  if (options.fixtureRoot) return fileExists(join(options.fixtureRoot, name, 'SKILL.md'));
+  return false;
 }
 
 function fileExists(path) {

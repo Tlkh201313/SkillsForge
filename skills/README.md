@@ -1,5 +1,14 @@
-# Skills Library
+# Skills
 
-Canonical skill directories live here as `skills/<skill-name>/SKILL.md`.
+Canonical SkillsForge skills live here. Each directory must contain:
 
-Phase 0 intentionally ships no real skills, so `node scripts/validate-skill.mjs --all` reports that none are present.
+- `SKILL.md` with YAML frontmatter and `## Overview` / `## When to Use`
+- `skillsforge.json` sidecar with routing cases and declared capabilities
+
+Current skills:
+
+- `using-skillsforge`
+- `author-capability`
+- `verify-capability`
+
+Run `npm run validate` before committing changes.

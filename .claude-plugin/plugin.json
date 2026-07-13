@@ -1,15 +1,19 @@
 {
   "name": "skillsforge",
-  "version": "0.1.0",
-  "description": "Local cross-platform agent capability forge.",
-  "author": "SkillsForge",
-  "homepage": "https://github.com/skillsforge/skillsforge",
+  "displayName": "SkillsForge",
+  "version": "0.2.0",
+  "description": "Validate, route, policy-scan, and compile agent skills from one canonical source.",
+  "author": {
+    "name": "SkillsForge"
+  },
+  "repository": "https://github.com/Tlkh201313/SkillsForge",
+  "homepage": "https://github.com/Tlkh201313/SkillsForge",
   "license": "MIT",
   "keywords": [
     "skills",
     "agents",
     "forge",
-    "orchestration",
-    "adapters"
+    "routing",
+    "validation"
   ]
 }

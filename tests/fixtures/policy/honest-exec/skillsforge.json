@@ -1,0 +1,11 @@
+{
+  "routing": {
+    "triggers": ["honest exec fixture"],
+    "antiTriggers": []
+  },
+  "capabilities": {
+    "exec": true,
+    "network": false,
+    "writesOutsideSkill": false
+  }
+}

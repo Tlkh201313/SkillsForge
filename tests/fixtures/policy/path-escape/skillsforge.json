@@ -1,0 +1,11 @@
+{
+  "routing": {
+    "triggers": ["path escape fixture"],
+    "antiTriggers": []
+  },
+  "capabilities": {
+    "exec": false,
+    "network": false,
+    "writesOutsideSkill": false
+  }
+}

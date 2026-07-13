@@ -1,0 +1,15 @@
+{
+  "routing": {
+    "triggers": ["create a skill", "write a new skill", "edit skill frontmatter", "add a sidecar"],
+    "antiTriggers": ["run the tests", "compile", "security scan"]
+  },
+  "capabilities": {
+    "exec": false,
+    "network": false,
+    "writesOutsideSkill": false
+  },
+  "compat": {
+    "claude-code": "full",
+    "cursor": "full"
+  }
+}

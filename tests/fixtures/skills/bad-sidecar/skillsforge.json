@@ -1,0 +1,6 @@
+{
+  "routing": {
+    "triggers": ["x"],
+    "antiTriggers": []
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SkillsForge sidecar",
+  "type": "object",
+  "required": ["routing", "capabilities"],
+  "additionalProperties": false,
+  "properties": {
+    "routing": {
+      "type": "object",
+      "required": ["triggers", "antiTriggers"],
+      "additionalProperties": false,
+      "properties": {
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "antiTriggers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "required": ["exec", "network", "writesOutsideSkill"],
+      "additionalProperties": false,
+      "properties": {
+        "exec": {
+          "type": "boolean"
+        },
+        "network": {
+          "type": "boolean"
+        },
+        "writesOutsideSkill": {
+          "type": "boolean"
+        }
+      }
+    },
+    "compat": {
+      "type": "object",
+      "additionalProperties": {
+        "enum": ["full", "partial", "unsupported"]
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

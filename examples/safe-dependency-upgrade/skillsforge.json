@@ -1,0 +1,11 @@
+{
+  "routing": {
+    "triggers": ["upgrade dependencies", "audit dependencies", "bump package versions"],
+    "antiTriggers": []
+  },
+  "capabilities": {
+    "exec": false,
+    "network": false,
+    "writesOutsideSkill": false
+  }
+}

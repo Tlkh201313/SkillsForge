@@ -19,9 +19,26 @@
       "maxLength": 500
     },
     "author": {
-      "type": "string"
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "required": ["name"],
+          "properties": {
+            "name": { "type": "string" },
+            "email": { "type": "string" },
+            "url": { "type": "string" }
+          }
+        }
+      ]
     },
     "homepage": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "displayName": {
       "type": "string"
     },
     "license": {
