@@ -132,6 +132,11 @@ test('dist/claude-code sidecar skills ship committed PreToolUse hooks', async ()
   assert.equal(build.code, 0, build.stderr || build.stdout);
   await access(distPlugin);
 
+  const commandNames = ['validate', 'route', 'forge', 'doctor', 'verify-receipt'];
+  for (const name of commandNames) {
+    await access(join(distPlugin, 'commands', `${name}.md`));
+  }
+
   await assertSidecarSkillsHavePreToolUse(distPlugin);
 
   const cli = join(distPlugin, 'bin', 'skillsforge.mjs');
