@@ -1,7 +1,7 @@
 {
   "name": "skillsforge",
-  "version": "0.2.0",
-  "description": "Validate and review portable Agent Skills packages.",
+  "version": "0.3.0",
+  "description": "Validate, forge, route, policy-scan, and package portable Agent Skills with evidence receipts.",
   "author": {
     "name": "Tlkh201313",
     "url": "https://github.com/Tlkh201313"

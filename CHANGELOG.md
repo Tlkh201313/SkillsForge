@@ -2,6 +2,15 @@
 
 All notable changes to SkillsForge are recorded here.
 
+## [0.3.0] - 2026-07-13
+
+### Added
+
+- Capability-engine integration on top of the marketplace architecture.
+- Canonical `skillsforge.json` sidecar contract, deterministic forge, explainable routing, policy scanning, evidence receipts, and a self-contained runtime CLI.
+- Skill-scoped Claude policy hooks compiled from declared capabilities.
+- Holdout routing evaluation and cache-copy install smoke tests.
+
 ## [0.2.0] - 2026-07-11
 
 ### Changed

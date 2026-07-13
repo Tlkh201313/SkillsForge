@@ -1,11 +1,11 @@
 ![SkillsForge — Portable Agent Skills validation](assets/skillsforge-banner.svg)
 
 [![CI](https://github.com/Tlkh201313/SkillsForge/actions/workflows/ci.yml/badge.svg)](https://github.com/Tlkh201313/SkillsForge/actions/workflows/ci.yml)
-![Version](https://img.shields.io/badge/version-0.2.0-7c3aed)
+![Version](https://img.shields.io/badge/version-0.3.0-7c3aed)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 
-SkillsForge is a multi-plugin marketplace for portable Agent Skills. Version 0.2.0 ships one production plugin: a bundled validator for [Agent Skills](https://agentskills.io/specification) packages and supported Claude Code extensions. Planned plugins are listed separately and are not presented as available.
+SkillsForge is a multi-plugin marketplace for portable Agent Skills. Version 0.3.0 ships one production plugin: a bundled validator for [Agent Skills](https://agentskills.io/specification) packages and supported Claude Code extensions. Planned plugins are listed separately and are not presented as available.
 
 ## What ships today
 
@@ -34,7 +34,7 @@ The parser accepts valid BOM, CRLF, comments, quoted values, and multiline YAML.
 
 ## Plugin availability
 
-| Plugin | Purpose | Version 0.2.0 | Install command |
+| Plugin | Purpose | Version 0.3.0 | Install command |
 |---|---|:---:|---|
 | `skillsforge` | Validate portable and Claude Code skill packages | Available | `/plugin install skillsforge@skillsforge-marketplace` |
 | `skill-author` | Guided skill authoring | Planned | — |
