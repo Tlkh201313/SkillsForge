@@ -11,10 +11,11 @@ SkillsForge ships **one** production plugin: a capability / trust engine for por
 
 | Host | Status | What that means |
 |---|---|---|
-| Claude Code | Full | Marketplace install, SessionStart, skill-scoped PreToolUse guardrails, bundled `skillsforge` CLI, receipts, eval |
-| Cursor | Proof | Deterministic `SKILL.md` export plus lossiness report — not runtime policy parity |
-| Codex | Unsupported | Not packaged or claimed |
-| OpenCode | Unsupported | Not packaged or claimed |
+| Claude Code | Full | Marketplace install, SessionStart, skill-scoped PreToolUse guardrails, bundled `skillsforge` CLI, receipts, eval; `skillsforge install` copies full skill packages |
+| Cursor | Portable copy | `skillsforge install` / `dist/cursor` deterministic `SKILL.md` + lossiness report — **not** runtime policy parity |
+| Codex CLI | Portable copy | `skillsforge install` copies portable `SKILL.md` only — no runtime policy parity |
+| OpenCode | Portable copy | `skillsforge install` copies portable `SKILL.md` only — no runtime policy parity |
+| Gemini CLI | Portable copy | `skillsforge install` copies portable `SKILL.md` only — no runtime policy parity |
 
 ## What ships today
 
@@ -23,7 +24,8 @@ SkillsForge ships **one** production plugin: a capability / trust engine for por
 | One plugin | `skillsforge` only |
 | Slash commands | `validate`, `route`, `forge`, `doctor`, `verify-receipt` |
 | Claude Code skills | `validate-agent-skill`, `author-capability`, `route-capability`, `verify-capability`, `using-skillsforge` |
-| Runtime CLI | Full `skillsforge` CLI (`validate`, `doctor`, `route`, `forge`, `receipt`, `verify-receipt`, `enforce`, `eval`, `help`) + `skillsforge-validate` shim |
+| Runtime CLI | Full `skillsforge` CLI (`validate`, `doctor`, `route`, `forge`, `receipt`, `verify-receipt`, `enforce`, `eval`, `install`, `help`) + `skillsforge-validate` shim |
+| Host installer | CodeGraph-style `skillsforge install` TUI + `--hosts` / `--yes` non-interactive path |
 | Canonical sidecar | `skillsforge.json` (routing, capabilities, compatibility) validated with Ajv |
 | Forge | Deterministic skill generation from forge-spec (`--dry-run` / `--write`) |
 | Routing | Explainable scores with holdout evaluation gate |
@@ -65,7 +67,7 @@ flowchart TD
     Skills --> Bin
     Agents --> Bin
     Hooks --> Bin
-    Bin --> Engine["validate / route / forge / doctor / receipt / enforce / eval"]
+    Bin --> Engine["validate / route / forge / doctor / receipt / enforce / eval / install"]
 ```
 
 ## Trust pipeline
@@ -125,6 +127,46 @@ Or invoke an installed skill:
 ```
 
 Claude Code loads the command or skill, runs the bundled CLI, and reports structural or policy failures before qualitative advice.
+
+## Install skills into your agents
+
+CodeGraph-style host picker. Detects agent config dirs under your home folder, then copies validated skills:
+
+```text
+$ node ./plugins/skillsforge/bin/skillsforge.mjs install
+
+Which agents should SkillsForge configure?
+
+> [x] Claude Code — full
+  [x] Cursor — portable
+  [ ] Codex CLI — portable (not detected)
+  [ ] OpenCode — portable (not detected)
+  [x] Gemini CLI — portable
+
+↑/↓ move · space toggle · enter confirm · q abort
+```
+
+Fidelity:
+
+| Host | What gets installed |
+|---|---|
+| Claude Code (`full`) | Entire skill package (`SKILL.md`, `skillsforge.json`, references, hooks frontmatter) → `~/.claude/skills/<name>/` |
+| Cursor / Codex / OpenCode / Gemini (`portable`) | Portable `SKILL.md` only (name + description + body; sidecar/hooks stripped) → host skills dir |
+
+This is **not** multi-host runtime policy parity. PreToolUse guardrails only apply inside Claude Code.
+
+Non-interactive examples:
+
+```sh
+# List detected hosts
+node ./plugins/skillsforge/bin/skillsforge.mjs install --list --json
+
+# Dry-run portable install into Cursor
+node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts cursor --yes --dry-run
+
+# Install specific skills into Claude Code + Cursor (overwrite)
+node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts claude-code,cursor --yes --force path/to/skill
+```
 
 ## CLI reference
 
@@ -236,6 +278,21 @@ node ./plugins/skillsforge/bin/skillsforge.mjs eval
 # or
 npm run eval
 ```
+
+### `install`
+
+Install validated skills into detected agent hosts (interactive TUI or `--hosts` + `--yes`).
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs install
+node ./plugins/skillsforge/bin/skillsforge.mjs install --list --json
+node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts cursor,gemini --yes --dry-run
+node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts claude-code --yes --force path/to/skill
+```
+
+Flags: `--hosts <ids>`, `--yes`, `--list`, `--dry-run`, `--force`, `--json`, `--home <dir>`.
+
+Host ids: `claude-code`, `cursor`, `codex`, `opencode`, `gemini`.
 
 ### `help`
 

@@ -28,5 +28,9 @@ At session start, or whenever unsure which SkillsForge command applies.
 - `skillsforge validate`
 - `skillsforge route --query "<task>"`
 - `skillsforge forge --spec <file> --dry-run`
+- `skillsforge install --list`
+- `skillsforge install --hosts cursor --yes --dry-run`
 - `skillsforge receipt --out <file>`
 - `skillsforge verify-receipt <file>`
+
+`install` copies validated skills into detected agent hosts. Claude Code gets a full package; Cursor/Codex/OpenCode/Gemini get a portable `SKILL.md` only (no runtime policy parity).

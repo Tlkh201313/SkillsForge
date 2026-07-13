@@ -182,3 +182,23 @@ test('runBuildDist keeps dist SKILL.md byte-equal to source with PreToolUse', as
   assert.ok(Array.isArray(report.compiledPolicies));
   assert.ok(report.compiledPolicies.includes('using-skillsforge'));
 });
+
+test('runBuildDist cursor export matches exportPortableSkill bytes', async (context) => {
+  const { exportPortableSkill } = await import('../lib/capabilities/export.mjs');
+  const root = await fixtureRepo(context);
+  const skills = await loadAllSkills(root);
+  const result = await runBuildDist({
+    root,
+    skills,
+    evaluation: okEval(),
+    validation: { ok: true, text: 'PASS\n' },
+    hostValidation: { status: 'skipped', reason: 'test' }
+  });
+  assert.equal(result.ok, true, JSON.stringify(result.errors));
+
+  for (const skill of skills) {
+    const expected = exportPortableSkill(skill).files[0].contents;
+    const actual = await readFile(join(root, 'dist', 'cursor', skill.name, 'SKILL.md'), 'utf8');
+    assert.equal(actual, expected, `${skill.name} cursor export drifted from exportPortableSkill`);
+  }
+});
