@@ -2,7 +2,10 @@ node_modules/
 .DS_Store
 coverage/
 dist/
+artifacts/
 .worktrees/
 .env
 teacher (FABLE 5)/
 tests/.tmp-runner/
+
+.codegraph/

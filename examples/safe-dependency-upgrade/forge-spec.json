@@ -1,0 +1,44 @@
+{
+  "name": "safe-dependency-upgrade",
+  "description": "Use when planning a dependency upgrade with explicit safety checks, validation, and rollback guidance.",
+  "overview": "Prepare a controlled dependency upgrade, verify declared scope, run validation, and document rollback before completion.",
+  "whenToUse": [
+    "A project dependency needs a controlled version upgrade.",
+    "An upgrade must include validation and rollback guidance.",
+    "You need a repeatable checklist before bumping package versions."
+  ],
+  "maturity": "stable",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "safe dependency upgrade",
+      "upgrade dependency safely",
+      "controlled package bump"
+    ],
+    "antiTriggers": [
+      "operating system upgrade",
+      "firmware flash"
+    ]
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial"
+  },
+  "provenance": {
+    "source": "examples/safe-dependency-upgrade/forge-spec.json",
+    "license": "MIT"
+  }
+}
