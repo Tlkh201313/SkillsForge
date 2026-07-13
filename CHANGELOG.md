@@ -10,6 +10,9 @@ All notable changes to SkillsForge are recorded here.
 - Canonical `skillsforge.json` sidecar contract, deterministic forge, explainable routing, policy scanning, evidence receipts, and a self-contained runtime CLI.
 - Skill-scoped Claude policy hooks compiled from declared capabilities.
 - Holdout routing evaluation and cache-copy install smoke tests.
+- Plugin slash commands: `validate`, `route`, `forge`, `doctor`, `verify-receipt`.
+- Full CLI help text and README reference for all nine subcommands.
+- Diagrams for plugin components, trust pipeline, fail-closed PreToolUse, and holdout eval gate.
 
 ### Changed
 
