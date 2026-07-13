@@ -3,8 +3,16 @@
   "maturity": "stable",
   "requires": [],
   "routing": {
-    "triggers": ["what is skillsforge", "which skillsforge command", "skill health", "session start skillsforge"],
-    "antiTriggers": ["write a new skill", "compile skills"]
+    "triggers": [
+      "what is skillsforge",
+      "which skillsforge command",
+      "skillsforge command",
+      "skill health",
+      "session start skillsforge",
+      "skillsforge session",
+      "session starts"
+    ],
+    "antiTriggers": ["write a new skill", "compile skills", "skill marketplace"]
   },
   "capabilities": {
     "exec": {

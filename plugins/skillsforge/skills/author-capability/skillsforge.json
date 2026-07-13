@@ -3,8 +3,24 @@
   "maturity": "stable",
   "requires": ["using-skillsforge"],
   "routing": {
-    "triggers": ["create a skill", "write a new skill", "edit skill frontmatter", "add a sidecar", "forge a capability"],
-    "antiTriggers": ["run the tests", "security audit of skills"]
+    "triggers": [
+      "create a skill",
+      "write a new skill",
+      "edit skill frontmatter",
+      "add a sidecar",
+      "into a sidecar",
+      "add routing triggers",
+      "forge a capability",
+      "forge from a spec",
+      "write sidecar",
+      "sidecar metadata"
+    ],
+    "antiTriggers": [
+      "run the tests",
+      "security audit of skills",
+      "forge steel",
+      "capability bracket"
+    ]
   },
   "capabilities": {
     "exec": {

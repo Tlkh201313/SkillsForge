@@ -72,6 +72,16 @@
     { "query": "choose a database index for this query", "expected": null },
     { "query": "audit application security headers", "expected": null },
     { "query": "write a new release announcement", "expected": null },
-    { "query": "validate yaml for kubernetes deployment", "expected": null }
+    { "query": "validate yaml for kubernetes deployment", "expected": null },
+    { "query": "deploy skill marketplace frontend", "expected": null },
+    { "query": "forge steel parts for a capability bracket", "expected": null },
+    { "query": "validate agent payroll records", "expected": null },
+    { "query": "route network packets through a gateway", "expected": null },
+    { "query": "security audit of cloud infrastructure", "expected": null },
+    { "query": "compile skills into a binary artifact", "expected": null },
+    { "query": "prepare an Agent Skill package for distribution", "expected": "validate-agent-skill" },
+    { "query": "debug invalid skill metadata YAML", "expected": "validate-agent-skill" },
+    { "query": "check portable skill package links", "expected": "validate-agent-skill" },
+    { "query": "review a SKILL.md before publishing", "expected": "validate-agent-skill" }
   ]
 }

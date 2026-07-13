@@ -3,8 +3,23 @@
   "maturity": "stable",
   "requires": ["using-skillsforge"],
   "routing": {
-    "triggers": ["is this skill safe", "audit skill", "routing regression", "undeclared capability", "security audit of skills", "verify receipt"],
-    "antiTriggers": ["write documentation", "create a skill"]
+    "triggers": [
+      "is this skill safe",
+      "audit skill",
+      "routing regression",
+      "undeclared capability",
+      "security audit of skills",
+      "verify receipt",
+      "audit skill safety",
+      "undeclared capability flags"
+    ],
+    "antiTriggers": [
+      "write documentation",
+      "create a skill",
+      "security audit of cloud",
+      "container layers",
+      "security scan only"
+    ]
   },
   "capabilities": {
     "exec": {

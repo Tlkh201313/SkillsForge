@@ -11,6 +11,11 @@ All notable changes to SkillsForge are recorded here.
 - Skill-scoped Claude policy hooks compiled from declared capabilities.
 - Holdout routing evaluation and cache-copy install smoke tests.
 
+### Fixed
+
+- Honest one-vs-rest routing metrics (wrong skill = FP+FN) with separate exact-match accuracy; holdout gate raised to P≥0.95 / R≥0.90.
+- Contiguous phrase routing with required trigger evidence, stronger anti-triggers, and #1/#2 score margin.
+
 ## [0.2.0] - 2026-07-11
 
 ### Changed

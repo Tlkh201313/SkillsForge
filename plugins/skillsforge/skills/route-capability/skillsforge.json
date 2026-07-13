@@ -3,8 +3,20 @@
   "maturity": "stable",
   "requires": ["using-skillsforge"],
   "routing": {
-    "triggers": ["which skill applies", "route this task", "choose a skill", "skill selection"],
-    "antiTriggers": ["create a skill", "security audit of skills"]
+    "triggers": [
+      "which skill applies",
+      "route this task",
+      "choose a skill",
+      "skill selection",
+      "score and explain",
+      "score skill selection"
+    ],
+    "antiTriggers": [
+      "create a skill",
+      "security audit of skills",
+      "route network",
+      "network packets"
+    ]
   },
   "capabilities": {
     "exec": {

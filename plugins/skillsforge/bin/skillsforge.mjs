@@ -15585,18 +15585,22 @@ function scoreSkill(query, skill) {
   const queryTokens = tokenize(query);
   const reasons = [];
   let score = 0;
+  let triggerScore = 0;
   for (const trigger of skill.sidecar?.routing?.triggers ?? []) {
     const hits = phraseHits(queryTokens, trigger);
     if (hits > 0) {
-      score += 2 * hits;
-      reasons.push(`trigger "${trigger}" +${2 * hits}`);
+      const delta = 2 * hits;
+      score += delta;
+      triggerScore += delta;
+      reasons.push(`trigger "${trigger}" +${delta}`);
     }
   }
   for (const anti of skill.sidecar?.routing?.antiTriggers ?? []) {
     const hits = phraseHits(queryTokens, anti);
     if (hits > 0) {
-      score -= 3 * hits;
-      reasons.push(`antiTrigger "${anti}" -${3 * hits}`);
+      const delta = 4 * hits;
+      score -= delta;
+      reasons.push(`antiTrigger "${anti}" -${delta}`);
     }
   }
   const descriptionOverlap = tokenize(skill.description).filter((token) => token.length > 3 && queryTokens.includes(token)).length;
@@ -15608,38 +15612,64 @@ function scoreSkill(query, skill) {
     score -= 5;
     reasons.push("deprecated -5");
   }
-  return { name: skill.name, score, reasons };
+  return { name: skill.name, score, triggerScore, reasons };
 }
 function routeQuery(query, skills, options = {}) {
   const threshold = options.threshold ?? THRESHOLD;
+  const margin = options.margin ?? MARGIN;
   const candidates = skills.map((skill) => scoreSkill(query, skill)).sort((left, right) => right.score - left.score || left.name.localeCompare(right.name));
   const top = candidates[0];
-  const selected = top && top.score >= threshold ? top.name : null;
+  const second = candidates[1];
+  let selected = null;
+  let fallback = null;
+  if (!top || top.score < threshold) {
+    fallback = "no-skill-above-threshold";
+  } else if (top.triggerScore <= 0) {
+    fallback = "no-trigger-evidence";
+  } else if (second && top.score - second.score < margin) {
+    fallback = "insufficient-margin";
+  } else {
+    selected = top.name;
+  }
   return {
     query,
     selected,
     threshold,
-    fallback: selected ? null : "no-skill-above-threshold",
+    margin,
+    fallback: selected ? null : fallback,
     candidates
   };
 }
-var tokenize, phraseHits, THRESHOLD;
+var tokenize, phraseHits, THRESHOLD, MARGIN;
 var init_router = __esm({
   "lib/capabilities/router.mjs"() {
     tokenize = (text) => text.toLowerCase().match(/[a-z0-9]+/g) ?? [];
     phraseHits = (queryTokens, phrase) => {
       const phraseTokens = tokenize(phrase);
       if (phraseTokens.length === 0) return 0;
-      const hits = phraseTokens.filter((token) => queryTokens.includes(token)).length;
-      return hits === phraseTokens.length ? phraseTokens.length : 0;
+      for (let index = 0; index <= queryTokens.length - phraseTokens.length; index += 1) {
+        let matched = true;
+        for (let offset = 0; offset < phraseTokens.length; offset += 1) {
+          if (queryTokens[index + offset] !== phraseTokens[offset]) {
+            matched = false;
+            break;
+          }
+        }
+        if (matched) return phraseTokens.length;
+      }
+      return 0;
     };
     THRESHOLD = 2;
+    MARGIN = 1;
   }
 });
 
 // scripts/eval.mjs
 var eval_exports = {};
 __export(eval_exports, {
+  HOLDOUT_PRECISION_MIN: () => HOLDOUT_PRECISION_MIN,
+  HOLDOUT_RECALL_MIN: () => HOLDOUT_RECALL_MIN,
+  calculateMetrics: () => calculateMetrics,
   runEvaluation: () => runEvaluation
 });
 import { createHash as createHash2 } from "node:crypto";
@@ -15660,19 +15690,28 @@ function calculateMetrics(cases, select) {
   let fp = 0;
   let fn = 0;
   let tn = 0;
+  let exactMatches = 0;
   const failures = [];
   const latenciesMs = [];
   for (const { query, expected } of cases) {
     const started = performance.now();
     const actual = select(query);
     latenciesMs.push(performance.now() - started);
-    if (expected === null && actual === null) tn++;
-    else if (expected === null && actual !== null) {
-      fp++;
+    if (expected === null && actual === null) {
+      tn += 1;
+      exactMatches += 1;
+    } else if (expected === null && actual !== null) {
+      fp += 1;
       failures.push({ query, expected, actual });
-    } else if (expected !== null && actual === expected) tp++;
-    else {
-      fn++;
+    } else if (expected !== null && actual === expected) {
+      tp += 1;
+      exactMatches += 1;
+    } else if (expected !== null && actual === null) {
+      fn += 1;
+      failures.push({ query, expected, actual });
+    } else {
+      fp += 1;
+      fn += 1;
       failures.push({ query, expected, actual });
     }
   }
@@ -15682,6 +15721,7 @@ function calculateMetrics(cases, select) {
     fp,
     fn,
     tn,
+    exactMatchAccuracy: cases.length === 0 ? null : exactMatches / cases.length,
     precision: tp + fp === 0 ? null : tp / (tp + fp),
     recall: tp + fn === 0 ? null : tp / (tp + fn),
     latencyMs: {
@@ -15728,19 +15768,27 @@ async function runEvaluation(options = {}) {
   }
   return report;
 }
-var modulePath, repositoryRoot;
+var modulePath, repositoryRoot, HOLDOUT_PRECISION_MIN, HOLDOUT_RECALL_MIN;
 var init_eval = __esm({
   async "scripts/eval.mjs"() {
     init_skill_loader();
     init_router();
     modulePath = fileURLToPath2(import.meta.url);
     repositoryRoot = resolve7(dirname4(modulePath), "..");
+    HOLDOUT_PRECISION_MIN = 0.95;
+    HOLDOUT_RECALL_MIN = 0.9;
     if (process.argv[1] && resolve7(process.argv[1]) === modulePath) {
       const report = await runEvaluation();
-      console.log(`routing: ${report.tp}+${report.tn}/${report.total} P=${report.precision?.toFixed(2)} R=${report.recall?.toFixed(2)} p50=${report.latencyMs?.p50?.toFixed(2)}ms p95=${report.latencyMs?.p95?.toFixed(2)}ms`);
-      console.log(`metadata-only baseline: ${report.metadataOnlyBaseline.tp}+${report.metadataOnlyBaseline.tn}/${report.total} P=${report.metadataOnlyBaseline.precision?.toFixed(2)} R=${report.metadataOnlyBaseline.recall?.toFixed(2)}`);
+      console.log(
+        `routing: ${report.tp}+${report.tn}/${report.total} exact=${report.exactMatchAccuracy?.toFixed(2)} P=${report.precision?.toFixed(2)} R=${report.recall?.toFixed(2)} p50=${report.latencyMs?.p50?.toFixed(2)}ms p95=${report.latencyMs?.p95?.toFixed(2)}ms`
+      );
+      console.log(
+        `metadata-only baseline: ${report.metadataOnlyBaseline.tp}+${report.metadataOnlyBaseline.tn}/${report.total} P=${report.metadataOnlyBaseline.precision == null ? "n/a" : report.metadataOnlyBaseline.precision.toFixed(2)} R=${report.metadataOnlyBaseline.recall == null ? "n/a" : report.metadataOnlyBaseline.recall.toFixed(2)}`
+      );
       console.log(`corpusSha256=${report.corpusSha256} frozen=${report.frozen}`);
-      process.exit(report.precision >= 0.9 && report.recall >= 0.85 ? 0 : 1);
+      process.exit(
+        report.precision >= HOLDOUT_PRECISION_MIN && report.recall >= HOLDOUT_RECALL_MIN ? 0 : 1
+      );
     }
   }
 });
@@ -17109,11 +17157,11 @@ async function runEnforce(argv) {
   return 0;
 }
 async function runEvalCommand(argv, options) {
-  const { runEvaluation: runEvaluation2 } = await init_eval().then(() => eval_exports);
+  const { runEvaluation: runEvaluation2, HOLDOUT_PRECISION_MIN: HOLDOUT_PRECISION_MIN2, HOLDOUT_RECALL_MIN: HOLDOUT_RECALL_MIN2 } = await init_eval().then(() => eval_exports);
   const report = await runEvaluation2({ root: await resolveRuntimeRoot(options) });
   process.stdout.write(`${JSON.stringify(report, null, 2)}
 `);
-  return report.precision >= 0.9 && report.recall >= 0.85 ? 0 : 1;
+  return report.precision >= HOLDOUT_PRECISION_MIN2 && report.recall >= HOLDOUT_RECALL_MIN2 ? 0 : 1;
 }
 if (process.argv[1] && resolve8(process.argv[1]) === modulePath2) {
   process.exitCode = await main();

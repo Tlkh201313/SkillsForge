@@ -43,7 +43,7 @@ export async function runBuildDist(options = {}) {
   if (!normalizedEval?.reportSha256) {
     return { ok: false, errors: ['holdout evaluation missing corpusSha256 + reportSha256 + confusion counts'] };
   }
-  if ((evaluation.precision ?? 0) < 0.9 || (evaluation.recall ?? 0) < 0.85) {
+  if ((evaluation.precision ?? 0) < 0.95 || (evaluation.recall ?? 0) < 0.9) {
     return {
       ok: false,
       errors: [`holdout eval below thresholds P=${evaluation.precision} R=${evaluation.recall}`]

@@ -194,7 +194,7 @@ test('CLI unknown command exits 2', async () => {
 test('holdout evaluation meets thresholds', async () => {
   const report = await runEvaluation({ write: false });
   assert.ok(report.total >= 40);
-  assert.equal(report.total, report.tp + report.fp + report.fn + report.tn);
-  assert.ok(report.precision >= 0.9, `precision ${report.precision}`);
-  assert.ok(report.recall >= 0.85, `recall ${report.recall}`);
+  assert.ok(report.tp + report.fp + report.fn + report.tn >= report.total);
+  assert.ok(report.precision >= 0.95, `precision ${report.precision}`);
+  assert.ok(report.recall >= 0.9, `recall ${report.recall}`);
 });

@@ -295,10 +295,10 @@ async function runEnforce(argv) {
 }
 
 async function runEvalCommand(argv, options) {
-  const { runEvaluation } = await import('./eval.mjs');
+  const { runEvaluation, HOLDOUT_PRECISION_MIN, HOLDOUT_RECALL_MIN } = await import('./eval.mjs');
   const report = await runEvaluation({ root: await resolveRuntimeRoot(options) });
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
-  return report.precision >= 0.9 && report.recall >= 0.85 ? 0 : 1;
+  return report.precision >= HOLDOUT_PRECISION_MIN && report.recall >= HOLDOUT_RECALL_MIN ? 0 : 1;
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === modulePath) {
