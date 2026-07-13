@@ -42,10 +42,48 @@ flowchart LR
     A["SKILL.md package"] --> B["YAML parser"]
     B --> C["Selected profile"]
     C --> D["Resource boundary checks"]
-    D --> E["Text or JSON diagnostics"]
+    D --> E{"skillsforge.json present?"}
+    E -->|yes| F["Capability policy scan"]
+    E -->|no| G["Structural diagnostics only"]
+    F --> H["Text or JSON diagnostics"]
+    G --> H
 ```
 
-The parser accepts valid BOM, CRLF, comments, quoted values, and multiline YAML. Profile validation uses Draft 2020-12 JSON Schema. Resource checks reject missing files, unsupported URI schemes, sibling-prefix escapes, and links whose real path leaves the skill directory.
+The parser accepts valid BOM, CRLF, comments, quoted values, and multiline YAML. Profile validation uses Draft 2020-12 JSON Schema. Resource checks reject missing files, unsupported URI schemes, sibling-prefix escapes, and links whose real path leaves the skill directory. Sidecar skills also fail closed on blocking policy findings.
+
+## Plugin component map
+
+```mermaid
+flowchart TD
+    Marketplace["Marketplace install"] --> Plugin["skillsforge plugin"]
+    Plugin --> Commands["commands/"]
+    Plugin --> Skills["skills/"]
+    Plugin --> Agents["agents/"]
+    Plugin --> Hooks["hooks/"]
+    Plugin --> Bin["bin/skillsforge.mjs"]
+    Commands --> Bin
+    Skills --> Bin
+    Agents --> Bin
+    Hooks --> Bin
+    Bin --> Engine["validate / route / forge / doctor / receipt / enforce / eval"]
+```
+
+## Trust pipeline
+
+```mermaid
+flowchart LR
+    Spec["forge-spec.json"] --> Forge["forge"]
+    Forge --> Package["SKILL.md + skillsforge.json"]
+    Package --> Validate["validate + policy scan"]
+    Package --> Route["route"]
+    Validate --> Enforce["PreToolUse enforce"]
+    Package --> Receipt["receipt"]
+    Route --> EvalGate["eval holdout gate"]
+    EvalGate --> Receipt
+    Receipt --> Verify["verify-receipt"]
+```
+
+The committed CLI bundle contains its runtime dependencies, so a marketplace installation does not run `npm install`. Source and bundle drift is blocked by `npm run build:check`.
 
 ## Plugin
 

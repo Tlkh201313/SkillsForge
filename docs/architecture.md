@@ -7,7 +7,7 @@ SkillsForge ships **one** Claude Code marketplace plugin — a capability / trus
 | Surface | Role |
 | --- | --- |
 | Marketplace | `.claude-plugin/marketplace.json` with `metadata.pluginRoot: ./plugins` — one entry: `skillsforge` |
-| Plugin | `plugins/skillsforge/` — skills, hooks, agents, bundled CLI |
+| Plugin | `plugins/skillsforge/` — commands, skills, hooks, agents, bundled CLI |
 | Canonical IR | `skillsforge.json` sidecar (Ajv Draft 2020-12) beside `SKILL.md` |
 | Runtime CLI | `plugins/skillsforge/bin/skillsforge.mjs` (esbuild bundle; no `npm install` on install) |
 | Capability engine | `lib/capabilities/*` — loader, graph, forge, router, policy, receipt, doctor |
@@ -30,6 +30,33 @@ flowchart LR
   Canonical --> CursorExport[CursorExport]
   CursorExport --> Lossiness[LossinessReport]
 ```
+
+## Fail-closed PreToolUse decision
+
+```mermaid
+flowchart TD
+    Event["PreToolUse event"] --> Load{"Load sidecar policy?"}
+    Load -->|missing or invalid JSON| DenyErr["deny + exit 0"]
+    Load -->|ok| Tool{"Tool family"}
+    Tool -->|Bash| Shell{"Shell control syntax?"}
+    Shell -->|yes| DenyShell["deny"]
+    Shell -->|no| Cmd{"Command family allowlisted?"}
+    Cmd -->|no| DenyCmd["deny"]
+    Cmd -->|yes| NetBash{"Needs network client?"}
+    NetBash -->|undeclared| DenyNet["deny"]
+    NetBash -->|ok or N/A| AllowBash["allow / no decision"]
+    Tool -->|Write or Edit| Path{"Path present and in scope?"}
+    Path -->|no| DenyWrite["deny"]
+    Path -->|yes| AllowWrite["allow / no decision"]
+    Tool -->|WebFetch| Host{"network.allowed + host allowlisted?"}
+    Host -->|no| DenyFetch["deny"]
+    Host -->|yes| AllowFetch["allow / no decision"]
+    Tool -->|WebSearch| Search{"network.allowed + searchAllowed?"}
+    Search -->|no| DenySearch["deny"]
+    Search -->|yes| AllowSearch["allow / no decision"]
+```
+
+Hooks are guardrails honored by Claude Code — not an OS sandbox. Any unexpected hook error also emits an explicit deny.
 
 ## Host support
 

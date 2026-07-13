@@ -11,6 +11,16 @@ SkillsForge routing quality is measured against frozen corpora under `evaluation
 
 Holdout must not be edited to inflate scores without a version bump and changelog note.
 
+```mermaid
+flowchart LR
+    Tune["routing-tune.json"] --> Develop["Threshold and phrase development"]
+    Holdout["routing-holdout.json"] --> Gate["Release gate"]
+    Develop -.->|"do not mutate holdout"| Gate
+    Gate --> Pass{"P greater than or equal to 0.95 and R greater than or equal to 0.90?"}
+    Pass -->|yes| Ship["CI / receipt evaluation evidence"]
+    Pass -->|no| Fail["eval exits 1"]
+```
+
 ## Metrics
 
 Each case declares an expected skill name or `null` (no skill).
