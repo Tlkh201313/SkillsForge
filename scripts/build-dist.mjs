@@ -3,6 +3,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadAllSkills } from '../lib/capabilities/skill-loader.mjs';
 import { buildReceipt, normalizeEvaluation } from '../lib/capabilities/receipt.mjs';
+import { exportPortableSkill } from '../lib/capabilities/export.mjs';
 import { runEvaluation } from './eval.mjs';
 import { validateSkillPaths } from './validate-skill-lib.mjs';
 import { runHostValidation } from './host-validation.mjs';
@@ -129,12 +130,11 @@ export async function runBuildDist(options = {}) {
 
   await mkdir(join(distRoot, 'cursor'), { recursive: true });
   for (const skill of sourceSkills) {
-    const requiresNote = skill.requires.length
-      ? `\n\n## Requires\n${skill.requires.map((name) => `- ${name}`).join('\n')}`
-      : '';
-    const content = `---\nname: ${skill.name}\ndescription: ${skill.description}\n---\n${skill.body.trim()}${requiresNote}\n`;
+    const exported = exportPortableSkill(skill);
     await mkdir(join(distRoot, 'cursor', skill.name), { recursive: true });
-    await writeFile(join(distRoot, 'cursor', skill.name, 'SKILL.md'), content);
+    for (const file of exported.files) {
+      await writeFile(join(distRoot, 'cursor', skill.name, file.path), file.contents);
+    }
     if (skill.sidecar) {
       const sourceSkillPath = join(buildRoot, 'plugins', 'skillsforge', 'skills', skill.name, 'SKILL.md');
       const distSkillPath = join(packageRoot, 'skills', skill.name, 'SKILL.md');
