@@ -15,7 +15,7 @@ jobs:
   test:
     name: Test (${{ matrix.os }}, Node ${{ matrix.node }})
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -37,11 +37,13 @@ jobs:
         run: npm run validate
       - name: Run tests
         run: npm test
+      - name: Evaluate routing holdout
+        run: npm run eval
 
   release-contract:
     name: Plugin and bundle contract
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -52,11 +54,73 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
-      - name: Validate every plugin and the marketplace
-        shell: bash
-        run: |
-          for target in plugins/*/ .; do
-            npx @anthropic-ai/claude-code plugin validate "$target" --strict
-          done
-      - name: Verify bundled CLI freshness
+      - name: Check generated schemas / bundled CLI freshness
         run: npm run build:check
+      - name: Validate repository contract
+        run: npm run validate:repo
+      - name: Validate production skills
+        run: npm run validate
+      - name: Run tests
+        run: npm test
+      - name: Evaluate routing holdout
+        run: npm run eval
+      - name: Offline trust demo
+        run: npm run demo
+      - name: Build bundled CLI
+        run: npm run build
+      - name: Re-check build artifacts
+        run: npm run build:check
+      - name: Host-validate marketplace + plugin (pre-dist)
+        run: node scripts/host-validation.mjs . plugins/skillsforge --out artifacts/host-validation.json
+      - name: Build distribution packages
+        env:
+          SKILLSFORGE_HOST_VALIDATION: artifacts/host-validation.json
+        run: npm run build:dist
+      - name: Smoke cached plugin distribution
+        run: |
+          mkdir -p artifacts
+          npm run smoke:dist 2>&1 | tee artifacts/smoke-dist.log
+      - name: Strict host validate (marketplace + plugin + dist)
+        run: npm run validate:host
+      - name: Upload release evidence artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skillsforge-v0.3-release-evidence
+          if-no-files-found: warn
+          path: |
+            artifacts/evaluation/routing-report.json
+            artifacts/host-validation.json
+            artifacts/smoke-dist.log
+            dist/trust-receipt.json
+            dist/cursor-lossiness.json
+            dist/build-report.json
+
+  release-windows:
+    name: Windows release smoke
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+      - name: Offline trust demo
+        run: npm run demo
+      - name: Build bundled CLI
+        run: npm run build
+      - name: Build distribution packages
+        run: npm run build:dist
+      - name: Smoke cached plugin distribution
+        run: npm run smoke:dist
+      - name: Strict host validate (marketplace + plugin + dist)
+        # Local @anthropic-ai/claude-code binary; fail closed (no soft-skip).
+        # If Windows Claude packaging is flaky upstream, fix validate:host — do not soften.
+        run: npm run validate:host

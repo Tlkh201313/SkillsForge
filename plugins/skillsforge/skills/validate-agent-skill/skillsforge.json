@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "maturity": "stable",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "validate agent skill",
+      "validate agent skills",
+      "review portable skill",
+      "review a skill",
+      "debug skill frontmatter",
+      "skill metadata",
+      "prepare skill for distribution",
+      "prepare a skill for distribution",
+      "prepare an agent skill",
+      "validate skill package",
+      "portable skill package",
+      "agent skill package",
+      "skill md"
+    ],
+    "antiTriggers": [
+      "forge a capability",
+      "route this task",
+      "validate agent payroll",
+      "skill marketplace",
+      "deploy skill marketplace"
+    ]
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": true,
+      "commands": [
+        "skillsforge-validate",
+        "node plugins/skillsforge/bin/skillsforge-validate",
+        "node plugins/skillsforge/bin/skillsforge.mjs validate",
+        "skillsforge validate"
+      ]
+    },
+    "network": { "allowed": false, "hosts": [] },
+    "write": { "scope": "none" }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

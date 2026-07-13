@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "maturity": "stable",
+  "requires": ["using-skillsforge"],
+  "routing": {
+    "triggers": [
+      "is this skill safe",
+      "audit skill",
+      "routing regression",
+      "undeclared capability",
+      "security audit of skills",
+      "verify receipt",
+      "audit skill safety",
+      "undeclared capability flags"
+    ],
+    "antiTriggers": [
+      "write documentation",
+      "create a skill",
+      "security audit of cloud",
+      "container layers",
+      "security scan only"
+    ]
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": true,
+      "commands": [
+        "skillsforge doctor",
+        "skillsforge validate",
+        "skillsforge eval",
+        "skillsforge receipt",
+        "skillsforge verify-receipt",
+        "node plugins/skillsforge/bin/skillsforge.mjs doctor",
+        "node plugins/skillsforge/bin/skillsforge.mjs validate",
+        "node plugins/skillsforge/bin/skillsforge.mjs eval",
+        "node plugins/skillsforge/bin/skillsforge.mjs receipt",
+        "node plugins/skillsforge/bin/skillsforge.mjs verify-receipt"
+      ]
+    },
+    "network": { "allowed": false, "hosts": [] },
+    "write": { "scope": "project" }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

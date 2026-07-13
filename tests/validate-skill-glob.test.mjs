@@ -9,7 +9,9 @@ test('expands wildcard skill path patterns for shells that pass globs literally'
     paths.map((path) => path.replaceAll('\\\\', '/').replaceAll('\\', '/')).map((path) => path.slice(path.indexOf('tests/fixtures/skills/'))),
     [
       'tests/fixtures/skills/good-basic',
-      'tests/fixtures/skills/good-with-metadata'
+      'tests/fixtures/skills/good-claude-extension',
+      'tests/fixtures/skills/good-with-metadata',
+      'tests/fixtures/skills/good-with-sidecar'
     ]
   );
 });

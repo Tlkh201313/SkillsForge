@@ -1,22 +1,30 @@
 {
   "name": "skillsforge",
-  "version": "0.2.0",
-  "description": "Validate and review portable Agent Skills packages.",
+  "version": "0.3.0",
+  "description": "Validate, forge, route, policy-scan, and package portable Agent Skills with evidence receipts.",
   "type": "module",
   "bin": {
+    "skillsforge": "./plugins/skillsforge/bin/skillsforge.mjs",
     "skillsforge-validate": "./plugins/skillsforge/bin/skillsforge-validate"
   },
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "validate": "node plugins/skillsforge/bin/skillsforge-validate --all",
+    "validate": "node plugins/skillsforge/bin/skillsforge.mjs validate --profile claude-code --all",
     "validate:repo": "node scripts/validate-repo.mjs",
     "validate:plugin": "claude plugin validate . --strict",
+    "validate:host": "node scripts/host-validation.mjs --require-dist --out artifacts/host-validation.json",
     "test": "node scripts/test.mjs",
+    "eval": "node scripts/eval.mjs",
+    "demo": "node scripts/demo.mjs",
+    "gen:schemas": "node scripts/gen-schemas.mjs",
+    "gen:schemas:check": "node scripts/build.mjs --check",
     "build": "node scripts/build.mjs",
     "build:check": "node scripts/build.mjs --check",
-    "check": "npm run validate:repo && npm run validate && npm test && npm run build:check"
+    "build:dist": "node scripts/build-dist.mjs",
+    "smoke:dist": "node --test tests/dist-smoke.test.mjs",
+    "check": "npm run validate:repo && npm run validate && npm test && npm run eval && npm run demo && npm run build:check && npm run build && npm run build:dist && npm run smoke:dist && npm run validate:host"
   },
   "license": "MIT",
   "dependencies": {

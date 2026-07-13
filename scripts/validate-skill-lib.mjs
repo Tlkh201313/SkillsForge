@@ -3,9 +3,10 @@ import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'nod
 import { fileURLToPath } from 'node:url';
 import { parseDocument } from 'yaml';
 import { validateWithSchema } from './schema-lib.mjs';
-import { skillSchemasByProfile } from './schemas.generated.mjs';
+import { schemas, skillSchemasByProfile } from './schemas.generated.mjs';
 
 const adjacentSkillsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'skills');
+const sidecarSchema = schemas['skillsforge.sidecar'];
 
 export async function validateSkillPaths(paths, options = {}) {
   const root = options.root ?? process.cwd();
@@ -70,6 +71,7 @@ export async function validateSkillPath(skillPath, options = {}) {
   }
 
   await validateBody(parsed.body, absolute, errors);
+  await validateSidecar(absolute, errors);
   return errors.length === 0
     ? { name, path: absolute, profile, status: 'pass', errors: [] }
     : failReport(name, absolute, errors, profile);
@@ -83,6 +85,31 @@ export function parseFrontmatter(source) {
     yaml: match[1],
     body: normalized.slice(match[0].length)
   };
+}
+
+async function validateSidecar(skillDirectory, errors) {
+  const path = join(skillDirectory, 'skillsforge.json');
+  if (!await fileExists(path)) return;
+
+  let sidecar;
+  try {
+    sidecar = JSON.parse(await readFile(path, 'utf8'));
+  } catch (error) {
+    errors.push(`skillsforge.json must be valid JSON: ${firstLine(error.message)}`);
+    return;
+  }
+
+  const schemaResult = await validateWithSchema(sidecarSchema, sidecar);
+  errors.push(...schemaResult.errors.map((error) => `skillsforge.json ${error}`));
+
+  if (!isPlainObject(sidecar?.capabilities)) return;
+  const { exec, network } = sidecar.capabilities;
+  if (exec?.allowed === false && Array.isArray(exec.commands) && exec.commands.length > 0) {
+    errors.push('skillsforge.json /capabilities/exec/commands must be empty when allowed is false');
+  }
+  if (network?.allowed === false && Array.isArray(network.hosts) && network.hosts.length > 0) {
+    errors.push('skillsforge.json /capabilities/network/hosts must be empty when allowed is false');
+  }
 }
 
 async function validateBody(body, skillDirectory, errors) {

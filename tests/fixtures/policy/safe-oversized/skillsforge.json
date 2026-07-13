@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "routing": {
+    "triggers": [
+      "test safe oversized"
+    ],
+    "antiTriggers": []
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "skill"
+    }
+  }
+}

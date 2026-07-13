@@ -1,6 +1,8 @@
 # SkillsForge Marketplace — Executable Master Plan (v2, standalone)
 
-This document is self-sufficient: an executing agent with access to the repo needs nothing else. It contains context, architecture, house templates, per-plugin specs, and a phased work breakdown (§9) of numbered tasks with acceptance checks.
+> **SUPERSEDED (product track):** The eight-plugin family roadmap below (`forge-flow`, `forge-lean`, `forge-gauge`, domain packs, MCP token ledger, etc.) is **historical**. Ship track is the **capability / trust engine**: one production plugin `skillsforge` — validate, forge, route, skill-scoped PreToolUse guardrails, receipts, eval; Cursor = lossy export proof; other hosts unsupported. See `README.md`, `docs/architecture.md`, `docs/threat-model.md`. Do not revive family / ledger / domain-pack claims in marketplace copy or release docs.
+
+This document is self-sufficient for archaeology of the old multi-plugin plan. New work follows the capability-engine track, not §2.1’s eight plugins.
 
 ---
 
@@ -31,12 +33,15 @@ This document is self-sufficient: an executing agent with access to the repo nee
 - Known bug: `package.json` description says "Validate and forge…", `plugin.json` says "Validate and review…" — they disagree.
 - NO agents, commands, hooks, MCP, workflows anywhere (deliberately removed in 0.1.0).
 
-### 1.2 Requirements (user-confirmed)
-1. Rebuild as a **multi-plugin marketplace** in this repo: core workflow plugin + token plugin + MCP plugin + 4 domain plugins + expanded meta plugin. À la carte installs, minimal always-on token cost.
-2. **MCP server = skills manager + token/cost ledger**: record input / output / cache-read / cache-write / total tokens + computed USD cost + model name per session; queryable grouped reports.
-3. **Token-reduction system** better than Caveman: Caveman compresses only OUTPUT (~65%) via per-turn injected style costing ~1–1.5k input tokens/turn (net can go negative). Ours attacks output AND input/context AND compaction, and measures honestly via the ledger.
-4. **All domains wave 1**: full-stack web, security & review, data/ML/AI, research/writing/business — deeper and more current (2026) than ECC-style repos.
-5. Validator extended to agents / hooks / commands / MCP / marketplace + content-quality lint; the whole repo passes its own validator.
+### 1.2 Requirements (user-confirmed) — HISTORICAL / SUPERSEDED
+
+> Original multi-plugin + MCP ledger + domain-pack requirements below are **archived**. Current product requirements: one plugin `skillsforge` (capability trust engine); Claude full / Cursor proof / others unsupported; hooks = guardrails ≠ sandbox; no MCP/LSP/monitors/token-ledger/domain-pack claims.
+
+1. ~~Rebuild as a **multi-plugin marketplace**…~~ → **Superseded:** marketplace hosts one plugin.
+2. ~~**MCP server = skills manager + token/cost ledger**…~~ → **Out of scope / anti-goal.**
+3. ~~**Token-reduction system**…~~ → **Out of scope / anti-goal.**
+4. ~~**All domains wave 1**…~~ → **Out of scope / anti-goal.**
+5. Validator + capability engine for skills / sidecar / policy / receipts; repo passes its own validator.
 6. Original everything (see §0.3).
 
 ### 1.3 Claude Code capabilities to exploit (from official docs; the references barely use these)
@@ -50,20 +55,22 @@ This document is self-sufficient: an executing agent with access to the repo nee
 
 ## 2. Architecture
 
-### 2.1 The eight plugins
+### 2.1 The eight plugins — HISTORICAL / SUPERSEDED
 
-| Plugin | Category | Role | Always-on budget (lint-enforced) |
-|---|---|---|---|
-| `skillsforge` | developer-tools | Meta: author/scaffold/validate skills, agents, plugins (existing plugin, expanded — name kept so installs survive) | ≤ 350 tok |
-| `forge-flow` | productivity | Engineering workflow: shape → plan → execute → verify → review → ship | ≤ 1,100 tok |
-| `forge-lean` | developer-tools | Token economy: output styles + context hygiene + honest benchmarks | ≤ 450 tok |
-| `forge-gauge` | developer-tools | MCP: skills manager + token/cost ledger | ≤ 600 tok |
-| `forge-web` | development | Full-stack web domain pack | ≤ 900 tok |
-| `forge-guard` | security | Security & adversarial review pack | ≤ 900 tok |
-| `forge-data` | data | Data/ML/AI pack | ≤ 900 tok |
-| `forge-scribe` | writing | Research/writing/business pack | ≤ 900 tok |
+> **Not the ship track.** Product claims one plugin: `skillsforge` (capability trust engine). Sections §4–§8 and Phases 3–9 below remain as archived design notes only.
 
-No hard inter-plugin `dependencies`. Cross-plugin cooperation is runtime-detected with fallbacks (e.g. forge-lean reads forge-gauge's ledger if present, else parses transcripts directly).
+| Plugin | Category | Role | Always-on budget (lint-enforced) | Status |
+|---|---|---|---|---|
+| `skillsforge` | developer-tools | Capability trust: forge / validate / route / policy / receipts | ≤ 350 tok | **Ship track** |
+| `forge-flow` | productivity | Engineering workflow: shape → plan → execute → verify → review → ship | ≤ 1,100 tok | Superseded / not shipped |
+| `forge-lean` | developer-tools | Token economy: output styles + context hygiene + honest benchmarks | ≤ 450 tok | Superseded / not shipped |
+| `forge-gauge` | developer-tools | MCP: skills manager + token/cost ledger | ≤ 600 tok | Superseded / not shipped |
+| `forge-web` | development | Full-stack web domain pack | ≤ 900 tok | Superseded / not shipped |
+| `forge-guard` | security | Security & adversarial review pack | ≤ 900 tok | Superseded / not shipped |
+| `forge-data` | data | Data/ML/AI pack | ≤ 900 tok | Superseded / not shipped |
+| `forge-scribe` | writing | Research/writing/business pack | ≤ 900 tok | Superseded / not shipped |
+
+No hard inter-plugin `dependencies` were planned. That multi-plugin cooperation story is abandoned for v0.3 product claims.
 
 ### 2.2 Repo layout (target)
 
@@ -156,12 +163,12 @@ skills: [<same-plugin skills to preload>]
 ```json
 {
   "name": "skillsforge-marketplace",
-  "description": "The SkillsForge family: workflow, token economy, usage ledger, domain expertise, and the validator that keeps them honest.",
+  "description": "Capability and trust engine for portable Agent Skills: validate, forge, route, policy-scan, and package with evidence receipts.",
   "owner": {"name": "Tlkh201313", "url": "https://github.com/Tlkh201313"},
   "metadata": {"pluginRoot": "./plugins"},
   "plugins": [
     {"name": "skillsforge", "source": "./plugins/skillsforge", "category": "developer-tools", "tags": ["skills","validation","authoring"], "strict": true, "version": "<lockstep>", "description": "…", "author": {…}, "homepage": "…", "repository": "…", "license": "MIT", "keywords": […]}
-    /* …7 more entries, same shape, categories per §2.1 */
+    /* Historical plan added 7 more entries — superseded; ship one plugin only */
   ]
 }
 ```
@@ -384,8 +391,8 @@ Legend: each task = **ID · title → files · Done-when**. Execute in order; ta
 
 ### Phase 10 — Release 0.3.0
 - **P10.1 Token-cost audit** → run `claude plugin details <each>`; record always-on cost table in README; must be within §2.1 budgets (trim descriptions if over).
-- **P10.2 Docs** → README plugin matrix + quickstarts; CHANGELOG 0.3.0; CONTRIBUTING with interactive smoke checklist (§10).
-- **P10.3 Full gate** → §10 all green; lockstep bump to 0.3.0; tag.
+- **P10.2 Docs** → README host support matrix (Claude full / Cursor proof / Codex+OpenCode unsupported) + capability quickstarts; CHANGELOG 0.3.0; docs under `docs/` (architecture, threat-model, evaluation-method, hackathon-demo); CONTRIBUTING smoke checklist (§10).
+- **P10.3 Full gate** → §10 all green including `build:dist` + `smoke:dist` + holdout eval; lockstep bump to 0.3.0; tag.
 
 ---
 

@@ -8,9 +8,12 @@ import { validateSkillPath, validateSkillPaths } from '../scripts/validate-skill
 const fixtures = (...parts) => join(process.cwd(), 'tests', 'fixtures', 'skills', ...parts);
 
 test('passes portable skills with standard metadata and local resources', async () => {
-  const result = await validateSkillPaths([fixtures('good-basic'), fixtures('good-with-metadata')], { root: process.cwd() });
+  const result = await validateSkillPaths(
+    [fixtures('good-basic'), fixtures('good-with-metadata'), fixtures('good-with-sidecar')],
+    { root: process.cwd() }
+  );
   assert.equal(result.ok, true, result.text);
-  assert.deepEqual(result.reports.map((report) => report.status), ['pass', 'pass']);
+  assert.deepEqual(result.reports.map((report) => report.status), ['pass', 'pass', 'pass']);
   assert.match(result.text, /PASS good-basic \(canonical\)/);
 });
 
@@ -19,7 +22,8 @@ const badCases = [
   ['bad-description', /description.*must NOT have fewer than 1 characters/],
   ['bad-unknown-field', /unsupported field maturity/],
   ['bad-empty-body', /body must contain skill instructions/],
-  ['bad-link', /relative markdown link must resolve/]
+  ['bad-link', /relative markdown link must resolve/],
+  ['bad-sidecar', /skillsforge\.json/]
 ];
 
 for (const [name, expected] of badCases) {

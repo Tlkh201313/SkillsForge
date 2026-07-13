@@ -2,6 +2,28 @@
 
 All notable changes to SkillsForge are recorded here.
 
+## [0.3.0] - 2026-07-13
+
+### Added
+
+- Capability-engine integration on top of the marketplace architecture.
+- Canonical `skillsforge.json` sidecar contract, deterministic forge, explainable routing, policy scanning, evidence receipts, and a self-contained runtime CLI.
+- Skill-scoped Claude policy hooks compiled from declared capabilities.
+- Holdout routing evaluation and cache-copy install smoke tests.
+- Plugin slash commands: `validate`, `route`, `forge`, `doctor`, `verify-receipt`.
+- Full CLI help text and README reference for all nine subcommands.
+- Diagrams for plugin components, trust pipeline, fail-closed PreToolUse, and holdout eval gate.
+
+### Changed
+
+- Docs and marketplace copy focus on one capability / trust-engine plugin (`skillsforge`); eight-plugin family roadmap marked historical in `MASTER_PLAN.md`.
+- Release gate is hard-fail: `validate:host` runs local `claude plugin validate --strict` (no soft-skip); CI release-contract + Windows smoke require demo, dist, and host validation.
+
+### Fixed
+
+- Honest one-vs-rest routing metrics (wrong skill = FP+FN) with separate exact-match accuracy; holdout gate raised to P≥0.95 / R≥0.90.
+- Contiguous phrase routing with required trigger evidence, stronger anti-triggers, and #1/#2 score margin.
+
 ## [0.2.0] - 2026-07-11
 
 ### Changed

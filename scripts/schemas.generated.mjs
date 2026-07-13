@@ -104,6 +104,172 @@ export const schemas = Object.freeze({
       }
     }
   },
+  "forge-spec": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://skillsforge.local/schemas/forge-spec.schema.json",
+    "title": "SkillsForge forge specification",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "name",
+      "description",
+      "overview",
+      "routing",
+      "capabilities"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "description": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024
+      },
+      "overview": {
+        "type": "string",
+        "minLength": 1
+      },
+      "whenToUse": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "maturity": {
+        "type": "string",
+        "enum": [
+          "experimental",
+          "stable",
+          "deprecated"
+        ]
+      },
+      "requires": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        }
+      },
+      "routing": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "triggers"
+        ],
+        "properties": {
+          "triggers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "antiTriggers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "capabilities": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "exec",
+          "network",
+          "write"
+        ],
+        "properties": {
+          "exec": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "allowed"
+            ],
+            "properties": {
+              "allowed": {
+                "type": "boolean"
+              },
+              "commands": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "network": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "allowed"
+            ],
+            "properties": {
+              "allowed": {
+                "type": "boolean"
+              },
+              "searchAllowed": {
+                "type": "boolean"
+              },
+              "hosts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "write": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "scope"
+            ],
+            "properties": {
+              "scope": {
+                "type": "string",
+                "enum": [
+                  "skill",
+                  "project",
+                  "none"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "compatibility": {
+        "type": "object",
+        "additionalProperties": {
+          "enum": [
+            "full",
+            "partial",
+            "unsupported"
+          ]
+        }
+      },
+      "provenance": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
   "marketplace": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://skillsforge.local/schemas/marketplace.schema.json",
@@ -354,6 +520,166 @@ export const schemas = Object.freeze({
       "allowed-tools": {
         "type": "string",
         "minLength": 1
+      }
+    }
+  },
+  "skillsforge.sidecar": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://skillsforge.local/schemas/skillsforge.sidecar.schema.json",
+    "title": "SkillsForge capability sidecar",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "schemaVersion",
+      "routing",
+      "capabilities"
+    ],
+    "properties": {
+      "schemaVersion": {
+        "type": "integer",
+        "const": 1
+      },
+      "maturity": {
+        "type": "string",
+        "enum": [
+          "experimental",
+          "stable",
+          "deprecated"
+        ]
+      },
+      "requires": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "uniqueItems": true
+      },
+      "routing": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "triggers",
+          "antiTriggers"
+        ],
+        "properties": {
+          "triggers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "antiTriggers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "capabilities": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "exec",
+          "network",
+          "write"
+        ],
+        "properties": {
+          "exec": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "allowed",
+              "commands"
+            ],
+            "properties": {
+              "allowed": {
+                "type": "boolean"
+              },
+              "commands": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              }
+            }
+          },
+          "network": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "allowed",
+              "hosts"
+            ],
+            "properties": {
+              "allowed": {
+                "type": "boolean"
+              },
+              "searchAllowed": {
+                "type": "boolean"
+              },
+              "hosts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^[A-Za-z0-9.-]+(?::\\d+)?$"
+                },
+                "uniqueItems": true
+              }
+            }
+          },
+          "write": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "scope"
+            ],
+            "properties": {
+              "scope": {
+                "type": "string",
+                "enum": [
+                  "skill",
+                  "project",
+                  "none"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "compatibility": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string",
+          "enum": [
+            "full",
+            "partial",
+            "unsupported"
+          ]
+        }
+      },
+      "provenance": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "license": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
       }
     }
   }

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "routing": {
+    "triggers": ["test multi exec extensions"],
+    "antiTriggers": []
+  },
+  "capabilities": {
+    "exec": { "allowed": false, "commands": [] },
+    "network": { "allowed": false, "hosts": [] },
+    "write": { "scope": "skill" }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "routing": {
+    "triggers": ["test declared execution"],
+    "antiTriggers": []
+  },
+  "capabilities": {
+    "exec": { "allowed": true, "commands": ["sh scripts/run.sh"] },
+    "network": { "allowed": false, "hosts": [] },
+    "write": { "scope": "skill" }
+  }
+}
