@@ -21,8 +21,9 @@ SkillsForge ships **one** production plugin: a capability / trust engine for por
 | Surface | Actual implementation |
 |---|---|
 | One plugin | `skillsforge` only |
+| Slash commands | `validate`, `route`, `forge`, `doctor`, `verify-receipt` |
 | Claude Code skills | `validate-agent-skill`, `author-capability`, `route-capability`, `verify-capability`, `using-skillsforge` |
-| Runtime CLI | `skillsforge` / `skillsforge-validate` bundled for marketplace installs |
+| Runtime CLI | Full `skillsforge` CLI (`validate`, `doctor`, `route`, `forge`, `receipt`, `verify-receipt`, `enforce`, `eval`, `help`) + `skillsforge-validate` shim |
 | Canonical sidecar | `skillsforge.json` (routing, capabilities, compatibility) validated with Ajv |
 | Forge | Deterministic skill generation from forge-spec (`--dry-run` / `--write`) |
 | Routing | Explainable scores with holdout evaluation gate |
@@ -52,6 +53,16 @@ The parser accepts valid BOM, CRLF, comments, quoted values, and multiline YAML.
 |---|---|:---:|---|
 | `skillsforge` | Capability trust engine: forge, validate, route, policy-enforce, package | Available | `/plugin install skillsforge@skillsforge-marketplace` |
 
+### Plugin components
+
+| Component | Paths | What you get |
+|---|---|---|
+| Slash commands | `commands/` | `/skillsforge:validate`, `/skillsforge:route`, `/skillsforge:forge`, `/skillsforge:doctor`, `/skillsforge:verify-receipt` |
+| Skills | `skills/` | `validate-agent-skill`, `author-capability`, `route-capability`, `verify-capability`, `using-skillsforge` |
+| Agents | `agents/` | `validator` (explain-only after authoritative checks) |
+| Hooks | `hooks/` | `SessionStart` banner + skill-scoped `PreToolUse` policy guardrails |
+| CLI | `bin/` | Bundled `skillsforge.mjs` + `skillsforge-validate` shim |
+
 See [docs/architecture.md](docs/architecture.md), [docs/threat-model.md](docs/threat-model.md), and [docs/hackathon-demo.md](docs/hackathon-demo.md).
 
 ## Install in Claude Code
@@ -61,37 +72,137 @@ See [docs/architecture.md](docs/architecture.md), [docs/threat-model.md](docs/th
 /plugin install skillsforge@skillsforge-marketplace
 ```
 
-Invoke the installed skill with a path:
+Invoke a slash command:
+
+```text
+/skillsforge:validate path/to/skill
+/skillsforge:route how do I validate a skill package
+/skillsforge:doctor
+```
+
+Or invoke an installed skill:
 
 ```text
 /skillsforge:validate-agent-skill path/to/skill
 ```
 
-Claude Code loads the skill, runs the bundled command, and reports structural failures before qualitative advice.
+Claude Code loads the command or skill, runs the bundled CLI, and reports structural or policy failures before qualitative advice.
 
-## Use the validator directly
+## CLI reference
+
+Build once, then use the bundled binary (marketplace installs already ship it):
 
 ```sh
 npm ci
 npm run build
-
-# Portable Agent Skills specification
-./plugins/skillsforge/bin/skillsforge-validate path/to/skill
-
-# Portable fields plus supported Claude Code extensions
-./plugins/skillsforge/bin/skillsforge-validate --profile claude-code path/to/skill
-
-# Machine-readable diagnostics
-./plugins/skillsforge/bin/skillsforge-validate --json path/to/skill
-
-# Every production skill under plugins/*/skills
-./plugins/skillsforge/bin/skillsforge-validate --all
+node ./plugins/skillsforge/bin/skillsforge.mjs help
 ```
 
-On Windows PowerShell, use Node explicitly:
+On Windows PowerShell, always invoke with Node:
 
 ```powershell
-node .\plugins\skillsforge\bin\skillsforge-validate path\to\skill
+node .\plugins\skillsforge\bin\skillsforge.mjs help
+```
+
+The `skillsforge-validate` shim forwards to `skillsforge validate`.
+
+Exit codes for every command: `0` success, `1` failure, `2` invalid usage.
+
+### `validate`
+
+Validate skill packages (YAML / schema / paths). When a `skillsforge.json` sidecar is present, also run the capability policy scan.
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs validate path/to/skill
+node ./plugins/skillsforge/bin/skillsforge.mjs validate --profile claude-code path/to/skill
+node ./plugins/skillsforge/bin/skillsforge.mjs validate --json path/to/skill
+node ./plugins/skillsforge/bin/skillsforge.mjs validate --all
+node ./plugins/skillsforge/bin/skillsforge.mjs validate --all --allow-empty
+```
+
+Flags: `--json`, `--all`, `--allow-empty`, `--profile <canonical|claude-code>` (default `canonical`).
+
+Shim:
+
+```sh
+./plugins/skillsforge/bin/skillsforge-validate --profile claude-code path/to/skill
+```
+
+### `doctor`
+
+Plugin and installed-skill health checks (includes blocking policy findings).
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs doctor
+node ./plugins/skillsforge/bin/skillsforge.mjs doctor --json
+```
+
+### `route`
+
+Explainable skill routing for a natural-language query.
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs route --query "validate this skill package"
+```
+
+### `forge`
+
+Deterministic skill generation from a forge-spec. Dry-run is the default; `--write` materializes files.
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs forge --spec examples/safe-dependency-upgrade/forge-spec.json --dry-run
+node ./plugins/skillsforge/bin/skillsforge.mjs forge --spec path/to/forge-spec.json --write
+node ./plugins/skillsforge/bin/skillsforge.mjs forge --spec path/to/forge-spec.json --write --force --out path/to/skills
+```
+
+Flags: `--spec <file>` (required), `--dry-run`, `--write`, `--force`, `--out <dir>`.
+
+### `receipt`
+
+Build a trust receipt over packaged plugin bytes (optional evaluation evidence).
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs receipt --out dist/trust-receipt.json --package dist/claude-code
+node ./plugins/skillsforge/bin/skillsforge.mjs receipt --out dist/trust-receipt.json --package dist/claude-code --evaluation artifacts/evaluation/routing-report.json --require-evaluation
+```
+
+Flags: `--out <file>`, `--package <dir>`, `--evaluation <file>`, `--require-evaluation`.
+
+### `verify-receipt`
+
+Verify a receipt against package bytes and optional evaluation report.
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs verify-receipt dist/trust-receipt.json --package dist/claude-code --package-only
+node ./plugins/skillsforge/bin/skillsforge.mjs verify-receipt dist/trust-receipt.json --package dist/claude-code --evaluation artifacts/evaluation/routing-report.json
+```
+
+Flags: `--package <dir>`, `--evaluation <file>`, `--package-only`.
+
+### `enforce`
+
+Decide PreToolUse allow/deny from a sidecar policy. Reads the Claude tool-use event JSON from stdin (hook runtime).
+
+```sh
+echo '{"tool_name":"WebSearch","tool_input":{"query":"x"}}' | node ./plugins/skillsforge/bin/skillsforge.mjs enforce --policy path/to/skillsforge.json
+```
+
+Flag: `--policy <sidecar.json>` (required).
+
+### `eval`
+
+Run the holdout routing evaluation gate (precision / recall thresholds).
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs eval
+# or
+npm run eval
+```
+
+### `help`
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs help
 ```
 
 ## Profiles
@@ -108,18 +219,6 @@ node .\plugins\skillsforge\bin\skillsforge-validate path\to\skill
 
 Put portable project-specific values under `metadata`. Select `claude-code` only when the package intentionally uses Claude extensions.
 
-## Runtime architecture
-
-```mermaid
-flowchart TD
-    A["User or coding agent"] --> B["validate-agent-skill"]
-    B --> C["Bundled skillsforge-validate CLI"]
-    C --> D["YAML, schema, and path engine"]
-    D --> E["Actionable diagnostics"]
-```
-
-The committed CLI bundle contains its runtime dependencies, so a marketplace installation does not run `npm install`. Source and bundle drift is blocked by `npm run build:check`.
-
 ## Example output
 
 Successful package:
@@ -135,8 +234,6 @@ FAIL example-skill
   - frontmatter / must contain description
   - relative markdown link must resolve: references/missing.md
 ```
-
-Exit codes are `0` for success, `1` for validation failure, and `2` for invalid CLI usage.
 
 ## Verification
 

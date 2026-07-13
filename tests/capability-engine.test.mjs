@@ -106,9 +106,27 @@ test('enforce denies network tools when undeclared', () => {
   assert.equal(decision.hookSpecificOutput.permissionDecision, 'deny');
 });
 
-test('CLI help exits 0', async () => {
-  const code = await main(['help']);
-  assert.equal(code, 0);
+test('CLI help exits 0 and lists every subcommand', async () => {
+  const chunks = [];
+  const originalWrite = process.stdout.write;
+  process.stdout.write = (chunk, encoding, callback) => {
+    chunks.push(String(chunk));
+    if (typeof callback === 'function') callback();
+    return true;
+  };
+  try {
+    const code = await main(['help']);
+    assert.equal(code, 0);
+  } finally {
+    process.stdout.write = originalWrite;
+  }
+  const help = chunks.join('');
+  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'help']) {
+    assert.match(help, new RegExp(`\\b${name}\\b`));
+  }
+  assert.match(help, /--profile/);
+  assert.match(help, /--package-only/);
+  assert.match(help, /Exit codes/);
 });
 
 test('verifySkillPaths fails undeclared-exec with JSON finding fields', async () => {

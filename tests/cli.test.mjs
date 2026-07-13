@@ -87,3 +87,22 @@ test('bundled CLI validate fails undeclared-exec with policy JSON fields', () =>
   assert.ok(Array.isArray(finding.evidence));
   assert.ok(finding.fix);
 });
+
+test('bundled CLI help lists every subcommand', () => {
+  const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
+  const build = spawnSync('npm', ['run', 'build'], {
+    cwd: process.cwd(),
+    encoding: 'utf8',
+    shell: true
+  });
+  assert.equal(build.status, 0, build.stderr || build.stdout);
+
+  const result = spawnSync(process.execPath, [cli, 'help'], {
+    cwd: process.cwd(),
+    encoding: 'utf8'
+  });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'help']) {
+    assert.match(result.stdout, new RegExp(`\\b${name}\\b`));
+  }
+});

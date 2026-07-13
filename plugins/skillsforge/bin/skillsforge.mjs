@@ -16914,8 +16914,38 @@ async function resolveRuntimeRoot(options, { explicitPaths = false } = {}) {
 async function main(argv = process.argv.slice(2), options = {}) {
   const command = argv[0];
   if (!command || command === "help" || command === "--help") {
-    process.stdout.write("usage: skillsforge <validate|doctor|route|forge|receipt|verify-receipt|enforce|eval> [options]\n");
-    process.stdout.write("  verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only]\n");
+    process.stdout.write(`usage: skillsforge <command> [options]
+
+Commands:
+  help                              Show this help
+  validate [paths...]               Validate skills (structure + capability policy when sidecar present)
+    --json                          Machine-readable diagnostics
+    --all                           Scan every production skill under plugins/*/skills
+    --allow-empty                   Allow empty production skill libraries
+    --profile <canonical|claude-code>
+                                    Validation profile (default: canonical)
+  doctor                            Plugin and installed-skill health checks
+    --json                          Machine-readable diagnostics
+  route --query <text>              Explainable skill routing for a query
+  forge --spec <file>               Deterministic skill generation from forge-spec
+    --dry-run                       Plan only (default when --write omitted)
+    --write                         Write SKILL.md + skillsforge.json
+    --force                         Overwrite an existing skill directory
+    --out <dir>                     Output skills root (default: plugin skills/)
+  receipt                           Build a trust receipt for packaged bytes
+    --out <file>                    Receipt path (default: dist/trust-receipt.json)
+    --package <dir>                 Package root to hash
+    --evaluation <file>             Routing evaluation report to embed
+    --require-evaluation            Fail if evaluation evidence is missing
+  verify-receipt <file>             Verify a trust receipt
+    --package <dir>                 Package root to re-hash
+    --evaluation <file>             External routing-report.json to check
+    --package-only                  Skip evaluation authenticity checks
+  enforce --policy <sidecar.json>   Decide PreToolUse allow/deny from stdin event JSON
+  eval                              Run holdout routing evaluation (P/R gate)
+
+Exit codes: 0 success, 1 command failure, 2 invalid usage
+`);
     return 0;
   }
   switch (command) {
