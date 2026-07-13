@@ -5,13 +5,13 @@
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 
-SkillsForge is a multi-plugin marketplace for portable Agent Skills. Version 0.3.0 ships one production plugin: a capability engine that validates, forges, routes, policy-scans, and packages [Agent Skills](https://agentskills.io/specification) with evidence receipts for Claude Code.
+SkillsForge ships **one** production plugin: a capability / trust engine for portable [Agent Skills](https://agentskills.io/specification). Version 0.3.0 validates, forges, routes, policy-scans, and packages skills with evidence receipts — primarily for Claude Code.
 
 ## Host support matrix
 
 | Host | Status | What that means |
 |---|---|---|
-| Claude Code | Full | Marketplace install, SessionStart, skill-scoped PreToolUse hooks, bundled `skillsforge` CLI |
+| Claude Code | Full | Marketplace install, SessionStart, skill-scoped PreToolUse guardrails, bundled `skillsforge` CLI, receipts, eval |
 | Cursor | Proof | Deterministic `SKILL.md` export plus lossiness report — not runtime policy parity |
 | Codex | Unsupported | Not packaged or claimed |
 | OpenCode | Unsupported | Not packaged or claimed |
@@ -20,16 +20,19 @@ SkillsForge is a multi-plugin marketplace for portable Agent Skills. Version 0.3
 
 | Surface | Actual implementation |
 |---|---|
+| One plugin | `skillsforge` only |
 | Claude Code skills | `validate-agent-skill`, `author-capability`, `route-capability`, `verify-capability`, `using-skillsforge` |
 | Runtime CLI | `skillsforge` / `skillsforge-validate` bundled for marketplace installs |
 | Canonical sidecar | `skillsforge.json` (routing, capabilities, compatibility) validated with Ajv |
 | Forge | Deterministic skill generation from forge-spec (`--dry-run` / `--write`) |
 | Routing | Explainable scores with holdout evaluation gate |
-| Policy | Static scan + skill-scoped PreToolUse enforce (guardrails, not a sandbox) |
+| Policy | Static scan + skill-scoped PreToolUse enforce (guardrails ≠ OS sandbox) |
 | Receipts | Reproducible full-package hashes + Cursor lossiness proof |
 | Diagnostics | Human-readable and JSON output with non-zero failure exits |
 
-Planned marketplace plugins beyond `skillsforge` are listed separately and are not presented as available.
+## Anti-goals (not claimed)
+
+This release does **not** ship or claim: MCP servers, LSP, monitors, token / usage ledgers, domain skill packs, multi-host runtime parity, OS sandboxing, or third-party attestation.
 
 ## Validation pipeline
 
@@ -43,18 +46,13 @@ flowchart LR
 
 The parser accepts valid BOM, CRLF, comments, quoted values, and multiline YAML. Profile validation uses Draft 2020-12 JSON Schema. Resource checks reject missing files, unsupported URI schemes, sibling-prefix escapes, and links whose real path leaves the skill directory.
 
-## Plugin availability
+## Plugin
 
 | Plugin | Purpose | Version 0.3.0 | Install command |
 |---|---|:---:|---|
-| `skillsforge` | Forge, validate, route, policy-enforce, and package skills | Available | `/plugin install skillsforge@skillsforge-marketplace` |
-| `skill-author` | Guided skill authoring (host UX) | Planned | — |
-| `skill-reviewer` | Qualitative skill review | Planned | — |
-| `skill-sync` | Cross-environment synchronization | Planned | — |
-| `skill-adapters` | Additional host adapters | Planned | — |
-| `skill-orchestrator` | Multi-skill orchestration | Planned | — |
+| `skillsforge` | Capability trust engine: forge, validate, route, policy-enforce, package | Available | `/plugin install skillsforge@skillsforge-marketplace` |
 
-Only `skillsforge` is installable in this release. See [docs/architecture.md](docs/architecture.md), [docs/threat-model.md](docs/threat-model.md), and [docs/hackathon-demo.md](docs/hackathon-demo.md).
+See [docs/architecture.md](docs/architecture.md), [docs/threat-model.md](docs/threat-model.md), and [docs/hackathon-demo.md](docs/hackathon-demo.md).
 
 ## Install in Claude Code
 
@@ -159,6 +157,7 @@ GitHub Actions runs the unit matrix on Ubuntu, Windows, and macOS with Node.js 2
 - Local Markdown resources must remain inside the skill directory after real-path resolution.
 - Only HTTP, HTTPS, mailto, fragment, and valid local links are accepted.
 - Empty production skill libraries fail closed unless `--allow-empty` is explicitly supplied.
+- PreToolUse hooks are guardrails honored by the host — not an OS sandbox.
 - `VERSION`, `package.json`, every plugin and marketplace entry, and the README badge must use the same release version.
 
 ## License

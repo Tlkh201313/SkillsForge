@@ -1,12 +1,12 @@
 # SkillsForge architecture (v0.3)
 
-SkillsForge is a Claude Code marketplace plugin that forges, validates, routes, policy-scans, and packages Agent Skills with reproducible evidence receipts.
+SkillsForge ships **one** Claude Code marketplace plugin — a capability / trust engine that forges, validates, routes, policy-scans, and packages Agent Skills with reproducible evidence receipts.
 
 ## Surfaces
 
 | Surface | Role |
 | --- | --- |
-| Marketplace | `.claude-plugin/marketplace.json` with `metadata.pluginRoot: ./plugins` |
+| Marketplace | `.claude-plugin/marketplace.json` with `metadata.pluginRoot: ./plugins` — one entry: `skillsforge` |
 | Plugin | `plugins/skillsforge/` — skills, hooks, agents, bundled CLI |
 | Canonical IR | `skillsforge.json` sidecar (Ajv Draft 2020-12) beside `SKILL.md` |
 | Runtime CLI | `plugins/skillsforge/bin/skillsforge.mjs` (esbuild bundle; no `npm install` on install) |
@@ -35,7 +35,7 @@ flowchart LR
 
 | Host | Status | Meaning |
 | --- | --- | --- |
-| Claude Code | Full | Marketplace install, SessionStart, skill-scoped PreToolUse, bundled CLI |
+| Claude Code | Full | Marketplace install, SessionStart, skill-scoped PreToolUse guardrails, bundled CLI, receipts, eval |
 | Cursor | Proof | Deterministic SKILL.md export + lossiness report; no runtime policy parity |
 | Codex / OpenCode | Unsupported | Not packaged or claimed |
 
@@ -55,3 +55,13 @@ Cache-copy smoke tests copy **only** `plugins/skillsforge` and exercise doctor /
 - PreToolUse hooks are guardrails honored by the host, not an OS sandbox.
 - Receipts hash skill files + record evaluation denominators; they are evidence, not certification.
 - Release receipts hash packaged `dist/claude-code` bytes and embed `reportSha256` for the external routing-report. Verification recomputes package hashes and checks the report file; unsigned receipts are reproducible evidence, not third-party attestation.
+
+## Anti-goals
+
+Not in scope for this product track (see also superseded eight-plugin notes in `MASTER_PLAN.md`):
+
+- MCP servers, LSP integrations, or always-on monitors
+- Token / usage ledgers or cost accounting
+- Domain expertise skill packs or multi-plugin “family” installs
+- Multi-host runtime policy parity (Cursor is export proof only)
+- OS sandboxing or third-party attestation of safety

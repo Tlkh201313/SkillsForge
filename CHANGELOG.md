@@ -13,6 +13,7 @@ All notable changes to SkillsForge are recorded here.
 
 ### Changed
 
+- Docs and marketplace copy focus on one capability / trust-engine plugin (`skillsforge`); eight-plugin family roadmap marked historical in `MASTER_PLAN.md`.
 - Release gate is hard-fail: `validate:host` runs local `claude plugin validate --strict` (no soft-skip); CI release-contract + Windows smoke require demo, dist, and host validation.
 
 ### Fixed

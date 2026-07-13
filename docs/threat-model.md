@@ -4,6 +4,8 @@
 
 SkillsForge validates, forges, routes, policy-scans, and packages Agent Skills for Claude Code (full) with Cursor export proof. This document covers trust boundaries for static capability scanning and Claude Code PreToolUse policy hooks.
 
+One plugin: `skillsforge`. No MCP, LSP, monitors, token ledgers, or domain packs are in scope.
+
 ## Assets
 
 - Declared skill capabilities (`exec`, `network`, `write`) in `skillsforge.json`
@@ -45,11 +47,12 @@ Hooks are **guardrails, not an OS sandbox**:
 - They cannot confine processes, block arbitrary filesystem access outside matched tools, or replace OS-level isolation.
 - Exit with no stdout means “no SkillsForge decision,” never an auto-approve.
 
-## Non-goals
+## Non-goals / anti-goals
 
 - Preventing a malicious local user from editing their own sidecar or disabling hooks
 - Guaranteeing confidentiality against a compromised host runtime
 - Replacing container/VM sandboxing for untrusted code execution
+- Claiming MCP, LSP, monitors, token ledgers, domain packs, multi-host parity, or attestation
 
 ## Residual risk
 
