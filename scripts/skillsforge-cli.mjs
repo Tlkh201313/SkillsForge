@@ -9,8 +9,12 @@ import { runDoctor } from '../lib/capabilities/doctor.mjs';
 import { enforcePolicy } from '../lib/capabilities/claude-policy-compiler.mjs';
 import { analyzeDependencies } from '../lib/capabilities/dependency-graph.mjs';
 import { verifySkillPaths } from '../lib/capabilities/verify.mjs';
+import { detectHosts, installSkills, resolveHostSelection } from '../lib/capabilities/install.mjs';
+import { pickHosts } from '../lib/capabilities/install-tui.mjs';
+import { HOST_REGISTRY } from '../lib/capabilities/hosts.mjs';
+import { exportPortableSkill } from '../lib/capabilities/export.mjs';
 
-export { enforcePolicy };
+export { enforcePolicy, exportPortableSkill };
 
 const modulePath = fileURLToPath(import.meta.url);
 const modulePluginRoot = resolve(dirname(modulePath), '..');
@@ -75,6 +79,14 @@ Commands:
     --package-only                  Skip evaluation authenticity checks
   enforce --policy <sidecar.json>   Decide PreToolUse allow/deny from stdin event JSON
   eval                              Run holdout routing evaluation (P/R gate)
+  install [skill-paths...]          Install skills into detected agent hosts
+    --hosts <ids>                   Comma list: claude-code,cursor,codex,opencode,gemini
+    --yes                           Non-interactive (requires --hosts)
+    --list                          Print detected hosts and exit
+    --dry-run                       Plan installs without writing
+    --force                         Overwrite existing skill directories
+    --json                          Machine-readable output
+    --home <dir>                    Override home directory (tests / custom roots)
 
 Exit codes: 0 success, 1 command failure, 2 invalid usage
 `);
@@ -98,6 +110,8 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runEnforce(argv.slice(1), options);
     case 'eval':
       return runEvalCommand(argv.slice(1), options);
+    case 'install':
+      return runInstall(argv.slice(1), options);
     default:
       process.stderr.write(`unknown command: ${command}\n`);
       return 2;
@@ -329,6 +343,108 @@ async function runEvalCommand(argv, options) {
   const report = await runEvaluation({ root: await resolveRuntimeRoot(options) });
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
   return report.precision >= HOLDOUT_PRECISION_MIN && report.recall >= HOLDOUT_RECALL_MIN ? 0 : 1;
+}
+
+async function runInstall(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const list = consumeFlag(args, '--list');
+  const yes = consumeFlag(args, '--yes');
+  const dryRun = consumeFlag(args, '--dry-run');
+  const force = consumeFlag(args, '--force');
+  const hostsOption = consumeOption(args, '--hosts');
+  if (hostsOption === null) {
+    process.stderr.write('--hosts requires a value\n');
+    return 2;
+  }
+  const homeOption = consumeOption(args, '--home');
+  if (homeOption === null) {
+    process.stderr.write('--home requires a value\n');
+    return 2;
+  }
+  const home = homeOption ? resolve(homeOption) : options.home;
+  const skillPaths = args.filter((item) => !item.startsWith('--'));
+  const root = await resolveRuntimeRoot(options, { explicitPaths: skillPaths.length > 0 });
+
+  const detected = await detectHosts({ home });
+  if (list) {
+    const payload = {
+      ok: true,
+      registry: HOST_REGISTRY.map((host) => ({ id: host.id, label: host.label, fidelity: host.fidelity })),
+      hosts: detected
+    };
+    if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+    else {
+      for (const host of detected) {
+        const mark = host.detected ? 'detected' : 'missing';
+        process.stdout.write(`${host.id}\t${mark}\t${host.fidelity}\t${host.skillsDir}\n`);
+      }
+    }
+    return 0;
+  }
+
+  let hostIds = hostsOption
+    ? hostsOption.split(',').map((item) => item.trim()).filter(Boolean)
+    : null;
+
+  if (!hostIds) {
+    if (yes) {
+      process.stderr.write('install --yes requires --hosts <ids>\n');
+      return 2;
+    }
+    const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+    if (!interactive) {
+      process.stderr.write('usage: skillsforge install --hosts <ids> --yes [skill-paths...]\n');
+      process.stderr.write('       (interactive picker requires a TTY; use --list to see hosts)\n');
+      return 2;
+    }
+    try {
+      const picked = await pickHosts(detected);
+      if (picked == null) {
+        process.stderr.write('install aborted\n');
+        return 1;
+      }
+      hostIds = picked;
+    } catch (error) {
+      process.stderr.write(`${error.message}\n`);
+      return 2;
+    }
+  }
+
+  if (!hostIds.length) {
+    process.stderr.write('no hosts selected\n');
+    return 1;
+  }
+
+  const selection = await resolveHostSelection(hostIds, { home });
+  if (selection.unknown.length) {
+    process.stderr.write(`unknown hosts: ${selection.unknown.join(', ')}\n`);
+    process.stderr.write(`known: ${HOST_REGISTRY.map((host) => host.id).join(', ')}\n`);
+    return 2;
+  }
+
+  const result = await installSkills({
+    hostIds,
+    home,
+    root,
+    skillPaths: skillPaths.length ? skillPaths : undefined,
+    dryRun,
+    force
+  });
+
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  else {
+    if (!result.ok) {
+      process.stdout.write(`FAIL install: ${result.error ?? 'unknown'}\n`);
+      if (result.validation?.text) process.stdout.write(result.validation.text);
+    } else {
+      for (const item of result.installs) {
+        process.stdout.write(`${item.status.toUpperCase()} ${item.host}/${item.skill} -> ${item.dir}\n`);
+      }
+      process.stdout.write(`OK install (${result.dryRun ? 'dry-run' : 'wrote'} ${result.installs.length} target(s))\n`);
+    }
+  }
+  return result.ok ? 0 : 1;
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === modulePath) {

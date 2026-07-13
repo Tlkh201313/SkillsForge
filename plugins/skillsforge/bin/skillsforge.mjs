@@ -4010,10 +4010,10 @@ var require_resolve_block_map = __commonJS({
       let offset = bm.offset;
       let commentEnd = null;
       for (const collItem of bm.items) {
-        const { start, key, sep: sep5, value } = collItem;
+        const { start, key, sep: sep6, value } = collItem;
         const keyProps = resolveProps.resolveProps(start, {
           indicator: "explicit-key-ind",
-          next: key ?? sep5?.[0],
+          next: key ?? sep6?.[0],
           offset,
           onError,
           parentIndent: bm.indent,
@@ -4027,7 +4027,7 @@ var require_resolve_block_map = __commonJS({
             else if ("indent" in key && key.indent !== bm.indent)
               onError(offset, "BAD_INDENT", startColMsg);
           }
-          if (!keyProps.anchor && !keyProps.tag && !sep5) {
+          if (!keyProps.anchor && !keyProps.tag && !sep6) {
             commentEnd = keyProps.end;
             if (keyProps.comment) {
               if (map.comment)
@@ -4051,7 +4051,7 @@ var require_resolve_block_map = __commonJS({
         ctx.atKey = false;
         if (utilMapIncludes.mapIncludes(ctx, map.items, keyNode))
           onError(keyStart, "DUPLICATE_KEY", "Map keys must be unique");
-        const valueProps = resolveProps.resolveProps(sep5 ?? [], {
+        const valueProps = resolveProps.resolveProps(sep6 ?? [], {
           indicator: "map-value-ind",
           next: value,
           offset: keyNode.range[2],
@@ -4067,7 +4067,7 @@ var require_resolve_block_map = __commonJS({
             if (ctx.options.strict && keyProps.start < valueProps.found.offset - 1024)
               onError(keyNode.range, "KEY_OVER_1024_CHARS", "The : indicator must be at most 1024 chars after the start of an implicit block mapping key");
           }
-          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep5, null, valueProps, onError);
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep6, null, valueProps, onError);
           if (ctx.schema.compat)
             utilFlowIndentCheck.flowIndentCheck(bm.indent, value, onError);
           offset = valueNode.range[2];
@@ -4158,7 +4158,7 @@ var require_resolve_end = __commonJS({
       let comment = "";
       if (end) {
         let hasSpace = false;
-        let sep5 = "";
+        let sep6 = "";
         for (const token of end) {
           const { source, type } = token;
           switch (type) {
@@ -4172,13 +4172,13 @@ var require_resolve_end = __commonJS({
               if (!comment)
                 comment = cb;
               else
-                comment += sep5 + cb;
-              sep5 = "";
+                comment += sep6 + cb;
+              sep6 = "";
               break;
             }
             case "newline":
               if (comment)
-                sep5 += source;
+                sep6 += source;
               hasSpace = true;
               break;
             default:
@@ -4221,18 +4221,18 @@ var require_resolve_flow_collection = __commonJS({
       let offset = fc.offset + fc.start.source.length;
       for (let i = 0; i < fc.items.length; ++i) {
         const collItem = fc.items[i];
-        const { start, key, sep: sep5, value } = collItem;
+        const { start, key, sep: sep6, value } = collItem;
         const props = resolveProps.resolveProps(start, {
           flow: fcName,
           indicator: "explicit-key-ind",
-          next: key ?? sep5?.[0],
+          next: key ?? sep6?.[0],
           offset,
           onError,
           parentIndent: fc.indent,
           startOnNewline: false
         });
         if (!props.found) {
-          if (!props.anchor && !props.tag && !sep5 && !value) {
+          if (!props.anchor && !props.tag && !sep6 && !value) {
             if (i === 0 && props.comma)
               onError(props.comma, "UNEXPECTED_TOKEN", `Unexpected , in ${fcName}`);
             else if (i < fc.items.length - 1)
@@ -4286,8 +4286,8 @@ var require_resolve_flow_collection = __commonJS({
             }
           }
         }
-        if (!isMap && !sep5 && !props.found) {
-          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep5, null, props, onError);
+        if (!isMap && !sep6 && !props.found) {
+          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep6, null, props, onError);
           coll.items.push(valueNode);
           offset = valueNode.range[2];
           if (isBlock(value))
@@ -4299,7 +4299,7 @@ var require_resolve_flow_collection = __commonJS({
           if (isBlock(key))
             onError(keyNode.range, "BLOCK_IN_FLOW", blockMsg);
           ctx.atKey = false;
-          const valueProps = resolveProps.resolveProps(sep5 ?? [], {
+          const valueProps = resolveProps.resolveProps(sep6 ?? [], {
             flow: fcName,
             indicator: "map-value-ind",
             next: value,
@@ -4310,8 +4310,8 @@ var require_resolve_flow_collection = __commonJS({
           });
           if (valueProps.found) {
             if (!isMap && !props.found && ctx.options.strict) {
-              if (sep5)
-                for (const st of sep5) {
+              if (sep6)
+                for (const st of sep6) {
                   if (st === valueProps.found)
                     break;
                   if (st.type === "newline") {
@@ -4328,7 +4328,7 @@ var require_resolve_flow_collection = __commonJS({
             else
               onError(valueProps.start, "MISSING_CHAR", `Missing , or : between ${fcName} items`);
           }
-          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep5, null, valueProps, onError) : null;
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep6, null, valueProps, onError) : null;
           if (valueNode) {
             if (isBlock(value))
               onError(valueNode.range, "BLOCK_IN_FLOW", blockMsg);
@@ -4508,7 +4508,7 @@ var require_resolve_block_scalar = __commonJS({
           chompStart = i + 1;
       }
       let value = "";
-      let sep5 = "";
+      let sep6 = "";
       let prevMoreIndented = false;
       for (let i = 0; i < contentStart; ++i)
         value += lines[i][0].slice(trimIndent) + "\n";
@@ -4525,24 +4525,24 @@ var require_resolve_block_scalar = __commonJS({
           indent = "";
         }
         if (type === Scalar.Scalar.BLOCK_LITERAL) {
-          value += sep5 + indent.slice(trimIndent) + content;
-          sep5 = "\n";
+          value += sep6 + indent.slice(trimIndent) + content;
+          sep6 = "\n";
         } else if (indent.length > trimIndent || content[0] === "	") {
-          if (sep5 === " ")
-            sep5 = "\n";
-          else if (!prevMoreIndented && sep5 === "\n")
-            sep5 = "\n\n";
-          value += sep5 + indent.slice(trimIndent) + content;
-          sep5 = "\n";
+          if (sep6 === " ")
+            sep6 = "\n";
+          else if (!prevMoreIndented && sep6 === "\n")
+            sep6 = "\n\n";
+          value += sep6 + indent.slice(trimIndent) + content;
+          sep6 = "\n";
           prevMoreIndented = true;
         } else if (content === "") {
-          if (sep5 === "\n")
+          if (sep6 === "\n")
             value += "\n";
           else
-            sep5 = "\n";
+            sep6 = "\n";
         } else {
-          value += sep5 + content;
-          sep5 = " ";
+          value += sep6 + content;
+          sep6 = " ";
           prevMoreIndented = false;
         }
       }
@@ -4724,25 +4724,25 @@ var require_resolve_flow_scalar = __commonJS({
       if (!match)
         return source;
       let res = match[1];
-      let sep5 = " ";
+      let sep6 = " ";
       let pos = first.lastIndex;
       line.lastIndex = pos;
       while (match = line.exec(source)) {
         if (match[1] === "") {
-          if (sep5 === "\n")
-            res += sep5;
+          if (sep6 === "\n")
+            res += sep6;
           else
-            sep5 = "\n";
+            sep6 = "\n";
         } else {
-          res += sep5 + match[1];
-          sep5 = " ";
+          res += sep6 + match[1];
+          sep6 = " ";
         }
         pos = line.lastIndex;
       }
       const last = /[ \t]*(.*)/sy;
       last.lastIndex = pos;
       match = last.exec(source);
-      return res + sep5 + (match?.[1] ?? "");
+      return res + sep6 + (match?.[1] ?? "");
     }
     function doubleQuotedValue(source, onError) {
       let res = "";
@@ -5552,14 +5552,14 @@ var require_cst_stringify = __commonJS({
         }
       }
     }
-    function stringifyItem({ start, key, sep: sep5, value }) {
+    function stringifyItem({ start, key, sep: sep6, value }) {
       let res = "";
       for (const st of start)
         res += st.source;
       if (key)
         res += stringifyToken(key);
-      if (sep5)
-        for (const st of sep5)
+      if (sep6)
+        for (const st of sep6)
           res += st.source;
       if (value)
         res += stringifyToken(value);
@@ -6726,18 +6726,18 @@ var require_parser = __commonJS({
         if (this.type === "map-value-ind") {
           const prev = getPrevProps(this.peek(2));
           const start = getFirstKeyStartProps(prev);
-          let sep5;
+          let sep6;
           if (scalar.end) {
-            sep5 = scalar.end;
-            sep5.push(this.sourceToken);
+            sep6 = scalar.end;
+            sep6.push(this.sourceToken);
             delete scalar.end;
           } else
-            sep5 = [this.sourceToken];
+            sep6 = [this.sourceToken];
           const map = {
             type: "block-map",
             offset: scalar.offset,
             indent: scalar.indent,
-            items: [{ start, key: scalar, sep: sep5 }]
+            items: [{ start, key: scalar, sep: sep6 }]
           };
           this.onKeyLine = true;
           this.stack[this.stack.length - 1] = map;
@@ -6890,15 +6890,15 @@ var require_parser = __commonJS({
                 } else if (isFlowToken(it.key) && !includesToken(it.sep, "newline")) {
                   const start2 = getFirstKeyStartProps(it.start);
                   const key = it.key;
-                  const sep5 = it.sep;
-                  sep5.push(this.sourceToken);
+                  const sep6 = it.sep;
+                  sep6.push(this.sourceToken);
                   delete it.key;
                   delete it.sep;
                   this.stack.push({
                     type: "block-map",
                     offset: this.offset,
                     indent: this.indent,
-                    items: [{ start: start2, key, sep: sep5 }]
+                    items: [{ start: start2, key, sep: sep6 }]
                   });
                 } else if (start.length > 0) {
                   it.sep = it.sep.concat(start, this.sourceToken);
@@ -7092,13 +7092,13 @@ var require_parser = __commonJS({
             const prev = getPrevProps(parent);
             const start = getFirstKeyStartProps(prev);
             fixFlowSeqItems(fc);
-            const sep5 = fc.end.splice(1, fc.end.length);
-            sep5.push(this.sourceToken);
+            const sep6 = fc.end.splice(1, fc.end.length);
+            sep6.push(this.sourceToken);
             const map = {
               type: "block-map",
               offset: fc.offset,
               indent: fc.indent,
-              items: [{ start, key: fc, sep: sep5 }]
+              items: [{ start, key: fc, sep: sep6 }]
             };
             this.onKeyLine = true;
             this.stack[this.stack.length - 1] = map;
@@ -10327,7 +10327,7 @@ var require_compile = __commonJS({
       const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve9.call(this, root, ref);
+      let _sch = resolve11.call(this, root, ref);
       if (_sch === void 0) {
         const schema = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
         const { schemaId } = this.opts;
@@ -10354,7 +10354,7 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve9(root, ref) {
+    function resolve11(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
@@ -10985,55 +10985,55 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve9(baseURI, relativeURI, options) {
+    function resolve11(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const resolved = resolveComponent(parse(baseURI, schemelessOptions), parse(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
       return serialize(resolved, schemelessOptions);
     }
-    function resolveComponent(base, relative5, options, skipNormalization) {
+    function resolveComponent(base, relative6, options, skipNormalization) {
       const target = {};
       if (!skipNormalization) {
         base = parse(serialize(base, options), options);
-        relative5 = parse(serialize(relative5, options), options);
+        relative6 = parse(serialize(relative6, options), options);
       }
       options = options || {};
-      if (!options.tolerant && relative5.scheme) {
-        target.scheme = relative5.scheme;
-        target.userinfo = relative5.userinfo;
-        target.host = relative5.host;
-        target.port = relative5.port;
-        target.path = removeDotSegments(relative5.path || "");
-        target.query = relative5.query;
+      if (!options.tolerant && relative6.scheme) {
+        target.scheme = relative6.scheme;
+        target.userinfo = relative6.userinfo;
+        target.host = relative6.host;
+        target.port = relative6.port;
+        target.path = removeDotSegments(relative6.path || "");
+        target.query = relative6.query;
       } else {
-        if (relative5.userinfo !== void 0 || relative5.host !== void 0 || relative5.port !== void 0) {
-          target.userinfo = relative5.userinfo;
-          target.host = relative5.host;
-          target.port = relative5.port;
-          target.path = removeDotSegments(relative5.path || "");
-          target.query = relative5.query;
+        if (relative6.userinfo !== void 0 || relative6.host !== void 0 || relative6.port !== void 0) {
+          target.userinfo = relative6.userinfo;
+          target.host = relative6.host;
+          target.port = relative6.port;
+          target.path = removeDotSegments(relative6.path || "");
+          target.query = relative6.query;
         } else {
-          if (!relative5.path) {
+          if (!relative6.path) {
             target.path = base.path;
-            if (relative5.query !== void 0) {
-              target.query = relative5.query;
+            if (relative6.query !== void 0) {
+              target.query = relative6.query;
             } else {
               target.query = base.query;
             }
           } else {
-            if (relative5.path[0] === "/") {
-              target.path = removeDotSegments(relative5.path);
+            if (relative6.path[0] === "/") {
+              target.path = removeDotSegments(relative6.path);
             } else {
               if ((base.userinfo !== void 0 || base.host !== void 0 || base.port !== void 0) && !base.path) {
-                target.path = "/" + relative5.path;
+                target.path = "/" + relative6.path;
               } else if (!base.path) {
-                target.path = relative5.path;
+                target.path = relative6.path;
               } else {
-                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative5.path;
+                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative6.path;
               }
               target.path = removeDotSegments(target.path);
             }
-            target.query = relative5.query;
+            target.query = relative6.query;
           }
           target.userinfo = base.userinfo;
           target.host = base.host;
@@ -11041,7 +11041,7 @@ var require_fast_uri = __commonJS({
         }
         target.scheme = base.scheme;
       }
-      target.fragment = relative5.fragment;
+      target.fragment = relative6.fragment;
       return target;
     }
     function equal(uriA, uriB, options) {
@@ -11243,7 +11243,7 @@ var require_fast_uri = __commonJS({
     var fastUri = {
       SCHEMES,
       normalize: normalize2,
-      resolve: resolve9,
+      resolve: resolve11,
       resolveComponent,
       equal,
       serialize,
@@ -15673,8 +15673,8 @@ __export(eval_exports, {
   runEvaluation: () => runEvaluation
 });
 import { createHash as createHash2 } from "node:crypto";
-import { mkdir as mkdir2, readFile as readFile7, writeFile as writeFile2 } from "node:fs/promises";
-import { dirname as dirname4, join as join7, resolve as resolve7 } from "node:path";
+import { mkdir as mkdir3, readFile as readFile8, writeFile as writeFile3 } from "node:fs/promises";
+import { dirname as dirname5, join as join9, resolve as resolve9 } from "node:path";
 import { fileURLToPath as fileURLToPath2 } from "node:url";
 function percentile(values, p) {
   if (values.length === 0) return null;
@@ -15734,8 +15734,8 @@ function calculateMetrics(cases, select) {
 async function runEvaluation(options = {}) {
   const root = options.root ?? repositoryRoot;
   const corpusName = options.corpus ?? "routing-holdout.json";
-  const corpusPath = join7(root, "evaluation", corpusName);
-  const corpusSource = await readFile7(corpusPath);
+  const corpusPath = join9(root, "evaluation", corpusName);
+  const corpusSource = await readFile8(corpusPath);
   const corpus = JSON.parse(corpusSource.toString("utf8"));
   const skills = await loadAllSkills(root);
   const started = Date.now();
@@ -15762,8 +15762,8 @@ async function runEvaluation(options = {}) {
     durationMs: Date.now() - started
   };
   if (options.write !== false) {
-    await mkdir2(join7(root, "artifacts", "evaluation"), { recursive: true });
-    await writeFile2(join7(root, "artifacts", "evaluation", "routing-report.json"), `${JSON.stringify(report, null, 2)}
+    await mkdir3(join9(root, "artifacts", "evaluation"), { recursive: true });
+    await writeFile3(join9(root, "artifacts", "evaluation", "routing-report.json"), `${JSON.stringify(report, null, 2)}
 `);
   }
   return report;
@@ -15774,10 +15774,10 @@ var init_eval = __esm({
     init_skill_loader();
     init_router();
     modulePath = fileURLToPath2(import.meta.url);
-    repositoryRoot = resolve7(dirname4(modulePath), "..");
+    repositoryRoot = resolve9(dirname5(modulePath), "..");
     HOLDOUT_PRECISION_MIN = 0.95;
     HOLDOUT_RECALL_MIN = 0.9;
-    if (process.argv[1] && resolve7(process.argv[1]) === modulePath) {
+    if (process.argv[1] && resolve9(process.argv[1]) === modulePath) {
       const report = await runEvaluation();
       console.log(
         `routing: ${report.tp}+${report.tn}/${report.total} exact=${report.exactMatchAccuracy?.toFixed(2)} P=${report.precision?.toFixed(2)} R=${report.recall?.toFixed(2)} p50=${report.latencyMs?.p50?.toFixed(2)}ms p95=${report.latencyMs?.p95?.toFixed(2)}ms`
@@ -15796,8 +15796,8 @@ var init_eval = __esm({
 // scripts/skillsforge-cli.mjs
 init_skill_loader();
 init_router();
-import { access as access5, readFile as readFile8, writeFile as writeFile3, mkdir as mkdir3 } from "node:fs/promises";
-import { dirname as dirname5, join as join8, resolve as resolve8 } from "node:path";
+import { access as access7, readFile as readFile9, writeFile as writeFile4, mkdir as mkdir4 } from "node:fs/promises";
+import { dirname as dirname6, join as join10, resolve as resolve10 } from "node:path";
 import { fileURLToPath as fileURLToPath3 } from "node:url";
 
 // lib/capabilities/forge.mjs
@@ -16885,9 +16885,89 @@ function isInside4(parent, candidate) {
   return normalizedCandidate === normalizedParent || normalizedCandidate.startsWith(normalizedParent.endsWith(sep4) ? normalizedParent : normalizedParent + sep4);
 }
 
-// scripts/skillsforge-cli.mjs
-var modulePath2 = fileURLToPath3(import.meta.url);
-var modulePluginRoot = resolve8(dirname5(modulePath2), "..");
+// lib/capabilities/install.mjs
+import { access as access6, cp, mkdir as mkdir2, readFile as readFile7, writeFile as writeFile2 } from "node:fs/promises";
+import { basename as basename3, dirname as dirname4, join as join8, relative as relative5, resolve as resolve8 } from "node:path";
+
+// lib/capabilities/export.mjs
+function exportPortableSkill(skill) {
+  const requires = Array.isArray(skill.requires) ? skill.requires : [];
+  const requiresNote = requires.length ? `
+
+## Requires
+${requires.map((name) => `- ${name}`).join("\n")}` : "";
+  const contents = `---
+name: ${skill.name}
+description: ${skill.description}
+---
+${String(skill.body ?? "").trim()}${requiresNote}
+`;
+  return {
+    files: [{ path: "SKILL.md", contents }]
+  };
+}
+
+// lib/capabilities/hosts.mjs
+import { access as access5 } from "node:fs/promises";
+import { homedir } from "node:os";
+import { join as join7, resolve as resolve7, sep as sep5 } from "node:path";
+var HOST_REGISTRY = Object.freeze([
+  Object.freeze({
+    id: "claude-code",
+    label: "Claude Code",
+    detectRel: ".claude",
+    skillsRel: join7(".claude", "skills"),
+    fidelity: (
+      /** @type {HostFidelity} */
+      "full"
+    )
+  }),
+  Object.freeze({
+    id: "cursor",
+    label: "Cursor",
+    detectRel: ".cursor",
+    skillsRel: join7(".cursor", "skills"),
+    fidelity: (
+      /** @type {HostFidelity} */
+      "portable"
+    )
+  }),
+  Object.freeze({
+    id: "codex",
+    label: "Codex CLI",
+    detectRel: ".codex",
+    skillsRel: join7(".codex", "skills"),
+    fidelity: (
+      /** @type {HostFidelity} */
+      "portable"
+    )
+  }),
+  Object.freeze({
+    id: "opencode",
+    label: "OpenCode",
+    detectRel: ".agents",
+    skillsRel: join7(".agents", "skills"),
+    fidelity: (
+      /** @type {HostFidelity} */
+      "portable"
+    )
+  }),
+  Object.freeze({
+    id: "gemini",
+    label: "Gemini CLI",
+    detectRel: ".gemini",
+    skillsRel: join7(".gemini", "skills"),
+    fidelity: (
+      /** @type {HostFidelity} */
+      "portable"
+    )
+  })
+]);
+function isInsideHome(home, candidate) {
+  const root = resolve7(home);
+  const path = resolve7(candidate);
+  return path === root || path.startsWith(root.endsWith(sep5) ? root : `${root}${sep5}`);
+}
 async function pathExists2(path) {
   try {
     await access5(path);
@@ -16896,11 +16976,267 @@ async function pathExists2(path) {
     return false;
   }
 }
+async function detectHosts(options = {}) {
+  const home = resolve7(options.home ?? homedir());
+  const results = [];
+  for (const host of HOST_REGISTRY) {
+    const detectDir = resolve7(home, host.detectRel);
+    const skillsDir = resolve7(home, host.skillsRel);
+    if (!isInsideHome(home, detectDir) || !isInsideHome(home, skillsDir)) {
+      throw new Error(`host path escaped home: ${host.id}`);
+    }
+    results.push({
+      id: host.id,
+      label: host.label,
+      detected: await pathExists2(detectDir),
+      detectDir,
+      skillsDir,
+      fidelity: host.fidelity
+    });
+  }
+  return results;
+}
+async function resolveHostSelection(ids, options = {}) {
+  const detected = await detectHosts(options);
+  const byId = new Map(detected.map((host) => [host.id, host]));
+  const selected = [];
+  const unknown = [];
+  for (const id of ids) {
+    const host = byId.get(id);
+    if (!host) unknown.push(id);
+    else selected.push(host);
+  }
+  return { selected, unknown, all: detected };
+}
+
+// lib/capabilities/install.mjs
+init_skill_loader();
+async function pathExists3(path) {
+  try {
+    await access6(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+async function installSkills(options = {}) {
+  const home = options.home;
+  const root = options.root ?? process.cwd();
+  const dryRun = Boolean(options.dryRun);
+  const force = Boolean(options.force);
+  let hosts = options.hosts;
+  if (!hosts) {
+    if (!options.hostIds?.length) {
+      return {
+        ok: false,
+        error: "no hosts selected",
+        installs: [],
+        validation: null
+      };
+    }
+    const selection = await resolveHostSelection(options.hostIds, { home });
+    if (selection.unknown.length) {
+      return {
+        ok: false,
+        error: `unknown hosts: ${selection.unknown.join(", ")}`,
+        installs: [],
+        validation: null,
+        hosts: selection.all
+      };
+    }
+    hosts = selection.selected;
+  }
+  if (!hosts.length) {
+    return { ok: false, error: "no hosts selected", installs: [], validation: null };
+  }
+  let skills = options.skills;
+  if (!skills) {
+    if (options.skillPaths?.length) {
+      skills = [];
+      for (const path of options.skillPaths) {
+        skills.push(await loadSkill(path, { root }));
+      }
+    } else {
+      skills = await loadAllSkills(root);
+    }
+  }
+  if (!skills.length) {
+    return { ok: false, error: "no skills to install", installs: [], validation: null };
+  }
+  const paths = skills.map((skill) => skill.directory);
+  const validation = await verifySkillPaths(paths, {
+    root,
+    profile: "claude-code",
+    all: false,
+    dependencies: false
+  });
+  if (!validation.ok) {
+    return {
+      ok: false,
+      error: "validation failed",
+      installs: [],
+      validation,
+      planned: []
+    };
+  }
+  const installs = [];
+  const planned = [];
+  for (const host of hosts) {
+    for (const skill of skills) {
+      const targetDir = join8(host.skillsDir, skill.name);
+      const exists = await pathExists3(targetDir);
+      const entry = {
+        host: host.id,
+        skill: skill.name,
+        dir: targetDir,
+        fidelity: host.fidelity,
+        status: "pending"
+      };
+      if (exists && !force) {
+        entry.status = "skipped";
+        entry.reason = "target exists (pass --force to overwrite)";
+        installs.push(entry);
+        continue;
+      }
+      if (host.fidelity === "portable") {
+        const exported = exportPortableSkill(skill);
+        for (const file of exported.files) {
+          planned.push({ host: host.id, skill: skill.name, path: join8(targetDir, file.path) });
+        }
+        if (!dryRun) {
+          await mkdir2(targetDir, { recursive: true });
+          for (const file of exported.files) {
+            await writeFile2(join8(targetDir, file.path), file.contents);
+          }
+        }
+        entry.status = dryRun ? "planned" : "installed";
+        entry.files = exported.files.map((file) => file.path);
+      } else {
+        const relativeFiles = skill.files.map((file) => relative5(skill.directory, file));
+        for (const rel of relativeFiles) {
+          planned.push({ host: host.id, skill: skill.name, path: join8(targetDir, rel) });
+        }
+        if (!dryRun) {
+          await mkdir2(dirname4(targetDir), { recursive: true });
+          await cp(skill.directory, targetDir, { recursive: true, force: true });
+        }
+        entry.status = dryRun ? "planned" : "installed";
+        entry.files = relativeFiles;
+      }
+      installs.push(entry);
+    }
+  }
+  const blocked = installs.some((item) => item.status === "pending");
+  return {
+    ok: !blocked,
+    dryRun,
+    installs,
+    planned,
+    validation,
+    hosts: await detectHosts({ home })
+  };
+}
+
+// lib/capabilities/install-tui.mjs
+import readline from "node:readline";
+async function pickHosts(hosts, options = {}) {
+  const input = options.input ?? process.stdin;
+  const output = options.output ?? process.stdout;
+  if (!input.isTTY || typeof input.setRawMode !== "function") {
+    throw new Error("interactive picker requires a TTY; pass --hosts <ids> --yes");
+  }
+  const selected = new Set(hosts.filter((host) => host.detected).map((host) => host.id));
+  let cursor = 0;
+  let done = false;
+  let aborted = false;
+  function render() {
+    output.write("\x1B[?25l");
+    output.write("\x1B[H\x1B[J");
+    output.write("Which agents should SkillsForge configure?\n\n");
+    hosts.forEach((host, index) => {
+      const pointer = index === cursor ? ">" : " ";
+      const mark = selected.has(host.id) ? "[x]" : "[ ]";
+      const note = host.detected ? "" : " (not detected)";
+      const fidelity = host.fidelity === "full" ? "full" : "portable";
+      const dimStart = host.detected ? "" : "\x1B[2m";
+      const dimEnd = host.detected ? "" : "\x1B[0m";
+      output.write(`${dimStart}${pointer} ${mark} ${host.label} \u2014 ${fidelity}${note}${dimEnd}
+`);
+    });
+    output.write("\n\u2191/\u2193 move \xB7 space toggle \xB7 enter confirm \xB7 q abort\n");
+  }
+  return await new Promise((resolvePromise) => {
+    const rl = readline.createInterface({ input, output, terminal: true });
+    readline.emitKeypressEvents(input, rl);
+    input.setRawMode(true);
+    render();
+    function cleanup(result) {
+      if (done) return;
+      done = true;
+      input.setRawMode(false);
+      input.removeListener("keypress", onKeypress);
+      rl.close();
+      output.write("\x1B[?25h");
+      resolvePromise(result);
+    }
+    function onKeypress(_str, key) {
+      if (!key) return;
+      if (key.ctrl && key.name === "c") {
+        aborted = true;
+        cleanup(null);
+        return;
+      }
+      switch (key.name) {
+        case "up":
+          cursor = (cursor - 1 + hosts.length) % hosts.length;
+          render();
+          break;
+        case "down":
+          cursor = (cursor + 1) % hosts.length;
+          render();
+          break;
+        case "space": {
+          const id = hosts[cursor].id;
+          if (selected.has(id)) selected.delete(id);
+          else selected.add(id);
+          render();
+          break;
+        }
+        case "return":
+        case "enter":
+          cleanup([...selected]);
+          break;
+        case "q":
+        case "escape":
+          aborted = true;
+          cleanup(null);
+          break;
+        default:
+          break;
+      }
+      if (aborted) {
+      }
+    }
+    input.on("keypress", onKeypress);
+  });
+}
+
+// scripts/skillsforge-cli.mjs
+var modulePath2 = fileURLToPath3(import.meta.url);
+var modulePluginRoot = resolve10(dirname6(modulePath2), "..");
+async function pathExists4(path) {
+  try {
+    await access7(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
 async function isPluginRoot(root) {
-  return await pathExists2(join8(root, ".claude-plugin", "plugin.json")) && await pathExists2(join8(root, "skills"));
+  return await pathExists4(join10(root, ".claude-plugin", "plugin.json")) && await pathExists4(join10(root, "skills"));
 }
 async function isRepositoryRoot(root) {
-  return pathExists2(join8(root, "plugins", "skillsforge", ".claude-plugin", "plugin.json"));
+  return pathExists4(join10(root, "plugins", "skillsforge", ".claude-plugin", "plugin.json"));
 }
 async function resolveRuntimeRoot(options, { explicitPaths = false } = {}) {
   if (options.root) return options.root;
@@ -16943,6 +17279,14 @@ Commands:
     --package-only                  Skip evaluation authenticity checks
   enforce --policy <sidecar.json>   Decide PreToolUse allow/deny from stdin event JSON
   eval                              Run holdout routing evaluation (P/R gate)
+  install [skill-paths...]          Install skills into detected agent hosts
+    --hosts <ids>                   Comma list: claude-code,cursor,codex,opencode,gemini
+    --yes                           Non-interactive (requires --hosts)
+    --list                          Print detected hosts and exit
+    --dry-run                       Plan installs without writing
+    --force                         Overwrite existing skill directories
+    --json                          Machine-readable output
+    --home <dir>                    Override home directory (tests / custom roots)
 
 Exit codes: 0 success, 1 command failure, 2 invalid usage
 `);
@@ -16965,6 +17309,8 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runEnforce(argv.slice(1), options);
     case "eval":
       return runEvalCommand(argv.slice(1), options);
+    case "install":
+      return runInstall(argv.slice(1), options);
     default:
       process.stderr.write(`unknown command: ${command}
 `);
@@ -17053,24 +17399,24 @@ async function runForge(argv, options) {
     return 2;
   }
   const outIndex = argv.indexOf("--out");
-  const spec = JSON.parse(await readFile8(argv[specIndex + 1], "utf8"));
+  const spec = JSON.parse(await readFile9(argv[specIndex + 1], "utf8"));
   const root = await resolveRuntimeRoot(options);
   const result = await forgeSkill(spec, {
     write: argv.includes("--write"),
     dryRun: !argv.includes("--write"),
     force: argv.includes("--force"),
-    outRoot: outIndex >= 0 ? argv[outIndex + 1] : join8(root, ...await isPluginRoot(root) ? ["skills"] : ["plugins", "skillsforge", "skills"])
+    outRoot: outIndex >= 0 ? argv[outIndex + 1] : join10(root, ...await isPluginRoot(root) ? ["skills"] : ["plugins", "skillsforge", "skills"])
   });
   process.stdout.write(`${JSON.stringify(result, null, 2)}
 `);
   return result.ok ? 0 : 1;
 }
 async function resolvePackageRoot(root, packageOption) {
-  if (packageOption) return resolve8(packageOption);
+  if (packageOption) return resolve10(packageOption);
   if (await isPluginRoot(root)) return root;
-  const distPackage = join8(root, "dist", "claude-code");
-  if (await pathExists2(join8(distPackage, ".claude-plugin", "plugin.json"))) return distPackage;
-  if (await isRepositoryRoot(root)) return join8(root, "plugins", "skillsforge");
+  const distPackage = join10(root, "dist", "claude-code");
+  if (await pathExists4(join10(distPackage, ".claude-plugin", "plugin.json"))) return distPackage;
+  if (await isRepositoryRoot(root)) return join10(root, "plugins", "skillsforge");
   return root;
 }
 async function runReceipt(argv, options) {
@@ -17093,7 +17439,7 @@ async function runReceipt(argv, options) {
   const requireEvaluation = consumeFlag(args, "--require-evaluation");
   const root = await resolveRuntimeRoot(options);
   const packageRoot = await resolvePackageRoot(root, packageOption);
-  const receiptOut = out ?? join8(root, "dist", "trust-receipt.json");
+  const receiptOut = out ?? join10(root, "dist", "trust-receipt.json");
   const skills = await loadAllSkills(packageRoot);
   const graph = analyzeDependencies(skills);
   if (graph.cycles.length || graph.missing.length || graph.duplicates.length) {
@@ -17103,9 +17449,9 @@ async function runReceipt(argv, options) {
   }
   let evaluation = null;
   let reportBytes = null;
-  const evaluationPath = evaluationOption ?? join8(root, "artifacts", "evaluation", "routing-report.json");
+  const evaluationPath = evaluationOption ?? join10(root, "artifacts", "evaluation", "routing-report.json");
   try {
-    reportBytes = await readFile8(evaluationPath);
+    reportBytes = await readFile9(evaluationPath);
     evaluation = normalizeEvaluation(JSON.parse(reportBytes.toString("utf8")), { reportBytes });
   } catch {
   }
@@ -17120,8 +17466,8 @@ async function runReceipt(argv, options) {
 `);
     return 1;
   }
-  await mkdir3(dirname5(receiptOut), { recursive: true });
-  await writeFile3(receiptOut, result.text);
+  await mkdir4(dirname6(receiptOut), { recursive: true });
+  await writeFile4(receiptOut, result.text);
   process.stdout.write(`${JSON.stringify({
     ok: true,
     out: receiptOut,
@@ -17158,10 +17504,10 @@ async function runVerifyReceipt(argv, options) {
     requireEvaluation: !packageOnly
   };
   if (!packageOnly && evaluationOption) {
-    verifyOptions.evaluationPath = resolve8(evaluationOption);
+    verifyOptions.evaluationPath = resolve10(evaluationOption);
   } else if (!packageOnly) {
-    const defaultEval = join8(root, "artifacts", "evaluation", "routing-report.json");
-    if (await pathExists2(defaultEval)) verifyOptions.evaluationPath = defaultEval;
+    const defaultEval = join10(root, "artifacts", "evaluation", "routing-report.json");
+    if (await pathExists4(defaultEval)) verifyOptions.evaluationPath = defaultEval;
   }
   const result = await verifyReceipt(path, skills, verifyOptions);
   process.stdout.write(`${JSON.stringify(result, null, 2)}
@@ -17177,9 +17523,9 @@ async function runEnforce(argv) {
   const chunks = [];
   for await (const chunk of process.stdin) chunks.push(chunk);
   const event = JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
-  const policyPath = resolve8(argv[policyIndex + 1]);
-  const policy = JSON.parse(await readFile8(policyPath, "utf8"));
-  policy.__skillRoot = dirname5(policyPath);
+  const policyPath = resolve10(argv[policyIndex + 1]);
+  const policy = JSON.parse(await readFile9(policyPath, "utf8"));
+  policy.__skillRoot = dirname6(policyPath);
   policy.__projectRoot = event?.cwd || process.env.CLAUDE_PROJECT_DIR || process.env.CLAUDE_CWD || process.cwd();
   const decision = enforcePolicy(event, policy);
   if (decision) process.stdout.write(`${JSON.stringify(decision)}
@@ -17193,10 +17539,112 @@ async function runEvalCommand(argv, options) {
 `);
   return report.precision >= HOLDOUT_PRECISION_MIN2 && report.recall >= HOLDOUT_RECALL_MIN2 ? 0 : 1;
 }
-if (process.argv[1] && resolve8(process.argv[1]) === modulePath2) {
+async function runInstall(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const list = consumeFlag(args, "--list");
+  const yes = consumeFlag(args, "--yes");
+  const dryRun = consumeFlag(args, "--dry-run");
+  const force = consumeFlag(args, "--force");
+  const hostsOption = consumeOption(args, "--hosts");
+  if (hostsOption === null) {
+    process.stderr.write("--hosts requires a value\n");
+    return 2;
+  }
+  const homeOption = consumeOption(args, "--home");
+  if (homeOption === null) {
+    process.stderr.write("--home requires a value\n");
+    return 2;
+  }
+  const home = homeOption ? resolve10(homeOption) : options.home;
+  const skillPaths = args.filter((item) => !item.startsWith("--"));
+  const root = await resolveRuntimeRoot(options, { explicitPaths: skillPaths.length > 0 });
+  const detected = await detectHosts({ home });
+  if (list) {
+    const payload = {
+      ok: true,
+      registry: HOST_REGISTRY.map((host) => ({ id: host.id, label: host.label, fidelity: host.fidelity })),
+      hosts: detected
+    };
+    if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+    else {
+      for (const host of detected) {
+        const mark = host.detected ? "detected" : "missing";
+        process.stdout.write(`${host.id}	${mark}	${host.fidelity}	${host.skillsDir}
+`);
+      }
+    }
+    return 0;
+  }
+  let hostIds = hostsOption ? hostsOption.split(",").map((item) => item.trim()).filter(Boolean) : null;
+  if (!hostIds) {
+    if (yes) {
+      process.stderr.write("install --yes requires --hosts <ids>\n");
+      return 2;
+    }
+    const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+    if (!interactive) {
+      process.stderr.write("usage: skillsforge install --hosts <ids> --yes [skill-paths...]\n");
+      process.stderr.write("       (interactive picker requires a TTY; use --list to see hosts)\n");
+      return 2;
+    }
+    try {
+      const picked = await pickHosts(detected);
+      if (picked == null) {
+        process.stderr.write("install aborted\n");
+        return 1;
+      }
+      hostIds = picked;
+    } catch (error) {
+      process.stderr.write(`${error.message}
+`);
+      return 2;
+    }
+  }
+  if (!hostIds.length) {
+    process.stderr.write("no hosts selected\n");
+    return 1;
+  }
+  const selection = await resolveHostSelection(hostIds, { home });
+  if (selection.unknown.length) {
+    process.stderr.write(`unknown hosts: ${selection.unknown.join(", ")}
+`);
+    process.stderr.write(`known: ${HOST_REGISTRY.map((host) => host.id).join(", ")}
+`);
+    return 2;
+  }
+  const result = await installSkills({
+    hostIds,
+    home,
+    root,
+    skillPaths: skillPaths.length ? skillPaths : void 0,
+    dryRun,
+    force
+  });
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else {
+    if (!result.ok) {
+      process.stdout.write(`FAIL install: ${result.error ?? "unknown"}
+`);
+      if (result.validation?.text) process.stdout.write(result.validation.text);
+    } else {
+      for (const item of result.installs) {
+        process.stdout.write(`${item.status.toUpperCase()} ${item.host}/${item.skill} -> ${item.dir}
+`);
+      }
+      process.stdout.write(`OK install (${result.dryRun ? "dry-run" : "wrote"} ${result.installs.length} target(s))
+`);
+    }
+  }
+  return result.ok ? 0 : 1;
+}
+if (process.argv[1] && resolve10(process.argv[1]) === modulePath2) {
   process.exitCode = await main();
 }
 export {
   enforcePolicy,
+  exportPortableSkill,
   main
 };

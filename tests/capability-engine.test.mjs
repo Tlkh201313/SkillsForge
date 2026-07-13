@@ -121,7 +121,7 @@ test('CLI help exits 0 and lists every subcommand', async () => {
     process.stdout.write = originalWrite;
   }
   const help = chunks.join('');
-  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'help']) {
+  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'help', 'install']) {
     assert.match(help, new RegExp(`\\b${name}\\b`));
   }
   assert.match(help, /--profile/);

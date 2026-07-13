@@ -102,7 +102,65 @@ test('bundled CLI help lists every subcommand', () => {
     encoding: 'utf8'
   });
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'help']) {
+  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'help', 'install']) {
     assert.match(result.stdout, new RegExp(`\\b${name}\\b`));
   }
+});
+
+test('bundled CLI install --list --json reports registry', () => {
+  const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
+  const result = spawnSync(process.execPath, [cli, 'install', '--list', '--json', '--home', process.cwd()], {
+    cwd: process.cwd(),
+    encoding: 'utf8'
+  });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.ok, true);
+  assert.ok(payload.registry.some((host) => host.id === 'cursor'));
+  assert.ok(payload.hosts.some((host) => host.id === 'claude-code'));
+});
+
+test('bundled CLI install dry-run plans portable files under --home', async () => {
+  const { mkdtemp, mkdir, rm } = await import('node:fs/promises');
+  const { tmpdir } = await import('node:os');
+  const home = await mkdtemp(join(tmpdir(), 'sf-cli-install-'));
+  try {
+    await mkdir(join(home, '.cursor'), { recursive: true });
+    const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
+    const result = spawnSync(
+      process.execPath,
+      [
+        cli,
+        'install',
+        '--hosts',
+        'cursor',
+        '--yes',
+        '--dry-run',
+        '--json',
+        '--home',
+        home,
+        'tests/fixtures/skills/good-basic'
+      ],
+      { cwd: process.cwd(), encoding: 'utf8' }
+    );
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    const payload = JSON.parse(result.stdout);
+    assert.equal(payload.ok, true);
+    assert.equal(payload.dryRun, true);
+    assert.equal(payload.installs[0].status, 'planned');
+    assert.equal(payload.installs[0].fidelity, 'portable');
+  } finally {
+    await rm(home, { recursive: true, force: true });
+  }
+});
+
+test('bundled CLI install without hosts in non-TTY exits 2', () => {
+  const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
+  const result = spawnSync(process.execPath, [cli, 'install', '--yes'], {
+    cwd: process.cwd(),
+    encoding: 'utf8',
+    stdio: ['pipe', 'pipe', 'pipe']
+  });
+  assert.equal(result.status, 2, result.stderr || result.stdout);
+  assert.match(result.stderr, /--hosts/);
 });
