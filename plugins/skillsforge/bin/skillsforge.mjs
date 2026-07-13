@@ -15797,6 +15797,7 @@ var init_eval = __esm({
 init_skill_loader();
 init_router();
 import { access as access7, readFile as readFile9, writeFile as writeFile4, mkdir as mkdir4 } from "node:fs/promises";
+import { realpathSync } from "node:fs";
 import { dirname as dirname6, join as join10, resolve as resolve10 } from "node:path";
 import { fileURLToPath as fileURLToPath3 } from "node:url";
 
@@ -15868,7 +15869,8 @@ async function scanSkill(skill) {
     if (stats.isSymbolicLink()) {
       try {
         const real = await realpath3(file);
-        if (!isInside3(skill.directory, real)) {
+        const realDir = await realpath3(skill.directory);
+        if (!isInside3(realDir, real)) {
           findings.push(finding(
             "symlink-escape",
             true,
@@ -17640,8 +17642,16 @@ async function runInstall(argv, options) {
   }
   return result.ok ? 0 : 1;
 }
-if (process.argv[1] && resolve10(process.argv[1]) === modulePath2) {
-  process.exitCode = await main();
+if (process.argv[1]) {
+  let sameEntry = false;
+  try {
+    sameEntry = realpathSync(process.argv[1]) === realpathSync(modulePath2);
+  } catch {
+    sameEntry = resolve10(process.argv[1]) === modulePath2;
+  }
+  if (sameEntry) {
+    process.exitCode = await main();
+  }
 }
 export {
   enforcePolicy,

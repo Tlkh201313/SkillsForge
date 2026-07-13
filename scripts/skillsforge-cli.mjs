@@ -1,4 +1,5 @@
 import { access, readFile, writeFile, mkdir } from 'node:fs/promises';
+import { realpathSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadAllSkills } from '../lib/capabilities/skill-loader.mjs';
@@ -447,6 +448,14 @@ async function runInstall(argv, options) {
   return result.ok ? 0 : 1;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === modulePath) {
-  process.exitCode = await main();
+if (process.argv[1]) {
+  let sameEntry = false;
+  try {
+    sameEntry = realpathSync(process.argv[1]) === realpathSync(modulePath);
+  } catch {
+    sameEntry = resolve(process.argv[1]) === modulePath;
+  }
+  if (sameEntry) {
+    process.exitCode = await main();
+  }
 }

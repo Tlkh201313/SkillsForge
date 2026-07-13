@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readdir, readFile, access } from 'node:fs/promises';
-import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 import {
   compileSkillPolicyFrontmatter,
   enforcePolicy,
@@ -14,6 +15,12 @@ const baseCaps = {
   write: { scope: 'skill' }
 };
 
+const skillRoot = resolve(tmpdir(), 'sf-policy-skill-demo');
+const projectRoot = resolve(tmpdir(), 'sf-policy-project-app');
+const outsideFile = resolve(tmpdir(), 'sf-policy-outside', 'secret.txt');
+const insideSkillFile = join(skillRoot, 'output.txt');
+const insideProjectFile = join(projectRoot, 'src', 'a.txt');
+
 function policy(overrides = {}, roots = {}) {
   return {
     schemaVersion: 1,
@@ -21,8 +28,8 @@ function policy(overrides = {}, roots = {}) {
       ...baseCaps,
       ...overrides
     },
-    __skillRoot: roots.__skillRoot ?? 'C:\\skills\\demo',
-    __projectRoot: roots.__projectRoot ?? 'C:\\projects\\app'
+    __skillRoot: roots.__skillRoot ?? skillRoot,
+    __projectRoot: roots.__projectRoot ?? projectRoot
   };
 }
 
@@ -210,19 +217,19 @@ test('Bash denies shell network when network capability is undeclared', () => {
 test('Write and Edit deny outside skill scope and allow inside', () => {
   const caps = policy({ write: { scope: 'skill' } });
   const denied = enforcePolicy(
-    { tool_name: 'Write', tool_input: { file_path: 'C:\\outside\\secret.txt', content: 'x' } },
+    { tool_name: 'Write', tool_input: { file_path: outsideFile, content: 'x' } },
     caps
   );
   assert.match(denyReason(denied), /write escapes skill scope/);
 
   const editDenied = enforcePolicy(
-    { tool_name: 'Edit', tool_input: { file_path: 'C:\\outside\\secret.txt', old_string: 'a', new_string: 'b' } },
+    { tool_name: 'Edit', tool_input: { file_path: outsideFile, old_string: 'a', new_string: 'b' } },
     caps
   );
   assert.match(denyReason(editDenied), /write escapes skill scope/);
 
   const allowed = enforcePolicy(
-    { tool_name: 'Write', tool_input: { file_path: 'C:\\skills\\demo\\output.txt', content: 'ok' } },
+    { tool_name: 'Write', tool_input: { file_path: insideSkillFile, content: 'ok' } },
     caps
   );
   assert.equal(allowed, null);
@@ -239,15 +246,15 @@ test('Write and Edit deny missing path for declared write scopes', () => {
 });
 
 test('Write denies outside project root when scope is project', () => {
-  const caps = policy({ write: { scope: 'project' } }, { __projectRoot: 'C:\\projects\\app' });
+  const caps = policy({ write: { scope: 'project' } }, { __projectRoot: projectRoot });
   const denied = enforcePolicy(
-    { tool_name: 'Write', tool_input: { file_path: 'C:\\elsewhere\\secret.txt', content: 'x' } },
+    { tool_name: 'Write', tool_input: { file_path: outsideFile, content: 'x' } },
     caps
   );
   assert.match(denyReason(denied), /write escapes project scope/);
 
   const allowed = enforcePolicy(
-    { tool_name: 'Write', tool_input: { file_path: 'C:\\projects\\app\\src\\a.txt', content: 'ok' } },
+    { tool_name: 'Write', tool_input: { file_path: insideProjectFile, content: 'ok' } },
     caps
   );
   assert.equal(allowed, null);
@@ -255,7 +262,7 @@ test('Write denies outside project root when scope is project', () => {
 
 test('write scope none denies Write tools', () => {
   const decision = enforcePolicy(
-    { tool_name: 'Write', tool_input: { file_path: 'C:\\skills\\demo\\x.txt', content: 'x' } },
+    { tool_name: 'Write', tool_input: { file_path: insideSkillFile, content: 'x' } },
     policy({ write: { scope: 'none' } })
   );
   assert.match(denyReason(decision), /write capability scope is none/);
