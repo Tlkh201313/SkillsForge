@@ -5,8 +5,41 @@ import { loadAllSkills } from '../lib/capabilities/skill-loader.mjs';
 import { buildReceipt, normalizeEvaluation } from '../lib/capabilities/receipt.mjs';
 import { runEvaluation } from './eval.mjs';
 import { validateSkillPaths } from './validate-skill-lib.mjs';
+import { runHostValidation } from './host-validation.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+
+async function loadHostValidation(buildRoot, options) {
+  if (options.hostValidation) return options.hostValidation;
+
+  const envPath = process.env.SKILLSFORGE_HOST_VALIDATION;
+  if (envPath) {
+    const abs = resolve(buildRoot, envPath);
+    return JSON.parse(await readFile(abs, 'utf8'));
+  }
+
+  const artifactPath = join(buildRoot, 'artifacts', 'host-validation.json');
+  try {
+    return JSON.parse(await readFile(artifactPath, 'utf8'));
+  } catch {
+    // fall through
+  }
+
+  if (process.env.SKILLSFORGE_HOST_VALIDATE === '1' || options.hostValidate) {
+    // Pre-dist: marketplace + plugin only (dist validated by validate:host after build:dist)
+    return await runHostValidation({
+      root: buildRoot,
+      paths: ['.', 'plugins/skillsforge'],
+      requireDist: false
+    });
+  }
+
+  return {
+    status: 'skipped',
+    tool: 'claude plugin validate --strict',
+    reason: 'host validation not run during build-dist; run npm run validate:host after build:dist'
+  };
+}
 
 export async function runBuildDist(options = {}) {
   const buildRoot = options.root ?? root;
@@ -62,11 +95,7 @@ export async function runBuildDist(options = {}) {
     };
   }
 
-  const hostValidation = options.hostValidation ?? {
-    status: 'skipped',
-    tool: 'claude plugin validate --strict',
-    reason: 'host validation not run during build-dist; see agent-config tests'
-  };
+  const hostValidation = await loadHostValidation(buildRoot, options);
   if (hostValidation.status === 'fail') {
     return { ok: false, errors: [`strict host validation failed: ${hostValidation.detail ?? 'unknown'}`] };
   }

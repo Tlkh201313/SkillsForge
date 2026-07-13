@@ -5,20 +5,31 @@
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 
-SkillsForge is a multi-plugin marketplace for portable Agent Skills. Version 0.3.0 ships one production plugin: a bundled validator for [Agent Skills](https://agentskills.io/specification) packages and supported Claude Code extensions. Planned plugins are listed separately and are not presented as available.
+SkillsForge is a multi-plugin marketplace for portable Agent Skills. Version 0.3.0 ships one production plugin: a capability engine that validates, forges, routes, policy-scans, and packages [Agent Skills](https://agentskills.io/specification) with evidence receipts for Claude Code.
+
+## Host support matrix
+
+| Host | Status | What that means |
+|---|---|---|
+| Claude Code | Full | Marketplace install, SessionStart, skill-scoped PreToolUse hooks, bundled `skillsforge` CLI |
+| Cursor | Proof | Deterministic `SKILL.md` export plus lossiness report — not runtime policy parity |
+| Codex | Unsupported | Not packaged or claimed |
+| OpenCode | Unsupported | Not packaged or claimed |
 
 ## What ships today
 
 | Surface | Actual implementation |
 |---|---|
-| Claude Code skill | `validate-agent-skill` reviews and validates a requested skill package |
-| Standalone command | `skillsforge-validate` is bundled into one executable Node.js file |
-| Portable profile | Enforces the Agent Skills name, description, metadata, compatibility, license, and tool fields |
-| Claude Code profile | Adds supported Claude-specific invocation, tool, model, context, agent, and hook fields |
-| Diagnostics | Human-readable output and structured JSON with non-zero failure exits |
-| Safety | Reads skill metadata and resources without executing bundled skill scripts |
+| Claude Code skills | `validate-agent-skill`, `author-capability`, `route-capability`, `verify-capability`, `using-skillsforge` |
+| Runtime CLI | `skillsforge` / `skillsforge-validate` bundled for marketplace installs |
+| Canonical sidecar | `skillsforge.json` (routing, capabilities, compatibility) validated with Ajv |
+| Forge | Deterministic skill generation from forge-spec (`--dry-run` / `--write`) |
+| Routing | Explainable scores with holdout evaluation gate |
+| Policy | Static scan + skill-scoped PreToolUse enforce (guardrails, not a sandbox) |
+| Receipts | Reproducible full-package hashes + Cursor lossiness proof |
+| Diagnostics | Human-readable and JSON output with non-zero failure exits |
 
-Routing, generation, synchronization, adapters, and orchestration are not implemented or advertised as working commands.
+Planned marketplace plugins beyond `skillsforge` are listed separately and are not presented as available.
 
 ## Validation pipeline
 
@@ -36,15 +47,14 @@ The parser accepts valid BOM, CRLF, comments, quoted values, and multiline YAML.
 
 | Plugin | Purpose | Version 0.3.0 | Install command |
 |---|---|:---:|---|
-| `skillsforge` | Validate portable and Claude Code skill packages | Available | `/plugin install skillsforge@skillsforge-marketplace` |
-| `skill-author` | Guided skill authoring | Planned | — |
+| `skillsforge` | Forge, validate, route, policy-enforce, and package skills | Available | `/plugin install skillsforge@skillsforge-marketplace` |
+| `skill-author` | Guided skill authoring (host UX) | Planned | — |
 | `skill-reviewer` | Qualitative skill review | Planned | — |
-| `skill-router` | Skill selection and routing | Planned | — |
 | `skill-sync` | Cross-environment synchronization | Planned | — |
-| `skill-adapters` | Format adapters | Planned | — |
+| `skill-adapters` | Additional host adapters | Planned | — |
 | `skill-orchestrator` | Multi-skill orchestration | Planned | — |
 
-Only `skillsforge` is installable in this release.
+Only `skillsforge` is installable in this release. See [docs/architecture.md](docs/architecture.md), [docs/threat-model.md](docs/threat-model.md), and [docs/hackathon-demo.md](docs/hackathon-demo.md).
 
 ## Install in Claude Code
 
@@ -137,13 +147,11 @@ Run the same release-contract dry run locally from the repository root:
 ```sh
 npm ci
 npm run check
-for plugin in plugins/*/; do
-  npx @anthropic-ai/claude-code plugin validate "$plugin" --strict || exit 1
-done
-npx @anthropic-ai/claude-code plugin validate . --strict
 ```
 
-GitHub Actions runs the validation and test suite on Ubuntu, Windows, and macOS with Node.js 20 and 22. A separate release-contract job strictly validates every directory under `plugins/`, validates the marketplace root, and verifies the committed CLI bundle.
+`npm run check` includes validate, test, eval, demo, build, `build:dist`, `smoke:dist`, and hard `validate:host` (`claude plugin validate --strict` via local `@anthropic-ai/claude-code`; no soft-skip).
+
+GitHub Actions runs the unit matrix on Ubuntu, Windows, and macOS with Node.js 20 and 22. The release-contract job (Ubuntu) runs the full gate including demo, `build:dist`, `smoke:dist`, and `validate:host`. A Windows release-smoke job covers test + demo + dist + host validate. Evidence artifacts: eval report, host-validation JSON, receipt, lossiness, smoke log.
 
 ## Security boundary
 
