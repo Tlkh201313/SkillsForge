@@ -8,7 +8,15 @@ allowed-tools: "Bash(node *),Read"
 
 Diagnose the installed SkillsForge plugin and its production skills.
 
+`$ARGUMENTS` may include `--json` (recommended) or be empty.
+
 1. Run:
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" doctor $ARGUMENTS
+```
+
+If `$ARGUMENTS` is empty, default to JSON:
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" doctor --json
