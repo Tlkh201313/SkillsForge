@@ -10,7 +10,8 @@ SkillsForge ships **one** Claude Code marketplace plugin — a capability / trus
 | Plugin | `plugins/skillsforge/` — commands, skills, hooks, agents, bundled CLI |
 | Canonical IR | `skillsforge.json` sidecar (Ajv Draft 2020-12) beside `SKILL.md` |
 | Runtime CLI | `plugins/skillsforge/bin/skillsforge.mjs` (esbuild bundle; no `npm install` on install) |
-| Capability engine | `lib/capabilities/*` — loader, graph, forge, router, policy, receipt, doctor |
+| Capability engine | `lib/capabilities/*` — loader, graph, forge, router, policy, receipt, doctor, hosts, export, install |
+| Host installer | `skillsforge install` — detect `~/.claude` / `~/.cursor` / `~/.codex` / `~/.agents` / `~/.gemini`, copy full or portable skills |
 | Distribution | `npm run build:dist` → `dist/claude-code`, `dist/cursor`, trust receipt, lossiness |
 
 ## Data flow
@@ -58,13 +59,30 @@ flowchart TD
 
 Hooks are guardrails honored by Claude Code — not an OS sandbox. Any unexpected hook error also emits an explicit deny.
 
+## Host installer flow
+
+```mermaid
+flowchart TD
+    Run["skillsforge install"] --> Detect["Detect hosts in home directory"]
+    Detect --> TUI{"Interactive terminal?"}
+    TUI -->|yes| Picker["Checkbox picker: detected agents"]
+    TUI -->|"no or --yes"| Flags["--hosts list"]
+    Picker --> Validate["Validate selected skills"]
+    Flags --> Validate
+    Validate -->|fail| Abort["Exit 1, nothing written"]
+    Validate -->|pass| Copy["Per host: full copy or portable export"]
+    Copy --> Report["Install report JSON + summary"]
+```
+
 ## Host support
 
 | Host | Status | Meaning |
 | --- | --- | --- |
-| Claude Code | Full | Marketplace install, SessionStart, skill-scoped PreToolUse guardrails, bundled CLI, receipts, eval |
-| Cursor | Proof | Deterministic SKILL.md export + lossiness report; no runtime policy parity |
-| Codex / OpenCode | Unsupported | Not packaged or claimed |
+| Claude Code | Full | Marketplace install, SessionStart, skill-scoped PreToolUse guardrails, bundled CLI, receipts, eval; installer copies full packages |
+| Cursor | Portable copy | `skillsforge install` / dist export + lossiness; no runtime policy parity |
+| Codex CLI | Portable copy | Installer copies portable `SKILL.md` only |
+| OpenCode | Portable copy | Installer copies portable `SKILL.md` only |
+| Gemini CLI | Portable copy | Installer copies portable `SKILL.md` only |
 
 ## Runtime root resolution
 

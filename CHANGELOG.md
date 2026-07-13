@@ -11,8 +11,9 @@ All notable changes to SkillsForge are recorded here.
 - Skill-scoped Claude policy hooks compiled from declared capabilities.
 - Holdout routing evaluation and cache-copy install smoke tests.
 - Plugin slash commands: `validate`, `route`, `forge`, `doctor`, `verify-receipt`.
-- Full CLI help text and README reference for all nine subcommands.
-- Diagrams for plugin components, trust pipeline, fail-closed PreToolUse, and holdout eval gate.
+- Full CLI help text and README reference for all subcommands (including `install`).
+- Diagrams for plugin components, trust pipeline, fail-closed PreToolUse, holdout eval gate, and host installer flow.
+- Interactive `skillsforge install` (CodeGraph-style TUI) to copy validated skills into Claude Code, Cursor, Codex, OpenCode, and Gemini host skill directories.
 
 ### Changed
 
