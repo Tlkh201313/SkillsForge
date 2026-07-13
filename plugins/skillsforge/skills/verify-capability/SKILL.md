@@ -17,7 +17,9 @@ hooks:
 
 ## Overview
 
-Verification contract: structural validation, capability scanning, dependency analysis, routing evaluation, and receipt checks. Explain evidence only; never edit files or override policy.
+Verification contract: structural validation, capability policy scan, dependency analysis, routing evaluation, and receipt checks. Explain evidence only; never edit files or override policy.
+
+`skillsforge validate` and `skillsforge doctor` both run the verify orchestrator: structural checks first, then capability policy scan for skills that ship a `skillsforge.json` sidecar. Sidecar-free portable skills stay structural-only. Blocking policy findings fail the command (exit 1). Doctor also fails when any installed skill has a blocking capability finding.
 
 ## When to Use
 
@@ -25,8 +27,8 @@ Before packaging, after editing any skill, and whenever a routing or policy resu
 
 ## Checks
 
-1. Run `skillsforge doctor --json` first (or `skillsforge validate --json` for a single skill path).
-2. Treat deterministic JSON output as authoritative. Explain failures with exact fields, files, rules, and remediation; do not invent status.
+1. Run `skillsforge doctor --json` first (or `skillsforge validate --json` for a single skill path). Both include capability policy scanning when sidecars are present.
+2. Treat deterministic JSON output as authoritative (`ok`, `reports`, `findings` with `rule`, `evidence`, `fix`, `blocking`). Explain failures with exact fields, files, rules, and remediation; do not invent status.
 3. Run `skillsforge eval` when routing changed.
 4. Run `skillsforge receipt` and `skillsforge verify-receipt` when packaging or integrity is in question.
 5. Never claim sandboxing, certification, or safety beyond scanner/hook evidence.

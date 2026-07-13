@@ -71,3 +71,19 @@ test('shipped shim rejects missing --profile value', () => {
   assert.equal(result.status, 2, result.stderr || result.stdout);
   assert.match(result.stderr, /requires a value/);
 });
+
+test('bundled CLI validate fails undeclared-exec with policy JSON fields', () => {
+  const result = spawnSync(
+    process.execPath,
+    [binary, '--json', 'tests/fixtures/policy/undeclared-exec'],
+    { cwd: process.cwd(), encoding: 'utf8' }
+  );
+  assert.equal(result.status, 1, result.stderr || result.stdout);
+  const output = JSON.parse(result.stdout);
+  assert.equal(output.ok, false);
+  const finding = output.findings.find((item) => String(item.rule).startsWith('undeclared-exec'));
+  assert.ok(finding, JSON.stringify(output.findings));
+  assert.equal(finding.blocking, true);
+  assert.ok(Array.isArray(finding.evidence));
+  assert.ok(finding.fix);
+});

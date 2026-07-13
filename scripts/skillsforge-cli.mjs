@@ -1,7 +1,6 @@
 import { access, readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { validateSkillPaths } from './validate-skill-lib.mjs';
 import { loadAllSkills } from '../lib/capabilities/skill-loader.mjs';
 import { routeQuery } from '../lib/capabilities/router.mjs';
 import { forgeSkill } from '../lib/capabilities/forge.mjs';
@@ -9,6 +8,7 @@ import { buildReceipt, normalizeEvaluation, verifyReceipt } from '../lib/capabil
 import { runDoctor } from '../lib/capabilities/doctor.mjs';
 import { enforcePolicy } from '../lib/capabilities/claude-policy-compiler.mjs';
 import { analyzeDependencies } from '../lib/capabilities/dependency-graph.mjs';
+import { verifySkillPaths } from '../lib/capabilities/verify.mjs';
 
 export { enforcePolicy };
 
@@ -90,11 +90,14 @@ async function runValidate(argv, options) {
   }
   const paths = args.filter((item) => !item.startsWith('--'));
   const root = await resolveRuntimeRoot(options, { explicitPaths: paths.length > 0 });
-  const result = await validateSkillPaths(paths, {
+  const scanAll = paths.length === 0 || all;
+  const result = await verifySkillPaths(paths, {
     root,
-    all: paths.length === 0 || all,
+    all: scanAll,
     allowEmpty,
-    profile: resolvedProfile
+    profile: resolvedProfile,
+    // Full install validate includes dependency graph; path-targeted validate stays local.
+    dependencies: scanAll
   });
   if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
   else process.stdout.write(result.text);

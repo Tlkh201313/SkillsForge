@@ -15746,7 +15746,6 @@ var init_eval = __esm({
 });
 
 // scripts/skillsforge-cli.mjs
-init_validate_skill_lib();
 init_skill_loader();
 init_router();
 import { access as access5, readFile as readFile8, writeFile as writeFile3, mkdir as mkdir3 } from "node:fs/promises";
@@ -16321,10 +16320,158 @@ function assertNoTimestamps(receipt) {
 }
 
 // lib/capabilities/doctor.mjs
-init_validate_skill_lib();
-init_skill_loader();
 import { access as access4, readFile as readFile6 } from "node:fs/promises";
 import { join as join5 } from "node:path";
+
+// lib/capabilities/verify.mjs
+init_validate_skill_lib();
+init_skill_loader();
+async function verifySkillPaths(paths, options = {}) {
+  const validation = await validateSkillPaths(paths, options);
+  const findings = [];
+  const scannedSkills = [];
+  for (const report of validation.reports) {
+    if (report.status !== "pass") continue;
+    let skill;
+    try {
+      skill = await loadSkill(report.path, { root: options.root });
+    } catch (error) {
+      findings.push({
+        skill: report.name,
+        path: report.path,
+        rule: "skill-load-failed",
+        blocking: true,
+        evidence: [error.message],
+        fix: "fix structural/sidecar issues so the skill can be loaded"
+      });
+      continue;
+    }
+    scannedSkills.push(skill);
+    if (!skill.sidecar) continue;
+    const scanned = await scanSkill(skill);
+    for (const item of scanned) {
+      findings.push(normalizeFinding(item, skill));
+    }
+  }
+  let graph = null;
+  if (options.dependencies === true) {
+    const root = options.root ?? process.cwd();
+    let skillsForGraph = scannedSkills;
+    try {
+      skillsForGraph = await loadAllSkills(root);
+    } catch (error) {
+      findings.push({
+        skill: null,
+        path: root,
+        rule: "skill-load-failed",
+        blocking: true,
+        evidence: [error.message],
+        fix: "fix skill load errors before dependency analysis"
+      });
+      skillsForGraph = scannedSkills;
+    }
+    graph = analyzeDependencies(skillsForGraph);
+    findings.push(...dependencyFindings(graph));
+  }
+  const merged = sortFindings(findings);
+  const structuralOk = validation.ok;
+  const ok = structuralOk && !merged.some((item) => item.blocking);
+  const text = formatVerifyText(validation, merged);
+  return {
+    ok,
+    structuralOk,
+    text,
+    reports: validation.reports,
+    findings: merged,
+    graph,
+    policyScanned: scannedSkills.filter((skill) => skill.sidecar).length
+  };
+}
+async function verifyInstalledSkills(root, options = {}) {
+  return verifySkillPaths([], {
+    root,
+    all: true,
+    allowEmpty: options.allowEmpty ?? false,
+    profile: options.profile ?? "claude-code",
+    dependencies: true,
+    ...options
+  });
+}
+function normalizeFinding(item, skill) {
+  return {
+    skill: skill.name,
+    path: skill.directory,
+    rule: item.rule,
+    blocking: Boolean(item.blocking),
+    evidence: [...item.evidence ?? []],
+    fix: item.fix ?? "",
+    declared: item.declared ?? null,
+    detected: item.detected ?? null
+  };
+}
+function dependencyFindings(graph) {
+  const findings = [];
+  for (const cycle of graph.cycles ?? []) {
+    findings.push({
+      skill: cycle[0] ?? null,
+      path: null,
+      rule: "dependency-cycle",
+      blocking: true,
+      evidence: [cycle.join(" -> ")],
+      fix: "break the requires cycle between skills"
+    });
+  }
+  for (const item of graph.missing ?? []) {
+    findings.push({
+      skill: item.skill,
+      path: null,
+      rule: "missing-dependency",
+      blocking: true,
+      evidence: [`${item.skill} -> ${item.requires}`],
+      fix: `add skill "${item.requires}" or remove the requires entry`
+    });
+  }
+  for (const name of graph.duplicates ?? []) {
+    findings.push({
+      skill: name,
+      path: null,
+      rule: "duplicate-name",
+      blocking: true,
+      evidence: [name],
+      fix: "ensure skill names are unique across discovered roots"
+    });
+  }
+  return findings;
+}
+function sortFindings(findings) {
+  return [...findings].sort((left, right) => {
+    const skillCmp = String(left.skill ?? "").localeCompare(String(right.skill ?? ""));
+    if (skillCmp !== 0) return skillCmp;
+    const ruleCmp = String(left.rule).localeCompare(String(right.rule));
+    if (ruleCmp !== 0) return ruleCmp;
+    const leftEvidence = (left.evidence ?? []).join("\0");
+    const rightEvidence = (right.evidence ?? []).join("\0");
+    return leftEvidence.localeCompare(rightEvidence);
+  });
+}
+function formatVerifyText(validation, findings) {
+  const lines = [];
+  if (validation.text) lines.push(validation.text.replace(/\n$/, ""));
+  for (const item of findings) {
+    const where = item.skill ? `${item.skill}: ` : "";
+    const evidence = (item.evidence ?? []).join(", ");
+    const prefix = item.blocking ? "FAIL" : "WARN";
+    lines.push(`${prefix} ${where}${item.rule}${evidence ? ` ${evidence}` : ""}${item.fix ? ` \u2014 ${item.fix}` : ""}`);
+  }
+  if (findings.length === 0 && validation.reports.length > 0) {
+    return `${lines.join("\n")}
+`;
+  }
+  return `${lines.filter(Boolean).join("\n")}
+`;
+}
+
+// lib/capabilities/doctor.mjs
 async function runDoctor(root = process.cwd()) {
   const checks = [];
   const repositoryPluginRoot = join5(root, "plugins", "skillsforge");
@@ -16340,33 +16487,44 @@ async function runDoctor(root = process.cwd()) {
   checks.push(await optionalFileCheck("hooks config", hooks));
   checks.push(await optionalFileCheck("runtime CLI", binary));
   const validationRoot = monorepo ? root : pluginRoot;
-  const validation = await validateSkillPaths([], {
-    root: validationRoot,
-    all: true,
+  const verification = await verifyInstalledSkills(validationRoot, {
     allowEmpty: false,
     profile: "claude-code"
   });
   checks.push({
     name: "skill validation",
-    ok: validation.ok,
-    detail: validation.ok ? `passed ${validation.reports.length} skills` : validation.text.trim()
+    ok: verification.structuralOk,
+    detail: verification.structuralOk ? `passed ${verification.reports.length} skills` : verification.text.trim()
   });
-  let graphDetail = "no skills loaded";
-  let graphOk = true;
-  try {
-    const skills = await loadAllSkills(validationRoot);
-    const graph = analyzeDependencies(skills);
-    graphOk = graph.cycles.length === 0 && graph.missing.length === 0 && graph.duplicates.length === 0;
-    graphDetail = graphOk ? `order=${graph.order.join(",") || "(none)"}` : JSON.stringify({ cycles: graph.cycles, missing: graph.missing, duplicates: graph.duplicates });
-  } catch (error) {
-    graphOk = false;
-    graphDetail = error.message;
-  }
-  checks.push({ name: "dependency graph", ok: graphOk, detail: graphDetail });
+  const policyFindings = verification.findings.filter((item) => isPolicyFinding(item));
+  const blockingPolicy = policyFindings.filter((item) => item.blocking);
+  checks.push({
+    name: "capability policy",
+    ok: blockingPolicy.length === 0,
+    detail: blockingPolicy.length === 0 ? `scanned ${verification.policyScanned} sidecar skills` : summarizeFindings(blockingPolicy)
+  });
+  const graph = verification.graph;
+  const graphOk = graph && graph.cycles.length === 0 && graph.missing.length === 0 && graph.duplicates.length === 0;
+  checks.push({
+    name: "dependency graph",
+    ok: Boolean(graphOk),
+    detail: graphOk ? `order=${graph.order.join(",") || "(none)"}` : JSON.stringify({
+      cycles: graph?.cycles ?? [],
+      missing: graph?.missing ?? [],
+      duplicates: graph?.duplicates ?? []
+    })
+  });
   return {
     ok: checks.every((check) => check.ok),
-    checks
+    checks,
+    findings: verification.findings
   };
+}
+function isPolicyFinding(item) {
+  return !["dependency-cycle", "missing-dependency", "duplicate-name", "skill-load-failed"].includes(item.rule);
+}
+function summarizeFindings(findings) {
+  return findings.map((item) => `${item.skill ?? "?"}:${item.rule}:${(item.evidence ?? []).join(",")}`).join("; ");
 }
 async function pathExists(path) {
   try {
@@ -16643,11 +16801,14 @@ async function runValidate(argv, options) {
   }
   const paths = args.filter((item) => !item.startsWith("--"));
   const root = await resolveRuntimeRoot(options, { explicitPaths: paths.length > 0 });
-  const result = await validateSkillPaths(paths, {
+  const scanAll = paths.length === 0 || all;
+  const result = await verifySkillPaths(paths, {
     root,
-    all: paths.length === 0 || all,
+    all: scanAll,
     allowEmpty,
-    profile: resolvedProfile
+    profile: resolvedProfile,
+    // Full install validate includes dependency graph; path-targeted validate stays local.
+    dependencies: scanAll
   });
   if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
 `);
