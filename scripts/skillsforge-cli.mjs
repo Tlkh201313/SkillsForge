@@ -219,6 +219,10 @@ async function runEnforce(argv) {
   const policyPath = resolve(argv[policyIndex + 1]);
   const policy = JSON.parse(await readFile(policyPath, 'utf8'));
   policy.__skillRoot = dirname(policyPath);
+  policy.__projectRoot = event?.cwd
+    || process.env.CLAUDE_PROJECT_DIR
+    || process.env.CLAUDE_CWD
+    || process.cwd();
   const decision = enforcePolicy(event, policy);
   if (decision) process.stdout.write(`${JSON.stringify(decision)}\n`);
   return 0;

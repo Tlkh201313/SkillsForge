@@ -225,3 +225,31 @@ test('hook fail-closed when policy path omitted', async () => {
   });
   assertFailClosed(result);
 });
+
+test('hook sets project root and denies Write escape for project scope', async (context) => {
+  const policyPath = await tempPolicy(context, {
+    exec: { allowed: false, commands: [] },
+    network: { allowed: false, hosts: [] },
+    write: { scope: 'project' }
+  });
+  const projectRoot = await mkdtemp(join(tmpdir(), 'sf-project-'));
+  context.after(() => rm(projectRoot, { recursive: true, force: true }));
+
+  const denied = await spawnHook(policyPath, {
+    hook_event_name: 'PreToolUse',
+    cwd: projectRoot,
+    tool_name: 'Write',
+    tool_input: { file_path: join(tmpdir(), 'outside-project.txt'), content: 'x' }
+  });
+  assert.equal(denied.code, 0, denied.stderr);
+  assert.match(denied.stdout, /write escapes project scope/);
+
+  const allowed = await spawnHook(policyPath, {
+    hook_event_name: 'PreToolUse',
+    cwd: projectRoot,
+    tool_name: 'Write',
+    tool_input: { file_path: join(projectRoot, 'inside.txt'), content: 'ok' }
+  });
+  assert.equal(allowed.code, 0, allowed.stderr);
+  assert.equal(allowed.stdout.trim(), '');
+});

@@ -215,6 +215,9 @@ export const schemas = Object.freeze({
               "allowed": {
                 "type": "boolean"
               },
+              "searchAllowed": {
+                "type": "boolean"
+              },
               "hosts": {
                 "type": "array",
                 "items": {
@@ -618,6 +621,9 @@ export const schemas = Object.freeze({
             ],
             "properties": {
               "allowed": {
+                "type": "boolean"
+              },
+              "searchAllowed": {
                 "type": "boolean"
               },
               "hosts": {

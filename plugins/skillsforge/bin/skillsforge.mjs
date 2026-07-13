@@ -14747,6 +14747,9 @@ var init_schemas_generated = __esm({
                   "allowed": {
                     "type": "boolean"
                   },
+                  "searchAllowed": {
+                    "type": "boolean"
+                  },
                   "hosts": {
                     "type": "array",
                     "items": {
@@ -15150,6 +15153,9 @@ var init_schemas_generated = __esm({
                 ],
                 "properties": {
                   "allowed": {
+                    "type": "boolean"
+                  },
+                  "searchAllowed": {
                     "type": "boolean"
                   },
                   "hosts": {
@@ -16400,7 +16406,14 @@ function enforcePolicy(event, policy) {
   };
   const tool = event.tool_name;
   const input = event.tool_input ?? {};
-  if ((tool === "WebFetch" || tool === "WebSearch") && caps.network?.allowed !== true) {
+  if (tool === "WebSearch") {
+    if (caps.network?.allowed !== true || caps.network?.searchAllowed !== true) {
+      return deny(
+        caps.network?.allowed !== true ? "network capability is not declared" : "network searchAllowed is not declared"
+      );
+    }
+  }
+  if (tool === "WebFetch" && caps.network?.allowed !== true) {
     return deny("network capability is not declared");
   }
   if (tool === "WebFetch" && caps.network?.allowed === true) {
@@ -16412,10 +16425,13 @@ function enforcePolicy(event, policy) {
   if (tool === "Bash") {
     const command = String(input.command ?? "");
     if (caps.exec?.allowed !== true) return deny("exec capability is not declared");
+    if (hasShellControlSyntax(command)) {
+      return deny("shell command contains disallowed control syntax");
+    }
     if (!commandAllowed(command, caps.exec.commands)) {
       return deny("shell command is not declared");
     }
-    if (caps.network?.allowed !== true && /\b(curl|wget|Invoke-WebRequest|fetch)\b/i.test(command)) {
+    if (caps.network?.allowed !== true && shellImpliesNetwork(command)) {
       return deny("network capability is not declared for shell command");
     }
     if (caps.network?.allowed === true) {
@@ -16432,13 +16448,22 @@ function enforcePolicy(event, policy) {
   }
   if ((tool === "Write" || tool === "Edit") && caps.write) {
     const filePath = String(input.file_path ?? input.path ?? "");
-    if (!filePath) return null;
+    if (!filePath) {
+      return deny("write path is required");
+    }
     if (caps.write.scope === "none") return deny("write capability scope is none");
     if (caps.write.scope === "skill") {
       const skillRoot = policy.__skillRoot;
       const candidate = skillRoot && !isAbsolute4(filePath) ? resolve5(skillRoot, filePath) : resolve5(filePath);
       if (skillRoot && !isInside4(skillRoot, candidate)) {
         return deny("write escapes skill scope");
+      }
+    }
+    if (caps.write.scope === "project") {
+      const projectRoot = policy.__projectRoot;
+      const candidate = projectRoot && !isAbsolute4(filePath) ? resolve5(projectRoot, filePath) : resolve5(filePath);
+      if (projectRoot && !isInside4(projectRoot, candidate)) {
+        return deny("write escapes project scope");
       }
     }
   }
@@ -16453,12 +16478,77 @@ function deny(reason) {
     }
   };
 }
+var SHELL_CONTROL_SYNTAX = /[;&|`\n\r<>]|\$\(/;
+function hasShellControlSyntax(command) {
+  return SHELL_CONTROL_SYNTAX.test(String(command ?? ""));
+}
+function tokenizeCommand(command) {
+  const tokens = [];
+  const source = String(command ?? "").trim();
+  let current = "";
+  let quote = null;
+  for (let i = 0; i < source.length; i += 1) {
+    const ch = source[i];
+    if (quote) {
+      if (ch === quote) {
+        quote = null;
+      } else if (ch === "\\" && quote === '"' && i + 1 < source.length) {
+        current += source[i + 1];
+        i += 1;
+      } else {
+        current += ch;
+      }
+      continue;
+    }
+    if (ch === "'" || ch === '"') {
+      quote = ch;
+      continue;
+    }
+    if (/\s/.test(ch)) {
+      if (current) {
+        tokens.push(current);
+        current = "";
+      }
+      continue;
+    }
+    current += ch;
+  }
+  if (quote) return null;
+  if (current) tokens.push(current);
+  return tokens;
+}
+function argHasMetacharacters(arg) {
+  return /[;&|`$<>\\]/.test(String(arg ?? "")) || /\$\(/.test(String(arg ?? ""));
+}
 function commandAllowed(command, declaredCommands = []) {
   const normalized = command.trim();
+  if (!normalized || hasShellControlSyntax(normalized)) return false;
+  const cmdTokens = tokenizeCommand(normalized);
+  if (!cmdTokens) return false;
   return declaredCommands.some((declared) => {
     const allowed = String(declared).trim();
-    return allowed.length > 0 && (normalized === allowed || normalized.startsWith(`${allowed} `));
+    if (!allowed || hasShellControlSyntax(allowed)) return false;
+    if (normalized === allowed) return true;
+    const allowedTokens = tokenizeCommand(allowed);
+    if (!allowedTokens || allowedTokens.length === 0) return false;
+    if (cmdTokens.length < allowedTokens.length) return false;
+    for (let i = 0; i < allowedTokens.length; i += 1) {
+      if (cmdTokens[i] !== allowedTokens[i]) return false;
+    }
+    const remaining = cmdTokens.slice(allowedTokens.length);
+    return remaining.every((token) => !argHasMetacharacters(token));
   });
+}
+var SHELL_NETWORK_CLIENTS = /\b(curl|wget|Invoke-WebRequest|Invoke-RestMethod|iwr|bitsadmin|certutil|fetch)\b/i;
+function shellImpliesNetwork(command) {
+  if (SHELL_NETWORK_CLIENTS.test(command)) return true;
+  if (/\bpython(?:3)?\b/i.test(command) && /\s-c\b/.test(command) && /\b(urllib|requests|http\.client|httpx|urlopen)\b/i.test(command)) {
+    return true;
+  }
+  if (/\bnode\b/i.test(command) && /\s-e\b/.test(command) && /\b(fetch|https?:\/\/|https?\.|axios|got)\b/i.test(command)) {
+    return true;
+  }
+  return false;
 }
 function hostFromUrl(value) {
   try {
@@ -16680,6 +16770,7 @@ async function runEnforce(argv) {
   const policyPath = resolve7(argv[policyIndex + 1]);
   const policy = JSON.parse(await readFile8(policyPath, "utf8"));
   policy.__skillRoot = dirname5(policyPath);
+  policy.__projectRoot = event?.cwd || process.env.CLAUDE_PROJECT_DIR || process.env.CLAUDE_CWD || process.cwd();
   const decision = enforcePolicy(event, policy);
   if (decision) process.stdout.write(`${JSON.stringify(decision)}
 `);

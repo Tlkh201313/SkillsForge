@@ -1,14 +1,27 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://skillsforge.local/schemas/skillsforge.sidecar.schema.json",
-  "title": "SkillsForge capability sidecar",
+  "$id": "https://skillsforge.local/schemas/forge-spec.schema.json",
+  "title": "SkillsForge forge specification",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "routing", "capabilities"],
+  "required": ["name", "description", "overview", "routing", "capabilities"],
   "properties": {
-    "schemaVersion": {
-      "type": "integer",
-      "const": 1
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "overview": {
+      "type": "string",
+      "minLength": 1
+    },
+    "whenToUse": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
     },
     "maturity": {
       "type": "string",
@@ -19,24 +32,21 @@
       "items": {
         "type": "string",
         "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
-      },
-      "uniqueItems": true
+      }
     },
     "routing": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["triggers", "antiTriggers"],
+      "required": ["triggers"],
       "properties": {
         "triggers": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 },
-          "minItems": 1,
-          "uniqueItems": true
+          "minItems": 1
         },
         "antiTriggers": {
           "type": "array",
-          "items": { "type": "string", "minLength": 1 },
-          "uniqueItems": true
+          "items": { "type": "string", "minLength": 1 }
         }
       }
     },
@@ -48,31 +58,25 @@
         "exec": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["allowed", "commands"],
+          "required": ["allowed"],
           "properties": {
             "allowed": { "type": "boolean" },
             "commands": {
               "type": "array",
-              "items": { "type": "string", "minLength": 1 },
-              "uniqueItems": true
+              "items": { "type": "string", "minLength": 1 }
             }
           }
         },
         "network": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["allowed", "hosts"],
+          "required": ["allowed"],
           "properties": {
             "allowed": { "type": "boolean" },
             "searchAllowed": { "type": "boolean" },
             "hosts": {
               "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "pattern": "^[A-Za-z0-9.-]+(?::\\d+)?$"
-              },
-              "uniqueItems": true
+              "items": { "type": "string", "minLength": 1 }
             }
           }
         },
@@ -92,7 +96,6 @@
     "compatibility": {
       "type": "object",
       "additionalProperties": {
-        "type": "string",
         "enum": ["full", "partial", "unsupported"]
       }
     },
@@ -100,8 +103,8 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "source": { "type": "string", "minLength": 1 },
-        "license": { "type": "string", "minLength": 1 }
+        "source": { "type": "string" },
+        "license": { "type": "string" }
       }
     }
   }
