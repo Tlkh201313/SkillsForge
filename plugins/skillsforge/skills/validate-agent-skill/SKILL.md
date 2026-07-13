@@ -1,7 +1,17 @@
 ---
 name: validate-agent-skill
-description: Validate Agent Skills packages and Claude Code skill extensions for metadata, YAML, naming, instructions, and local resource links. Use when creating, reviewing, debugging, or preparing a SKILL.md package for distribution.
+description: Validate Agent Skills packages and Claude Code skill extensions for
+  metadata, YAML, naming, instructions, and local resource links. Use when
+  creating, reviewing, debugging, or preparing a SKILL.md package for
+  distribution.
 license: MIT
+hooks:
+  PreToolUse:
+    - matcher: Bash|Write|Edit|WebFetch|WebSearch
+      hooks:
+        - type: command
+          command: node "${CLAUDE_PLUGIN_ROOT}/hooks/pre-tool-policy.mjs" --policy
+            "${CLAUDE_PLUGIN_ROOT}/skills/validate-agent-skill/skillsforge.json"
 ---
 
 # Validate an Agent Skill

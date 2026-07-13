@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "maturity": "stable",
+  "requires": [],
+  "routing": {
+    "triggers": ["what is skillsforge", "which skillsforge command", "skill health", "session start skillsforge"],
+    "antiTriggers": ["write a new skill", "compile skills"]
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": true,
+      "commands": [
+        "skillsforge",
+        "skillsforge-validate",
+        "node plugins/skillsforge/bin/skillsforge.mjs",
+        "node plugins/skillsforge/bin/skillsforge-validate"
+      ]
+    },
+    "network": { "allowed": false, "hosts": [] },
+    "write": { "scope": "none" }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

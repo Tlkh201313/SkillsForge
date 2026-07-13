@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "maturity": "stable",
+  "requires": ["using-skillsforge"],
+  "routing": {
+    "triggers": ["which skill applies", "route this task", "choose a skill", "skill selection"],
+    "antiTriggers": ["create a skill", "security audit of skills"]
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": true,
+      "commands": [
+        "skillsforge route",
+        "node plugins/skillsforge/bin/skillsforge.mjs route"
+      ]
+    },
+    "network": { "allowed": false, "hosts": [] },
+    "write": { "scope": "none" }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

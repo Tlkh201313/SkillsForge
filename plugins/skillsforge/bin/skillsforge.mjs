@@ -1517,7 +1517,7 @@ var require_stringify = __commonJS({
         props.push(doc.directives.tagString(tag));
       return props.join(" ");
     }
-    function stringify(item, ctx, onComment, onChompKeep) {
+    function stringify2(item, ctx, onComment, onChompKeep) {
       if (identity.isPair(item))
         return item.toString(ctx, onComment, onChompKeep);
       if (identity.isAlias(item)) {
@@ -1546,7 +1546,7 @@ var require_stringify = __commonJS({
 ${ctx.indent}${str}`;
     }
     exports.createStringifyContext = createStringifyContext;
-    exports.stringify = stringify;
+    exports.stringify = stringify2;
   }
 });
 
@@ -1556,7 +1556,7 @@ var require_stringifyPair = __commonJS({
     "use strict";
     var identity = require_identity();
     var Scalar = require_Scalar();
-    var stringify = require_stringify();
+    var stringify2 = require_stringify();
     var stringifyComment = require_stringifyComment();
     function stringifyPair({ key, value }, ctx, onComment, onChompKeep) {
       const { allNullValues, doc, indent, indentStep, options: { commentString, indentSeq, simpleKeys } } = ctx;
@@ -1578,7 +1578,7 @@ var require_stringifyPair = __commonJS({
       });
       let keyCommentDone = false;
       let chompKeep = false;
-      let str = stringify.stringify(key, ctx, () => keyCommentDone = true, () => chompKeep = true);
+      let str = stringify2.stringify(key, ctx, () => keyCommentDone = true, () => chompKeep = true);
       if (!explicitKey && !ctx.inFlow && str.length > 1024) {
         if (simpleKeys)
           throw new Error("With simple keys, single line scalar must not span more than 1024 characters");
@@ -1630,7 +1630,7 @@ ${indent}:`;
         ctx.indent = ctx.indent.substring(2);
       }
       let valueCommentDone = false;
-      const valueStr = stringify.stringify(value, ctx, () => valueCommentDone = true, () => chompKeep = true);
+      const valueStr = stringify2.stringify(value, ctx, () => valueCommentDone = true, () => chompKeep = true);
       let ws = " ";
       if (keyComment || vsb || vcb) {
         ws = vsb ? "\n" : "";
@@ -1771,7 +1771,7 @@ var require_addPairToJSMap = __commonJS({
     "use strict";
     var log = require_log();
     var merge = require_merge();
-    var stringify = require_stringify();
+    var stringify2 = require_stringify();
     var identity = require_identity();
     var toJS = require_toJS();
     function addPairToJSMap(ctx, map, { key, value }) {
@@ -1807,7 +1807,7 @@ var require_addPairToJSMap = __commonJS({
       if (typeof jsKey !== "object")
         return String(jsKey);
       if (identity.isNode(key) && ctx?.doc) {
-        const strCtx = stringify.createStringifyContext(ctx.doc, {});
+        const strCtx = stringify2.createStringifyContext(ctx.doc, {});
         strCtx.anchors = /* @__PURE__ */ new Set();
         for (const node of ctx.anchors.keys())
           strCtx.anchors.add(node.anchor);
@@ -1874,12 +1874,12 @@ var require_stringifyCollection = __commonJS({
   "node_modules/yaml/dist/stringify/stringifyCollection.js"(exports) {
     "use strict";
     var identity = require_identity();
-    var stringify = require_stringify();
+    var stringify2 = require_stringify();
     var stringifyComment = require_stringifyComment();
     function stringifyCollection(collection, ctx, options) {
       const flow = ctx.inFlow ?? collection.flow;
-      const stringify2 = flow ? stringifyFlowCollection : stringifyBlockCollection;
-      return stringify2(collection, ctx, options);
+      const stringify3 = flow ? stringifyFlowCollection : stringifyBlockCollection;
+      return stringify3(collection, ctx, options);
     }
     function stringifyBlockCollection({ comment, items }, ctx, { blockItemPrefix, flowChars, itemIndent, onChompKeep, onComment }) {
       const { indent, options: { commentString } } = ctx;
@@ -1904,7 +1904,7 @@ var require_stringifyCollection = __commonJS({
           }
         }
         chompKeep = false;
-        let str2 = stringify.stringify(item, itemCtx, () => comment2 = null, () => chompKeep = true);
+        let str2 = stringify2.stringify(item, itemCtx, () => comment2 = null, () => chompKeep = true);
         if (comment2)
           str2 += stringifyComment.lineComment(str2, itemIndent, commentString(comment2));
         if (chompKeep && comment2)
@@ -1971,7 +1971,7 @@ ${indent}${line}` : "\n";
         }
         if (comment)
           reqNewline = true;
-        let str = stringify.stringify(item, itemCtx, () => comment = null);
+        let str = stringify2.stringify(item, itemCtx, () => comment = null);
         reqNewline || (reqNewline = lines.length > linesAtValue || str.includes("\n"));
         if (i < items.length - 1) {
           str += ",";
@@ -3332,7 +3332,7 @@ var require_stringifyDocument = __commonJS({
   "node_modules/yaml/dist/stringify/stringifyDocument.js"(exports) {
     "use strict";
     var identity = require_identity();
-    var stringify = require_stringify();
+    var stringify2 = require_stringify();
     var stringifyComment = require_stringifyComment();
     function stringifyDocument(doc, options) {
       const lines = [];
@@ -3347,7 +3347,7 @@ var require_stringifyDocument = __commonJS({
       }
       if (hasDirectives)
         lines.push("---");
-      const ctx = stringify.createStringifyContext(doc, options);
+      const ctx = stringify2.createStringifyContext(doc, options);
       const { commentString } = ctx.options;
       if (doc.commentBefore) {
         if (lines.length !== 1)
@@ -3369,7 +3369,7 @@ var require_stringifyDocument = __commonJS({
           contentComment = doc.contents.comment;
         }
         const onChompKeep = contentComment ? void 0 : () => chompKeep = true;
-        let body = stringify.stringify(doc.contents, ctx, () => contentComment = null, onChompKeep);
+        let body = stringify2.stringify(doc.contents, ctx, () => contentComment = null, onChompKeep);
         if (contentComment)
           body += stringifyComment.lineComment(body, "", commentString(contentComment));
         if ((body[0] === "|" || body[0] === ">") && lines[lines.length - 1] === "---") {
@@ -3377,7 +3377,7 @@ var require_stringifyDocument = __commonJS({
         } else
           lines.push(body);
       } else {
-        lines.push(stringify.stringify(doc.contents, ctx));
+        lines.push(stringify2.stringify(doc.contents, ctx));
       }
       if (doc.directives?.docEnd) {
         if (doc.comment) {
@@ -5512,7 +5512,7 @@ var require_cst_scalar = __commonJS({
 var require_cst_stringify = __commonJS({
   "node_modules/yaml/dist/parse/cst-stringify.js"(exports) {
     "use strict";
-    var stringify = (cst) => "type" in cst ? stringifyToken(cst) : stringifyItem(cst);
+    var stringify2 = (cst) => "type" in cst ? stringifyToken(cst) : stringifyItem(cst);
     function stringifyToken(token) {
       switch (token.type) {
         case "block-scalar": {
@@ -5565,7 +5565,7 @@ var require_cst_stringify = __commonJS({
         res += stringifyToken(value);
       return res;
     }
-    exports.stringify = stringify;
+    exports.stringify = stringify2;
   }
 });
 
@@ -7257,7 +7257,7 @@ var require_public_api = __commonJS({
         return docs;
       return Object.assign([], { empty: true }, composer$1.streamInfo());
     }
-    function parseDocument3(source, options = {}) {
+    function parseDocument4(source, options = {}) {
       const { lineCounter: lineCounter2, prettyErrors } = parseOptions(options);
       const parser$1 = new parser.Parser(lineCounter2?.addNewLine);
       const composer$1 = new composer.Composer(options);
@@ -7283,7 +7283,7 @@ var require_public_api = __commonJS({
       } else if (options === void 0 && reviver && typeof reviver === "object") {
         options = reviver;
       }
-      const doc = parseDocument3(src, options);
+      const doc = parseDocument4(src, options);
       if (!doc)
         return null;
       doc.warnings.forEach((warning) => log.warn(doc.options.logLevel, warning));
@@ -7295,7 +7295,7 @@ var require_public_api = __commonJS({
       }
       return doc.toJS(Object.assign({ reviver: _reviver }, options));
     }
-    function stringify(value, replacer, options) {
+    function stringify2(value, replacer, options) {
       let _replacer = null;
       if (typeof replacer === "function" || Array.isArray(replacer)) {
         _replacer = replacer;
@@ -7319,8 +7319,8 @@ var require_public_api = __commonJS({
     }
     exports.parse = parse;
     exports.parseAllDocuments = parseAllDocuments;
-    exports.parseDocument = parseDocument3;
-    exports.stringify = stringify;
+    exports.parseDocument = parseDocument4;
+    exports.stringify = stringify2;
   }
 });
 
@@ -7504,10 +7504,10 @@ var require_code = __commonJS({
     function interpolate(x) {
       return typeof x == "number" || typeof x == "boolean" || x === null ? x : safeStringify(Array.isArray(x) ? x.join(",") : x);
     }
-    function stringify(x) {
+    function stringify2(x) {
       return new _Code(safeStringify(x));
     }
-    exports.stringify = stringify;
+    exports.stringify = stringify2;
     function safeStringify(x) {
       return JSON.stringify(x).replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
     }
@@ -15865,37 +15865,40 @@ async function scanSkill(skill) {
       continue;
     }
     const text = raw.toString("utf8");
+    const { body, lineOffset } = extension === ".md" ? markdownScanRegion(text) : { body: text, lineOffset: 0 };
     if (caps.exec?.allowed !== true) {
-      for (const line of matchingLines(text, EXEC_CONTENT)) {
+      for (const line of matchingLines(body, EXEC_CONTENT)) {
+        const absoluteLine = line + lineOffset;
         findings.push(finding(
           "undeclared-exec-content",
           true,
-          [`${relativePath}:${line}`],
+          [`${relativePath}:${absoluteLine}`],
           "declare capabilities.exec.allowed: true or remove process execution",
           { exec: false },
-          { processExecutionReference: true, line }
+          { processExecutionReference: true, line: absoluteLine }
         ));
       }
     }
     if (caps.network?.allowed !== true) {
-      for (const line of matchingLines(text, NETWORK_CONTENT)) {
+      for (const line of matchingLines(body, NETWORK_CONTENT)) {
+        const absoluteLine = line + lineOffset;
         findings.push(finding(
           "undeclared-network",
           true,
-          [`${relativePath}:${line}`],
+          [`${relativePath}:${absoluteLine}`],
           "declare capabilities.network.allowed: true or remove network references",
           { network: false },
-          { networkReference: true, line }
+          { networkReference: true, line: absoluteLine }
         ));
       }
     }
     if (caps.network?.allowed === true) {
       const allowedHosts = caps.network.hosts ?? [];
-      for (const match of text.matchAll(HOST_PATTERN)) {
+      for (const match of body.matchAll(HOST_PATTERN)) {
         const host = normalizeHost(match[1]);
         if (!host) continue;
         if (!hostAllowed(host, allowedHosts)) {
-          const line = lineNumberAt(text, match.index ?? 0);
+          const line = lineNumberAt(body, match.index ?? 0) + lineOffset;
           findings.push(finding(
             "undeclared-host",
             true,
@@ -15908,10 +15911,10 @@ async function scanSkill(skill) {
       }
     }
     if (caps.write?.scope === "skill" || caps.write?.scope === "none") {
-      for (const match of text.matchAll(PATH_ESCAPE)) {
+      for (const match of body.matchAll(PATH_ESCAPE)) {
         const candidate = match[1];
         if (candidate.includes("..") || isAbsolute3(candidate)) {
-          const line = lineNumberAt(text, match.index ?? 0);
+          const line = lineNumberAt(body, match.index ?? 0) + lineOffset;
           findings.push(finding(
             "write-scope-escape",
             true,
@@ -15982,6 +15985,12 @@ function isProbablyText(buffer) {
   }
   if (printable / sample.byteLength < 0.85) return false;
   return !/[\uFFFD]/.test(sample.toString("utf8"));
+}
+function markdownScanRegion(text) {
+  const match = text.match(/^---[\t ]*\r?\n[\s\S]*?\r?\n---[\t ]*(?:\r?\n|$)/);
+  if (!match) return { body: text, lineOffset: 0 };
+  const frontmatterLines = match[0].split(/\r?\n/).length - 1;
+  return { body: text.slice(match[0].length), lineOffset: frontmatterLines };
 }
 function matchingLines(text, pattern) {
   const lines = [];
@@ -16325,7 +16334,12 @@ async function runDoctor(root = process.cwd()) {
   checks.push(await optionalFileCheck("hooks config", hooks));
   checks.push(await optionalFileCheck("runtime CLI", binary));
   const validationRoot = monorepo ? root : pluginRoot;
-  const validation = await validateSkillPaths([], { root: validationRoot, all: true, allowEmpty: false });
+  const validation = await validateSkillPaths([], {
+    root: validationRoot,
+    all: true,
+    allowEmpty: false,
+    profile: "claude-code"
+  });
   checks.push({
     name: "skill validation",
     ok: validation.ok,
@@ -16376,6 +16390,7 @@ async function optionalFileCheck(name, path) {
 }
 
 // lib/capabilities/claude-policy-compiler.mjs
+var import_yaml3 = __toESM(require_dist(), 1);
 import { isAbsolute as isAbsolute4, normalize, resolve as resolve5, sep as sep4 } from "node:path";
 function enforcePolicy(event, policy) {
   const caps = policy?.capabilities ?? {
