@@ -104,6 +104,134 @@ export const schemas = Object.freeze({
       }
     }
   },
+  "codex-package": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://skillsforge.local/schemas/codex-package.schema.json",
+    "title": "SkillsForge Codex package receipt",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "ok",
+      "host",
+      "skill",
+      "outDir",
+      "dryRun",
+      "files",
+      "interop"
+    ],
+    "properties": {
+      "ok": {
+        "type": "boolean"
+      },
+      "host": {
+        "type": "string",
+        "const": "codex"
+      },
+      "skill": {
+        "type": "string",
+        "minLength": 1
+      },
+      "outDir": {
+        "type": "string",
+        "minLength": 1
+      },
+      "dryRun": {
+        "type": "boolean"
+      },
+      "force": {
+        "type": "boolean"
+      },
+      "files": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "action": {
+              "type": "string",
+              "enum": [
+                "copy",
+                "generate",
+                "write"
+              ]
+            }
+          }
+        }
+      },
+      "interop": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "accepted",
+          "transformed",
+          "ignored",
+          "runtimeEnforced",
+          "usesSidecar"
+        ],
+        "properties": {
+          "accepted": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "transformed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ignored": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "runtimeEnforced": {
+            "type": "boolean"
+          },
+          "usesSidecar": {
+            "type": "boolean"
+          },
+          "losses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "findings": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "errors": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "notes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "plugin": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    }
+  },
   "forge-spec": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://skillsforge.local/schemas/forge-spec.schema.json",
@@ -651,6 +779,23 @@ export const schemas = Object.freeze({
                   "project",
                   "none"
                 ]
+              }
+            }
+          },
+          "mcp": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "allowed": {
+                "type": "boolean"
+              },
+              "tools": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
               }
             }
           }

@@ -14,6 +14,7 @@ import { detectHosts, installSkills, resolveHostSelection } from '../lib/capabil
 import { pickHosts } from '../lib/capabilities/install-tui.mjs';
 import { HOST_REGISTRY } from '../lib/capabilities/hosts.mjs';
 import { exportPortableSkill } from '../lib/capabilities/export.mjs';
+import { packageCodexPlugin } from '../lib/capabilities/codex-package.mjs';
 
 export { enforcePolicy, exportPortableSkill };
 
@@ -88,6 +89,12 @@ Commands:
     --force                         Overwrite existing skill directories
     --json                          Machine-readable output
     --home <dir>                    Override home directory (tests / custom roots)
+  package --host codex              Package one skill as a guarded Codex plugin
+    --skill <dir>                   Single skill directory (multi-skill inputs are rejected)
+    --out <dir>                     Output plugin directory
+    --dry-run                       Plan only (default when --write omitted)
+    --write                         Write the Codex plugin tree
+    --force                         Overwrite a non-empty --out directory
 
 Exit codes: 0 success, 1 command failure, 2 invalid usage
 `);
@@ -113,6 +120,8 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runEvalCommand(argv.slice(1), options);
     case 'install':
       return runInstall(argv.slice(1), options);
+    case 'package':
+      return runPackage(argv.slice(1), options);
     default:
       process.stderr.write(`unknown command: ${command}\n`);
       return 2;
@@ -445,6 +454,52 @@ async function runInstall(argv, options) {
       process.stdout.write(`OK install (${result.dryRun ? 'dry-run' : 'wrote'} ${result.installs.length} target(s))\n`);
     }
   }
+  return result.ok ? 0 : 1;
+}
+
+async function runPackage(argv, options) {
+  const args = [...argv];
+  const host = consumeOption(args, '--host');
+  if (host === null) {
+    process.stderr.write('--host requires a value\n');
+    return 2;
+  }
+  const skill = consumeOption(args, '--skill');
+  if (skill === null) {
+    process.stderr.write('--skill requires a value\n');
+    return 2;
+  }
+  const out = consumeOption(args, '--out');
+  if (out === null) {
+    process.stderr.write('--out requires a value\n');
+    return 2;
+  }
+  const write = consumeFlag(args, '--write');
+  consumeFlag(args, '--dry-run');
+  const force = consumeFlag(args, '--force');
+
+  if (!host || !skill || !out) {
+    process.stderr.write('usage: skillsforge package --host codex --skill <dir> --out <dir> [--force] [--dry-run|--write]\n');
+    return 2;
+  }
+  if (host !== 'codex') {
+    process.stderr.write(`unsupported package host: ${host} (supported: codex)\n`);
+    return 2;
+  }
+  if (args.some((item) => item.startsWith('--'))) {
+    process.stderr.write(`unknown package option: ${args.find((item) => item.startsWith('--'))}\n`);
+    return 2;
+  }
+
+  const root = await resolveRuntimeRoot(options);
+  const result = await packageCodexPlugin({
+    skillDir: resolve(root, skill),
+    outDir: resolve(root, out),
+    write,
+    dryRun: !write,
+    force
+  });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
   return result.ok ? 0 : 1;
 }
 
