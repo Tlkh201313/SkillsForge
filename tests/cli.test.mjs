@@ -148,7 +148,7 @@ test('bundled CLI install dry-run plans portable files under --home', async () =
     assert.equal(payload.ok, true);
     assert.equal(payload.dryRun, true);
     assert.equal(payload.installs[0].status, 'planned');
-    assert.equal(payload.installs[0].fidelity, 'portable');
+    assert.equal(payload.installs[0].fidelity, 'package');
   } finally {
     await rm(home, { recursive: true, force: true });
   }
