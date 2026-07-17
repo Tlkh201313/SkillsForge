@@ -54,11 +54,66 @@ export async function validateRepository(root = process.cwd()) {
     if (!errors.some((error) => error.includes('version '))) passes.push(`version lockstep ${expected}`);
   }
 
+  // Optional Codex plugin presence — warn/pass only; do not join Claude marketplace lockstep.
+  await validateOptionalCodexPlugin(repositoryRoot, errors, passes);
+
   const ok = errors.length === 0;
   const text = ok
     ? `${passes.map((pass) => `PASS ${pass}`).join('\n')}\n`
     : `${errors.map((error) => `FAIL ${error}`).join('\n')}\n`;
   return { ok, errors, passes, version: expected ?? null, text };
+}
+
+async function validateOptionalCodexPlugin(repositoryRoot, errors, passes) {
+  const codexPluginPath = join(repositoryRoot, 'plugins', 'skillsforge', '.codex-plugin', 'plugin.json');
+  let source;
+  try {
+    source = await readFile(codexPluginPath, 'utf8');
+  } catch {
+    passes.push('codex plugin absent (optional)');
+    return;
+  }
+
+  let plugin;
+  try {
+    plugin = JSON.parse(source);
+  } catch (error) {
+    errors.push(`codex plugin manifest contains invalid JSON: ${error.message}`);
+    return;
+  }
+
+  if (!plugin?.name || !plugin?.version || !plugin?.description) {
+    errors.push('codex plugin manifest must include name, version, and description');
+    return;
+  }
+  const skills = String(plugin.skills ?? '');
+  if (!(skills === './skills/' || skills === './skills') || skills.includes('..')) {
+    errors.push('codex plugin skills path must be ./skills/ without path escape');
+    return;
+  }
+  if (!plugin.interface?.displayName || !plugin.interface?.shortDescription) {
+    errors.push('codex plugin interface requires displayName and shortDescription');
+    return;
+  }
+
+  const marketPath = join(repositoryRoot, '.agents', 'plugins', 'marketplace.json');
+  try {
+    const market = JSON.parse(await readFile(marketPath, 'utf8'));
+    const entry = (market.plugins ?? []).find((item) => item.name === 'skillsforge');
+    if (!entry?.source?.path || !String(entry.source.path).includes('plugins/skillsforge')) {
+      errors.push('codex marketplace entry must reference local plugins/skillsforge');
+      return;
+    }
+    if (!entry.policy?.installation) {
+      errors.push('codex marketplace entry must declare installation policy');
+      return;
+    }
+  } catch (error) {
+    errors.push(`codex marketplace cannot be read: ${error.message}`);
+    return;
+  }
+
+  passes.push('codex plugin + marketplace present');
 }
 
 async function validateManifest(label, schema, value, errors, passes) {

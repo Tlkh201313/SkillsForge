@@ -127,10 +127,28 @@ test('cache-copy does not require repository lib or scripts modules', async (con
 
 test('dist/claude-code sidecar skills ship committed PreToolUse hooks', async () => {
   const distPlugin = join(repoRoot, 'dist', 'claude-code');
+  const distCodex = join(repoRoot, 'dist', 'codex');
   // Rebuild so dist CLI matches source (doctor must use claude-code profile).
   const build = await runNode([join(repoRoot, 'scripts', 'build-dist.mjs')], { cwd: repoRoot });
   assert.equal(build.code, 0, build.stderr || build.stdout);
   await access(distPlugin);
+  await access(distCodex);
+  await access(join(repoRoot, 'dist', 'codex-interop.json'));
+
+  const skillsRoot = join(distCodex, 'skills');
+  const entries = await readdir(skillsRoot, { withFileTypes: true });
+  let openaiCount = 0;
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    try {
+      await access(join(skillsRoot, entry.name, 'SKILL.md'));
+    } catch {
+      continue;
+    }
+    await access(join(skillsRoot, entry.name, 'agents', 'openai.yaml'));
+    openaiCount += 1;
+  }
+  assert.ok(openaiCount >= 1, 'dist/codex skills must include agents/openai.yaml');
 
   const commandNames = ['validate', 'route', 'forge', 'doctor', 'verify-receipt'];
   for (const name of commandNames) {

@@ -1,0 +1,6 @@
+﻿interface:
+  display_name: Verify Capability
+  short_description: Use when checking whether a skill is safe and correct, including validation failures, undeclared capabilities, dependency cycles, and routing regressions.
+  default_prompt: Use this skill to verify a skill is safe and correct before packaging or after edits.
+policy:
+  allow_implicit_invocation: true

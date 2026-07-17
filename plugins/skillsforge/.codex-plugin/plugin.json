@@ -1,0 +1,39 @@
+{
+  "name": "skillsforge",
+  "version": "0.3.0",
+  "description": "Make Agent Skills reviewable, least-privilege, measurable, and tamper-evident before teams run them in Codex.",
+  "author": {
+    "name": "Tlkh201313"
+  },
+  "homepage": "https://github.com/Tlkh201313/SkillsForge",
+  "repository": "https://github.com/Tlkh201313/SkillsForge",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "validation",
+    "agent-skills",
+    "codex",
+    "trust",
+    "policy"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SkillsForge",
+    "shortDescription": "Validate, policy-scan, package, and prove Agent Skills for Codex.",
+    "longDescription": "SkillsForge is a capability and trust engine for portable Agent Skills. It validates packages, scans declared capabilities, packages guarded Codex plugins, and emits reproducible evidence receipts. Hooks are host guardrails, not an OS sandbox.",
+    "developerName": "Tlkh201313",
+    "category": "Developer Tools",
+    "capabilities": [
+      "skill-validation",
+      "capability-policy",
+      "evidence-receipts",
+      "codex-packaging"
+    ],
+    "websiteURL": "https://github.com/Tlkh201313/SkillsForge",
+    "defaultPrompt": [
+      "Validate this Agent Skill package with SkillsForge before installing it.",
+      "Package this skill as a guarded Codex plugin with least-privilege policy.",
+      "Verify the SkillsForge trust receipt for this package."
+    ]
+  }
+}

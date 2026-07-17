@@ -1,0 +1,6 @@
+interface:
+  display_name: Validate Agent Skill
+  short_description: Validate Agent Skills packages and Claude Code skill extensions for metadata, YAML, naming, instructions, and local resource links.
+  default_prompt: Use this skill to validate an Agent Skills package or Claude Code skill before distribution.
+policy:
+  allow_implicit_invocation: true

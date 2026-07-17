@@ -1,4 +1,4 @@
-import { access, cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadAllSkills } from '../lib/capabilities/skill-loader.mjs';
@@ -173,6 +173,16 @@ export async function runBuildDist(options = {}) {
     if (/\bPreToolUse\b/.test(source)) compiledPolicies.push(skill.name);
   }
 
+  const codexRoot = join(distRoot, 'codex');
+  await mkdir(codexRoot, { recursive: true });
+  await cp(join(buildRoot, 'plugins', 'skillsforge'), codexRoot, { recursive: true });
+
+  const codexProof = await proveCodexPackageParity(buildRoot, codexRoot);
+  if (!codexProof.ok) return codexProof;
+
+  const codexInterop = buildCodexInterop(sourceSkills, codexProof.skillSummaries);
+  await writeFile(join(distRoot, 'codex-interop.json'), `${JSON.stringify(codexInterop, null, 2)}\n`);
+
   await writeFile(join(distRoot, 'trust-receipt.json'), receipt.text);
   await writeFile(join(distRoot, 'cursor-lossiness.json'), `${JSON.stringify(lossiness, null, 2)}\n`);
   await writeFile(join(distRoot, 'build-report.json'), `${JSON.stringify({
@@ -181,7 +191,8 @@ export async function runBuildDist(options = {}) {
     evaluation: normalizedEval,
     hostValidation,
     compiledPolicies,
-    packageHash: receipt.receipt.package?.packageHash ?? null
+    packageHash: receipt.receipt.package?.packageHash ?? null,
+    codexInterop
   }, null, 2)}\n`);
 
   return {
@@ -190,8 +201,174 @@ export async function runBuildDist(options = {}) {
     packageHash: receipt.receipt.package?.packageHash ?? null,
     evaluation: normalizedEval,
     lossiness,
-    hostValidation
+    hostValidation,
+    codexInterop
   };
+}
+
+async function proveCodexPackageParity(buildRoot, codexRoot) {
+  const sourceSkillsRoot = join(buildRoot, 'plugins', 'skillsforge', 'skills');
+  const distSkillsRoot = join(codexRoot, 'skills');
+  let entries = [];
+  try {
+    entries = await readdir(sourceSkillsRoot, { withFileTypes: true });
+  } catch (error) {
+    return { ok: false, errors: [`codex package missing skills root: ${error.message}`] };
+  }
+
+  const skillSummaries = [];
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const sourceDir = join(sourceSkillsRoot, entry.name);
+    const distDir = join(distSkillsRoot, entry.name);
+    try {
+      await access(join(sourceDir, 'SKILL.md'));
+    } catch {
+      continue;
+    }
+
+    const required = ['SKILL.md', join('agents', 'openai.yaml')];
+    for (const rel of required) {
+      const parity = await assertByteEqual(join(sourceDir, rel), join(distDir, rel), entry.name, rel);
+      if (!parity.ok) return parity;
+    }
+
+    const hasSidecar = await pathExists(join(sourceDir, 'skillsforge.json'));
+    if (hasSidecar) {
+      const parity = await assertByteEqual(
+        join(sourceDir, 'skillsforge.json'),
+        join(distDir, 'skillsforge.json'),
+        entry.name,
+        'skillsforge.json'
+      );
+      if (!parity.ok) return parity;
+    }
+
+    for (const resource of ['scripts', 'references', 'assets']) {
+      const sourceResource = join(sourceDir, resource);
+      if (!(await pathExists(sourceResource))) continue;
+      const parity = await assertDirByteEqual(sourceResource, join(distDir, resource), entry.name, resource);
+      if (!parity.ok) return parity;
+    }
+
+    skillSummaries.push({
+      name: entry.name,
+      hasSidecar,
+      openaiYaml: true
+    });
+  }
+
+  try {
+    await access(join(codexRoot, '.codex-plugin', 'plugin.json'));
+  } catch {
+    return { ok: false, errors: ['dist/codex missing .codex-plugin/plugin.json'] };
+  }
+
+  return { ok: true, skillSummaries };
+}
+
+function buildCodexInterop(sourceSkills, skillSummaries) {
+  const accepted = [
+    '.codex-plugin/plugin.json',
+    'SKILL.md',
+    'agents/openai.yaml',
+    'scripts',
+    'references',
+    'assets'
+  ];
+  if (skillSummaries.some((item) => item.hasSidecar)) {
+    accepted.push('skillsforge.json');
+  }
+  return {
+    host: 'codex',
+    accepted,
+    transformed: [],
+    ignored: [
+      'Claude-only PreToolUse hooks embedded in SKILL.md (Codex packaging note: ignored for Codex runtime; use plugin-level hooks instead)'
+    ],
+    runtimeEnforced: false,
+    losses: ['claude-skill-hooks'],
+    usesSidecar: false,
+    skills: skillSummaries.map((item) => item.name),
+    note: 'Codex host install usesSidecar=false; openai.yaml is accepted for Codex skill interface metadata.'
+  };
+}
+
+async function assertByteEqual(sourcePath, distPath, skillName, label) {
+  let sourceBytes;
+  let distBytes;
+  try {
+    sourceBytes = await readFile(sourcePath);
+  } catch {
+    return { ok: false, errors: [`codex source missing ${skillName}/${label}`] };
+  }
+  try {
+    distBytes = await readFile(distPath);
+  } catch {
+    return { ok: false, errors: [`dist/codex missing ${skillName}/${label}`] };
+  }
+  if (!sourceBytes.equals(distBytes)) {
+    return { ok: false, errors: [`dist/codex ${skillName}/${label} is not byte-equivalent to source`] };
+  }
+  return { ok: true };
+}
+
+async function assertDirByteEqual(sourceDir, distDir, skillName, label) {
+  const sourceFiles = await listFilesRecursive(sourceDir);
+  const distFiles = await listFilesRecursive(distDir);
+  const sourceRels = new Set(sourceFiles.map((file) => file.rel));
+  const distRels = new Set(distFiles.map((file) => file.rel));
+  for (const rel of sourceRels) {
+    if (!distRels.has(rel)) {
+      return { ok: false, errors: [`dist/codex missing ${skillName}/${label}/${rel}`] };
+    }
+  }
+  for (const rel of distRels) {
+    if (!sourceRels.has(rel)) {
+      return { ok: false, errors: [`dist/codex unexpected extra ${skillName}/${label}/${rel}`] };
+    }
+  }
+  for (const file of sourceFiles) {
+    const distFile = distFiles.find((item) => item.rel === file.rel);
+    const sourceBytes = await readFile(file.abs);
+    const distBytes = await readFile(distFile.abs);
+    if (!sourceBytes.equals(distBytes)) {
+      return {
+        ok: false,
+        errors: [`dist/codex ${skillName}/${label}/${file.rel} is not byte-equivalent to source`]
+      };
+    }
+  }
+  return { ok: true };
+}
+
+async function listFilesRecursive(rootDir) {
+  const out = [];
+  async function walk(current, prefix = '') {
+    let entries = [];
+    try {
+      entries = await readdir(current, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+      const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
+      const abs = join(current, entry.name);
+      if (entry.isDirectory()) await walk(abs, rel);
+      else out.push({ rel, abs });
+    }
+  }
+  await walk(rootDir);
+  return out;
+}
+
+async function pathExists(path) {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function buildCursorLossiness(skill) {
