@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need cloud networking in a SkillsForge cloud-devops workflow.
   default_prompt: Use the cloud-networking skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

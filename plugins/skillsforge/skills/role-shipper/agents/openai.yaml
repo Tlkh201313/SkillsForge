@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need role shipper in a SkillsForge roles workflow.
   default_prompt: Use the role-shipper skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

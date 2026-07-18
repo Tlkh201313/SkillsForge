@@ -15,11 +15,11 @@ hooks:
 
 ## Overview
 
-Original SkillsForge skill for fin mrr (finance-lite pack).
+Lean SkillsForge scaffold for fin mrr (finance-lite pack). Add domain examples and verification before calling it production-depth.
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Fin Mrr without copying third-party skill bodies.
+Deliver a trustworthy, repeatable outcome for Fin Mrr without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 

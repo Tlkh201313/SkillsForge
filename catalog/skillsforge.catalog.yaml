@@ -213,6 +213,17 @@ packs:
     - ops-runbook-drill
     - ops-feature-freeze
     - ops-canary
+  os:
+    description: "Cross-platform OS helpers for agentic workstations"
+    skills:
+    - os-command-router
+    - os-file-ops-safe
+    - os-process-port-doctor
+    - os-env-doctor
+    - os-shell-modernize
+    - os-app-launcher
+    - os-path-cleanup
+    - os-agent-terminal
   agentic:
     description: "Agentic workflows and crew patterns"
     skills:
@@ -347,6 +358,10 @@ packs:
     - media-ugc
     - media-localization
     - media-accessibility
+    - media-video-watch
+    - media-frame-sampling
+    - media-remotion-plan
+    - media-caption-qc
   mobile:
     description: "Mobile release and store"
     skills:
@@ -446,8 +461,9 @@ profiles:
     - roles
     - eng
     - design
+    - os
   full:
-    description: "Everything — beat ECC surface"
+    description: "Everything -- broad trusted skill surface"
     packs:
     - trust
     - browse-catalog
@@ -462,6 +478,7 @@ profiles:
     - docs
     - security
     - ops
+    - os
     - agentic
     - lang
     - framework
@@ -509,6 +526,7 @@ profiles:
     packs:
     - trust
     - ops
+    - os
     - security
     - cloud-devops
   methodology:

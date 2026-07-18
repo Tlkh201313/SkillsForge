@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need brainstorm first in a SkillsForge methodology workflow.
   default_prompt: Use the brainstorm-first skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

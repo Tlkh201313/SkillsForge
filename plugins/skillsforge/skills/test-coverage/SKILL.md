@@ -15,11 +15,11 @@ hooks:
 
 ## Overview
 
-Original SkillsForge skill for test coverage (testing pack).
+Lean SkillsForge scaffold for test coverage (testing pack). Add domain examples and verification before calling it production-depth.
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Test Coverage without copying third-party skill bodies.
+Deliver a trustworthy, repeatable outcome for Test Coverage without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 

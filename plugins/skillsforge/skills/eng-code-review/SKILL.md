@@ -15,11 +15,11 @@ hooks:
 
 ## Overview
 
-Original SkillsForge skill for eng code review (eng pack).
+Lean SkillsForge scaffold for eng code review (eng pack). Add domain examples and verification before calling it production-depth.
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Eng Code Review without copying third-party skill bodies.
+Deliver a trustworthy, repeatable outcome for Eng Code Review without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "media video watch",
+      "run media video watch",
+      "media video watch skill",
+      "help with media video watch",
+      "media media video watch"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only"
+    ],
+    "mode": "explicit",
+    "pack": "media"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

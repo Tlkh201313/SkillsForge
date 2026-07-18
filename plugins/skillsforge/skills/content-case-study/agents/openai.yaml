@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need content case study in a SkillsForge content workflow.
   default_prompt: Use the content-case-study skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

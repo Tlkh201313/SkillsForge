@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Remotion Plan
+  short_description: Use when you need media remotion plan in a SkillsForge media workflow.
+  default_prompt: Use the media-remotion-plan skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -15,11 +15,11 @@ hooks:
 
 ## Overview
 
-Original SkillsForge skill for ent stakeholder brief (enterprise pack).
+Lean SkillsForge scaffold for ent stakeholder brief (enterprise pack). Add domain examples and verification before calling it production-depth.
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Ent Stakeholder Brief without copying third-party skill bodies.
+Deliver a trustworthy, repeatable outcome for Ent Stakeholder Brief without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 

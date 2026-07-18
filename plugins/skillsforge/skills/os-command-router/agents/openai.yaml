@@ -1,0 +1,6 @@
+interface:
+  display_name: Os Command Router
+  short_description: Use when you need os command router in a SkillsForge os workflow.
+  default_prompt: Use the os-command-router skill for this task.
+policy:
+  allow_implicit_invocation: false

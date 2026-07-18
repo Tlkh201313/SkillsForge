@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need role qa lead in a SkillsForge roles workflow.
   default_prompt: Use the role-qa-lead skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

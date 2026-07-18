@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need media podcast in a SkillsForge media workflow.
   default_prompt: Use the media-podcast skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

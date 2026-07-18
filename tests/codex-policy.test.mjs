@@ -58,7 +58,7 @@ async function runHook(stdin, args, env = {}) {
 
 test('compileCodexHooks matcher covers Bash apply_patch and mcp', () => {
   const compiled = compileCodexHooks({ policyRelativePath: 'policy/skillsforge.json' });
-  assert.equal(compiled.hooks.PreToolUse[0].matcher, 'Bash|apply_patch|mcp__*');
+  assert.equal(compiled.hooks.PreToolUse[0].matcher, '^(Bash|apply_patch|mcp__.*)$');
 });
 
 test('Bash denies chaining redirects and encoded interpreter abuse', () => {
@@ -84,6 +84,42 @@ test('Bash denies chaining redirects and encoded interpreter abuse', () => {
     allowed
   );
   assert.equal(ok, null);
+});
+
+test('Bash write:none denies declared commands with write-shaped arguments', () => {
+  const locked = policy({
+    exec: { allowed: true, commands: ['node scripts/ok.mjs'] },
+    write: { scope: 'none' }
+  });
+
+  for (const command of [
+    'node scripts/ok.mjs --write',
+    'node scripts/ok.mjs --out artifact.json',
+    'node scripts/ok.mjs --force'
+  ]) {
+    const decision = enforceCodexPolicy({ tool_name: 'Bash', tool_input: { command } }, locked);
+    assert.match(denyReason(decision), /write scope forbids shell writes/i, command);
+  }
+
+  assert.equal(
+    enforceCodexPolicy({ tool_name: 'Bash', tool_input: { command: 'node scripts/ok.mjs' } }, locked),
+    null
+  );
+});
+
+test('Bash write:none denies exact declared inline filesystem writes', () => {
+  for (const command of [
+    'node -e "require(\'fs\').writeFileSync(\'x\',\'y\')"',
+    'python -c "open(\'x\', \'w\').write(\'y\')"',
+    'pwsh -Command "Set-Content -Path x -Value y"'
+  ]) {
+    const locked = policy({
+      exec: { allowed: true, commands: [command] },
+      write: { scope: 'none' }
+    });
+    const decision = enforceCodexPolicy({ tool_name: 'Bash', tool_input: { command } }, locked);
+    assert.match(denyReason(decision), /write scope forbids shell writes/i, command);
+  }
 });
 
 test('apply_patch enforces write scope and rejects traversal or malformed patches', () => {
@@ -112,9 +148,29 @@ test('apply_patch enforces write scope and rejects traversal or malformed patche
   assert.match(denyReason(malformed), /no recognizable file paths/);
 
   assert.deepEqual(
-    parseApplyPatchPaths('*** Update File: a.txt\n*** Add File: b/c.txt\n'),
-    ['a.txt', 'b/c.txt']
+    parseApplyPatchPaths('*** Update File: a.txt\n*** Add File: b/c.txt\n*** Delete File: c.txt\n*** Move to: d.txt\n'),
+    ['a.txt', 'b/c.txt', 'c.txt', 'd.txt']
   );
+});
+
+test('apply_patch checks Delete File and Move to paths', () => {
+  const scoped = policy({ write: { scope: 'skill' } });
+
+  const deleteEscape = enforceCodexPolicy({
+    tool_name: 'apply_patch',
+    tool_input: {
+      patch: '*** Begin Patch\n*** Update File: output.txt\n@@\n+ok\n*** Delete File: ../outside.txt\n*** End Patch\n'
+    }
+  }, scoped);
+  assert.match(denyReason(deleteEscape), /traversal|escapes skill scope/i);
+
+  const moveEscape = enforceCodexPolicy({
+    tool_name: 'apply_patch',
+    tool_input: {
+      patch: '*** Begin Patch\n*** Update File: output.txt\n*** Move to: ../outside.txt\n@@\n+ok\n*** End Patch\n'
+    }
+  }, scoped);
+  assert.match(denyReason(moveEscape), /traversal|escapes skill scope/i);
 });
 
 test('MCP tools deny-by-default unless declared', () => {

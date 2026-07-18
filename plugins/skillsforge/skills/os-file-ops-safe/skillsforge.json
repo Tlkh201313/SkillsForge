@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "os file ops safe",
+      "run os file ops safe",
+      "os file ops safe skill",
+      "help with os file ops safe",
+      "os os file ops safe"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only"
+    ],
+    "mode": "explicit",
+    "pack": "os"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

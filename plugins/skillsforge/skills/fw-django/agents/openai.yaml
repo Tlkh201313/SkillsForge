@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need fw django in a SkillsForge framework workflow.
   default_prompt: Use the fw-django skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

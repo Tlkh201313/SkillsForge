@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need research interview in a SkillsForge research workflow.
   default_prompt: Use the research-interview skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

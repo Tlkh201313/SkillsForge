@@ -15,11 +15,11 @@ hooks:
 
 ## Overview
 
-Original SkillsForge skill for subagent driven dev (methodology pack).
+Lean SkillsForge scaffold for subagent driven dev (methodology pack). Add domain examples and verification before calling it production-depth.
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Subagent Driven Dev without copying third-party skill bodies.
+Deliver a trustworthy, repeatable outcome for Subagent Driven Dev without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 

@@ -56,6 +56,46 @@ async function pathExists(path) {
   }
 }
 
+async function readTextIfExists(path) {
+  try {
+    return await readFile(path, 'utf8');
+  } catch {
+    return null;
+  }
+}
+
+function isGeneratedScaffold(source) {
+  return Boolean(source)
+    && source.includes('## Pressure stub')
+    && (source.includes('Deliver a trustworthy, repeatable outcome for')
+      || source.includes('Lean SkillsForge scaffold for')
+      || source.includes('Original SkillsForge skill for'));
+}
+
+function shouldSyncThinAgent(source) {
+  return !source || source.includes('Thin SkillsForge role agent.');
+}
+
+function shouldSyncGeneratedCommand(source) {
+  return !source || (source.includes('Run the SkillsForge')
+    && (source.includes('npx skillsforge') || source.includes('route --query')));
+}
+
+const NATIVE_COMMANDS = new Set([
+  'vibe', 'catalog', 'quality', 'lint-skill', 'bench', 'compose', 'watch', 'scorecard',
+  'scaffold', 'stocktake', 'batch', 'compare', 'pressure', 'skillshield', 'export-agents',
+  'capture', 'forge-from-capture', 'doctor', 'validate', 'route', 'forge', 'receipt',
+  'verify-receipt', 'enforce', 'eval', 'install', 'package', 'evidence', 'demo',
+  'compare-skill', 'os-run', 'os-open', 'os-find', 'os-ports', 'os-env', 'os-copy-path',
+  'os-clean'
+]);
+
+function commandInvocation(name) {
+  if (name === 'prove' || name === 'work-proof') return 'evidence --out artifacts/evidence';
+  if (NATIVE_COMMANDS.has(name)) return `${name} $ARGUMENTS`;
+  return `route --query "${name} $ARGUMENTS"`;
+}
+
 async function writeCatalogYaml() {
   const packsYaml = Object.entries(PACKS).map(([id, pack]) => {
     const skills = pack.skills.map((s) => `    - ${s.id}`).join('\n');
@@ -85,10 +125,14 @@ async function writeSkill(skill) {
   assertSkillId(skill.id);
   const target = join(skillsRoot, skill.id);
   const sidecarPath = join(target, 'skillsforge.json');
+  const skillPath = join(target, 'SKILL.md');
+  const existingSkill = await readTextIfExists(skillPath);
   if (await pathExists(sidecarPath)) {
-    // Never overwrite hero/custom bodies — only sync routing.mode + pack.
-    await patchExistingTrustSidecar(skill);
-    return { id: skill.id, action: 'patched' };
+    if (!isGeneratedScaffold(existingSkill)) {
+      // Never overwrite hero/custom bodies -- only sync routing.mode + pack.
+      await patchExistingTrustSidecar(skill);
+      return { id: skill.id, action: 'patched' };
+    }
   }
   if (TRUST_EXISTING.has(skill.id)) {
     await patchExistingTrustSidecar(skill);
@@ -102,7 +146,7 @@ async function writeSkill(skill) {
     description: descriptionFor(skill),
     triggers: triggersFor(skill),
     antiTriggers: antiFor(skill),
-    overview: `Original SkillsForge skill for ${humanize(skill.id)} (${skill.pack} pack).`,
+    overview: `Lean SkillsForge scaffold for ${humanize(skill.id)} (${skill.pack} pack). Add domain examples and verification before calling it production-depth.`,
     whenToUse: [`Need ${humanize(skill.id)} with trusted SkillsForge artifacts`]
   });
   await mkdir(join(target, 'agents'), { recursive: true });
@@ -117,14 +161,15 @@ async function writeSkill(skill) {
       expectedCompliance: ['follow-phases', 'write-exit-criteria', 'no-rationalize']
     }, null, 2)}\n`);
   }
-  return { id: skill.id, action: 'created' };
+  return { id: skill.id, action: existingSkill ? 'synced' : 'created' };
 }
 
 async function writeAgents() {
   await mkdir(agentsRoot, { recursive: true });
   for (const name of AGENTS) {
     const path = join(agentsRoot, `${name}.md`);
-    if (await pathExists(path)) continue; // preserve playbook upgrades
+    const existing = await readTextIfExists(path);
+    if (!shouldSyncThinAgent(existing)) continue; // preserve playbook upgrades
     const content = `---
 name: ${name}
 description: Use when you need a ${humanize(name)} agent that invokes SkillsForge skills and CLI.
@@ -133,18 +178,18 @@ maturity: experimental
 
 # ${humanize(name)}
 
-Thin SkillsForge role agent. Do not run Ruflo-style swarms.
+Thin SkillsForge role agent. Load only the matched skill and CLI output needed for the task.
 
 ## Instructions
 
 1. Clarify the goal.
 2. \`skillsforge route --query "<goal>"\` or \`skillsforge catalog --pack <pack>\`.
 3. Invoke the matched skill; write artifacts under \`docs/work/\`.
-4. Finish with \`skillsforge prove\` / evidence when shipping.
+4. Finish with \`skillsforge evidence --out artifacts/evidence\` or \`skillsforge verify-receipt\` when shipping.
 
 ## Tools
 
-- skillsforge vibe|catalog|quality|route|validate|pressure|skillshield|capture
+- skillsforge vibe|catalog|quality|route|validate|pressure|skillshield|capture|evidence|verify-receipt
 `;
     await writeFile(path, content);
   }
@@ -154,20 +199,23 @@ async function writeCommands() {
   await mkdir(commandsRoot, { recursive: true });
   for (const name of COMMANDS) {
     const path = join(commandsRoot, `${name}.md`);
-    if (await pathExists(path)) continue; // preserve upgraded slash contracts
+    const existing = await readTextIfExists(path);
+    if (!shouldSyncGeneratedCommand(existing)) continue; // preserve upgraded slash contracts
     const content = `---
 name: ${name}
 description: Use when invoking SkillsForge ${name} from a slash command or host shim.
+argument-hint: "[args]"
+allowed-tools: "Bash(node *),Read"
 ---
 
 # /${name}
 
-<!-- alias stub: prefer upgraded entry commands (validate/route/vibe/…) -->
+<!-- generated thin command: prefer upgraded entry commands for trust-critical flows -->
 
 Run the SkillsForge \`${name}\` workflow.
 
 \`\`\`bash
-npx skillsforge ${['vibe', 'catalog', 'quality', 'bench', 'scorecard', 'scaffold', 'stocktake', 'pressure', 'skillshield', 'export-agents', 'capture', 'doctor', 'validate', 'route', 'forge', 'eval', 'install', 'package', 'evidence', 'demo'].includes(name) ? name : 'route --query "' + name + '"'}
+node "\${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" ${commandInvocation(name)}
 \`\`\`
 `;
     await writeFile(path, content);
@@ -197,18 +245,11 @@ alwaysApply: false
 
 # SkillsForge vibe
 
-Start with \`npx skillsforge vibe\` then \`skillsforge catalog\`.
+Start with \`node plugins/skillsforge/bin/skillsforge.mjs vibe\` in a clone, or \`skillsforge vibe\` after install.
 `);
 }
 
 async function writeDocs() {
-  await mkdir(join(root, 'docs', 'work'), { recursive: true });
-  for (const name of ['brief', 'plan', 'design-lock', 'findings', 'ship-notes', 'proof', 'learning']) {
-    const path = join(root, 'docs', 'work', `${name}.md`);
-    if (!(await pathExists(path))) {
-      await writeFile(path, `# ${name}\n\n_Work Artifact Contract stub._\n`);
-    }
-  }
   await writeFile(join(root, 'docs', 'inspiration.md'), `# Inspiration (no-copy)
 
 SkillsForge learns from ecosystems without copying skill bodies:
@@ -233,24 +274,21 @@ SkillsForge learns from ecosystems without copying skill bodies:
 1. Write \`pressure/baseline.json\` with expected baseline violations.
 2. Scaffold with \`skillsforge scaffold --name <id> --pack <pack>\`.
 3. Run \`skillsforge pressure --skill <dir>\`.
-4. Run \`skillsforge quality --skill <dir>\` (heroes ≥85, others ≥70).
-5. CSO: description starts with \`Use when…\` and does not summarize workflow.
+4. Run \`skillsforge quality --skill <dir>\`. Quality score is a lint gate, not proof of production depth.
+5. CSO: description starts with \`Use when...\` and does not summarize workflow.
 
 See Superpowers writing-skills for the methodology inspiration (original SkillsForge text only).
 `);
-  await writeFile(join(root, 'docs', 'competitive-matrix.md'), `# Competitive matrix
+  await writeFile(join(root, 'docs', 'competitive-matrix.md'), `# Claim boundaries
 
-| Dimension | ECC | Superpowers | gstack | SkillsForge |
-|---|---|---|---|---|
-| Skill count | ~278 | ~14 | ~40–60 | ≥350 trusted |
-| Agents | ~67 | few | role cmds | ≥70 |
-| Commands | ~94 | few | ~28 | ≥100 |
-| Trust sidecars | rare | no | no | 100% |
-| Skill TDD pressure | no | process | no | \`pressure\` |
-| Operator vibe CLI | weak | no | browse | vibe/quality/bench |
-| SkillShield | AgentShield (code) | no | no | skills scanner |
-| Cross-harness AGENTS.md | yes | multi-host | multi-host | \`export-agents\` |
-| Swarm/MCP | no | no | no | complement Ruflo only |
+Do not publish competitor counts or "weak/no/rare" claims without dated sources and reproduction notes.
+
+Current local facts only:
+
+- SkillsForge catalog entries come from \`catalog/skillsforge.catalog.yaml\`.
+- Skill sidecars are checked by \`skillsforge validate --all\`.
+- Routing metrics are corpus-bound to \`evaluation/routing-holdout.json\`.
+- Quality scores are lint signals, not independent proof of production depth.
 `);
   await writeFile(join(root, 'docs', 'work-os.md'), `# SkillsForge Work OS
 
@@ -260,13 +298,8 @@ Magical moment:
 
 \`\`\`bash
 npm ci
-npx skillsforge vibe
+node plugins/skillsforge/bin/skillsforge.mjs vibe
 \`\`\`
-`);
-  await mkdir(join(root, 'docs', 'superpowers', 'plans'), { recursive: true });
-  await writeFile(join(root, 'docs', 'superpowers', 'plans', '2026-07-18-skillsforge-total-dominance.md'), `# SkillsForge Total Dominance
-
-See Cursor plan Total Dominance Work OS. Implementation materialized by \`node scripts/gen-pack-skills.mjs\`.
 `);
 }
 
@@ -289,11 +322,13 @@ async function main() {
 
   const created = results.filter((r) => r.action === 'created').length;
   const patched = results.filter((r) => r.action === 'patched').length;
+  const synced = results.filter((r) => r.action === 'synced').length;
   console.log(JSON.stringify({
     ok: true,
     skills: counts.skills,
     created,
     patched,
+    synced,
     agents: counts.agents,
     commands: counts.commands,
     packs: counts.packs

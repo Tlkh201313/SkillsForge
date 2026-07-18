@@ -1,14 +1,16 @@
 ---
 name: tdd
 description: Use when invoking SkillsForge tdd from a slash command or host shim.
+argument-hint: "[args]"
+allowed-tools: "Bash(node *),Read"
 ---
 
-<!-- alias of /skillsforge:build / pressure-test-skill — prefer the upgraded entry command for CLAUDE_PLUGIN_ROOT contracts -->
-
 # /tdd
+
+<!-- generated thin command: prefer upgraded entry commands for trust-critical flows -->
 
 Run the SkillsForge `tdd` workflow.
 
 ```bash
-npx skillsforge route --query "tdd"
+node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" route --query "tdd $ARGUMENTS"
 ```

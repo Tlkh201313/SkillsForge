@@ -1,7 +1,7 @@
 {
   "name": "skillsforge",
   "version": "0.4.0",
-  "description": "Trusted Agent Skills pipeline — validate, forge, route, demo, evidence receipts. 354 catalog entries with ~25 production-depth heroes.",
+  "description": "Trusted Agent Skills pipeline: validate, route, package, enforce, and verify portable Agent Skills.",
   "type": "module",
   "bin": {
     "skillsforge": "./plugins/skillsforge/bin/skillsforge.mjs",
@@ -31,11 +31,22 @@
     "vibe": "node plugins/skillsforge/bin/skillsforge.mjs vibe",
     "quality": "node plugins/skillsforge/bin/skillsforge.mjs quality",
     "bench": "node plugins/skillsforge/bin/skillsforge.mjs bench",
-    "video:studio": "npm --prefix video run studio",
-    "video:render": "npm --prefix video run render",
-    "video:still": "npm --prefix video run still",
     "check": "npm run validate:repo && npm run validate && npm test && npm run eval && npm run demo && npm run build:check && npm run build && npm run build:dist && npm run smoke:dist && npm run validate:host && npm run evidence -- --out artifacts/evidence"
   },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "VERSION",
+    "catalog/",
+    "plugins/skillsforge/",
+    "schemas/",
+    "lib/",
+    "scripts/",
+    "examples/",
+    "assets/*.svg",
+    "assets/skillsforge-demo-poster.png",
+    "assets/video/skillsforge-demo.mp4"
+  ],
   "license": "MIT",
   "dependencies": {
     "ajv": "^8.20.0",

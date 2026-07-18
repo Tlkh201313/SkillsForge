@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need fin forecast lite in a SkillsForge finance-lite workflow.
   default_prompt: Use the fin-forecast-lite skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

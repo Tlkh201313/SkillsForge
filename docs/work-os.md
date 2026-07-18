@@ -6,5 +6,5 @@ Magical moment:
 
 ```bash
 npm ci
-npx skillsforge vibe
+node plugins/skillsforge/bin/skillsforge.mjs vibe
 ```

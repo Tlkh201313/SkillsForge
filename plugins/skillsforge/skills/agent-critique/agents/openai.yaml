@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need agent critique in a SkillsForge agentic workflow.
   default_prompt: Use the agent-critique skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

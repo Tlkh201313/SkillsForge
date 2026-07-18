@@ -15,11 +15,11 @@ hooks:
 
 ## Overview
 
-Original SkillsForge skill for role security officer (roles pack).
+Lean SkillsForge scaffold for role security officer (roles pack). Add domain examples and verification before calling it production-depth.
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Role Security Officer without copying third-party skill bodies.
+Deliver a trustworthy, repeatable outcome for Role Security Officer without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 

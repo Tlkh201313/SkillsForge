@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need lang php in a SkillsForge lang workflow.
   default_prompt: Use the lang-php skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

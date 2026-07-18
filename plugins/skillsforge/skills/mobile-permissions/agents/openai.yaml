@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need mobile permissions in a SkillsForge mobile workflow.
   default_prompt: Use the mobile-permissions skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

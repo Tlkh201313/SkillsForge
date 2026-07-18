@@ -92,6 +92,17 @@ flowchart LR
   Canonical --> Install[HostInstall full or package]
 ```
 
+## Lazy-load contract
+
+SkillsForge should stay usable with a large catalog:
+
+1. `catalog` lists pack/profile/skill metadata only.
+2. `route` narrows the task to one selected skill or a small candidate list.
+3. The agent loads the selected `SKILL.md` only after routing or explicit user choice.
+4. Bulk validators (`validate --all`, `skillshield --all`, build/evidence) may scan full skill bodies because those are deliberate verification commands.
+
+Current implementation caches the loaded skill index by skills-root fingerprint. Next hardening step is a metadata-only route index so ordinary routing does not need every body in memory.
+
 ## Fail-closed Claude PreToolUse decision
 
 ```mermaid

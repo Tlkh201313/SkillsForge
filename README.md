@@ -7,26 +7,22 @@
 
 **Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, and tamper-evident.**
 
-SkillsForge is a Developer Tools **trust engine** for portable [Agent Skills](https://agentskills.io/specification): validate → deny unsafe → package safe → PreToolUse → tamper-evident receipt. Catalog scale (354 entries, ~25 production-depth heroes) is supporting evidence — the product is the trust pipeline.
+SkillsForge is a Developer Tools **trust engine** for portable [Agent Skills](https://agentskills.io/specification): validate, deny unsafe inputs, package safe skills, enforce PreToolUse policy, and verify tamper-evident receipts. Current local catalog: 366 skills, 26 packs, 10 profiles.
 
 ---
 
 ## Demo video
 
-[![SkillsForge demo — click to play MP4](assets/skillsforge-demo-poster.png)](assets/video/skillsforge-demo.mp4)
-
-**[▶ Watch the demo (MP4)](assets/video/skillsforge-demo.mp4)** — ~90s Remotion presentation that mirrors `npx skillsforge demo`. Click the poster or the link; GitHub plays the committed file in-browser (no YouTube required).
+<video src="assets/video/skillsforge-demo.mp4" poster="assets/skillsforge-demo-poster.png" controls width="100%"></video>
 
 | Beat | What you’ll see |
 |---|---|
 | Thesis | Why untrusted Agent Skills are a real operator risk |
 | **Unsafe deny** | `examples/codex-unsafe-release` fails validation — undeclared exec/network blocked **without executing** the skill |
 | **Safe package** | `examples/codex-safe-release` passes → compiles to a guarded Codex plugin tree |
-| **Receipt** | Scoreboard: false-allow = 0, tamper-evident receipt hash |
-| Scale punchline | 354 catalog entries / ~25 heroes — proof of inventory, not the pitch |
-| CTA | Clone + `npx skillsforge demo` |
-
-Regenerate locally: `npm run video:render` (MP4) / `npm run video:still` (poster). Details: [docs/video.md](docs/video.md). Source: [`video/`](video/).
+| **Receipt** | Tamper-evident receipt hash for packaged bytes |
+| Scale punchline | 366 catalog entries / 26 packs / 74 agents / 119 commands — inventory is verified locally |
+| CTA | Clone + `node plugins/skillsforge/bin/skillsforge.mjs demo` |
 
 ---
 
@@ -71,17 +67,17 @@ We built SkillsForge **because** Everything Claude Code (ECC) and Superpowers al
 
 **Honest differentiation** ([docs/competitive-matrix.md](docs/competitive-matrix.md), [docs/inspiration.md](docs/inspiration.md)):
 
-| Dimension | ECC | Superpowers | SkillsForge |
-|---|---|---|---|
-| Core pitch | Pack / surface completeness | Process discipline | **Trust engine for Agent Skills** |
-| Trust sidecars | Rare | No | **100%** (354/354) |
-| Trust pipeline | Rare | No | validate → package → PreToolUse → receipt |
-| Operator CLI | Weak | No | `demo`, `vibe`, `quality`, `bench`, `compare-skill`, … |
-| SkillShield | AgentShield (code) | No | Skill-body scanner (**best-effort**) |
-| Pressure | No | Process | Fixture gate + expanding |
-| Swarm / MCP | Varies | No | Thin trust MCP only (`validate` / `route` / `skillshield`); complement Ruflo — **not** a swarm clone |
+| Dimension | SkillsForge local evidence |
+|---|---|
+| Core pitch | Trust engine for Agent Skills |
+| Trust sidecars | 366/366 catalog skills ship `skillsforge.json` |
+| Trust pipeline | validate -> package -> PreToolUse -> receipt |
+| Operator CLI | `demo`, `vibe`, `quality`, `bench`, `compare-skill`, `evidence` |
+| SkillShield | Skill-body scanner, best-effort static gate |
+| Pressure | Fixture gate now; broader behavioral pressure is future work |
+| MCP | Thin trust MCP only: `validate`, `route`, `skillshield` |
 
-Inspiration is attributed; skill bodies are original SkillsForge text (no-copy rule). Catalog count is scale proof — judges should hit the trust demo first.
+Inspiration is attributed; skill bodies are original SkillsForge text. Judges should hit the trust demo first.
 
 ---
 
@@ -91,17 +87,17 @@ Inspiration is attributed; skill bodies are original SkillsForge text (no-copy r
 git clone https://github.com/Tlkh201313/SkillsForge.git
 cd SkillsForge
 npm ci
-npx skillsforge demo
+node plugins/skillsforge/bin/skillsforge.mjs demo
 ```
 
-You should see: **unsafe deny → safe package → receipt hash** (false-allow = 0).
+You should see: **unsafe deny -> safe package -> receipt hash**.
 
 Optional follow-ups:
 
 ```sh
-npx skillsforge compare-skill --a examples/codex-unsafe-release --b examples/codex-safe-release
-npx skillsforge vibe
-npx skillsforge catalog --pack trust
+node plugins/skillsforge/bin/skillsforge.mjs compare-skill --a examples/codex-unsafe-release --b examples/codex-safe-release
+node plugins/skillsforge/bin/skillsforge.mjs vibe
+node plugins/skillsforge/bin/skillsforge.mjs catalog --pack trust
 ```
 
 Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/roadmap-next.md](docs/roadmap-next.md).
@@ -113,12 +109,12 @@ Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/r
 | Surface | Actual implementation |
 |---|---|
 | One plugin | `skillsforge` (Claude + Codex manifests) |
-| Trust demo | `skillsforge demo` — unsafe deny → safe package → receipt |
-| Catalog | **354** skills, **25** packs, **10** profiles — `catalog/skillsforge.catalog.yaml` |
+| Trust demo | `skillsforge demo` -- unsafe deny -> safe package -> receipt |
+| Catalog | **366** skills, **26** packs, **10** profiles -- `catalog/skillsforge.catalog.yaml` |
 | Sidecars | **100%** (`skillsforge.json` beside every production skill) |
-| Depth honesty | **~25** production-depth heroes; domain packs are lean scaffolds on purpose |
-| Agents | **70** agents (depth varies — fuller leads vs thinner stubs) |
-| Commands | **107** shims (fuller contracts on trust/lifecycle; long-tail thinner) |
+| Depth honesty | Stable trust skills are deeper; domain packs are lean scaffolds until individually expanded |
+| Agents | **74** agents (depth varies -- fuller leads vs thinner stubs) |
+| Commands | **119** shims (bundled CLI first; long-tail routes by pack/query) |
 | Operator CLI | `vibe`, `catalog`, `quality`, `bench`, `scorecard`, `scaffold`, `pressure`, `skillshield`, `compare-skill`, … |
 | Trust CLI | `validate`, `doctor`, `route`, `forge`, `receipt`, `package`, `evidence`, `demo`, `enforce` |
 | Thin MCP | `scripts/skillsforge-mcp.mjs` — **only** `validate` / `route` / `skillshield` |
@@ -279,8 +275,8 @@ This release does **not** ship or claim: Ruflo-style MCP swarms / AgentDB / cons
 - **Pressure = fixture gate + expanding.** Fixtures check expected violation/compliance shape today; behavioral agent pressure is expanding.
 - **Receipts are unsigned tamper evidence.** Reproducible hashes prove bytes changed; they are not third-party certification.
 - **No copied third-party skill bodies.** Inspiration is attributed; bodies are original SkillsForge text.
-- **Honest depth:** 354 catalog entries; ~25 heroes carry production-depth Purpose/Phases. Domain packs stay lean on purpose.
-- **No invented Session IDs.** Build Week provenance lives in [BUILD_WEEK.md](BUILD_WEEK.md) when filled — never fabricate one for demos or docs.
+- **Honest depth:** 366 catalog entries; stable trust skills are deeper, and domain packs stay lean until expanded with examples/evals.
+- **No invented Session IDs or stats.** If provenance is missing, omit the claim.
 
 ### Security boundary
 
@@ -322,12 +318,9 @@ npm run check
 | [docs/architecture.md](docs/architecture.md) | Surfaces, Codex compile, hook flow |
 | [docs/threat-model.md](docs/threat-model.md) | Trust boundaries and limitations |
 | [docs/hackathon-demo.md](docs/hackathon-demo.md) | Timed judge script |
-| [docs/video.md](docs/video.md) | Remotion render / poster |
-| [docs/competitive-matrix.md](docs/competitive-matrix.md) | ECC / Superpowers / gstack matrix |
+| [docs/competitive-matrix.md](docs/competitive-matrix.md) | Claim boundaries for external comparisons |
 | [docs/inspiration.md](docs/inspiration.md) | No-copy attribution |
-| [docs/submission.md](docs/submission.md) / [docs/submit-checklist.md](docs/submit-checklist.md) | Devpost / Stage One |
 | [docs/roadmap-next.md](docs/roadmap-next.md) | Post-0.4.0 priorities |
-| [BUILD_WEEK.md](BUILD_WEEK.md) | Build Week provenance |
 
 ---
 

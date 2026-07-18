@@ -1,14 +1,16 @@
 ---
 name: lock-design
 description: Use when invoking SkillsForge lock-design from a slash command or host shim.
+argument-hint: "[args]"
+allowed-tools: "Bash(node *),Read"
 ---
 
-<!-- alias of /skillsforge:shape → lock-design skill — prefer the upgraded entry command for CLAUDE_PLUGIN_ROOT contracts -->
-
 # /lock-design
+
+<!-- generated thin command: prefer upgraded entry commands for trust-critical flows -->
 
 Run the SkillsForge `lock-design` workflow.
 
 ```bash
-npx skillsforge route --query "lock-design"
+node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" route --query "lock-design $ARGUMENTS"
 ```

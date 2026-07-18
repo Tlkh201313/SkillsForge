@@ -1,6 +1,7 @@
-import { access, readFile, writeFile, mkdir } from 'node:fs/promises';
+import { access, readFile, writeFile, mkdir, readdir, stat } from 'node:fs/promises';
 import { realpathSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { spawn } from 'node:child_process';
+import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadAllSkills } from '../lib/capabilities/skill-loader.mjs';
 import { routeQuery } from '../lib/capabilities/router.mjs';
@@ -138,6 +139,16 @@ Commands:
   compare-skill --a <dir> --b <dir> Side-by-side sidecar vs policy (trust delta)
   demo                              Judge path: unsafe deny → safe package → receipt
   watch --skill <dir>               Re-quality on interval (single pass in CI)
+  os-env [--name <VAR>] [--json]     Inspect safe environment facts without dumping secrets
+  os-find --name <glob> [--root <dir>] [--json]
+                                    Cross-platform file finder with repo-safe defaults
+  os-ports [--json]                 Best-effort listening port snapshot
+  os-open <path-or-url> [--dry-run] [--json]
+                                    Open target via platform launcher
+  os-run [--yes|--dry-run] -- <cmd> [args...]
+                                    Agent-safe command runner; dry-run unless --yes
+  os-copy-path <path> [--json]      Resolve and print canonical path
+  os-clean --root <dir> [--json]    Dry-run cleanup candidate inventory only
 
 Exit codes: 0 success, 1 command failure, 2 invalid usage
 `);
@@ -205,6 +216,20 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runDemoCommand(argv.slice(1), options);
     case 'watch':
       return runWatchCommand(argv.slice(1), options);
+    case 'os-env':
+      return runOsEnvCommand(argv.slice(1), options);
+    case 'os-find':
+      return runOsFindCommand(argv.slice(1), options);
+    case 'os-ports':
+      return runOsPortsCommand(argv.slice(1), options);
+    case 'os-open':
+      return runOsOpenCommand(argv.slice(1), options);
+    case 'os-run':
+      return runOsRunCommand(argv.slice(1), options);
+    case 'os-copy-path':
+      return runOsCopyPathCommand(argv.slice(1), options);
+    case 'os-clean':
+      return runOsCleanCommand(argv.slice(1), options);
     default:
       process.stderr.write(`unknown command: ${command}\n`);
       return 2;
@@ -400,9 +425,14 @@ async function runVerifyReceipt(argv, options) {
     process.stderr.write('--evaluation requires a value\n');
     return 2;
   }
+  const receiptSha256 = consumeOption(args, '--receipt-sha256');
+  if (receiptSha256 === null) {
+    process.stderr.write('--receipt-sha256 requires a value\n');
+    return 2;
+  }
   const path = args.find((item) => !item.startsWith('--'));
   if (!path) {
-    process.stderr.write('usage: skillsforge verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only]\n');
+    process.stderr.write('usage: skillsforge verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only] [--receipt-sha256 <hash>]\n');
     return 2;
   }
   const root = await resolveRuntimeRoot(options);
@@ -411,7 +441,8 @@ async function runVerifyReceipt(argv, options) {
   const verifyOptions = {
     packageRoot,
     packageOnly,
-    requireEvaluation: !packageOnly
+    requireEvaluation: !packageOnly,
+    expectedReceiptHash: receiptSha256 || undefined
   };
   if (!packageOnly && evaluationOption) {
     verifyOptions.evaluationPath = resolve(evaluationOption);
@@ -994,6 +1025,230 @@ async function runDemoCommand(argv, options) {
   return result.ok ? 0 : 1;
 }
 
+async function runOsEnvCommand(argv) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const name = consumeOption(args, '--name');
+  if (name === null) return usage('--name requires a value');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+
+  if (name) {
+    const exists = Object.hasOwn(process.env, name);
+    return writeOsResult({
+      ok: exists,
+      command: 'os-env',
+      name,
+      exists,
+      value: exists ? process.env[name] : null
+    }, json, ({ value }) => `${value ?? ''}\n`, exists ? 0 : 1);
+  }
+
+  const pathEntries = String(process.env.PATH ?? process.env.Path ?? '')
+    .split(process.platform === 'win32' ? ';' : ':')
+    .filter(Boolean);
+  return writeOsResult({
+    ok: true,
+    command: 'os-env',
+    platform: process.platform,
+    arch: process.arch,
+    node: process.version,
+    cwd: process.cwd(),
+    shell: process.env.SHELL ?? process.env.ComSpec ?? null,
+    home: process.env.HOME ?? process.env.USERPROFILE ?? null,
+    pathEntries,
+    envKeys: Object.keys(process.env).sort()
+  }, json, (payload) => [
+    `platform=${payload.platform}`,
+    `arch=${payload.arch}`,
+    `node=${payload.node}`,
+    `cwd=${payload.cwd}`,
+    `shell=${payload.shell ?? ''}`,
+    `pathEntries=${payload.pathEntries.length}`,
+    `envKeys=${payload.envKeys.length}`
+  ].join('\n') + '\n');
+}
+
+async function runOsFindCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  const name = consumeOption(args, '--name');
+  const rootOption = consumeOption(args, '--root') ?? '.';
+  const limitValue = consumeOption(args, '--limit') ?? '200';
+  if (name === null) return usage('--name requires a value');
+  if (rootOption === null) return usage('--root requires a value');
+  if (limitValue === null) return usage('--limit requires a value');
+  if (!name) return usage('usage: skillsforge os-find --name <glob> [--root <dir>] [--json]');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+
+  const repoRoot = await resolveRuntimeRoot(options);
+  let root;
+  try {
+    root = resolveUserPath(repoRoot, rootOption, allowAbsolute);
+  } catch (error) {
+    return failOsResult('os-find', error.message, json);
+  }
+  const limit = Math.max(1, Math.min(1000, Number(limitValue) || 200));
+  const regex = globToRegExp(name);
+  const matches = [];
+  await walkFind(root, root, regex, matches, limit);
+  return writeOsResult({
+    ok: true,
+    command: 'os-find',
+    root,
+    pattern: name,
+    limit,
+    truncated: matches.length >= limit,
+    matches
+  }, json, (payload) => payload.matches.map((item) => `${item.type}\t${item.path}`).join('\n') + (payload.matches.length ? '\n' : ''));
+}
+
+async function runOsPortsCommand(argv) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const attempts = process.platform === 'win32'
+    ? [['netstat', ['-ano', '-p', 'tcp']]]
+    : [['lsof', ['-nP', '-iTCP', '-sTCP:LISTEN']], ['netstat', ['-an']]];
+  for (const [command, commandArgs] of attempts) {
+    const result = await runProcess(command, commandArgs, { timeoutMs: 5000 });
+    if (result.status === 0 && result.stdout.trim()) {
+      const lines = result.stdout.split(/\r?\n/).filter(Boolean).slice(0, 200);
+      return writeOsResult({
+        ok: true,
+        command: 'os-ports',
+        probe: [command, ...commandArgs].join(' '),
+        lines
+      }, json, (payload) => payload.lines.join('\n') + '\n');
+    }
+  }
+  return failOsResult('os-ports', 'no port probe command succeeded', json);
+}
+
+async function runOsOpenCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const dryRun = consumeFlag(args, '--dry-run');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  const target = args.shift();
+  if (!target) return usage('usage: skillsforge os-open <path-or-url> [--dry-run] [--json]');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+
+  const repoRoot = await resolveRuntimeRoot(options);
+  let resolved = target;
+  if (!isUrlLike(target)) {
+    try {
+      resolved = resolveUserPath(repoRoot, target, allowAbsolute);
+    } catch (error) {
+      return failOsResult('os-open', error.message, json);
+    }
+  }
+  const launcher = platformOpenCommand(resolved);
+  const payload = {
+    ok: true,
+    command: 'os-open',
+    dryRun,
+    target: resolved,
+    launcher: [launcher.command, ...launcher.args]
+  };
+  if (dryRun) {
+    return writeOsResult(payload, json, (item) => `${item.launcher.join(' ')}\n`);
+  }
+  const result = await runProcess(launcher.command, launcher.args, { timeoutMs: 10000 });
+  return writeOsResult({ ...payload, result }, json, () => result.stderr || result.stdout || '', result.status === 0 ? 0 : 1);
+}
+
+async function runOsRunCommand(argv, options) {
+  const split = splitCommandArgs(argv);
+  const args = [...split.options];
+  const json = consumeFlag(args, '--json');
+  const dryRunFlag = consumeFlag(args, '--dry-run');
+  const yes = consumeFlag(args, '--yes');
+  const cwdOption = consumeOption(args, '--cwd') ?? '.';
+  const timeoutValue = consumeOption(args, '--timeout-ms') ?? '30000';
+  if (cwdOption === null) return usage('--cwd requires a value');
+  if (timeoutValue === null) return usage('--timeout-ms requires a value');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  if (split.command.length === 0) return usage('usage: skillsforge os-run [--yes|--dry-run] -- <cmd> [args...]');
+
+  const root = await resolveRuntimeRoot(options);
+  let cwd;
+  try {
+    cwd = resolveUserPath(root, cwdOption, true);
+  } catch (error) {
+    return failOsResult('os-run', error.message, json);
+  }
+  const [command, ...commandArgs] = split.command;
+  const timeoutMs = Math.max(1000, Math.min(300000, Number(timeoutValue) || 30000));
+  const dryRun = dryRunFlag || !yes;
+  const payload = {
+    ok: true,
+    command: 'os-run',
+    dryRun,
+    cwd,
+    timeoutMs,
+    argv: [command, ...commandArgs]
+  };
+  if (dryRun) {
+    return writeOsResult(payload, json, (item) => `${item.argv.join(' ')}\n`);
+  }
+  const result = await runProcess(command, commandArgs, { cwd, timeoutMs });
+  return writeOsResult({ ...payload, result, ok: result.status === 0 }, json, () => result.stdout + result.stderr, result.status === 0 ? 0 : 1);
+}
+
+async function runOsCopyPathCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  const target = args.shift();
+  if (!target) return usage('usage: skillsforge os-copy-path <path> [--json]');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  try {
+    const resolved = resolveUserPath(root, target, allowAbsolute);
+    return writeOsResult({ ok: true, command: 'os-copy-path', path: resolved }, json, (payload) => `${payload.path}\n`);
+  } catch (error) {
+    return failOsResult('os-copy-path', error.message, json);
+  }
+}
+
+async function runOsCleanCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  const rootOption = consumeOption(args, '--root') ?? '.';
+  if (rootOption === null) return usage('--root requires a value');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+
+  const repoRoot = await resolveRuntimeRoot(options);
+  let root;
+  try {
+    root = resolveUserPath(repoRoot, rootOption, allowAbsolute);
+  } catch (error) {
+    return failOsResult('os-clean', error.message, json);
+  }
+  const names = ['node_modules', 'dist', 'artifacts', 'coverage', '.next', '.turbo', 'tests/.tmp-runner'];
+  const candidates = [];
+  for (const name of names) {
+    const path = resolve(root, name);
+    if (await pathExists(path)) {
+      candidates.push({
+        path,
+        relativePath: relative(root, path).replaceAll('\\', '/'),
+        bytes: await directorySize(path)
+      });
+    }
+  }
+  return writeOsResult({
+    ok: true,
+    command: 'os-clean',
+    dryRun: true,
+    root,
+    candidates,
+    note: 'phase 1 inventory only; no files deleted'
+  }, json, (payload) => payload.candidates.map((item) => `${item.bytes}\t${item.relativePath}`).join('\n') + (payload.candidates.length ? '\n' : ''));
+}
+
 async function runWatchCommand(argv, options) {
   const args = [...argv];
   const skill = consumeOption(args, '--skill');
@@ -1013,6 +1268,131 @@ async function runWatchCommand(argv, options) {
   const result = await scoreSkillQuality(skillDir, { root });
   process.stdout.write(`${JSON.stringify({ watch: 'single-pass', ...result }, null, 2)}\n`);
   return result.pass ? 0 : 1;
+}
+
+function usage(message) {
+  process.stderr.write(`${message}\n`);
+  return 2;
+}
+
+function hasUnknownOption(args) {
+  return args.find((item) => item.startsWith('--'));
+}
+
+function writeOsResult(payload, json, textFormatter, status = 0) {
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+  else process.stdout.write(textFormatter(payload));
+  return status;
+}
+
+function failOsResult(command, error, json) {
+  return writeOsResult({ ok: false, command, error }, json, (payload) => `${payload.error}\n`, 1);
+}
+
+function splitCommandArgs(argv) {
+  const marker = argv.indexOf('--');
+  if (marker === -1) return { options: argv, command: [] };
+  return {
+    options: argv.slice(0, marker),
+    command: argv.slice(marker + 1)
+  };
+}
+
+function globToRegExp(glob) {
+  const escaped = String(glob)
+    .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+    .replace(/\*/g, '.*')
+    .replace(/\?/g, '.');
+  return new RegExp(`^${escaped}$`, 'i');
+}
+
+async function walkFind(root, dir, regex, matches, limit) {
+  if (matches.length >= limit) return;
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  entries.sort((a, b) => a.name.localeCompare(b.name));
+  for (const entry of entries) {
+    if (matches.length >= limit) return;
+    if (shouldSkipFindEntry(entry.name)) continue;
+    const full = join(dir, entry.name);
+    const rel = relative(root, full).replaceAll('\\', '/');
+    const type = entry.isDirectory() ? 'dir' : entry.isFile() ? 'file' : 'other';
+    if (regex.test(entry.name) || regex.test(rel)) matches.push({ path: rel, type });
+    if (entry.isDirectory()) await walkFind(root, full, regex, matches, limit);
+  }
+}
+
+function shouldSkipFindEntry(name) {
+  return new Set(['.git', '.codegraph', 'node_modules', '.worktrees', 'dist', 'artifacts']).has(name);
+}
+
+function isUrlLike(value) {
+  return /^[a-z][a-z0-9+.-]*:\/\//i.test(value) || /^mailto:/i.test(value);
+}
+
+function platformOpenCommand(target) {
+  if (process.platform === 'win32') {
+    return { command: 'powershell.exe', args: ['-NoProfile', '-Command', 'Start-Process', '-FilePath', target] };
+  }
+  if (process.platform === 'darwin') return { command: 'open', args: [target] };
+  return { command: 'xdg-open', args: [target] };
+}
+
+function runProcess(command, args, options = {}) {
+  return new Promise((resolveProcess) => {
+    const child = spawn(command, args, {
+      cwd: options.cwd ?? process.cwd(),
+      shell: false,
+      windowsHide: true
+    });
+    let stdout = '';
+    let stderr = '';
+    let timedOut = false;
+    const limit = 200_000;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      child.kill('SIGTERM');
+    }, options.timeoutMs ?? 30000);
+    child.stdout?.on('data', (chunk) => {
+      stdout = (stdout + chunk.toString()).slice(-limit);
+    });
+    child.stderr?.on('data', (chunk) => {
+      stderr = (stderr + chunk.toString()).slice(-limit);
+    });
+    child.on('error', (error) => {
+      clearTimeout(timer);
+      resolveProcess({ status: 127, stdout, stderr: error.message, timedOut });
+    });
+    child.on('close', (status, signal) => {
+      clearTimeout(timer);
+      resolveProcess({ status: status ?? 1, signal, stdout, stderr, timedOut });
+    });
+  });
+}
+
+async function directorySize(path) {
+  let info;
+  try {
+    info = await stat(path);
+  } catch {
+    return 0;
+  }
+  if (!info.isDirectory()) return info.size;
+  let total = 0;
+  let entries;
+  try {
+    entries = await readdir(path, { withFileTypes: true });
+  } catch {
+    return 0;
+  }
+  for (const entry of entries) {
+    total += await directorySize(join(path, entry.name));
+  }
+  return total;
 }
 
 if (process.argv[1]) {

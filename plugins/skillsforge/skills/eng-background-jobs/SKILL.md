@@ -15,11 +15,11 @@ hooks:
 
 ## Overview
 
-Original SkillsForge skill for eng background jobs (eng pack).
+Lean SkillsForge scaffold for eng background jobs (eng pack). Add domain examples and verification before calling it production-depth.
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Eng Background Jobs without copying third-party skill bodies.
+Deliver a trustworthy, repeatable outcome for Eng Background Jobs without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 

@@ -170,6 +170,72 @@ test('verifyReceipt detects skill file tampering', async (context) => {
   assert.ok(bad.mismatches.some((item) => /mismatch/i.test(item)));
 });
 
+test('verifyReceipt checks an externally pinned receipt hash', async (context) => {
+  const skill = await makeSkill(context, 'hash-pin', {
+    'SKILL.md': '---\nname: hash-pin\ndescription: h\n---\n\nok\n'
+  });
+  const built = await buildReceipt([skill], {
+    evaluation: evaluationWithReport,
+    packageRoot: skill.directory
+  });
+  const receiptDir = await mkdtemp(join(tmpdir(), 'sf-receipt-hash-pin-'));
+  context.after(() => rm(receiptDir, { recursive: true, force: true }));
+  const receiptPath = join(receiptDir, 'trust-receipt.json');
+  await writeFile(receiptPath, built.text);
+
+  const ok = await verifyReceipt(receiptPath, [skill], {
+    packageRoot: skill.directory,
+    packageOnly: true,
+    expectedReceiptHash: built.receiptHash
+  });
+  assert.equal(ok.ok, true, JSON.stringify(ok));
+  assert.equal(ok.receiptHash, built.receiptHash);
+
+  const bad = await verifyReceipt(receiptPath, [skill], {
+    packageRoot: skill.directory,
+    packageOnly: true,
+    expectedReceiptHash: '0'.repeat(64)
+  });
+  assert.equal(bad.ok, false);
+  assert.ok(bad.mismatches.some((item) => /receipt hash mismatch/i.test(item)));
+});
+
+test('verifyReceipt detects deterministic metadata tampering', async (context) => {
+  const lib = await makeSkill(context, 'meta-lib', {
+    'SKILL.md': '---\nname: meta-lib\ndescription: l\n---\n\nlib\n'
+  });
+  const app = await makeSkill(context, 'meta-app', {
+    'SKILL.md': '---\nname: meta-app\ndescription: a\n---\n\napp\n'
+  }, { requires: ['meta-lib'] });
+  const lossiness = [{ name: 'meta-app', fields: [{ field: 'hooks', status: 'unsupported' }] }];
+  const hostValidation = { status: 'pass', tool: 'test', paths: [{ path: '.', ok: true }] };
+  const built = await buildReceipt([app, lib], {
+    evaluation: evaluationWithReport,
+    lossiness,
+    hostValidation
+  });
+  const tampered = JSON.parse(built.text);
+  tampered.dependencyOrder = ['meta-app', 'meta-lib'];
+  tampered.scanner.version = 'tampered';
+  tampered.lossiness = [];
+  tampered.hostValidation = { status: 'pass', tool: 'tampered' };
+  tampered.skills[0].capabilities = { exec: { allowed: true, commands: ['sh evil.sh'] } };
+  const receiptPath = join(app.directory, 'trust-receipt.json');
+  await writeFile(receiptPath, `${JSON.stringify(tampered, null, 2)}\n`);
+
+  const bad = await verifyReceipt(receiptPath, [app, lib], {
+    packageOnly: true,
+    lossiness,
+    hostValidation
+  });
+  assert.equal(bad.ok, false);
+  assert.ok(bad.mismatches.some((item) => /dependencyOrder mismatch/i.test(item)));
+  assert.ok(bad.mismatches.some((item) => /scanner mismatch/i.test(item)));
+  assert.ok(bad.mismatches.some((item) => /lossiness mismatch/i.test(item)));
+  assert.ok(bad.mismatches.some((item) => /hostValidation mismatch/i.test(item)));
+  assert.ok(bad.mismatches.some((item) => /skill metadata mismatch meta-app/i.test(item)));
+});
+
 test('mutating compiled hook after receipt fails verify', async (context) => {
   const packageRoot = await mkdtemp(join(tmpdir(), 'sf-pkg-hook-'));
   context.after(() => rm(packageRoot, { recursive: true, force: true }));

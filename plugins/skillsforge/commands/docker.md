@@ -1,12 +1,16 @@
 ---
 name: docker
 description: Use when invoking SkillsForge docker from a slash command or host shim.
+argument-hint: "[args]"
+allowed-tools: "Bash(node *),Read"
 ---
 
 # /docker
 
+<!-- generated thin command: prefer upgraded entry commands for trust-critical flows -->
+
 Run the SkillsForge `docker` workflow.
 
 ```bash
-npx skillsforge route --query "docker"
+node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" route --query "docker $ARGUMENTS"
 ```

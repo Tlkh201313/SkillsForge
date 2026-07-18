@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need ent sla in a SkillsForge enterprise workflow.
   default_prompt: Use the ent-sla skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false
