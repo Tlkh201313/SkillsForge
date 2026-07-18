@@ -24,7 +24,8 @@
     "build:check": "node scripts/build.mjs --check",
     "build:dist": "node scripts/build-dist.mjs",
     "smoke:dist": "node --test tests/dist-smoke.test.mjs",
-    "check": "npm run validate:repo && npm run validate && npm test && npm run eval && npm run demo && npm run build:check && npm run build && npm run build:dist && npm run smoke:dist && npm run validate:host"
+    "evidence": "node scripts/evidence.mjs",
+    "check": "npm run validate:repo && npm run validate && npm test && npm run eval && npm run demo && npm run build:check && npm run build && npm run build:dist && npm run smoke:dist && npm run validate:host && npm run evidence -- --out artifacts/evidence"
   },
   "license": "MIT",
   "dependencies": {

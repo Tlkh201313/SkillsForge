@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": ["scan container layers", "cve pipeline check", "image vulnerability report"],
+    "antiTriggers": ["undeclared capability", "skillsforge verify", "skill receipt"]
+  },
+  "capabilities": {
+    "exec": { "allowed": false, "commands": [] },
+    "network": { "allowed": false, "hosts": [] },
+    "write": { "scope": "none" }
+  },
+  "compatibility": {
+    "claude-code": "partial",
+    "cursor": "partial"
+  }
+}

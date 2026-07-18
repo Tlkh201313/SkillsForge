@@ -95,6 +95,8 @@ Commands:
     --dry-run                       Plan only (default when --write omitted)
     --write                         Write the Codex plugin tree
     --force                         Overwrite a non-empty --out directory
+  evidence --out <dir>              Emit deterministic trust/eval evidence bundle
+                                    (writes when --out is set; default CI path: artifacts/evidence)
 
 Exit codes: 0 success, 1 command failure, 2 invalid usage
 `);
@@ -122,6 +124,8 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runInstall(argv.slice(1), options);
     case 'package':
       return runPackage(argv.slice(1), options);
+    case 'evidence':
+      return runEvidence(argv.slice(1), options);
     default:
       process.stderr.write(`unknown command: ${command}\n`);
       return 2;
@@ -500,6 +504,38 @@ async function runPackage(argv, options) {
     force
   });
   process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  return result.ok ? 0 : 1;
+}
+
+async function runEvidence(argv, options) {
+  const args = [...argv];
+  const out = consumeOption(args, '--out');
+  if (out === null) {
+    process.stderr.write('--out requires a value\n');
+    return 2;
+  }
+  if (!out) {
+    process.stderr.write('usage: skillsforge evidence --out <dir>\n');
+    return 2;
+  }
+  if (args.some((item) => item.startsWith('--'))) {
+    process.stderr.write(`unknown evidence option: ${args.find((item) => item.startsWith('--'))}\n`);
+    return 2;
+  }
+
+  const { buildEvidenceBundleWithPackageMeta } = await import('../lib/capabilities/evidence.mjs');
+  const root = await resolveRuntimeRoot(options);
+  const result = await buildEvidenceBundleWithPackageMeta({
+    root,
+    outDir: resolve(root, out),
+    write: true
+  });
+  process.stdout.write(`${JSON.stringify({
+    ok: result.ok,
+    outDir: result.outDir,
+    bundleHash: result.bundleHash,
+    files: result.files
+  }, null, 2)}\n`);
   return result.ok ? 0 : 1;
 }
 

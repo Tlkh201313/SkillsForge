@@ -1,0 +1,228 @@
+{
+  "name": "policy-adversarial",
+  "frozen": "2026-07-18",
+  "cases": [
+    {
+      "id": "allow-declared-bash",
+      "expected": "allow",
+      "event": {
+        "tool_name": "Bash",
+        "tool_input": { "command": "node scripts/ok.mjs" }
+      },
+      "policy": {
+        "schemaVersion": 1,
+        "capabilities": {
+          "exec": { "allowed": true, "commands": ["node scripts/ok.mjs"] },
+          "network": { "allowed": false, "hosts": [] },
+          "write": { "scope": "skill" },
+          "mcp": { "allowed": false, "tools": [] }
+        },
+        "__skillRoot": "/tmp/sf-policy-skill",
+        "__projectRoot": "/tmp/sf-policy-project"
+      }
+    },
+    {
+      "id": "deny-bash-chaining",
+      "expected": "deny",
+      "event": {
+        "tool_name": "Bash",
+        "tool_input": { "command": "node scripts/ok.mjs; rm -rf /" }
+      },
+      "policy": {
+        "schemaVersion": 1,
+        "capabilities": {
+          "exec": { "allowed": true, "commands": ["node scripts/ok.mjs"] },
+          "network": { "allowed": false, "hosts": [] },
+          "write": { "scope": "skill" },
+          "mcp": { "allowed": false, "tools": [] }
+        },
+        "__skillRoot": "/tmp/sf-policy-skill",
+        "__projectRoot": "/tmp/sf-policy-project"
+      }
+    },
+    {
+      "id": "deny-bash-redirect",
+      "expected": "deny",
+      "event": {
+        "tool_name": "Bash",
+        "tool_input": { "command": "node scripts/ok.mjs > /tmp/x" }
+      },
+      "policy": {
+        "schemaVersion": 1,
+        "capabilities": {
+          "exec": { "allowed": true, "commands": ["node scripts/ok.mjs"] },
+          "network": { "allowed": false, "hosts": [] },
+          "write": { "scope": "skill" },
+          "mcp": { "allowed": false, "tools": [] }
+        },
+        "__skillRoot": "/tmp/sf-policy-skill",
+        "__projectRoot": "/tmp/sf-policy-project"
+      }
+    },
+    {
+      "id": "deny-undeclared-exec",
+      "expected": "deny",
+      "event": {
+        "tool_name": "Bash",
+        "tool_input": { "command": "curl https://evil.test" }
+      },
+      "policy": {
+        "schemaVersion": 1,
+        "capabilities": {
+          "exec": { "allowed": false, "commands": [] },
+          "network": { "allowed": false, "hosts": [] },
+          "write": { "scope": "none" },
+          "mcp": { "allowed": false, "tools": [] }
+        },
+        "__skillRoot": "/tmp/sf-policy-skill",
+        "__projectRoot": "/tmp/sf-policy-project"
+      }
+    },
+    {
+      "id": "deny-apply-patch-traversal",
+      "expected": "deny",
+      "event": {
+        "tool_name": "apply_patch",
+        "tool_input": {
+          "patch": "*** Begin Patch\n*** Add File: ../outside.txt\n+secret\n*** End Patch\n"
+        }
+      },
+      "policy": {
+        "schemaVersion": 1,
+        "capabilities": {
+          "exec": { "allowed": false, "commands": [] },
+          "network": { "allowed": false, "hosts": [] },
+          "write": { "scope": "skill" },
+          "mcp": { "allowed": false, "tools": [] }
+        },
+        "__skillRoot": "/tmp/sf-policy-skill",
+        "__projectRoot": "/tmp/sf-policy-project"
+      }
+    },
+    {
+      "id": "allow-apply-patch-in-scope",
+      "expected": "allow",
+      "event": {
+        "tool_name": "apply_patch",
+        "tool_input": {
+          "patch": "*** Begin Patch\n*** Update File: output.txt\n@@\n+hi\n*** End Patch\n"
+        }
+      },
+      "policy": {
+        "schemaVersion": 1,
+        "capabilities": {
+          "exec": { "allowed": false, "commands": [] },
+          "network": { "allowed": false, "hosts": [] },
+          "write": { "scope": "skill" },
+          "mcp": { "allowed": false, "tools": [] }
+        },
+        "__skillRoot": "/tmp/sf-policy-skill",
+        "__projectRoot": "/tmp/sf-policy-project"
+      }
+    },
+    {
+      "id": "deny-malformed-patch",
+      "expected": "deny",
+      "event": {
+        "tool_name": "apply_patch",
+        "tool_input": { "patch": "not a patch at all" }
+      },
+      "policy": {
+        "schemaVersion": 1,
+        "capabilities": {
+          "exec": { "allowed": false, "commands": [] },
+          "network": { "allowed": false, "hosts": [] },
+          "write": { "scope": "skill" },
+          "mcp": { "allowed": false, "tools": [] }
+        },
+        "__skillRoot": "/tmp/sf-policy-skill",
+        "__projectRoot": "/tmp/sf-policy-project"
+      }
+    },
+    {
+      "id": "deny-undeclared-mcp",
+      "expected": "deny",
+      "event": {
+        "tool_name": "mcp__github__list",
+        "tool_input": {}
+      },
+      "policy": {
+        "schemaVersion": 1,
+        "capabilities": {
+          "exec": { "allowed": false, "commands": [] },
+          "network": { "allowed": false, "hosts": [] },
+          "write": { "scope": "none" },
+          "mcp": { "allowed": false, "tools": [] }
+        },
+        "__skillRoot": "/tmp/sf-policy-skill",
+        "__projectRoot": "/tmp/sf-policy-project"
+      }
+    },
+    {
+      "id": "allow-declared-mcp",
+      "expected": "allow",
+      "event": {
+        "tool_name": "mcp__github__list",
+        "tool_input": {}
+      },
+      "policy": {
+        "schemaVersion": 1,
+        "capabilities": {
+          "exec": { "allowed": false, "commands": [] },
+          "network": { "allowed": false, "hosts": [] },
+          "write": { "scope": "none" },
+          "mcp": { "allowed": true, "tools": ["mcp__github__list"] }
+        },
+        "__skillRoot": "/tmp/sf-policy-skill",
+        "__projectRoot": "/tmp/sf-policy-project"
+      }
+    },
+    {
+      "id": "deny-unsupported-tool",
+      "expected": "deny",
+      "event": {
+        "tool_name": "WebSearch",
+        "tool_input": { "query": "x" }
+      },
+      "policy": {
+        "schemaVersion": 1,
+        "capabilities": {
+          "exec": { "allowed": false, "commands": [] },
+          "network": { "allowed": false, "hosts": [] },
+          "write": { "scope": "none" },
+          "mcp": { "allowed": false, "tools": [] }
+        },
+        "__skillRoot": "/tmp/sf-policy-skill",
+        "__projectRoot": "/tmp/sf-policy-project"
+      }
+    },
+    {
+      "id": "deny-missing-capabilities",
+      "expected": "deny",
+      "event": {
+        "tool_name": "Bash",
+        "tool_input": { "command": "ls" }
+      },
+      "policy": {}
+    },
+    {
+      "id": "deny-encoded-interpreter",
+      "expected": "deny",
+      "event": {
+        "tool_name": "Bash",
+        "tool_input": { "command": "python -c \"import os; os.system('id')\"" }
+      },
+      "policy": {
+        "schemaVersion": 1,
+        "capabilities": {
+          "exec": { "allowed": true, "commands": ["node scripts/ok.mjs"] },
+          "network": { "allowed": false, "hosts": [] },
+          "write": { "scope": "skill" },
+          "mcp": { "allowed": false, "tools": [] }
+        },
+        "__skillRoot": "/tmp/sf-policy-skill",
+        "__projectRoot": "/tmp/sf-policy-project"
+      }
+    }
+  ]
+}
