@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "codex unsafe release",
+      "demo undeclared release skill",
+      "publish github release without policy"
+    ],
+    "antiTriggers": [
+      "safe release",
+      "least privilege release"
+    ]
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "skill"
+    }
+  },
+  "compatibility": {
+    "claude-code": "partial",
+    "cursor": "partial"
+  },
+  "provenance": {
+    "source": "examples/codex-unsafe-release",
+    "license": "MIT"
+  }
+}

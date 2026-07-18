@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "maturity": "stable",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "codex safe release",
+      "least privilege github release",
+      "guarded release checklist"
+    ],
+    "antiTriggers": [
+      "npm publish",
+      "deploy to production cluster",
+      "unsafe release"
+    ]
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": true,
+      "commands": [
+        "sh scripts/check-release.sh",
+        "gh release create",
+        "gh api"
+      ]
+    },
+    "network": {
+      "allowed": true,
+      "hosts": [
+        "api.github.com"
+      ]
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial"
+  },
+  "provenance": {
+    "source": "examples/codex-safe-release",
+    "license": "MIT"
+  }
+}

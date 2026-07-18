@@ -11,13 +11,24 @@ All notable changes to SkillsForge are recorded here.
 - Skill-scoped Claude policy hooks compiled from declared capabilities.
 - Holdout routing evaluation and cache-copy install smoke tests.
 - Plugin slash commands: `validate`, `route`, `forge`, `doctor`, `verify-receipt`.
-- Full CLI help text and README reference for all subcommands (including `install`).
+- Full CLI help text and README reference for all subcommands (including `install`, `package`, and `evidence`).
 - Diagrams for plugin components, trust pipeline, fail-closed PreToolUse, holdout eval gate, and host installer flow.
 - Interactive `skillsforge install` (CodeGraph-style TUI) to copy validated skills into Claude Code, Cursor, Codex, OpenCode, and Gemini host skill directories.
+
+#### Build Week — Codex native trust pipeline
+
+- Native Codex plugin packaging: `plugins/skillsforge/.codex-plugin/plugin.json`, `.agents/plugins/marketplace.json`, per-skill `agents/openai.yaml`.
+- `skillsforge package --host codex` — validate-first compiler that emits one guarded Codex plugin per skill (manifest, complete skill tree, hooks, immutable policy, receipt).
+- Codex `PreToolUse` policy compiler and fail-closed runner for `Bash`, `apply_patch`, and `mcp__*` matchers (`codex-policy-compiler`, `codex-pre-tool-policy.mjs`).
+- Package-fidelity host installs (complete skill directories; corrected Codex `~/.agents/skills` and OpenCode roots).
+- Deterministic `skillsforge evidence` bundle for judge-grade trust/eval artifacts.
+- Codex-first demo docs and examples: `examples/codex-unsafe-release/`, `examples/codex-safe-release/`, sub-three-minute script in `docs/hackathon-demo.md`.
 
 ### Changed
 
 - Docs and marketplace copy focus on one capability / trust-engine plugin (`skillsforge`); eight-plugin family roadmap marked historical in `MASTER_PLAN.md`.
+- README thesis is Codex-first Developer Tools: reviewable, least-privilege, measurable, tamper-evident Agent Skills — not feature-count parity.
+- Host support matrix: Codex is **native plugin + guarded package**; Cursor/OpenCode/Gemini are package fidelity; Claude remains full.
 - Release gate is hard-fail: `validate:host` runs local `claude plugin validate --strict` (no soft-skip); CI release-contract + Windows smoke require demo, dist, and host validation.
 
 ### Fixed
