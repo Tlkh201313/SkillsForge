@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="520" viewBox="0 0 1280 520" role="img" aria-labelledby="title desc">
+  <title id="title">SkillsForge universal host fanout</title>
+  <desc id="desc">One Agent Skill flows through SkillsForge validation, routing, packaging, and receipt steps before being installed into Codex, Claude Code, package-fidelity hosts, or a custom host.</desc>
+  <defs>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#172033" flood-opacity="0.16"/>
+    </filter>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto">
+      <path d="M2 2 L11 7 L2 12 Z" fill="#30445f"/>
+    </marker>
+  </defs>
+  <rect width="1280" height="520" rx="0" fill="#f6f8fb"/>
+  <rect x="40" y="36" width="1200" height="448" rx="28" fill="#ffffff" stroke="#dbe3ee"/>
+
+  <g filter="url(#soft-shadow)">
+    <rect x="82" y="183" width="214" height="154" rx="16" fill="#0f172a"/>
+    <text x="189" y="232" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" fill="#ffffff">Agent Skill</text>
+    <text x="189" y="265" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="15" fill="#cbd5e1">SKILL.md + skillsforge.json</text>
+    <text x="189" y="294" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="15" fill="#cbd5e1">scripts / references / assets</text>
+  </g>
+
+  <line x1="302" y1="260" x2="417" y2="260" stroke="#30445f" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g filter="url(#soft-shadow)">
+    <rect x="426" y="108" width="326" height="304" rx="18" fill="#f9fafb" stroke="#bfdbfe" stroke-width="2"/>
+    <text x="589" y="156" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800" fill="#0f172a">SkillsForge</text>
+    <text x="589" y="190" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" fill="#334155">trust and routing layer</text>
+    <rect x="469" y="223" width="240" height="42" rx="10" fill="#e0f2fe" stroke="#7dd3fc"/>
+    <text x="589" y="250" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#075985">validate capabilities</text>
+    <rect x="469" y="278" width="240" height="42" rx="10" fill="#ecfdf5" stroke="#86efac"/>
+    <text x="589" y="305" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#166534">route by sidecar evidence</text>
+    <rect x="469" y="333" width="240" height="42" rx="10" fill="#fff7ed" stroke="#fdba74"/>
+    <text x="589" y="360" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#9a3412">package + receipt</text>
+  </g>
+
+  <line x1="756" y1="260" x2="835" y2="260" stroke="#30445f" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="850" y="68" width="348" height="78" rx="14" fill="#eef2ff" stroke="#818cf8"/>
+    <text x="1024" y="99" text-anchor="middle" font-size="20" font-weight="800" fill="#312e81">Codex first</text>
+    <text x="1024" y="124" text-anchor="middle" font-size="14" fill="#334155">guarded native plugin bundle</text>
+
+    <rect x="850" y="166" width="348" height="78" rx="14" fill="#f0fdf4" stroke="#4ade80"/>
+    <text x="1024" y="197" text-anchor="middle" font-size="20" font-weight="800" fill="#14532d">Claude Code second</text>
+    <text x="1024" y="222" text-anchor="middle" font-size="14" fill="#334155">full install with hooks + sidecar</text>
+
+    <rect x="850" y="264" width="348" height="78" rx="14" fill="#fffbeb" stroke="#facc15"/>
+    <text x="1024" y="295" text-anchor="middle" font-size="20" font-weight="800" fill="#713f12">Package-fidelity hosts</text>
+    <text x="1024" y="320" text-anchor="middle" font-size="14" fill="#334155">Cursor / OpenCode / ZCode / Hermes / Gemini</text>
+
+    <rect x="850" y="362" width="348" height="78" rx="14" fill="#fdf2f8" stroke="#f472b6"/>
+    <text x="1024" y="393" text-anchor="middle" font-size="20" font-weight="800" fill="#831843">Custom host</text>
+    <text x="1024" y="418" text-anchor="middle" font-size="14" fill="#334155">install --custom-host id:.agent/skills</text>
+  </g>
+
+  <text x="640" y="474" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="15" fill="#475569">Honest boundary: package-fidelity hosts receive validated skill packages; runtime policy is enforced only where the host honors hooks.</text>
+</svg>

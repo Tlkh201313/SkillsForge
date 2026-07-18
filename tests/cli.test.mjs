@@ -102,9 +102,31 @@ test('bundled CLI help lists every subcommand', () => {
     encoding: 'utf8'
   });
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'help', 'install']) {
+  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'hosts', 'help', 'install']) {
     assert.match(result.stdout, new RegExp(`\\b${name}\\b`));
   }
+});
+
+test('bundled CLI hosts --json reports universal host boundaries', () => {
+  const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
+  const build = spawnSync('npm', ['run', 'build'], {
+    cwd: process.cwd(),
+    encoding: 'utf8',
+    shell: true
+  });
+  assert.equal(build.status, 0, build.stderr || build.stdout);
+
+  const result = spawnSync(process.execPath, [cli, 'hosts', '--json', '--home', process.cwd()], {
+    cwd: process.cwd(),
+    encoding: 'utf8'
+  });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.ok, true);
+  assert.ok(payload.registry.some((host) => host.id === 'zcode'));
+  assert.ok(payload.registry.some((host) => host.id === 'hermes'));
+  assert.ok(payload.registry.every((host) => typeof host.installHint === 'string' && host.installHint.length > 0));
+  assert.ok(payload.examples.some((example) => example.includes('--custom-host')));
 });
 
 test('bundled CLI install --list --json reports registry', () => {
@@ -117,6 +139,7 @@ test('bundled CLI install --list --json reports registry', () => {
   const payload = JSON.parse(result.stdout);
   assert.equal(payload.ok, true);
   assert.ok(payload.registry.some((host) => host.id === 'cursor'));
+  assert.ok(payload.registry.some((host) => host.id === 'hermes'));
   assert.ok(payload.hosts.some((host) => host.id === 'claude-code'));
 });
 
@@ -149,6 +172,74 @@ test('bundled CLI install dry-run plans portable files under --home', async () =
     assert.equal(payload.dryRun, true);
     assert.equal(payload.installs[0].status, 'planned');
     assert.equal(payload.installs[0].fidelity, 'package');
+  } finally {
+    await rm(home, { recursive: true, force: true });
+  }
+});
+
+test('bundled CLI install expands all hosts and custom hosts in dry-run', async () => {
+  const { mkdtemp, rm } = await import('node:fs/promises');
+  const { tmpdir } = await import('node:os');
+  const home = await mkdtemp(join(tmpdir(), 'sf-cli-install-all-'));
+  try {
+    const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
+    const result = spawnSync(
+      process.execPath,
+      [
+        cli,
+        'install',
+        '--hosts',
+        'all',
+        '--custom-host',
+        'lab-agent:.lab-agent/skills',
+        '--yes',
+        '--dry-run',
+        '--json',
+        '--home',
+        home,
+        'tests/fixtures/skills/good-basic'
+      ],
+      { cwd: process.cwd(), encoding: 'utf8' }
+    );
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    const payload = JSON.parse(result.stdout);
+    assert.equal(payload.ok, true);
+    assert.equal(payload.dryRun, true);
+    const hosts = payload.installs.map((item) => item.host);
+    for (const id of ['claude-code', 'cursor', 'codex', 'opencode', 'zcode', 'hermes', 'gemini', 'lab-agent']) {
+      assert.ok(hosts.includes(id), `missing install host ${id}`);
+    }
+  } finally {
+    await rm(home, { recursive: true, force: true });
+  }
+});
+
+test('bundled CLI install expands detected hosts only', async () => {
+  const { mkdtemp, mkdir, rm } = await import('node:fs/promises');
+  const { tmpdir } = await import('node:os');
+  const home = await mkdtemp(join(tmpdir(), 'sf-cli-install-detected-'));
+  try {
+    await mkdir(join(home, '.gemini'), { recursive: true });
+    const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
+    const result = spawnSync(
+      process.execPath,
+      [
+        cli,
+        'install',
+        '--hosts',
+        'detected',
+        '--yes',
+        '--dry-run',
+        '--json',
+        '--home',
+        home,
+        'tests/fixtures/skills/good-basic'
+      ],
+      { cwd: process.cwd(), encoding: 'utf8' }
+    );
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    const payload = JSON.parse(result.stdout);
+    assert.deepEqual(payload.installs.map((item) => item.host), ['gemini']);
   } finally {
     await rm(home, { recursive: true, force: true });
   }

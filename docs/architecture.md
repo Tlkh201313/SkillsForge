@@ -1,6 +1,6 @@
-# SkillsForge architecture (v0.3)
+# SkillsForge architecture (v0.4)
 
-SkillsForge is a capability / trust engine for portable Agent Skills. Canonical IR is `SKILL.md` + `skillsforge.json`. Claude Code remains a full marketplace host; **Codex** is a first-class native plugin target with guarded per-skill packaging and PreToolUse policy hooks.
+SkillsForge is a capability / trust engine for portable Agent Skills. Canonical IR is `SKILL.md` + `skillsforge.json`. **Codex** is the primary native plugin target with guarded per-skill packaging and PreToolUse policy hooks. Claude Code remains the second full-fidelity host. Other AI CLIs receive package-fidelity installs unless they run equivalent hooks.
 
 ## Surfaces
 
@@ -14,7 +14,8 @@ SkillsForge is a capability / trust engine for portable Agent Skills. Canonical 
 | Runtime CLI | `plugins/skillsforge/bin/skillsforge.mjs` (esbuild bundle) |
 | Capability engine | `lib/capabilities/*` — loader, forge, router, policy, package, evidence, receipt, install |
 | Codex compiler | `codex-package.mjs` + `codex-policy-compiler.mjs` — one skill → guarded plugin |
-| Host installer | `skillsforge install` — full (Claude) or package-fidelity (Cursor/Codex/OpenCode/Gemini) |
+| Host inventory | `skillsforge hosts` lists known AI CLI targets, detection paths, fidelity, and install hints |
+| Host installer | `skillsforge install` — full (Claude), package-fidelity (Codex/Cursor/OpenCode/ZCode/Hermes/Gemini), or custom package target |
 | Distribution | `npm run build:dist` → `dist/claude-code`, `dist/codex`, `dist/cursor`, receipts |
 
 ## Canonical skill → Codex plugin compilation
@@ -132,12 +133,18 @@ flowchart TD
 
 ```mermaid
 flowchart TD
+    Hosts["skillsforge hosts"] --> Inspect["Report detection, paths, fidelity, hints"]
     Run["skillsforge install"] --> Detect["Detect hosts in home directory"]
+    Run --> Custom["--custom-host id:.agent/skills"]
+    Detect --> Expand{"--hosts all or detected?"}
+    Expand --> Flags["Concrete host list"]
     Detect --> TUI{"Interactive terminal?"}
     TUI -->|yes| Picker["Checkbox picker: detected agents"]
-    TUI -->|"no or --yes"| Flags["--hosts list"]
+    TUI -->|"no or --yes"| Manual["--hosts list"]
+    Custom --> Validate
     Picker --> Validate["Validate selected skills"]
     Flags --> Validate
+    Manual --> Validate
     Validate -->|fail| Abort["Exit 1, nothing written"]
     Validate -->|pass| Copy["Per host: full or package-fidelity copy"]
     Copy --> Report["Install report JSON + summary"]
@@ -151,7 +158,10 @@ flowchart TD
 | Claude Code | Full | Marketplace, SessionStart, skill-scoped PreToolUse, CLI, receipts, eval |
 | Cursor | Package fidelity | Complete skill directories; no runtime policy parity |
 | OpenCode | Package fidelity | Complete skill directories; no runtime policy parity |
+| ZCode-compatible local agent | Package fidelity | Complete skill directories; verify the configured local skills path |
+| Hermes Agent | Package fidelity | Complete skill directories; no runtime policy parity |
 | Gemini CLI | Package fidelity | Complete skill directories; no runtime policy parity |
+| Custom host | Package fidelity | `--custom-host <id>:<skills-dir>` copies validated packages under user home |
 
 ## Runtime root resolution
 

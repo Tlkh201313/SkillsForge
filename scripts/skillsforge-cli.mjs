@@ -13,7 +13,7 @@ import { analyzeDependencies } from '../lib/capabilities/dependency-graph.mjs';
 import { verifySkillPaths } from '../lib/capabilities/verify.mjs';
 import { detectHosts, installSkills, resolveHostSelection } from '../lib/capabilities/install.mjs';
 import { pickHosts } from '../lib/capabilities/install-tui.mjs';
-import { HOST_REGISTRY } from '../lib/capabilities/hosts.mjs';
+import { buildCustomHost, HOST_REGISTRY } from '../lib/capabilities/hosts.mjs';
 import { exportPortableSkill } from '../lib/capabilities/export.mjs';
 import { packageCodexPlugin } from '../lib/capabilities/codex-package.mjs';
 import { loadCatalog, listPacks, listProfiles, searchCatalog, catalogStats, skillsForPack, skillsForProfile } from '../lib/capabilities/catalog.mjs';
@@ -92,9 +92,11 @@ Commands:
     --package-only                  Skip evaluation authenticity checks
   enforce --policy <sidecar.json>   Decide PreToolUse allow/deny from stdin event JSON
   eval                              Run holdout routing evaluation (P/R gate)
+  hosts [--json] [--home <dir>]     List universal AI CLI host targets and trust boundaries
   install [skill-paths...]          Install skills into detected agent hosts
-    --hosts <ids>                   Comma list: claude-code,cursor,codex,opencode,gemini
-    --yes                           Non-interactive (requires --hosts)
+    --hosts <ids>                   Comma list or all|detected: claude-code,cursor,codex,opencode,zcode,hermes,gemini
+    --custom-host <id>:<skills-dir> Add package-fidelity target under --home
+    --yes                           Non-interactive (requires --hosts or --custom-host)
     --list                          Print detected hosts and exit
     --dry-run                       Plan installs without writing
     --force                         Overwrite existing skill directories
@@ -172,6 +174,8 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runEnforce(argv.slice(1), options);
     case 'eval':
       return runEvalCommand(argv.slice(1), options);
+    case 'hosts':
+      return runHostsCommand(argv.slice(1), options);
     case 'install':
       return runInstall(argv.slice(1), options);
     case 'package':
@@ -284,6 +288,21 @@ function consumeOption(values, flag) {
   }
   values.splice(index, 2);
   return value;
+}
+
+function consumeOptions(values, flag) {
+  const picked = [];
+  for (;;) {
+    const index = values.indexOf(flag);
+    if (index === -1) return picked;
+    const value = values[index + 1];
+    if (!value || value.startsWith('--')) {
+      values.splice(index, 1);
+      return null;
+    }
+    picked.push(value);
+    values.splice(index, 2);
+  }
 }
 
 function resolveUserPath(root, value, allowAbsolute = false) {
@@ -483,6 +502,57 @@ async function runEvalCommand(argv, options) {
   return report.precision >= HOLDOUT_PRECISION_MIN && report.recall >= HOLDOUT_RECALL_MIN ? 0 : 1;
 }
 
+async function runHostsCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const homeOption = consumeOption(args, '--home');
+  if (homeOption === null) {
+    process.stderr.write('--home requires a value\n');
+    return 2;
+  }
+  if (args.some((item) => item.startsWith('--'))) {
+    process.stderr.write(`unknown hosts option: ${args.find((item) => item.startsWith('--'))}\n`);
+    return 2;
+  }
+  if (args.length) {
+    process.stderr.write(`unknown hosts argument: ${args[0]}\n`);
+    return 2;
+  }
+
+  const home = homeOption ? resolve(homeOption) : options.home;
+  const hosts = await detectHosts({ home });
+  const registry = HOST_REGISTRY.map((host) => ({
+    id: host.id,
+    label: host.label,
+    fidelity: host.fidelity,
+    runtimeEnforced: host.runtimeEnforced,
+    usesSidecar: host.usesSidecar,
+    installHint: host.installHint
+  }));
+  const examples = [
+    'skillsforge install --hosts codex,claude-code --yes --dry-run',
+    'skillsforge install --hosts all --yes --dry-run',
+    'skillsforge install --custom-host my-agent:.my-agent/skills --yes --dry-run'
+  ];
+  const payload = { ok: true, registry, hosts, examples };
+
+  if (json) {
+    process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+    return 0;
+  }
+
+  process.stdout.write('Universal AI CLI hosts\n');
+  for (const host of hosts) {
+    const mark = host.detected ? 'detected' : 'missing';
+    const policy = host.runtimeEnforced ? 'runtime-policy' : 'package-only';
+    process.stdout.write(`${host.id}\t${mark}\t${host.fidelity}\t${policy}\t${host.skillsDir}\n`);
+    process.stdout.write(`  ${host.installHint}\n`);
+  }
+  process.stdout.write('Examples:\n');
+  for (const example of examples) process.stdout.write(`  ${example}\n`);
+  return 0;
+}
+
 async function runInstall(argv, options) {
   const args = [...argv];
   const json = consumeFlag(args, '--json');
@@ -490,6 +560,11 @@ async function runInstall(argv, options) {
   const yes = consumeFlag(args, '--yes');
   const dryRun = consumeFlag(args, '--dry-run');
   const force = consumeFlag(args, '--force');
+  const customSpecs = consumeOptions(args, '--custom-host');
+  if (customSpecs === null) {
+    process.stderr.write('--custom-host requires <id>:<skills-dir>\n');
+    return 2;
+  }
   const hostsOption = consumeOption(args, '--hosts');
   if (hostsOption === null) {
     process.stderr.write('--hosts requires a value\n');
@@ -508,7 +583,14 @@ async function runInstall(argv, options) {
   if (list) {
     const payload = {
       ok: true,
-      registry: HOST_REGISTRY.map((host) => ({ id: host.id, label: host.label, fidelity: host.fidelity })),
+      registry: HOST_REGISTRY.map((host) => ({
+        id: host.id,
+        label: host.label,
+        fidelity: host.fidelity,
+        runtimeEnforced: host.runtimeEnforced,
+        usesSidecar: host.usesSidecar,
+        installHint: host.installHint
+      })),
       hosts: detected
     };
     if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
@@ -525,44 +607,67 @@ async function runInstall(argv, options) {
     ? hostsOption.split(',').map((item) => item.trim()).filter(Boolean)
     : null;
 
+  if (hostIds?.length === 1 && hostIds[0] === 'all') {
+    hostIds = HOST_REGISTRY.map((host) => host.id);
+  } else if (hostIds?.length === 1 && hostIds[0] === 'detected') {
+    hostIds = detected.filter((host) => host.detected).map((host) => host.id);
+  } else if (hostIds?.includes('all') || hostIds?.includes('detected')) {
+    process.stderr.write('--hosts all|detected cannot be combined with other ids\n');
+    return 2;
+  }
+
+  let customHosts;
+  try {
+    customHosts = customSpecs.map((spec) => buildCustomHost(spec, { home }));
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    return 2;
+  }
+
   if (!hostIds) {
-    if (yes) {
-      process.stderr.write('install --yes requires --hosts <ids>\n');
+    if (customHosts.length) {
+      hostIds = [];
+    } else if (yes) {
+      process.stderr.write('install --yes requires --hosts <ids> or --custom-host <id>:<skills-dir>\n');
       return 2;
-    }
-    const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
-    if (!interactive) {
-      process.stderr.write('usage: skillsforge install --hosts <ids> --yes [skill-paths...]\n');
-      process.stderr.write('       (interactive picker requires a TTY; use --list to see hosts)\n');
-      return 2;
-    }
-    try {
-      const picked = await pickHosts(detected);
-      if (picked == null) {
-        process.stderr.write('install aborted\n');
-        return 1;
+    } else {
+      const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+      if (!interactive) {
+        process.stderr.write('usage: skillsforge install --hosts <ids> --yes [skill-paths...]\n');
+        process.stderr.write('       (interactive picker requires a TTY; use --list to see hosts)\n');
+        return 2;
       }
-      hostIds = picked;
-    } catch (error) {
-      process.stderr.write(`${error.message}\n`);
-      return 2;
+      try {
+        const picked = await pickHosts(detected);
+        if (picked == null) {
+          process.stderr.write('install aborted\n');
+          return 1;
+        }
+        hostIds = picked;
+      } catch (error) {
+        process.stderr.write(`${error.message}\n`);
+        return 2;
+      }
     }
   }
 
-  if (!hostIds.length) {
+  if (!hostIds.length && !customHosts.length) {
     process.stderr.write('no hosts selected\n');
     return 1;
   }
 
-  const selection = await resolveHostSelection(hostIds, { home });
+  const selection = hostIds.length
+    ? await resolveHostSelection(hostIds, { home })
+    : { selected: [], unknown: [], all: detected };
   if (selection.unknown.length) {
     process.stderr.write(`unknown hosts: ${selection.unknown.join(', ')}\n`);
-    process.stderr.write(`known: ${HOST_REGISTRY.map((host) => host.id).join(', ')}\n`);
+    process.stderr.write(`known: ${HOST_REGISTRY.map((host) => host.id).join(', ')} or --custom-host <id>:<skills-dir>\n`);
     return 2;
   }
+  const selectedHosts = [...selection.selected, ...customHosts];
 
   const result = await installSkills({
-    hostIds,
+    hosts: selectedHosts,
     home,
     root,
     skillPaths: skillPaths.length ? skillPaths : undefined,

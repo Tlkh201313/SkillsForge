@@ -5,15 +5,17 @@
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 
-**Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, and tamper-evident.**
+**Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, tamper-evident, and installable across AI CLIs with honest trust boundaries.**
 
-SkillsForge is a Developer Tools **trust engine** for portable [Agent Skills](https://agentskills.io/specification): validate, deny unsafe inputs, package safe skills, enforce PreToolUse policy, and verify tamper-evident receipts. Current local catalog: 366 skills, 26 packs, 10 profiles.
+SkillsForge is a Developer Tools **trust engine** for portable [Agent Skills](https://agentskills.io/specification): validate, deny unsafe inputs, package safe skills, enforce host hooks where supported, install package-fidelity skills across AI CLIs, and verify tamper-evident receipts. Current local catalog: 366 skills, 26 packs, 10 profiles.
 
 ---
 
 ## Demo video
 
 <video src="assets/video/skillsforge-demo.mp4" poster="assets/skillsforge-demo-poster.png" controls width="100%"></video>
+
+![SkillsForge universal host fanout](assets/skillsforge-universal-fanout.svg)
 
 | Beat | What you’ll see |
 |---|---|
@@ -29,6 +31,8 @@ SkillsForge is a Developer Tools **trust engine** for portable [Agent Skills](ht
 ## Why SkillsForge
 
 Agent Skills travel across hosts. A “release helper” can ship undeclared shell, network, or write paths — and most catalogs optimize for **surface**, not **trust**.
+
+Most skill packs solve discovery. SkillsForge solves trust: what can this skill do, can it be packaged safely, and can the bytes be verified later?
 
 SkillsForge closes that gap:
 
@@ -96,6 +100,7 @@ Optional follow-ups:
 
 ```sh
 node plugins/skillsforge/bin/skillsforge.mjs compare-skill --a examples/codex-unsafe-release --b examples/codex-safe-release
+node plugins/skillsforge/bin/skillsforge.mjs hosts
 node plugins/skillsforge/bin/skillsforge.mjs vibe
 node plugins/skillsforge/bin/skillsforge.mjs catalog --pack trust
 ```
@@ -119,6 +124,7 @@ Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/r
 | Trust CLI | `validate`, `doctor`, `route`, `forge`, `receipt`, `package`, `evidence`, `demo`, `enforce` |
 | Thin MCP | `scripts/skillsforge-mcp.mjs` — **only** `validate` / `route` / `skillshield` |
 | Evidence | Deterministic trust/eval bundle (`skillsforge evidence`) |
+| Universal hosts | `hosts`, `install --hosts all|detected`, `install --custom-host <id>:<skills-dir>` |
 
 ### Host support
 
@@ -128,7 +134,10 @@ Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/r
 | Claude Code | Full | Marketplace, SessionStart, skill-scoped PreToolUse, bundled CLI, receipts, eval |
 | Cursor | Package fidelity | Complete skill dirs + thin `rules/` — **not** runtime policy parity |
 | OpenCode | Package fidelity | Complete skill package install — no runtime policy parity |
+| ZCode-compatible local agent | Package fidelity | Complete skill package install — verify the configured local skills directory |
+| Hermes Agent | Package fidelity | Complete skill package install — no runtime policy parity |
 | Gemini CLI | Package fidelity | Complete skill package install — no runtime policy parity |
+| Custom AI CLI | Package fidelity | `install --custom-host my-agent:.my-agent/skills` copies validated skills under your home directory |
 
 ---
 
@@ -173,18 +182,29 @@ Codex **runtime** policy for an external skill requires `skillsforge package --h
 
 ### Multi-host skill install
 
-Detects agent config dirs under your home folder, then copies validated skills:
+Inspect every known AI CLI target and its trust boundary:
 
 ```sh
-node ./plugins/skillsforge/bin/skillsforge.mjs install
+node ./plugins/skillsforge/bin/skillsforge.mjs hosts
+node ./plugins/skillsforge/bin/skillsforge.mjs hosts --json
 ```
 
 | Host | What gets installed |
 |---|---|
 | Claude Code (`full`) | Entire skill package → `~/.claude/skills/<name>/` with runtime policy |
-| Codex / Cursor / OpenCode / Gemini (`package`) | Complete skill package; Claude-only frontmatter may be stripped |
+| Codex / Cursor / OpenCode / ZCode / Hermes / Gemini (`package`) | Complete skill package; Claude-only frontmatter may be stripped |
+| Custom host (`package`) | Complete skill package under a user-declared skills directory inside `--home` |
 
-Non-interactive: `--hosts claude-code,cursor --yes` (host ids: `claude-code`, `cursor`, `codex`, `opencode`, `gemini`).
+Dry-run selected hosts:
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts codex,claude-code --yes --dry-run plugins/skillsforge/skills/using-skillsforge
+node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts all --yes --dry-run plugins/skillsforge/skills/using-skillsforge
+node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts detected --yes --dry-run plugins/skillsforge/skills/using-skillsforge
+node ./plugins/skillsforge/bin/skillsforge.mjs install --custom-host my-agent:.my-agent/skills --yes --dry-run plugins/skillsforge/skills/using-skillsforge
+```
+
+Known host ids: `claude-code`, `cursor`, `codex`, `opencode`, `zcode`, `hermes`, `gemini`. Details: [docs/universal-hosts.md](docs/universal-hosts.md).
 
 ---
 
@@ -209,6 +229,7 @@ Exit codes: `0` success · `1` failure · `2` invalid usage.
 | Command | Purpose |
 |---|---|
 | `demo` | Judge path: unsafe deny → safe package → receipt |
+| `hosts` | List detected AI CLI targets, fidelity, and trust boundary |
 | `validate [paths…]` | Structure + capability policy (when sidecar present) |
 | `package --host codex` | One skill → guarded Codex plugin (`--dry-run` default; `--write` to materialize) |
 | `receipt` / `verify-receipt` | Build / verify tamper-evident package receipt |
@@ -231,6 +252,10 @@ Full flag list: `skillsforge help`. Architecture: [docs/architecture.md](docs/ar
 # Validate
 node ./plugins/skillsforge/bin/skillsforge.mjs validate examples/codex-safe-release
 node ./plugins/skillsforge/bin/skillsforge.mjs validate --all
+
+# Universal host inventory and dry-run install
+node ./plugins/skillsforge/bin/skillsforge.mjs hosts
+node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts codex,claude-code --yes --dry-run plugins/skillsforge/skills/using-skillsforge
 
 # Package (POSIX) — dry-run first
 node ./plugins/skillsforge/bin/skillsforge.mjs package --host codex \
@@ -316,6 +341,7 @@ npm run check
 | Doc | Use |
 |---|---|
 | [docs/architecture.md](docs/architecture.md) | Surfaces, Codex compile, hook flow |
+| [docs/universal-hosts.md](docs/universal-hosts.md) | AI CLI host modes, custom install, and policy boundaries |
 | [docs/threat-model.md](docs/threat-model.md) | Trust boundaries and limitations |
 | [docs/hackathon-demo.md](docs/hackathon-demo.md) | Timed judge script |
 | [docs/competitive-matrix.md](docs/competitive-matrix.md) | Claim boundaries for external comparisons |
