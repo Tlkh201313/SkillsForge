@@ -1,0 +1,65 @@
+{
+  "id": "security.audit-log-path",
+  "category": "security",
+  "goal": "Design audit logging for sensitive operations.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "sec-audit-log",
+      "agent": "sre",
+      "command": "skillsforge route --query \"Design audit logging for sensitive operations.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "eng-logging",
+      "agent": "security-officer"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "sec-audit-log",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "sec-audit-log",
+    "eng-logging",
+    "sec-audit-log"
+  ],
+  "recommendedAgents": [
+    "sre",
+    "security-officer"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Design audit logging for sensitive operations.\"",
+    "skillsforge workflows run --id security.audit-log-path --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "medium"
+}

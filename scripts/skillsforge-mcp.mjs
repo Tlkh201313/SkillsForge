@@ -18,6 +18,8 @@ import { routeQuery } from '../lib/capabilities/router.mjs';
 import { verifySkillPaths } from '../lib/capabilities/verify.mjs';
 import { runSkillShield } from '../lib/capabilities/skillshield.mjs';
 import { resolveUnderRoot } from '../lib/capabilities/paths.mjs';
+import { buildLibraryIndex } from '../lib/capabilities/library.mjs';
+import { recommendWorkflows, showWorkflow } from '../lib/capabilities/workflows.mjs';
 
 const moduleDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(process.env.SKILLSFORGE_ROOT ?? join(moduleDir, '..'));
@@ -58,6 +60,52 @@ const TOOLS = [
       },
       required: ['skill']
     }
+  },
+  {
+    name: 'library_index',
+    description: 'Read-only installed skill library index for routing and host awareness',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        home: { type: 'string', description: 'Optional home directory override for tests' }
+      }
+    }
+  },
+  {
+    name: 'recommend_skill',
+    description: 'Read-only skill recommendation for a natural-language task',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string' },
+        pack: { type: 'string' }
+      },
+      required: ['query']
+    }
+  },
+  {
+    name: 'recommend_workflow',
+    description: 'Read-only workflow recommendation for a natural-language task',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string' },
+        category: { type: 'string' },
+        limit: { type: 'number', default: 5 }
+      },
+      required: ['query']
+    }
+  },
+  {
+    name: 'workflow_show',
+    description: 'Read-only workflow detail by id',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' }
+      },
+      required: ['id']
+    }
   }
 ];
 
@@ -84,6 +132,25 @@ async function callTool(name, args = {}) {
   if (name === 'skillshield') {
     const skillDir = resolveUnderRoot(root, args.skill);
     return runSkillShield(skillDir, { root });
+  }
+  if (name === 'library_index') {
+    return buildLibraryIndex(root, { home: args.home });
+  }
+  if (name === 'recommend_skill') {
+    const skills = await loadAllSkills(root);
+    return routeQuery(args.query, skills, {
+      pack: args.pack ?? null,
+      includeExplicit: true
+    });
+  }
+  if (name === 'recommend_workflow') {
+    return recommendWorkflows(root, args.query, {
+      category: args.category ?? undefined,
+      limit: args.limit ?? 5
+    });
+  }
+  if (name === 'workflow_show') {
+    return showWorkflow(root, args.id);
   }
   throw new Error(`unknown tool: ${name}`);
 }

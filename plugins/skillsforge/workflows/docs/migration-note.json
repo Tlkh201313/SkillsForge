@@ -1,0 +1,65 @@
+{
+  "id": "docs.migration-note",
+  "category": "docs",
+  "goal": "Write migration notes for changed command behavior.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "docs-migration",
+      "agent": "release-manager",
+      "command": "skillsforge route --query \"Write migration notes for changed command behavior.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "eng-versioning",
+      "agent": "tech-writer"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "docs-api-ref",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "docs-migration",
+    "eng-versioning",
+    "docs-api-ref"
+  ],
+  "recommendedAgents": [
+    "release-manager",
+    "tech-writer"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Write migration notes for changed command behavior.\"",
+    "skillsforge workflows run --id docs.migration-note --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "medium"
+}

@@ -1,0 +1,65 @@
+{
+  "id": "testing.e2e-smoke",
+  "category": "testing",
+  "goal": "Add a narrow end-to-end smoke path for a critical workflow.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "test-e2e",
+      "agent": "qa-lead",
+      "command": "skillsforge route --query \"Add a narrow end-to-end smoke path for a critical workflow.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "test-smoke",
+      "agent": "test-automator"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "qa-flow",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "test-e2e",
+    "test-smoke",
+    "qa-flow"
+  ],
+  "recommendedAgents": [
+    "qa-lead",
+    "test-automator"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Add a narrow end-to-end smoke path for a critical workflow.\"",
+    "skillsforge workflows run --id testing.e2e-smoke --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "medium"
+}

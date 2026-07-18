@@ -360,7 +360,7 @@ packs:
     - media-accessibility
     - media-video-watch
     - media-frame-sampling
-    - media-remotion-plan
+    - media-video-plan
     - media-caption-qc
   mobile:
     description: "Mobile release and store"

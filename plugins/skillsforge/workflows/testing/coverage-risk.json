@@ -1,0 +1,65 @@
+{
+  "id": "testing.coverage-risk",
+  "category": "testing",
+  "goal": "Raise coverage around risky code rather than chasing raw percent.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "test-coverage",
+      "agent": "qa-lead",
+      "command": "skillsforge route --query \"Raise coverage around risky code rather than chasing raw percent.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "review-diff",
+      "agent": "eng-reviewer"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "test-coverage",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "test-coverage",
+    "review-diff",
+    "test-coverage"
+  ],
+  "recommendedAgents": [
+    "qa-lead",
+    "eng-reviewer"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Raise coverage around risky code rather than chasing raw percent.\"",
+    "skillsforge workflows run --id testing.coverage-risk --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "low"
+}

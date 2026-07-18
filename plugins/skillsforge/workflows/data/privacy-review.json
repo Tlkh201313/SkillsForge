@@ -1,0 +1,65 @@
+{
+  "id": "data.privacy-review",
+  "category": "data",
+  "goal": "Check data minimization and retention notes.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "data-privacy",
+      "agent": "privacy-officer",
+      "command": "skillsforge route --query \"Check data minimization and retention notes.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "sec-privacy",
+      "agent": "data-governance-auditor"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "legal-privacy-outline",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "data-privacy",
+    "sec-privacy",
+    "legal-privacy-outline"
+  ],
+  "recommendedAgents": [
+    "privacy-officer",
+    "data-governance-auditor"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Check data minimization and retention notes.\"",
+    "skillsforge workflows run --id data.privacy-review --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "medium"
+}

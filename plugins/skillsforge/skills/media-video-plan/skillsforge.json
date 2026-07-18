@@ -4,11 +4,11 @@
   "requires": [],
   "routing": {
     "triggers": [
-      "media remotion plan",
-      "run media remotion plan",
-      "media remotion plan skill",
-      "help with media remotion plan",
-      "media media remotion plan"
+      "media video plan",
+      "run media video plan",
+      "media video plan skill",
+      "help with media video plan",
+      "media media video plan"
     ],
     "antiTriggers": [
       "install skillsforge plugin",

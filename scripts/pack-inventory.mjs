@@ -223,7 +223,7 @@ export const PACKS = {
       'media-image-brief', 'media-video-script', 'media-brand-asset', 'media-podcast',
       'media-thumbnail', 'media-storyboard', 'media-alt-text', 'media-compression',
       'media-style-guide', 'media-ugc', 'media-localization', 'media-accessibility',
-      'media-video-watch', 'media-frame-sampling', 'media-remotion-plan', 'media-caption-qc'
+      'media-video-watch', 'media-frame-sampling', 'media-video-plan', 'media-caption-qc'
     ])
   },
   mobile: {
@@ -313,7 +313,16 @@ export const AGENTS = [
   'enterprise-liaison', 'legal-lite', 'finance-lite', 'media-producer', 'mobile-releaser',
   'framework-coach', 'language-coach', 'growth-experimenter', 'research-synthesizer',
   'retro-facilitator', 'oncall-lead', 'validator', 'os-workstation-helper',
-  'video-workflow-producer', 'skill-pack-architect', 'agent-terminal-operator'
+  'video-workflow-producer', 'skill-pack-architect', 'agent-terminal-operator',
+  'repo-map-specialist', 'dependency-upgrade-surgeon', 'package-auditor',
+  'cli-workbench-engineer', 'policy-tester', 'llm-index-librarian',
+  'ui-systems-designer', 'motion-qa', 'data-quality-auditor',
+  'data-governance-auditor', 'hackathon-judge-reviewer',
+  'terminal-output-compressor', 'ci-diagnostician', 'workflow-curator',
+  'token-budget-controller', 'handoff-compressor', 'powershell-workbench-engineer',
+  'library-librarian', 'mcp-interface-engineer', 'star-map-designer',
+  'documentarian', 'readme-claim-auditor', 'local-ui-builder',
+  'safe-removal-operator'
 ];
 
 export const COMMANDS = [
@@ -332,7 +341,8 @@ export const COMMANDS = [
   'eval', 'install', 'package', 'evidence', 'browse', 'pack-methodology', 'pack-roles',
   'pack-lifecycle', 'next', 'status', 'work-brief', 'work-plan', 'work-proof',
   'os-run', 'os-open', 'os-find', 'os-ports', 'os-env', 'os-copy-path',
-  'os-clean', 'agent-terminal', 'video-watch', 'video-frames', 'skill-generate',
+  'os-clean', 'wb', 'lib', 'workflows', 'auto', 'ps',
+  'agent-terminal', 'video-watch', 'video-frames', 'skill-generate',
   'pack-author'
 ];
 

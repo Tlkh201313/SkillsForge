@@ -1,0 +1,65 @@
+{
+  "id": "coding.cli-command-addition",
+  "category": "coding",
+  "goal": "Add a CLI command with help text, JSON output, and tests.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "eng-api-design",
+      "agent": "cli-workbench-engineer",
+      "command": "skillsforge route --query \"Add a CLI command with help text, JSON output, and tests.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "test-unit",
+      "agent": "test-automator"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "docs-api-ref",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "eng-api-design",
+    "test-unit",
+    "docs-api-ref"
+  ],
+  "recommendedAgents": [
+    "cli-workbench-engineer",
+    "test-automator"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Add a CLI command with help text, JSON output, and tests.\"",
+    "skillsforge workflows run --id coding.cli-command-addition --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "medium"
+}

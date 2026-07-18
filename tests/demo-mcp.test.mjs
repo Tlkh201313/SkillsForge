@@ -27,14 +27,40 @@ test('compare-skill shows sidecar vs policy delta on examples', async () => {
   assert.equal(payload.right.policyOk, true);
 });
 
-test('thin MCP exposes only validate/route/skillshield', () => {
-  assert.deepEqual(TOOLS.map((t) => t.name).sort(), ['route', 'skillshield', 'validate']);
+test('thin MCP exposes trust plus read-only library/workflow tools', () => {
+  assert.deepEqual(TOOLS.map((t) => t.name).sort(), [
+    'library_index',
+    'recommend_skill',
+    'recommend_workflow',
+    'route',
+    'skillshield',
+    'validate',
+    'workflow_show'
+  ]);
 });
 
 test('MCP route tool returns selected or fallback', async () => {
   const result = await callTool('route', { query: 'what is skillsforge' });
   assert.ok('selected' in result);
   assert.ok(Array.isArray(result.candidates));
+});
+
+test('MCP read-only library and workflow tools return structured data', async () => {
+  const library = await callTool('library_index', { home: root });
+  assert.equal(library.ok, true);
+  assert.equal(library.stats.workflows, 100);
+  assert.ok(library.skills.some((skill) => skill.id === 'using-skillsforge'));
+
+  const skill = await callTool('recommend_skill', { query: 'validate agent skill' });
+  assert.ok(Array.isArray(skill.candidates));
+
+  const workflow = await callTool('recommend_workflow', { query: 'safe refactor code' });
+  assert.equal(workflow.ok, true);
+  assert.ok(workflow.candidates.some((item) => item.id === 'coding.safe-refactor'));
+
+  const shown = await callTool('workflow_show', { id: 'coding.safe-refactor' });
+  assert.equal(shown.ok, true);
+  assert.equal(shown.workflow.id, 'coding.safe-refactor');
 });
 
 test('MCP stdio tools/list responds', async () => {
@@ -51,5 +77,5 @@ test('MCP stdio tools/list responds', async () => {
   assert.equal(code, 0);
   const line = stdout.trim().split('\n').pop();
   const msg = JSON.parse(line);
-  assert.equal(msg.result.tools.length, 3);
+  assert.equal(msg.result.tools.length, 7);
 });

@@ -78,7 +78,7 @@ function shouldSyncThinAgent(source) {
 
 function shouldSyncGeneratedCommand(source) {
   return !source || (source.includes('Run the SkillsForge')
-    && (source.includes('npx skillsforge') || source.includes('route --query')));
+    && (source.includes('skillsforge.mjs') || source.includes('route --query')));
 }
 
 const NATIVE_COMMANDS = new Set([
@@ -87,7 +87,7 @@ const NATIVE_COMMANDS = new Set([
   'capture', 'forge-from-capture', 'doctor', 'validate', 'route', 'forge', 'receipt',
   'verify-receipt', 'enforce', 'eval', 'install', 'package', 'evidence', 'demo',
   'compare-skill', 'os-run', 'os-open', 'os-find', 'os-ports', 'os-env', 'os-copy-path',
-  'os-clean'
+  'os-clean', 'wb', 'lib', 'workflows', 'auto', 'ps'
 ]);
 
 function commandInvocation(name) {

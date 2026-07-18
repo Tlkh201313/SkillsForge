@@ -1,6 +1,6 @@
 ---
-name: media-remotion-plan
-description: Use when you need media remotion plan in a SkillsForge media workflow.
+name: media-video-plan
+description: Use when you need media video plan in a SkillsForge media workflow.
 license: MIT
 hooks:
   PreToolUse:
@@ -8,23 +8,23 @@ hooks:
       hooks:
         - type: command
           command: node "${CLAUDE_PLUGIN_ROOT}/hooks/pre-tool-policy.mjs" --policy
-            "${CLAUDE_PLUGIN_ROOT}/skills/media-remotion-plan/skillsforge.json"
+            "${CLAUDE_PLUGIN_ROOT}/skills/media-video-plan/skillsforge.json"
 ---
 
-# Media Remotion Plan
+# Media Video Plan
 
 ## Overview
 
-Lean SkillsForge scaffold for media remotion plan (media pack). Add domain examples and verification before calling it production-depth.
+Lean SkillsForge scaffold for media video plan (media pack). Add domain examples and verification before calling it production-depth.
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Media Remotion Plan without copying third-party skill bodies or overstating this scaffold's depth.
+Deliver a trustworthy, repeatable outcome for Media Video Plan without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 
-- Use when you need media remotion plan in a SkillsForge media workflow.
-- Need media remotion plan with trusted SkillsForge artifacts
+- Use when you need media video plan in a SkillsForge media workflow.
+- Need media video plan with trusted SkillsForge artifacts
 
 ## Phases
 

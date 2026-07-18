@@ -112,7 +112,7 @@ var require_visit = __commonJS({
     "use strict";
     var identity = require_identity();
     var BREAK = /* @__PURE__ */ Symbol("break visit");
-    var SKIP = /* @__PURE__ */ Symbol("skip children");
+    var SKIP2 = /* @__PURE__ */ Symbol("skip children");
     var REMOVE = /* @__PURE__ */ Symbol("remove node");
     function visit(node, visitor) {
       const visitor_ = initVisitor(visitor);
@@ -124,7 +124,7 @@ var require_visit = __commonJS({
         visit_(null, node, visitor_, Object.freeze([]));
     }
     visit.BREAK = BREAK;
-    visit.SKIP = SKIP;
+    visit.SKIP = SKIP2;
     visit.REMOVE = REMOVE;
     function visit_(key, node, visitor, path) {
       const ctrl = callVisitor(key, node, visitor, path);
@@ -172,7 +172,7 @@ var require_visit = __commonJS({
         await visitAsync_(null, node, visitor_, Object.freeze([]));
     }
     visitAsync.BREAK = BREAK;
-    visitAsync.SKIP = SKIP;
+    visitAsync.SKIP = SKIP2;
     visitAsync.REMOVE = REMOVE;
     async function visitAsync_(key, node, visitor, path) {
       const ctrl = await callVisitor(key, node, visitor, path);
@@ -4010,10 +4010,10 @@ var require_resolve_block_map = __commonJS({
       let offset = bm.offset;
       let commentEnd = null;
       for (const collItem of bm.items) {
-        const { start, key, sep: sep11, value } = collItem;
+        const { start, key, sep: sep13, value } = collItem;
         const keyProps = resolveProps.resolveProps(start, {
           indicator: "explicit-key-ind",
-          next: key ?? sep11?.[0],
+          next: key ?? sep13?.[0],
           offset,
           onError,
           parentIndent: bm.indent,
@@ -4027,7 +4027,7 @@ var require_resolve_block_map = __commonJS({
             else if ("indent" in key && key.indent !== bm.indent)
               onError(offset, "BAD_INDENT", startColMsg);
           }
-          if (!keyProps.anchor && !keyProps.tag && !sep11) {
+          if (!keyProps.anchor && !keyProps.tag && !sep13) {
             commentEnd = keyProps.end;
             if (keyProps.comment) {
               if (map.comment)
@@ -4051,7 +4051,7 @@ var require_resolve_block_map = __commonJS({
         ctx.atKey = false;
         if (utilMapIncludes.mapIncludes(ctx, map.items, keyNode))
           onError(keyStart, "DUPLICATE_KEY", "Map keys must be unique");
-        const valueProps = resolveProps.resolveProps(sep11 ?? [], {
+        const valueProps = resolveProps.resolveProps(sep13 ?? [], {
           indicator: "map-value-ind",
           next: value,
           offset: keyNode.range[2],
@@ -4067,7 +4067,7 @@ var require_resolve_block_map = __commonJS({
             if (ctx.options.strict && keyProps.start < valueProps.found.offset - 1024)
               onError(keyNode.range, "KEY_OVER_1024_CHARS", "The : indicator must be at most 1024 chars after the start of an implicit block mapping key");
           }
-          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep11, null, valueProps, onError);
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep13, null, valueProps, onError);
           if (ctx.schema.compat)
             utilFlowIndentCheck.flowIndentCheck(bm.indent, value, onError);
           offset = valueNode.range[2];
@@ -4158,7 +4158,7 @@ var require_resolve_end = __commonJS({
       let comment = "";
       if (end) {
         let hasSpace = false;
-        let sep11 = "";
+        let sep13 = "";
         for (const token of end) {
           const { source, type } = token;
           switch (type) {
@@ -4172,13 +4172,13 @@ var require_resolve_end = __commonJS({
               if (!comment)
                 comment = cb;
               else
-                comment += sep11 + cb;
-              sep11 = "";
+                comment += sep13 + cb;
+              sep13 = "";
               break;
             }
             case "newline":
               if (comment)
-                sep11 += source;
+                sep13 += source;
               hasSpace = true;
               break;
             default:
@@ -4221,18 +4221,18 @@ var require_resolve_flow_collection = __commonJS({
       let offset = fc.offset + fc.start.source.length;
       for (let i = 0; i < fc.items.length; ++i) {
         const collItem = fc.items[i];
-        const { start, key, sep: sep11, value } = collItem;
+        const { start, key, sep: sep13, value } = collItem;
         const props = resolveProps.resolveProps(start, {
           flow: fcName,
           indicator: "explicit-key-ind",
-          next: key ?? sep11?.[0],
+          next: key ?? sep13?.[0],
           offset,
           onError,
           parentIndent: fc.indent,
           startOnNewline: false
         });
         if (!props.found) {
-          if (!props.anchor && !props.tag && !sep11 && !value) {
+          if (!props.anchor && !props.tag && !sep13 && !value) {
             if (i === 0 && props.comma)
               onError(props.comma, "UNEXPECTED_TOKEN", `Unexpected , in ${fcName}`);
             else if (i < fc.items.length - 1)
@@ -4286,8 +4286,8 @@ var require_resolve_flow_collection = __commonJS({
             }
           }
         }
-        if (!isMap && !sep11 && !props.found) {
-          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep11, null, props, onError);
+        if (!isMap && !sep13 && !props.found) {
+          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep13, null, props, onError);
           coll.items.push(valueNode);
           offset = valueNode.range[2];
           if (isBlock(value))
@@ -4299,7 +4299,7 @@ var require_resolve_flow_collection = __commonJS({
           if (isBlock(key))
             onError(keyNode.range, "BLOCK_IN_FLOW", blockMsg);
           ctx.atKey = false;
-          const valueProps = resolveProps.resolveProps(sep11 ?? [], {
+          const valueProps = resolveProps.resolveProps(sep13 ?? [], {
             flow: fcName,
             indicator: "map-value-ind",
             next: value,
@@ -4310,8 +4310,8 @@ var require_resolve_flow_collection = __commonJS({
           });
           if (valueProps.found) {
             if (!isMap && !props.found && ctx.options.strict) {
-              if (sep11)
-                for (const st of sep11) {
+              if (sep13)
+                for (const st of sep13) {
                   if (st === valueProps.found)
                     break;
                   if (st.type === "newline") {
@@ -4328,7 +4328,7 @@ var require_resolve_flow_collection = __commonJS({
             else
               onError(valueProps.start, "MISSING_CHAR", `Missing , or : between ${fcName} items`);
           }
-          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep11, null, valueProps, onError) : null;
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep13, null, valueProps, onError) : null;
           if (valueNode) {
             if (isBlock(value))
               onError(valueNode.range, "BLOCK_IN_FLOW", blockMsg);
@@ -4508,7 +4508,7 @@ var require_resolve_block_scalar = __commonJS({
           chompStart = i + 1;
       }
       let value = "";
-      let sep11 = "";
+      let sep13 = "";
       let prevMoreIndented = false;
       for (let i = 0; i < contentStart; ++i)
         value += lines[i][0].slice(trimIndent) + "\n";
@@ -4525,24 +4525,24 @@ var require_resolve_block_scalar = __commonJS({
           indent = "";
         }
         if (type === Scalar.Scalar.BLOCK_LITERAL) {
-          value += sep11 + indent.slice(trimIndent) + content;
-          sep11 = "\n";
+          value += sep13 + indent.slice(trimIndent) + content;
+          sep13 = "\n";
         } else if (indent.length > trimIndent || content[0] === "	") {
-          if (sep11 === " ")
-            sep11 = "\n";
-          else if (!prevMoreIndented && sep11 === "\n")
-            sep11 = "\n\n";
-          value += sep11 + indent.slice(trimIndent) + content;
-          sep11 = "\n";
+          if (sep13 === " ")
+            sep13 = "\n";
+          else if (!prevMoreIndented && sep13 === "\n")
+            sep13 = "\n\n";
+          value += sep13 + indent.slice(trimIndent) + content;
+          sep13 = "\n";
           prevMoreIndented = true;
         } else if (content === "") {
-          if (sep11 === "\n")
+          if (sep13 === "\n")
             value += "\n";
           else
-            sep11 = "\n";
+            sep13 = "\n";
         } else {
-          value += sep11 + content;
-          sep11 = " ";
+          value += sep13 + content;
+          sep13 = " ";
           prevMoreIndented = false;
         }
       }
@@ -4724,25 +4724,25 @@ var require_resolve_flow_scalar = __commonJS({
       if (!match)
         return source;
       let res = match[1];
-      let sep11 = " ";
+      let sep13 = " ";
       let pos = first.lastIndex;
       line.lastIndex = pos;
       while (match = line.exec(source)) {
         if (match[1] === "") {
-          if (sep11 === "\n")
-            res += sep11;
+          if (sep13 === "\n")
+            res += sep13;
           else
-            sep11 = "\n";
+            sep13 = "\n";
         } else {
-          res += sep11 + match[1];
-          sep11 = " ";
+          res += sep13 + match[1];
+          sep13 = " ";
         }
         pos = line.lastIndex;
       }
       const last = /[ \t]*(.*)/sy;
       last.lastIndex = pos;
       match = last.exec(source);
-      return res + sep11 + (match?.[1] ?? "");
+      return res + sep13 + (match?.[1] ?? "");
     }
     function doubleQuotedValue(source, onError) {
       let res = "";
@@ -5552,14 +5552,14 @@ var require_cst_stringify = __commonJS({
         }
       }
     }
-    function stringifyItem({ start, key, sep: sep11, value }) {
+    function stringifyItem({ start, key, sep: sep13, value }) {
       let res = "";
       for (const st of start)
         res += st.source;
       if (key)
         res += stringifyToken(key);
-      if (sep11)
-        for (const st of sep11)
+      if (sep13)
+        for (const st of sep13)
           res += st.source;
       if (value)
         res += stringifyToken(value);
@@ -5574,7 +5574,7 @@ var require_cst_visit = __commonJS({
   "node_modules/yaml/dist/parse/cst-visit.js"(exports) {
     "use strict";
     var BREAK = /* @__PURE__ */ Symbol("break visit");
-    var SKIP = /* @__PURE__ */ Symbol("skip children");
+    var SKIP2 = /* @__PURE__ */ Symbol("skip children");
     var REMOVE = /* @__PURE__ */ Symbol("remove item");
     function visit(cst, visitor) {
       if ("type" in cst && cst.type === "document")
@@ -5582,7 +5582,7 @@ var require_cst_visit = __commonJS({
       _visit(Object.freeze([]), cst, visitor);
     }
     visit.BREAK = BREAK;
-    visit.SKIP = SKIP;
+    visit.SKIP = SKIP2;
     visit.REMOVE = REMOVE;
     visit.itemAtPath = (cst, path) => {
       let item = cst;
@@ -6726,18 +6726,18 @@ var require_parser = __commonJS({
         if (this.type === "map-value-ind") {
           const prev = getPrevProps(this.peek(2));
           const start = getFirstKeyStartProps(prev);
-          let sep11;
+          let sep13;
           if (scalar.end) {
-            sep11 = scalar.end;
-            sep11.push(this.sourceToken);
+            sep13 = scalar.end;
+            sep13.push(this.sourceToken);
             delete scalar.end;
           } else
-            sep11 = [this.sourceToken];
+            sep13 = [this.sourceToken];
           const map = {
             type: "block-map",
             offset: scalar.offset,
             indent: scalar.indent,
-            items: [{ start, key: scalar, sep: sep11 }]
+            items: [{ start, key: scalar, sep: sep13 }]
           };
           this.onKeyLine = true;
           this.stack[this.stack.length - 1] = map;
@@ -6890,15 +6890,15 @@ var require_parser = __commonJS({
                 } else if (isFlowToken(it.key) && !includesToken(it.sep, "newline")) {
                   const start2 = getFirstKeyStartProps(it.start);
                   const key = it.key;
-                  const sep11 = it.sep;
-                  sep11.push(this.sourceToken);
+                  const sep13 = it.sep;
+                  sep13.push(this.sourceToken);
                   delete it.key;
                   delete it.sep;
                   this.stack.push({
                     type: "block-map",
                     offset: this.offset,
                     indent: this.indent,
-                    items: [{ start: start2, key, sep: sep11 }]
+                    items: [{ start: start2, key, sep: sep13 }]
                   });
                 } else if (start.length > 0) {
                   it.sep = it.sep.concat(start, this.sourceToken);
@@ -7092,13 +7092,13 @@ var require_parser = __commonJS({
             const prev = getPrevProps(parent);
             const start = getFirstKeyStartProps(prev);
             fixFlowSeqItems(fc);
-            const sep11 = fc.end.splice(1, fc.end.length);
-            sep11.push(this.sourceToken);
+            const sep13 = fc.end.splice(1, fc.end.length);
+            sep13.push(this.sourceToken);
             const map = {
               type: "block-map",
               offset: fc.offset,
               indent: fc.indent,
-              items: [{ start, key: fc, sep: sep11 }]
+              items: [{ start, key: fc, sep: sep13 }]
             };
             this.onKeyLine = true;
             this.stack[this.stack.length - 1] = map;
@@ -10327,7 +10327,7 @@ var require_compile = __commonJS({
       const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve18.call(this, root, ref);
+      let _sch = resolve22.call(this, root, ref);
       if (_sch === void 0) {
         const schema = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
         const { schemaId } = this.opts;
@@ -10354,7 +10354,7 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve18(root, ref) {
+    function resolve22(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
@@ -10985,55 +10985,55 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve18(baseURI, relativeURI, options) {
+    function resolve22(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const resolved = resolveComponent(parse(baseURI, schemelessOptions), parse(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
       return serialize(resolved, schemelessOptions);
     }
-    function resolveComponent(base, relative11, options, skipNormalization) {
+    function resolveComponent(base, relative14, options, skipNormalization) {
       const target = {};
       if (!skipNormalization) {
         base = parse(serialize(base, options), options);
-        relative11 = parse(serialize(relative11, options), options);
+        relative14 = parse(serialize(relative14, options), options);
       }
       options = options || {};
-      if (!options.tolerant && relative11.scheme) {
-        target.scheme = relative11.scheme;
-        target.userinfo = relative11.userinfo;
-        target.host = relative11.host;
-        target.port = relative11.port;
-        target.path = removeDotSegments(relative11.path || "");
-        target.query = relative11.query;
+      if (!options.tolerant && relative14.scheme) {
+        target.scheme = relative14.scheme;
+        target.userinfo = relative14.userinfo;
+        target.host = relative14.host;
+        target.port = relative14.port;
+        target.path = removeDotSegments(relative14.path || "");
+        target.query = relative14.query;
       } else {
-        if (relative11.userinfo !== void 0 || relative11.host !== void 0 || relative11.port !== void 0) {
-          target.userinfo = relative11.userinfo;
-          target.host = relative11.host;
-          target.port = relative11.port;
-          target.path = removeDotSegments(relative11.path || "");
-          target.query = relative11.query;
+        if (relative14.userinfo !== void 0 || relative14.host !== void 0 || relative14.port !== void 0) {
+          target.userinfo = relative14.userinfo;
+          target.host = relative14.host;
+          target.port = relative14.port;
+          target.path = removeDotSegments(relative14.path || "");
+          target.query = relative14.query;
         } else {
-          if (!relative11.path) {
+          if (!relative14.path) {
             target.path = base.path;
-            if (relative11.query !== void 0) {
-              target.query = relative11.query;
+            if (relative14.query !== void 0) {
+              target.query = relative14.query;
             } else {
               target.query = base.query;
             }
           } else {
-            if (relative11.path[0] === "/") {
-              target.path = removeDotSegments(relative11.path);
+            if (relative14.path[0] === "/") {
+              target.path = removeDotSegments(relative14.path);
             } else {
               if ((base.userinfo !== void 0 || base.host !== void 0 || base.port !== void 0) && !base.path) {
-                target.path = "/" + relative11.path;
+                target.path = "/" + relative14.path;
               } else if (!base.path) {
-                target.path = relative11.path;
+                target.path = relative14.path;
               } else {
-                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative11.path;
+                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative14.path;
               }
               target.path = removeDotSegments(target.path);
             }
-            target.query = relative11.query;
+            target.query = relative14.query;
           }
           target.userinfo = base.userinfo;
           target.host = base.host;
@@ -11041,7 +11041,7 @@ var require_fast_uri = __commonJS({
         }
         target.scheme = base.scheme;
       }
-      target.fragment = relative11.fragment;
+      target.fragment = relative14.fragment;
       return target;
     }
     function equal(uriA, uriB, options) {
@@ -11243,7 +11243,7 @@ var require_fast_uri = __commonJS({
     var fastUri = {
       SCHEMES,
       normalize: normalize4,
-      resolve: resolve18,
+      resolve: resolve22,
       resolveComponent,
       equal,
       serialize,
@@ -17312,8 +17312,8 @@ __export(eval_exports, {
   runEvaluation: () => runEvaluation
 });
 import { createHash as createHash2 } from "node:crypto";
-import { mkdir as mkdir9, readFile as readFile15, writeFile as writeFile9 } from "node:fs/promises";
-import { dirname as dirname6, join as join17, resolve as resolve15 } from "node:path";
+import { mkdir as mkdir11, readFile as readFile17, writeFile as writeFile11 } from "node:fs/promises";
+import { dirname as dirname7, join as join21, resolve as resolve19 } from "node:path";
 import { fileURLToPath as fileURLToPath3 } from "node:url";
 function percentile(values, p) {
   if (values.length === 0) return null;
@@ -17373,8 +17373,8 @@ function calculateMetrics(cases, select) {
 async function runEvaluation(options = {}) {
   const root = options.root ?? repositoryRoot;
   const corpusName = options.corpus ?? "routing-holdout.json";
-  const corpusPath = join17(root, "evaluation", corpusName);
-  const corpusSource = await readFile15(corpusPath);
+  const corpusPath = join21(root, "evaluation", corpusName);
+  const corpusSource = await readFile17(corpusPath);
   const corpus = JSON.parse(corpusSource.toString("utf8"));
   const skills = await loadAllSkills(root);
   const started = Date.now();
@@ -17401,8 +17401,8 @@ async function runEvaluation(options = {}) {
     durationMs: Date.now() - started
   };
   if (options.write !== false) {
-    await mkdir9(join17(root, "artifacts", "evaluation"), { recursive: true });
-    await writeFile9(join17(root, "artifacts", "evaluation", "routing-report.json"), `${JSON.stringify(report, null, 2)}
+    await mkdir11(join21(root, "artifacts", "evaluation"), { recursive: true });
+    await writeFile11(join21(root, "artifacts", "evaluation", "routing-report.json"), `${JSON.stringify(report, null, 2)}
 `);
   }
   return report;
@@ -17413,10 +17413,10 @@ var init_eval = __esm({
     init_skill_loader();
     init_router();
     modulePath = fileURLToPath3(import.meta.url);
-    repositoryRoot = resolve15(dirname6(modulePath), "..");
+    repositoryRoot = resolve19(dirname7(modulePath), "..");
     HOLDOUT_PRECISION_MIN = 0.95;
     HOLDOUT_RECALL_MIN = 0.9;
-    if (process.argv[1] && resolve15(process.argv[1]) === modulePath) {
+    if (process.argv[1] && resolve19(process.argv[1]) === modulePath) {
       const report = await runEvaluation();
       console.log(
         `routing: ${report.tp}+${report.tn}/${report.total} exact=${report.exactMatchAccuracy?.toFixed(2)} P=${report.precision?.toFixed(2)} R=${report.recall?.toFixed(2)} p50=${report.latencyMs?.p50?.toFixed(2)}ms p95=${report.latencyMs?.p95?.toFixed(2)}ms`
@@ -17440,12 +17440,12 @@ __export(evidence_exports, {
   stableStringify: () => stableStringify
 });
 import { createHash as createHash3 } from "node:crypto";
-import { access as access11, mkdir as mkdir10, readFile as readFile16, readdir as readdir8, writeFile as writeFile10 } from "node:fs/promises";
-import { dirname as dirname7, join as join18, relative as relative9, resolve as resolve16 } from "node:path";
+import { access as access14, mkdir as mkdir12, readFile as readFile18, readdir as readdir10, writeFile as writeFile12 } from "node:fs/promises";
+import { dirname as dirname8, join as join22, relative as relative12, resolve as resolve20 } from "node:path";
 import { fileURLToPath as fileURLToPath4 } from "node:url";
 async function buildEvidenceBundle(options = {}) {
-  const root = resolve16(options.root ?? moduleRoot);
-  const outDir = options.outDir ? resolve16(options.outDir) : null;
+  const root = resolve20(options.root ?? moduleRoot);
+  const outDir = options.outDir ? resolve20(options.outDir) : null;
   const write = outDir != null && options.write !== false;
   if (!outDir) {
     return { ok: false, errors: ["--out <dir> is required"], files: [], bundleHash: null };
@@ -17477,8 +17477,8 @@ async function buildEvidenceBundle(options = {}) {
     const sha2562 = sha256Text(text);
     fileEntries.push({ path: name, sha256: sha2562, bytes: Buffer.byteLength(text) });
     if (write) {
-      await mkdir10(outDir, { recursive: true });
-      await writeFile10(join18(outDir, name), text);
+      await mkdir12(outDir, { recursive: true });
+      await writeFile12(join22(outDir, name), text);
     }
   }
   const manifestBody = {
@@ -17490,7 +17490,7 @@ async function buildEvidenceBundle(options = {}) {
   const manifest = { ...manifestBody, bundleHash };
   const manifestWithHash = stableStringify(manifest);
   if (write) {
-    await writeFile10(join18(outDir, "manifest.json"), manifestWithHash);
+    await writeFile12(join22(outDir, "manifest.json"), manifestWithHash);
   }
   const ok = Boolean(validation.ok) && policyReport.falseAllow === 0 && receiptReport.verify?.ok === true && receiptReport.tamper?.ok === false;
   return {
@@ -17594,8 +17594,8 @@ async function collectPolicyAdversarial(root, injectedCorpus) {
   };
 }
 async function loadPolicyCorpus(root) {
-  const path = join18(root, "evaluation", "policy-adversarial.json");
-  const source = await readFile16(path);
+  const path = join22(root, "evaluation", "policy-adversarial.json");
+  const source = await readFile18(path);
   const parsed = JSON.parse(source.toString("utf8"));
   return {
     ...parsed,
@@ -17605,16 +17605,16 @@ async function loadPolicyCorpus(root) {
 }
 async function collectIndependentFixtures(root, fixtureRoots) {
   const roots = fixtureRoots ?? [
-    join18(root, "tests", "fixtures", "skills", "public-docs-helper"),
-    join18(root, "tests", "fixtures", "skills", "public-router-helper"),
-    join18(root, "tests", "fixtures", "skills", "public-security-scan")
+    join22(root, "tests", "fixtures", "skills", "public-docs-helper"),
+    join22(root, "tests", "fixtures", "skills", "public-router-helper"),
+    join22(root, "tests", "fixtures", "skills", "public-security-scan")
   ];
   const reports = [];
   for (const dir of roots) {
-    const abs = resolve16(dir);
+    const abs = resolve20(dir);
     let exists = true;
     try {
-      await access11(join18(abs, "SKILL.md"));
+      await access14(join22(abs, "SKILL.md"));
     } catch {
       exists = false;
     }
@@ -17645,41 +17645,41 @@ async function collectIndependentFixtures(root, fixtureRoots) {
   };
 }
 async function collectCodexPackageSummary(root) {
-  const pluginPath = join18(root, "plugins", "skillsforge", ".codex-plugin", "plugin.json");
+  const pluginPath = join22(root, "plugins", "skillsforge", ".codex-plugin", "plugin.json");
   let plugin = null;
   try {
-    plugin = JSON.parse(await readFile16(pluginPath, "utf8"));
+    plugin = JSON.parse(await readFile18(pluginPath, "utf8"));
   } catch {
     plugin = null;
   }
-  const skillsRoot = join18(root, "plugins", "skillsforge", "skills");
+  const skillsRoot = join22(root, "plugins", "skillsforge", "skills");
   const skillSummaries = [];
   let entries = [];
   try {
-    entries = await readdir8(skillsRoot, { withFileTypes: true });
+    entries = await readdir10(skillsRoot, { withFileTypes: true });
   } catch {
     entries = [];
   }
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    const skillDir = join18(skillsRoot, entry.name);
-    const hasSkill = await pathExists6(join18(skillDir, "SKILL.md"));
+    const skillDir = join22(skillsRoot, entry.name);
+    const hasSkill = await pathExists7(join22(skillDir, "SKILL.md"));
     if (!hasSkill) continue;
     skillSummaries.push({
       name: entry.name,
-      openaiYaml: await pathExists6(join18(skillDir, "agents", "openai.yaml")),
-      sidecar: await pathExists6(join18(skillDir, "skillsforge.json"))
+      openaiYaml: await pathExists7(join22(skillDir, "agents", "openai.yaml")),
+      sidecar: await pathExists7(join22(skillDir, "skillsforge.json"))
     });
   }
   skillSummaries.sort((left, right) => left.name.localeCompare(right.name));
   let distInterop = null;
   try {
-    distInterop = JSON.parse(await readFile16(join18(root, "dist", "codex-interop.json"), "utf8"));
+    distInterop = JSON.parse(await readFile18(join22(root, "dist", "codex-interop.json"), "utf8"));
   } catch {
     distInterop = null;
   }
   const distPresent = {
-    pluginJson: await pathExists6(join18(root, "dist", "codex", ".codex-plugin", "plugin.json")),
+    pluginJson: await pathExists7(join22(root, "dist", "codex", ".codex-plugin", "plugin.json")),
     openaiYamlCount: skillSummaries.filter((item) => item.openaiYaml).length
   };
   return {
@@ -17719,17 +17719,17 @@ async function collectCodexPackageSummary(root) {
   };
 }
 async function collectReceiptEvidence(root, options) {
-  const packageRoot = resolve16(
-    options.packageRoot ?? join18(root, "dist", "claude-code")
+  const packageRoot = resolve20(
+    options.packageRoot ?? join22(root, "dist", "claude-code")
   );
-  const receiptPath = resolve16(
-    options.receiptPath ?? join18(root, "dist", "trust-receipt.json")
+  const receiptPath = resolve20(
+    options.receiptPath ?? join22(root, "dist", "trust-receipt.json")
   );
-  const evaluationPath = resolve16(
-    options.evaluationPath ?? join18(root, "artifacts", "evaluation", "routing-report.json")
+  const evaluationPath = resolve20(
+    options.evaluationPath ?? join22(root, "artifacts", "evaluation", "routing-report.json")
   );
-  const packageReady = await pathExists6(join18(packageRoot, ".claude-plugin", "plugin.json"));
-  const receiptReady = await pathExists6(receiptPath);
+  const packageReady = await pathExists7(join22(packageRoot, ".claude-plugin", "plugin.json"));
+  const receiptReady = await pathExists7(receiptPath);
   if (!packageReady || !receiptReady) {
     return await synthesizeReceiptProof(root, options);
   }
@@ -17739,7 +17739,7 @@ async function collectReceiptEvidence(root, options) {
     packageOnly: false,
     requireEvaluation: true
   };
-  if (await pathExists6(evaluationPath)) {
+  if (await pathExists7(evaluationPath)) {
     verifyOptions.evaluationPath = evaluationPath;
   }
   const verify = await verifyReceipt(receiptPath, skills, verifyOptions);
@@ -17763,7 +17763,7 @@ async function collectReceiptEvidence(root, options) {
   };
 }
 async function synthesizeReceiptProof(root, options) {
-  const skills = options.skills ?? await loadAllSkills(join18(root, "plugins", "skillsforge"));
+  const skills = options.skills ?? await loadAllSkills(join22(root, "plugins", "skillsforge"));
   const evaluation = options.evaluationSummary ?? {
     corpusSha256: "synthetic-corpus",
     total: 2,
@@ -17777,12 +17777,12 @@ async function synthesizeReceiptProof(root, options) {
     evaluation,
     reportBytes,
     requireEvaluation: true,
-    packageRoot: join18(root, "plugins", "skillsforge")
+    packageRoot: join22(root, "plugins", "skillsforge")
   });
   if (!built.ok) {
     return {
       receiptPath: null,
-      packageRoot: toPosix(root, join18(root, "plugins", "skillsforge")),
+      packageRoot: toPosix(root, join22(root, "plugins", "skillsforge")),
       verify: { ok: false, mismatches: built.errors ?? ["receipt build failed"], packageVerified: false, evaluationVerified: false, receiptHash: null },
       tamper: { ok: false, prepared: false, mismatches: ["receipt unavailable"], note: "Could not prepare tamper proof." }
     };
@@ -17796,11 +17796,11 @@ async function synthesizeReceiptProof(root, options) {
   };
   const tamperedText = mutateReceiptForTamper(built.text);
   const tamper = await evaluateTamperedReceipt(tamperedText, skills, {
-    packageRoot: join18(root, "plugins", "skillsforge")
+    packageRoot: join22(root, "plugins", "skillsforge")
   });
   return {
     receiptPath: null,
-    packageRoot: toPosix(root, join18(root, "plugins", "skillsforge")),
+    packageRoot: toPosix(root, join22(root, "plugins", "skillsforge")),
     mode: "synthetic",
     verify,
     tamper: {
@@ -17811,7 +17811,7 @@ async function synthesizeReceiptProof(root, options) {
   };
 }
 async function verifyOneByteTamper(receiptPath, skills, verifyOptions) {
-  const original = await readFile16(receiptPath, "utf8");
+  const original = await readFile18(receiptPath, "utf8");
   const mutated = mutateReceiptForTamper(original);
   return evaluateTamperedReceipt(mutated, skills, verifyOptions);
 }
@@ -17872,12 +17872,12 @@ function defaultBuildMeta(root) {
       sha: process.env.GITHUB_SHA ?? null,
       runId: process.env.GITHUB_RUN_ID ?? null
     },
-    rootName: relative9(dirname7(root), root).replaceAll("\\", "/") || "."
+    rootName: relative12(dirname8(root), root).replaceAll("\\", "/") || "."
   };
 }
 async function readPackageVersion(root) {
   try {
-    const pkg = JSON.parse(await readFile16(join18(root, "package.json"), "utf8"));
+    const pkg = JSON.parse(await readFile18(join22(root, "package.json"), "utf8"));
     return pkg.version ?? null;
   } catch {
     return null;
@@ -17935,18 +17935,18 @@ function compareFinding(left, right) {
   return leftKey.localeCompare(rightKey);
 }
 function toPosix(root, abs) {
-  return relative9(root, abs).replaceAll("\\", "/");
+  return relative12(root, abs).replaceAll("\\", "/");
 }
-async function pathExists6(path) {
+async function pathExists7(path) {
   try {
-    await access11(path);
+    await access14(path);
     return true;
   } catch {
     return false;
   }
 }
 async function buildEvidenceBundleWithPackageMeta(options = {}) {
-  const root = resolve16(options.root ?? moduleRoot);
+  const root = resolve20(options.root ?? moduleRoot);
   const packageVersion = await readPackageVersion(root);
   return buildEvidenceBundle({
     ...options,
@@ -17967,17 +17967,17 @@ var init_evidence = __esm({
     init_receipt();
     init_verify();
     EVIDENCE_VERSION = "0.4.0";
-    moduleRoot = resolve16(dirname7(fileURLToPath4(import.meta.url)), "../..");
+    moduleRoot = resolve20(dirname8(fileURLToPath4(import.meta.url)), "../..");
   }
 });
 
 // scripts/skillsforge-cli.mjs
 init_skill_loader();
 init_router();
-import { access as access12, readFile as readFile17, writeFile as writeFile11, mkdir as mkdir11, readdir as readdir9, stat as stat3 } from "node:fs/promises";
+import { access as access15, readFile as readFile19, writeFile as writeFile13, mkdir as mkdir13, readdir as readdir11, stat as stat4 } from "node:fs/promises";
 import { realpathSync } from "node:fs";
-import { spawn } from "node:child_process";
-import { basename as basename4, dirname as dirname8, join as join19, relative as relative10, resolve as resolve17 } from "node:path";
+import { spawn as spawn2 } from "node:child_process";
+import { basename as basename6, dirname as dirname9, join as join23, relative as relative13, resolve as resolve21 } from "node:path";
 import { fileURLToPath as fileURLToPath5 } from "node:url";
 
 // lib/capabilities/forge.mjs
@@ -19733,8 +19733,8 @@ Generated by \`skillsforge export-agents\`. Cross-harness context for Claude Cod
 
 Use SkillsForge as the trust and routing layer for Agent Skills.
 
-- Magical moment: \`npx skillsforge vibe\`
-- Judge demo: \`npx skillsforge demo\`
+- Magical moment: \`node plugins/skillsforge/bin/skillsforge.mjs vibe\`
+- Judge demo: \`node plugins/skillsforge/bin/skillsforge.mjs demo\`
 - Validate: \`skillsforge validate --all\`
 - Route: \`skillsforge route --query "..."\` or \`--pack <id>\`
 - Quality: \`skillsforge quality --skill <dir>\`
@@ -19985,8 +19985,8 @@ async function runJudgeDemo(root, options = {}) {
     };
   } finally {
     if (!options.keepWork) {
-      const { rm: rm3 } = await import("node:fs/promises");
-      await rm3(work, { recursive: true, force: true });
+      const { rm: rm4 } = await import("node:fs/promises");
+      await rm4(work, { recursive: true, force: true });
     }
   }
 }
@@ -20079,10 +20079,575 @@ async function compareSkillTrust(root, leftDir, rightDir) {
   };
 }
 
-// scripts/skillsforge-cli.mjs
-var modulePath2 = fileURLToPath5(import.meta.url);
-var modulePluginRoot = resolve17(dirname8(modulePath2), "..");
-async function pathExists7(path) {
+// lib/capabilities/library.mjs
+init_skill_loader();
+init_hosts();
+init_catalog();
+import { access as access12, mkdir as mkdir9, readFile as readFile16, rm as rm3, writeFile as writeFile9 } from "node:fs/promises";
+import { createServer } from "node:http";
+import { basename as basename5, join as join18, relative as relative10, resolve as resolve16, sep as sep12 } from "node:path";
+
+// lib/capabilities/workflows.mjs
+init_skill_loader();
+init_router();
+import { access as access11, readFile as readFile15, readdir as readdir8 } from "node:fs/promises";
+import { basename as basename4, dirname as dirname6, join as join17, relative as relative9, resolve as resolve15, sep as sep11 } from "node:path";
+var WORKFLOW_ROOT_REL = join17("plugins", "skillsforge", "workflows");
+var WORKFLOW_CATEGORIES = Object.freeze([
+  "coding",
+  "testing",
+  "security",
+  "docs",
+  "design",
+  "product",
+  "ops",
+  "data",
+  "media",
+  "agentic"
+]);
+var REQUIRED_FIELDS = Object.freeze([
+  "id",
+  "category",
+  "goal",
+  "inputs",
+  "steps",
+  "recommendedSkills",
+  "recommendedAgents",
+  "commands",
+  "stopGates",
+  "tokenBudget",
+  "qualityGate",
+  "risk"
+]);
+var tokenize2 = (text) => String(text ?? "").toLowerCase().match(/[a-z0-9]+/g) ?? [];
+async function loadWorkflows(root, options = {}) {
+  const workflowRoot = resolve15(root, options.workflowRoot ?? WORKFLOW_ROOT_REL);
+  const files = await listJsonFiles(workflowRoot);
+  const workflows = [];
+  const errors = [];
+  for (const file of files) {
+    try {
+      const workflow = JSON.parse(await readFile15(file, "utf8"));
+      const validation = validateWorkflow(workflow, { file, workflowRoot });
+      if (!validation.ok) {
+        errors.push(...validation.errors.map((error) => ({ file, error })));
+      } else {
+        workflows.push({
+          ...workflow,
+          file,
+          relativePath: relative9(workflowRoot, file).replaceAll("\\", "/")
+        });
+      }
+    } catch (error) {
+      errors.push({ file, error: error.message });
+    }
+  }
+  workflows.sort((left, right) => left.id.localeCompare(right.id));
+  return { ok: errors.length === 0, workflows, errors, root: workflowRoot };
+}
+function validateWorkflow(workflow, options = {}) {
+  const errors = [];
+  if (!workflow || typeof workflow !== "object" || Array.isArray(workflow)) {
+    return { ok: false, errors: ["workflow must be an object"] };
+  }
+  for (const field of REQUIRED_FIELDS) {
+    if (!(field in workflow)) errors.push(`missing field: ${field}`);
+  }
+  if (typeof workflow.id !== "string" || !/^[a-z]+[.][a-z0-9]+(?:-[a-z0-9]+)*$/.test(workflow.id)) {
+    errors.push("id must look like category.slug-name");
+  }
+  if (!WORKFLOW_CATEGORIES.includes(workflow.category)) {
+    errors.push(`category must be one of: ${WORKFLOW_CATEGORIES.join(", ")}`);
+  }
+  if (typeof workflow.id === "string" && typeof workflow.category === "string" && !workflow.id.startsWith(`${workflow.category}.`)) {
+    errors.push("id prefix must match category");
+  }
+  if (typeof workflow.goal !== "string" || workflow.goal.trim().length < 12) {
+    errors.push("goal must be a useful string");
+  }
+  for (const field of ["inputs", "steps", "recommendedSkills", "recommendedAgents", "commands", "stopGates"]) {
+    if (!Array.isArray(workflow[field])) errors.push(`${field} must be an array`);
+  }
+  if (Array.isArray(workflow.steps) && workflow.steps.length === 0) errors.push("steps must not be empty");
+  if (!["low", "medium", "high"].includes(workflow.risk)) errors.push("risk must be low, medium, or high");
+  if (options.file && options.workflowRoot && !isInside7(options.workflowRoot, options.file)) {
+    errors.push("workflow file must stay inside workflow root");
+  }
+  return { ok: errors.length === 0, errors };
+}
+async function recommendWorkflows(root, query, options = {}) {
+  const loaded = await loadWorkflows(root);
+  const limit = clampLimit(options.limit, 5);
+  const category = options.category ?? null;
+  const scoped = loaded.workflows.filter((workflow) => !category || workflow.category === category);
+  const candidates = scoped.map((workflow) => scoreWorkflow(query, workflow)).sort((left, right) => right.score - left.score || left.workflow.id.localeCompare(right.workflow.id)).slice(0, limit);
+  return {
+    ok: loaded.ok,
+    query,
+    category,
+    candidates: candidates.map(({ workflow, score, reasons }) => summarizeWorkflow(workflow, { score, reasons })),
+    errors: loaded.errors
+  };
+}
+async function showWorkflow(root, id) {
+  const loaded = await loadWorkflows(root);
+  const workflow = loaded.workflows.find((item) => item.id === id);
+  if (!workflow) {
+    return { ok: false, id, error: `unknown workflow: ${id}`, errors: loaded.errors };
+  }
+  return { ok: true, workflow };
+}
+async function runWorkflowDryRun(root, id) {
+  const shown = await showWorkflow(root, id);
+  if (!shown.ok) return shown;
+  const workflow = shown.workflow;
+  return {
+    ok: true,
+    dryRun: true,
+    workflow: workflow.id,
+    category: workflow.category,
+    goal: workflow.goal,
+    steps: workflow.steps.map((step, index) => ({
+      index: index + 1,
+      id: step.id ?? `step-${index + 1}`,
+      action: step.action ?? step.note ?? String(step),
+      skill: step.skill ?? null,
+      agent: step.agent ?? null,
+      command: step.command ?? null
+    })),
+    commands: workflow.commands,
+    stopGates: workflow.stopGates,
+    note: "dry-run only; no workflow command executed"
+  };
+}
+async function planAuto(root, query, options = {}) {
+  const skills = await loadAllSkills(root);
+  const skillRoute = routeQuery(query, skills, {
+    includeExplicit: true,
+    pack: options.pack ?? void 0
+  });
+  const workflowRoute = await recommendWorkflows(root, query, {
+    limit: options.limit ?? 5,
+    category: options.category
+  });
+  return {
+    ok: workflowRoute.ok,
+    mode: "plan",
+    query,
+    skill: {
+      selected: skillRoute.selected,
+      fallback: skillRoute.fallback,
+      candidates: skillRoute.candidates.slice(0, 5)
+    },
+    workflows: workflowRoute.candidates,
+    nextCommands: buildNextCommands(query, skillRoute, workflowRoute.candidates),
+    errors: workflowRoute.errors
+  };
+}
+async function runAutoReadOnly(root, query, options = {}) {
+  const plan = await planAuto(root, query, options);
+  const selected = plan.workflows[0]?.id ?? null;
+  const dryRun = selected ? await runWorkflowDryRun(root, selected) : null;
+  return {
+    ...plan,
+    mode: "read-only-run",
+    dryRun: true,
+    selectedWorkflow: selected,
+    workflowDryRun: dryRun,
+    note: "read-only mode produces routing and dry-run workflow steps only"
+  };
+}
+function summarizeWorkflow(workflow, extra = {}) {
+  return {
+    id: workflow.id,
+    category: workflow.category,
+    goal: workflow.goal,
+    recommendedSkills: workflow.recommendedSkills,
+    recommendedAgents: workflow.recommendedAgents,
+    commands: workflow.commands,
+    risk: workflow.risk,
+    tokenBudget: workflow.tokenBudget,
+    qualityGate: workflow.qualityGate,
+    score: extra.score ?? void 0,
+    reasons: extra.reasons ?? void 0
+  };
+}
+function scoreWorkflow(query, workflow) {
+  const queryTokens = new Set(tokenize2(query));
+  const haystack = [
+    workflow.id,
+    workflow.category,
+    workflow.goal,
+    ...workflow.inputs ?? [],
+    ...workflow.recommendedSkills ?? [],
+    ...workflow.recommendedAgents ?? [],
+    ...workflow.stopGates ?? []
+  ].join(" ");
+  const workflowTokens = tokenize2(haystack);
+  const hits = workflowTokens.filter((token) => queryTokens.has(token));
+  const uniqueHits = [...new Set(hits)];
+  const exactCategory = queryTokens.has(workflow.category) ? 3 : 0;
+  const exactId = String(query ?? "").toLowerCase().includes(workflow.id) ? 8 : 0;
+  const score = uniqueHits.length + exactCategory + exactId;
+  const reasons = uniqueHits.slice(0, 8).map((token) => `token:${token}`);
+  if (exactCategory) reasons.push("category-match");
+  if (exactId) reasons.push("id-match");
+  return { workflow, score, reasons };
+}
+function buildNextCommands(query, skillRoute, workflows) {
+  const encodedQuery = String(query).replaceAll('"', '\\"');
+  const commands = [
+    `skillsforge auto plan --query "${encodedQuery}"`,
+    `skillsforge workflows recommend --query "${encodedQuery}"`
+  ];
+  if (skillRoute.selected) commands.push(`skillsforge route --query "${encodedQuery}" --include-explicit`);
+  if (workflows[0]?.id) commands.push(`skillsforge workflows run --id ${workflows[0].id} --dry-run`);
+  return commands;
+}
+async function listJsonFiles(root) {
+  try {
+    await access11(root);
+  } catch {
+    return [];
+  }
+  const out = [];
+  async function walk(current) {
+    const entries = await readdir8(current, { withFileTypes: true });
+    for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+      const path = join17(current, entry.name);
+      if (entry.isDirectory()) await walk(path);
+      else if (entry.isFile() && entry.name.endsWith(".json")) out.push(path);
+    }
+  }
+  await walk(root);
+  return out;
+}
+function clampLimit(value, fallback) {
+  return Math.max(1, Math.min(100, Number(value) || fallback));
+}
+function isInside7(parent, candidate) {
+  const path = relative9(resolve15(parent), resolve15(candidate));
+  return path === "" || !path.startsWith(`..${sep11}`) && path !== "..";
+}
+
+// lib/capabilities/library.mjs
+var LIBRARY_OUT_REL = join18("artifacts", "skillsforge-library");
+async function buildLibraryIndex(root, options = {}) {
+  const absRoot = resolve16(root);
+  const home = options.home;
+  const [skills, hosts, workflowsLoaded, catalogLoaded] = await Promise.all([
+    loadAllSkills(absRoot),
+    detectHosts({ home }),
+    loadWorkflows(absRoot),
+    loadCatalog(absRoot).catch(() => null)
+  ]);
+  const catalog = catalogLoaded?.catalog ?? null;
+  const packBySkill = buildPackMap(catalog);
+  const hostInstallChecks = /* @__PURE__ */ new Map();
+  for (const host of hosts) {
+    for (const skill of skills) {
+      hostInstallChecks.set(`${host.id}:${skill.name}`, await pathExists6(join18(host.skillsDir, skill.name)));
+    }
+  }
+  const records = skills.map((skill) => summarizeSkill(absRoot, skill, {
+    packBySkill,
+    hosts,
+    installed: hostInstallChecks
+  })).sort((left, right) => left.id.localeCompare(right.id));
+  const categories = [...new Set(records.map((skill) => skill.category).filter(Boolean))].sort();
+  const sources = [...new Set(records.map((skill) => skill.sourcePlugin))].sort();
+  return {
+    ok: workflowsLoaded.ok,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    root: absRoot,
+    stats: {
+      skills: records.length,
+      workflows: workflowsLoaded.workflows.length,
+      packs: catalog ? listPacks(catalog).length : 0,
+      profiles: catalog ? listProfiles(catalog).length : 0,
+      hosts: hosts.length,
+      detectedHosts: hosts.filter((host) => host.detected).length,
+      categories: categories.length,
+      sources: sources.length
+    },
+    categories,
+    sources,
+    hosts: hosts.map((host) => ({
+      id: host.id,
+      label: host.label,
+      detected: host.detected,
+      skillsDir: host.skillsDir,
+      fidelity: host.fidelity,
+      runtimeEnforced: host.runtimeEnforced,
+      installHint: host.installHint
+    })),
+    skills: records,
+    workflows: workflowsLoaded.workflows.map((workflow) => ({
+      id: workflow.id,
+      category: workflow.category,
+      goal: workflow.goal,
+      recommendedSkills: workflow.recommendedSkills,
+      recommendedAgents: workflow.recommendedAgents,
+      risk: workflow.risk,
+      relativePath: workflow.relativePath
+    })),
+    errors: workflowsLoaded.errors
+  };
+}
+async function writeLibraryArtifacts(root, options = {}) {
+  const outDir = resolve16(root, options.outDir ?? LIBRARY_OUT_REL);
+  if (!options.allowAbsolute && !isInside8(root, outDir)) {
+    throw new Error(`library output path escapes root: ${outDir}`);
+  }
+  const index = await buildLibraryIndex(root, options);
+  await mkdir9(outDir, { recursive: true });
+  const jsonPath = join18(outDir, "skillsforge-library.json");
+  const htmlPath = join18(outDir, "skillsforge-library.html");
+  const aiPath = join18(outDir, "skillsforge-ai-index.html");
+  await writeFile9(jsonPath, `${JSON.stringify(index, null, 2)}
+`);
+  await writeFile9(htmlPath, buildLibraryHtml(index, { apiEnabled: false, allowMutations: false }));
+  await writeFile9(aiPath, buildAiIndexHtml(index));
+  return {
+    ok: index.ok,
+    outDir,
+    files: { json: jsonPath, html: htmlPath, ai: aiPath },
+    stats: index.stats,
+    errors: index.errors
+  };
+}
+async function serveLibrary(root, options = {}) {
+  const host = options.host ?? "127.0.0.1";
+  const port = Number(options.port ?? 4763);
+  const allowMutations = options.allowMutations === true;
+  const home = options.home;
+  const server = createServer(async (request, response) => {
+    try {
+      const url = new URL(request.url ?? "/", `http://${host}:${port}`);
+      if (url.pathname === "/skillsforge-library.json") {
+        const index2 = await buildLibraryIndex(root, { home });
+        sendJson(response, index2);
+        return;
+      }
+      if (url.pathname === "/api/recommend") {
+        const query = url.searchParams.get("query") ?? "";
+        sendJson(response, await recommendWorkflows(root, query, { limit: 5 }));
+        return;
+      }
+      if (url.pathname === "/api/remove") {
+        const body = await readRequestJson(request);
+        const result = allowMutations ? await removeInstalledSkill(root, { ...body, home, allowMutations: true, yes: body?.yes === true }) : await planSkillRemoval(root, { ...body, home });
+        sendJson(response, result);
+        return;
+      }
+      const index = await buildLibraryIndex(root, { home });
+      sendHtml(response, buildLibraryHtml(index, { apiEnabled: true, allowMutations }));
+    } catch (error) {
+      response.statusCode = 500;
+      sendJson(response, { ok: false, error: error.message });
+    }
+  });
+  await new Promise((resolveListen) => server.listen(port, host, resolveListen));
+  return { ok: true, host, port, url: `http://${host}:${port}/`, readOnly: !allowMutations, server };
+}
+async function planSkillRemoval(root, options = {}) {
+  const target = await resolveInstalledSkillTarget(options);
+  return {
+    ok: true,
+    dryRun: true,
+    host: target.host.id,
+    skill: target.skill,
+    path: target.path,
+    exists: target.exists,
+    command: `skillsforge lib remove --host ${target.host.id} --skill ${target.skill} --dry-run`
+  };
+}
+async function removeInstalledSkill(root, options = {}) {
+  if (options.yes !== true || options.allowMutations !== true) {
+    const plan = await planSkillRemoval(root, options);
+    return {
+      ok: false,
+      error: "removal requires --allow-mutations and --yes",
+      dryRun: true,
+      host: plan.host,
+      skill: plan.skill,
+      path: plan.path,
+      exists: plan.exists,
+      command: plan.command
+    };
+  }
+  const target = await resolveInstalledSkillTarget(options);
+  if (!target.exists) {
+    return { ok: true, removed: false, host: target.host.id, skill: target.skill, path: target.path, reason: "not installed" };
+  }
+  await rm3(target.path, { recursive: true, force: false });
+  return { ok: true, removed: true, host: target.host.id, skill: target.skill, path: target.path };
+}
+function buildLibraryHtml(index, options = {}) {
+  const data = safeScriptJson({
+    ...index,
+    ui: {
+      apiEnabled: options.apiEnabled === true,
+      allowMutations: options.allowMutations === true
+    }
+  });
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkillsForge Library</title>
+<style>
+:root{color-scheme:light dark;--bg:#f6f8fa;--panel:#ffffff;--line:#d0d7de;--text:#24292f;--muted:#57606a;--accent:#0969da;--ok:#1a7f37;--warn:#9a6700;--bad:#cf222e;--radius:8px}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#2f81f7;--ok:#3fb950;--warn:#d29922;--bad:#f85149}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}.shell{display:grid;grid-template-columns:280px 1fr;min-height:100dvh}.side{border-right:1px solid var(--line);padding:16px;background:var(--panel);position:sticky;top:0;height:100dvh;overflow:auto}.main{padding:18px;min-width:0}.brand{display:flex;align-items:center;gap:10px;margin-bottom:16px}.mark{width:28px;height:28px;border-radius:6px;background:var(--accent)}h1{font-size:18px;margin:0}h2{font-size:15px;margin:18px 0 8px}.stat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat div,.filter button,.row,.detail,.workflow,.select,.smallbtn,.dangerbtn{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}.stat div{padding:10px}.num{font:600 20px/1 ui-monospace,SFMono-Regular,Consolas,monospace}.label{color:var(--muted);font-size:12px}.search,.select{width:100%;height:36px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);padding:0 10px;margin:12px 0}.filter,.action-row{display:flex;flex-wrap:wrap;gap:6px}.filter button,.smallbtn,.dangerbtn{color:var(--text);padding:6px 8px;cursor:pointer;min-height:32px}.dangerbtn{color:var(--bad)}button:disabled{opacity:.55;cursor:not-allowed}.filter button.active{border-color:var(--accent);color:var(--accent)}.grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px}.rows{display:grid;gap:8px}.row{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px;text-align:left;color:var(--text);cursor:pointer}.row:hover,.row.active{border-color:var(--accent)}.title{font-weight:650}.meta{color:var(--muted);font-size:12px}.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.chip{border:1px solid var(--line);border-radius:999px;padding:2px 7px;color:var(--muted);font-size:12px}.risk-high{color:var(--bad)}.risk-medium{color:var(--warn)}.risk-low{color:var(--ok)}.detail{padding:14px;position:sticky;top:18px;max-height:calc(100dvh - 36px);overflow:auto}.detail pre{white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px}.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:12px}.toolbar input{flex:1}.workflow{padding:10px;margin-top:8px}@media (prefers-reduced-motion:no-preference){.row,.filter button,.smallbtn,.dangerbtn{transition:border-color 140ms ease,color 140ms ease,transform 140ms ease}.row:active,.filter button:active,.smallbtn:active,.dangerbtn:active{transform:translateY(1px)}}@media (max-width:900px){.shell{grid-template-columns:1fr}.side{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.grid{grid-template-columns:1fr}.detail{position:relative;top:auto;max-height:none}.toolbar{display:block}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><div class="mark"></div><div><h1>SkillsForge Library</h1><div class="label">Local skill routing index</div></div></div>
+    <div class="stat">
+      <div><div class="num">${index.stats.skills}</div><div class="label">skills</div></div>
+      <div><div class="num">${index.stats.workflows}</div><div class="label">workflows</div></div>
+      <div><div class="num">${index.stats.packs}</div><div class="label">packs</div></div>
+      <div><div class="num">${index.stats.detectedHosts}</div><div class="label">detected hosts</div></div>
+    </div>
+    <input id="q" class="search" type="search" placeholder="Search skills, packs, triggers">
+    <h2>Categories</h2>
+    <div id="filters" class="filter"></div>
+    <h2>Hosts</h2>
+    <div id="hosts"></div>
+  </aside>
+  <main class="main">
+    <div class="toolbar"><input id="workflowQ" class="search" type="search" placeholder="Recommend workflow for a task"><button id="workflowBtn">Recommend</button></div>
+    <div class="grid">
+      <section><div id="rows" class="rows"></div></section>
+      <aside id="detail" class="detail"></aside>
+    </div>
+  </main>
+</div>
+<script id="skillsforge-data" type="application/json">${data}</script>
+<script>
+const data=JSON.parse(document.getElementById('skillsforge-data').textContent);
+let category='all';let selected=data.skills[0]?.id;
+const q=document.getElementById('q');const rows=document.getElementById('rows');const detail=document.getElementById('detail');
+function esc(v){return String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function renderFilters(){const root=document.getElementById('filters');root.innerHTML=['all',...data.categories].map(c=>'<button class="'+(category===c?'active':'')+'" data-cat="'+esc(c)+'">'+esc(c)+'</button>').join('');root.onclick=e=>{if(e.target.dataset.cat){category=e.target.dataset.cat;render();renderFilters();}}}
+function riskClass(skill){return skill.riskFlags.length>1?'risk-high':skill.riskFlags.length?'risk-medium':'risk-low'}
+function filtered(){const text=q.value.toLowerCase();return data.skills.filter(s=>(category==='all'||s.category===category)&&[s.id,s.description,s.category,s.sourcePlugin,...s.recommendedFor].join(' ').toLowerCase().includes(text));}
+function render(){const list=filtered();if(!list.find(s=>s.id===selected))selected=list[0]?.id;rows.innerHTML=list.map(s=>'<button class="row '+(s.id===selected?'active':'')+'" data-id="'+esc(s.id)+'"><span><div class="title">'+esc(s.id)+'</div><div class="meta">'+esc(s.category)+' / '+esc(s.sourcePlugin)+' / '+esc(s.maturity)+'</div><span class="chips">'+s.riskFlags.slice(0,3).map(r=>'<span class="chip">'+esc(r)+'</span>').join('')+'</span></span><span class="'+riskClass(s)+'">'+(s.riskFlags.length?'review':'clean')+'</span></button>').join('');renderDetail();}
+function hostOptions(s){const installed=new Set(s.installedHosts);const hosts=data.hosts.filter(h=>h.detected||installed.has(h.id));const list=hosts.length?hosts:data.hosts;return list.map(h=>'<option value="'+esc(h.id)+'">'+esc(h.id)+(installed.has(h.id)?' installed':'')+'</option>').join('')}
+function removalCommand(s,host){return 'skillsforge lib remove --host '+host+' --skill '+s.id+' --dry-run'}
+function renderDetail(){const s=data.skills.find(x=>x.id===selected);if(!s){detail.innerHTML='<p>No skill selected.</p>';return}detail.innerHTML='<h2>'+esc(s.id)+'</h2><p>'+esc(s.description)+'</p><div class="chips"><span class="chip">'+esc(s.category)+'</span><span class="chip">'+esc(s.sourcePlugin)+'</span><span class="chip">'+esc(s.maturity)+'</span></div><h2>Recommended for</h2><pre>'+esc(s.recommendedFor.join('\\n')||'No triggers')+'</pre><h2>Risk flags</h2><pre>'+esc(s.riskFlags.join('\\n')||'No obvious capability risk flags')+'</pre><h2>Installed hosts</h2><pre>'+esc(s.installedHosts.join('\\n')||'Not installed in detected host roots')+'</pre><h2>Removal check</h2><select id="removeHost" class="select">'+hostOptions(s)+'</select><div class="action-row"><button id="removePreview" class="smallbtn">Dry-run</button><button id="removeConfirm" class="dangerbtn">Remove</button></div><pre id="removeResult"></pre><h2>Source</h2><pre>'+esc(s.sourcePath)+'</pre>';bindRemoval(s)}
+function bindRemoval(s){const host=document.getElementById('removeHost');const preview=document.getElementById('removePreview');const confirm=document.getElementById('removeConfirm');const out=document.getElementById('removeResult');const ui=data.ui||{};function show(value){out.textContent=typeof value==='string'?value:JSON.stringify(value,null,2)}function plan(){return {dryRun:true,command:removalCommand(s,host.value),apiEnabled:Boolean(ui.apiEnabled),allowMutations:Boolean(ui.allowMutations)}}show(plan());preview.onclick=async()=>{if(!ui.apiEnabled){show(plan());return}const res=await fetch('/api/remove',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({host:host.value,skill:s.id})});show(await res.json())};confirm.disabled=!ui.allowMutations;confirm.onclick=async()=>{if(!ui.allowMutations){show(plan());return}const typed=window.prompt('Type '+s.id+' to remove from '+host.value);if(typed!==s.id){show('confirmation mismatch');return}const res=await fetch('/api/remove',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({host:host.value,skill:s.id,yes:true})});show(await res.json())};host.onchange=()=>show(plan())}
+rows.onclick=e=>{const b=e.target.closest('button[data-id]');if(b){selected=b.dataset.id;render();}};q.oninput=render;
+document.getElementById('hosts').innerHTML=data.hosts.map(h=>'<div class="workflow"><b>'+esc(h.id)+'</b><div class="meta">'+(h.detected?'detected':'missing')+' / '+esc(h.fidelity)+'</div></div>').join('');
+document.getElementById('workflowBtn').onclick=()=>{const text=document.getElementById('workflowQ').value.toLowerCase();const hits=data.workflows.map(w=>({w,score:[w.id,w.category,w.goal,...w.recommendedSkills].join(' ').toLowerCase().split(/[^a-z0-9]+/).filter(t=>text.includes(t)).length})).sort((a,b)=>b.score-a.score).slice(0,5);detail.innerHTML='<h2>Workflow recommendations</h2>'+hits.map(({w})=>'<div class="workflow"><b>'+esc(w.id)+'</b><p>'+esc(w.goal)+'</p><div class="meta">'+esc(w.category)+' / '+esc(w.risk)+'</div></div>').join('');};
+renderFilters();render();
+</script>
+</body>
+</html>
+`;
+}
+function buildAiIndexHtml(index) {
+  const compact = {
+    generatedAt: index.generatedAt,
+    stats: index.stats,
+    instruction: "Use recommendedFor, notFor, category, sourcePlugin, installedHosts, and riskFlags to pick the smallest useful skill or workflow. Prefer clean risk flags and detected hosts. Do not execute write/remove/install actions without explicit user confirmation.",
+    skills: index.skills.map((skill) => ({
+      id: skill.id,
+      category: skill.category,
+      sourcePlugin: skill.sourcePlugin,
+      installedHosts: skill.installedHosts,
+      recommendedFor: skill.recommendedFor,
+      notFor: skill.notFor,
+      riskFlags: skill.riskFlags
+    })),
+    workflows: index.workflows
+  };
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>SkillsForge AI Index</title></head>
+<body>
+<h1>SkillsForge AI Index</h1>
+<p>Read the embedded JSON. Choose the smallest matching skill or workflow. Writes require explicit confirmation.</p>
+<script id="skillsforge-ai-index" type="application/json">${safeScriptJson(compact)}</script>
+</body></html>
+`;
+}
+async function resolveInstalledSkillTarget(options = {}) {
+  if (!options.host) throw new Error("--host is required");
+  if (!options.skill) throw new Error("--skill is required");
+  const hosts = await detectHosts({ home: options.home });
+  const host = hosts.find((item) => item.id === options.host);
+  if (!host) throw new Error(`unknown host: ${options.host}`);
+  const skill = basename5(String(options.skill));
+  if (skill !== options.skill || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(skill)) {
+    throw new Error("skill must be a skill id");
+  }
+  const target = resolve16(host.skillsDir, skill);
+  if (!isInside8(host.skillsDir, target)) throw new Error("resolved skill path escaped host skills directory");
+  return { host, skill, path: target, exists: await pathExists6(target) };
+}
+function summarizeSkill(root, skill, context) {
+  const sourcePlugin = detectSourcePlugin(root, skill.directory);
+  const category = skill.sidecar?.routing?.pack ?? context.packBySkill.get(skill.name) ?? "unpacked";
+  const installedHosts = context.hosts.filter((host) => context.installed.get(`${host.id}:${skill.name}`)).map((host) => host.id);
+  return {
+    id: skill.name,
+    name: skill.name,
+    description: skill.description,
+    category,
+    sourcePlugin,
+    sourcePath: relative10(root, skill.directory).replaceAll("\\", "/"),
+    installedHosts,
+    origin: skill.sidecar?.provenance?.source ?? "unknown",
+    maturity: skill.maturity,
+    capabilities: summarizeCapabilities(skill.sidecar?.capabilities),
+    riskFlags: riskFlags(skill.sidecar?.capabilities),
+    recommendedFor: (skill.sidecar?.routing?.triggers ?? []).slice(0, 6),
+    notFor: (skill.sidecar?.routing?.antiTriggers ?? []).slice(0, 6),
+    routingMode: skill.sidecar?.routing?.mode ?? "auto",
+    requires: skill.requires
+  };
+}
+function summarizeCapabilities(capabilities = {}) {
+  return {
+    exec: Boolean(capabilities.exec?.allowed),
+    execCommands: capabilities.exec?.commands ?? [],
+    network: Boolean(capabilities.network?.allowed),
+    networkHosts: capabilities.network?.hosts ?? [],
+    writeScope: capabilities.write?.scope ?? "unknown"
+  };
+}
+function riskFlags(capabilities = {}) {
+  const flags = [];
+  if (capabilities.exec?.allowed) flags.push("exec allowed");
+  if (capabilities.network?.allowed) flags.push("network allowed");
+  const writeScope = capabilities.write?.scope ?? "unknown";
+  if (writeScope !== "none") flags.push(`write ${writeScope}`);
+  if (writeScope === "unknown") flags.push("write scope unknown");
+  return flags;
+}
+function buildPackMap(catalog) {
+  const map = /* @__PURE__ */ new Map();
+  if (!catalog) return map;
+  for (const pack of listPacks(catalog)) {
+    for (const skill of pack.skills) map.set(skill, pack.id);
+  }
+  return map;
+}
+function detectSourcePlugin(root, directory) {
+  const rel = relative10(root, directory).replaceAll("\\", "/");
+  const parts = rel.split("/");
+  const pluginsIndex = parts.indexOf("plugins");
+  if (pluginsIndex >= 0 && parts[pluginsIndex + 1]) return parts[pluginsIndex + 1];
+  return "local";
+}
+function safeScriptJson(value) {
+  return JSON.stringify(value).replaceAll("</script", "<\\/script");
+}
+async function pathExists6(path) {
   try {
     await access12(path);
     return true;
@@ -20090,11 +20655,315 @@ async function pathExists7(path) {
     return false;
   }
 }
+function isInside8(parent, candidate) {
+  const path = relative10(resolve16(parent), resolve16(candidate));
+  return path === "" || !path.startsWith(`..${sep12}`) && path !== "..";
+}
+function sendJson(response, payload) {
+  response.setHeader("content-type", "application/json; charset=utf-8");
+  response.end(`${JSON.stringify(payload, null, 2)}
+`);
+}
+function sendHtml(response, html) {
+  response.setHeader("content-type", "text/html; charset=utf-8");
+  response.end(html);
+}
+async function readRequestJson(request) {
+  const chunks = [];
+  for await (const chunk of request) chunks.push(chunk);
+  const text = Buffer.concat(chunks).toString("utf8");
+  return text ? JSON.parse(text) : {};
+}
+
+// lib/capabilities/powershell.mjs
+import { mkdir as mkdir10, writeFile as writeFile10 } from "node:fs/promises";
+import { join as join19, resolve as resolve17 } from "node:path";
+var POWERSHELL_HELPERS = Object.freeze([
+  {
+    name: "sf-status",
+    description: "Compact repo and SkillsForge status",
+    args: ["wb", "status", "--json"]
+  },
+  {
+    name: "sf-tree",
+    description: "Compact file tree",
+    args: ["wb", "tree"]
+  },
+  {
+    name: "sf-find",
+    description: "Token-friendly file finder",
+    args: ["wb", "find"]
+  },
+  {
+    name: "sf-grep",
+    description: "Token-friendly ripgrep wrapper",
+    args: ["wb", "grep"]
+  },
+  {
+    name: "sf-diff",
+    description: "Compact git diff summary",
+    args: ["wb", "diff"]
+  },
+  {
+    name: "sf-errors",
+    description: "Find likely error and TODO markers",
+    args: ["wb", "errors"]
+  },
+  {
+    name: "sf-bigfiles",
+    description: "List largest repo files",
+    args: ["wb", "bigfiles"]
+  },
+  {
+    name: "sf-recent",
+    description: "Recent git commits",
+    args: ["wb", "recent"]
+  },
+  {
+    name: "sf-ports",
+    description: "Listening port snapshot",
+    args: ["os-ports"]
+  },
+  {
+    name: "sf-proof",
+    description: "Trust proof command hints",
+    args: ["wb", "proof", "--json"]
+  }
+]);
+async function exportPowerShellHelpers(root, options = {}) {
+  const outDir = resolve17(root, options.outDir ?? join19("artifacts", "powershell"));
+  const cliPath = resolve17(root, "plugins", "skillsforge", "bin", "skillsforge.mjs");
+  await mkdir10(outDir, { recursive: true });
+  const files = [];
+  for (const helper of POWERSHELL_HELPERS) {
+    const path = join19(outDir, `${helper.name}.ps1`);
+    await writeFile10(path, renderHelper(helper, cliPath));
+    files.push({ name: helper.name, path, description: helper.description });
+  }
+  const manifest = {
+    ok: true,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    cli: cliPath,
+    helpers: files
+  };
+  await writeFile10(join19(outDir, "skillsforge-powershell.json"), `${JSON.stringify(manifest, null, 2)}
+`);
+  return { ok: true, outDir, files, manifest: join19(outDir, "skillsforge-powershell.json") };
+}
+function renderHelper(helper, cliPath) {
+  const baseArgs = helper.args.map((arg) => `'${escapeSingle(arg)}'`).join(", ");
+  return `# ${helper.description}
+# Generated by skillsforge ps export.
+param(
+  [Parameter(ValueFromRemainingArguments = $true)]
+  [string[]] $Args
+)
+
+$SfCli = '${escapeSingle(cliPath)}'
+$BaseArgs = @(${baseArgs})
+& node $SfCli @BaseArgs @Args
+exit $LASTEXITCODE
+`;
+}
+function escapeSingle(value) {
+  return String(value).replaceAll("'", "''");
+}
+
+// lib/capabilities/workbench.mjs
+init_skill_loader();
+import { access as access13, readdir as readdir9, stat as stat3 } from "node:fs/promises";
+import { spawn } from "node:child_process";
+import { join as join20, relative as relative11, resolve as resolve18 } from "node:path";
+var SKIP = /* @__PURE__ */ new Set([".git", ".codegraph", "node_modules", "dist", "artifacts", ".next", ".turbo"]);
+async function runWorkbench(root, task, options = {}) {
+  const limit = clampLimit2(options.limit, 80);
+  switch (task) {
+    case "status":
+      return workbenchStatus(root);
+    case "tree":
+      return { ok: true, task, files: await listFiles(root, limit), limit };
+    case "find":
+      return workbenchFind(root, options.query ?? options.name ?? "", limit);
+    case "grep":
+      return workbenchGrep(root, options.query ?? "", limit);
+    case "diff":
+      return workbenchDiff(root);
+    case "errors":
+      return workbenchGrep(root, options.query ?? "TODO|FIXME|ERROR|FAIL|throw new Error", limit, { regex: true });
+    case "bigfiles":
+      return workbenchBigFiles(root, limit);
+    case "recent":
+      return workbenchRecent(root, limit);
+    case "proof":
+      return workbenchProof(root);
+    default:
+      return { ok: false, task, error: `unknown wb task: ${task}` };
+  }
+}
+function formatWorkbenchText(payload) {
+  if (!payload.ok) return `${payload.error}
+`;
+  if (payload.task === "status") {
+    return [
+      `branch	${payload.branch}`,
+      `dirty	${payload.dirty}`,
+      `skills	${payload.skills}`,
+      `workflows	${payload.workflows}`,
+      ...payload.status.map((line) => `git	${line}`)
+    ].join("\n") + "\n";
+  }
+  if (payload.files) return payload.files.join("\n") + (payload.files.length ? "\n" : "");
+  if (payload.matches) return payload.matches.map((item) => `${item.file}:${item.line}:${item.text}`).join("\n") + (payload.matches.length ? "\n" : "");
+  if (payload.bigFiles) return payload.bigFiles.map((item) => `${item.bytes}	${item.path}`).join("\n") + (payload.bigFiles.length ? "\n" : "");
+  if (payload.lines) return payload.lines.join("\n") + (payload.lines.length ? "\n" : "");
+  if (payload.commands) return payload.commands.join("\n") + "\n";
+  return `${JSON.stringify(payload, null, 2)}
+`;
+}
+async function workbenchStatus(root) {
+  const [git, skillsResult, workflowsResult] = await Promise.all([
+    runProcess("git", ["status", "--short", "--branch"], { cwd: root }),
+    loadAllSkills(root).then((skills) => skills.length).catch(() => 0),
+    loadWorkflows(root).then((result) => result.workflows.length).catch(() => 0)
+  ]);
+  const lines = git.stdout.trim().split(/\r?\n/).filter(Boolean);
+  const branch = lines[0]?.replace(/^##\s*/, "") ?? "unknown";
+  return {
+    ok: git.status === 0,
+    task: "status",
+    branch,
+    dirty: lines.length > 1,
+    status: lines.slice(1),
+    skills: skillsResult,
+    workflows: workflowsResult
+  };
+}
+async function workbenchFind(root, query, limit) {
+  if (!query) return { ok: false, task: "find", error: "find requires --query or text" };
+  const needle = String(query).toLowerCase();
+  const files = (await listFiles(root, 5e3)).filter((file) => file.toLowerCase().includes(needle)).slice(0, limit);
+  return { ok: true, task: "find", query, files, limit, truncated: files.length >= limit };
+}
+async function workbenchGrep(root, query, limit, options = {}) {
+  if (!query) return { ok: false, task: "grep", error: "grep requires --query or text" };
+  const args = ["-n", "--glob", "!node_modules/**", "--glob", "!dist/**", "--glob", "!artifacts/**"];
+  if (!options.regex) args.push("-F");
+  args.push(String(query), ".");
+  const result = await runProcess("rg", args, { cwd: root, timeoutMs: 1e4 });
+  if (result.status > 1) return { ok: false, task: "grep", error: result.stderr || result.stdout };
+  const matches = result.stdout.split(/\r?\n/).filter(Boolean).slice(0, limit).map((line) => {
+    const [file, lineNo, ...rest] = line.split(":");
+    return { file, line: Number(lineNo), text: rest.join(":").slice(0, 300) };
+  });
+  return { ok: true, task: "grep", query, matches, limit, truncated: matches.length >= limit };
+}
+async function workbenchDiff(root) {
+  const [statResult, namesResult] = await Promise.all([
+    runProcess("git", ["diff", "--stat"], { cwd: root }),
+    runProcess("git", ["diff", "--name-only"], { cwd: root })
+  ]);
+  return {
+    ok: statResult.status === 0 && namesResult.status === 0,
+    task: "diff",
+    lines: [
+      ...namesResult.stdout.trim().split(/\r?\n/).filter(Boolean).map((line) => `file	${line}`),
+      ...statResult.stdout.trim().split(/\r?\n/).filter(Boolean).map((line) => `stat	${line}`)
+    ]
+  };
+}
+async function workbenchBigFiles(root, limit) {
+  const files = [];
+  await walkFiles(root, async (path) => {
+    const info = await stat3(path);
+    files.push({ path: relative11(root, path).replaceAll("\\", "/"), bytes: info.size });
+  });
+  files.sort((left, right) => right.bytes - left.bytes || left.path.localeCompare(right.path));
+  return { ok: true, task: "bigfiles", bigFiles: files.slice(0, limit), limit };
+}
+async function workbenchRecent(root, limit) {
+  const result = await runProcess("git", ["log", `-${limit}`, "--oneline", "--decorate"], { cwd: root });
+  return { ok: result.status === 0, task: "recent", lines: result.stdout.trim().split(/\r?\n/).filter(Boolean) };
+}
+async function workbenchProof(root) {
+  const commands = [
+    "node plugins/skillsforge/bin/skillsforge.mjs demo",
+    "node plugins/skillsforge/bin/skillsforge.mjs validate --all",
+    "node plugins/skillsforge/bin/skillsforge.mjs evidence --out artifacts/evidence",
+    "node plugins/skillsforge/bin/skillsforge.mjs lib build",
+    "node plugins/skillsforge/bin/skillsforge.mjs workflows list --json"
+  ];
+  return { ok: true, task: "proof", commands };
+}
+async function listFiles(root, limit) {
+  const files = [];
+  await walkFiles(root, (path) => {
+    if (files.length < limit) files.push(relative11(root, path).replaceAll("\\", "/"));
+  });
+  return files;
+}
+async function walkFiles(root, onFile) {
+  async function walk(dir) {
+    let entries;
+    try {
+      entries = await readdir9(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+      if (SKIP.has(entry.name)) continue;
+      const path = join20(dir, entry.name);
+      if (entry.isDirectory()) await walk(path);
+      else if (entry.isFile()) await onFile(path);
+    }
+  }
+  await walk(resolve18(root));
+}
+function runProcess(command, args, options = {}) {
+  return new Promise((resolveProcess) => {
+    const child = spawn(command, args, {
+      cwd: options.cwd ?? process.cwd(),
+      shell: false,
+      windowsHide: true
+    });
+    let stdout = "";
+    let stderr = "";
+    const timer = setTimeout(() => child.kill("SIGTERM"), options.timeoutMs ?? 3e4);
+    child.stdout?.on("data", (chunk) => {
+      stdout = (stdout + chunk.toString()).slice(-2e5);
+    });
+    child.stderr?.on("data", (chunk) => {
+      stderr = (stderr + chunk.toString()).slice(-2e5);
+    });
+    child.on("error", (error) => {
+      clearTimeout(timer);
+      resolveProcess({ status: 127, stdout, stderr: error.message });
+    });
+    child.on("close", (status) => {
+      clearTimeout(timer);
+      resolveProcess({ status: status ?? 1, stdout, stderr });
+    });
+  });
+}
+function clampLimit2(value, fallback) {
+  return Math.max(1, Math.min(1e3, Number(value) || fallback));
+}
+
+// scripts/skillsforge-cli.mjs
+var modulePath2 = fileURLToPath5(import.meta.url);
+var modulePluginRoot = resolve21(dirname9(modulePath2), "..");
+async function pathExists8(path) {
+  try {
+    await access15(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
 async function isPluginRoot(root) {
-  return await pathExists7(join19(root, ".claude-plugin", "plugin.json")) && await pathExists7(join19(root, "skills"));
+  return await pathExists8(join23(root, ".claude-plugin", "plugin.json")) && await pathExists8(join23(root, "skills"));
 }
 async function isRepositoryRoot(root) {
-  return pathExists7(join19(root, "plugins", "skillsforge", ".claude-plugin", "plugin.json"));
+  return pathExists8(join23(root, "plugins", "skillsforge", ".claude-plugin", "plugin.json"));
 }
 async function resolveRuntimeRoot(options, { explicitPaths = false } = {}) {
   if (options.root) return options.root;
@@ -20186,6 +21055,12 @@ Commands:
   compare-skill --a <dir> --b <dir> Side-by-side sidecar vs policy (trust delta)
   demo                              Judge path: unsafe deny \u2192 safe package \u2192 receipt
   watch --skill <dir>               Re-quality on interval (single pass in CI)
+  wb <task>                         Token-friendly workbench: status/tree/find/grep/diff/errors/bigfiles/recent/proof
+  lib <build|serve|check|remove>     Local skill library index, UI, and removal preview
+  workflows <list|show|recommend|run|export-html>
+                                    Curated workflow catalog (dry-run execution only)
+  auto <plan|run>                    Recommend skill + workflow; run requires --read-only
+  ps export                         Export PowerShell sf-*.ps1 helper commands
   os-env [--name <VAR>] [--json]     Inspect safe environment facts without dumping secrets
   os-find --name <glob> [--root <dir>] [--json]
                                     Cross-platform file finder with repo-safe defaults
@@ -20264,6 +21139,16 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runDemoCommand(argv.slice(1), options);
     case "watch":
       return runWatchCommand(argv.slice(1), options);
+    case "wb":
+      return runWorkbenchCommand(argv.slice(1), options);
+    case "lib":
+      return runLibCommand(argv.slice(1), options);
+    case "workflows":
+      return runWorkflowsCommand(argv.slice(1), options);
+    case "auto":
+      return runAutoCommand(argv.slice(1), options);
+    case "ps":
+      return runPsCommand(argv.slice(1), options);
     case "os-env":
       return runOsEnvCommand(argv.slice(1), options);
     case "os-find":
@@ -20393,24 +21278,24 @@ async function runForge(argv, options) {
     return 2;
   }
   const outIndex = argv.indexOf("--out");
-  const spec = JSON.parse(await readFile17(argv[specIndex + 1], "utf8"));
+  const spec = JSON.parse(await readFile19(argv[specIndex + 1], "utf8"));
   const root = await resolveRuntimeRoot(options);
   const result = await forgeSkill(spec, {
     write: argv.includes("--write"),
     dryRun: !argv.includes("--write"),
     force: argv.includes("--force"),
-    outRoot: outIndex >= 0 ? argv[outIndex + 1] : join19(root, ...await isPluginRoot(root) ? ["skills"] : ["plugins", "skillsforge", "skills"])
+    outRoot: outIndex >= 0 ? argv[outIndex + 1] : join23(root, ...await isPluginRoot(root) ? ["skills"] : ["plugins", "skillsforge", "skills"])
   });
   process.stdout.write(`${JSON.stringify(result, null, 2)}
 `);
   return result.ok ? 0 : 1;
 }
 async function resolvePackageRoot(root, packageOption) {
-  if (packageOption) return resolve17(packageOption);
+  if (packageOption) return resolve21(packageOption);
   if (await isPluginRoot(root)) return root;
-  const distPackage = join19(root, "dist", "claude-code");
-  if (await pathExists7(join19(distPackage, ".claude-plugin", "plugin.json"))) return distPackage;
-  if (await isRepositoryRoot(root)) return join19(root, "plugins", "skillsforge");
+  const distPackage = join23(root, "dist", "claude-code");
+  if (await pathExists8(join23(distPackage, ".claude-plugin", "plugin.json"))) return distPackage;
+  if (await isRepositoryRoot(root)) return join23(root, "plugins", "skillsforge");
   return root;
 }
 async function runReceipt(argv, options) {
@@ -20433,7 +21318,7 @@ async function runReceipt(argv, options) {
   const requireEvaluation = consumeFlag(args, "--require-evaluation");
   const root = await resolveRuntimeRoot(options);
   const packageRoot = await resolvePackageRoot(root, packageOption);
-  const receiptOut = out ?? join19(root, "dist", "trust-receipt.json");
+  const receiptOut = out ?? join23(root, "dist", "trust-receipt.json");
   const skills = await loadAllSkills(packageRoot);
   const graph = analyzeDependencies(skills);
   if (graph.cycles.length || graph.missing.length || graph.duplicates.length) {
@@ -20443,9 +21328,9 @@ async function runReceipt(argv, options) {
   }
   let evaluation = null;
   let reportBytes = null;
-  const evaluationPath = evaluationOption ?? join19(root, "artifacts", "evaluation", "routing-report.json");
+  const evaluationPath = evaluationOption ?? join23(root, "artifacts", "evaluation", "routing-report.json");
   try {
-    reportBytes = await readFile17(evaluationPath);
+    reportBytes = await readFile19(evaluationPath);
     evaluation = normalizeEvaluation(JSON.parse(reportBytes.toString("utf8")), { reportBytes });
   } catch {
   }
@@ -20460,8 +21345,8 @@ async function runReceipt(argv, options) {
 `);
     return 1;
   }
-  await mkdir11(dirname8(receiptOut), { recursive: true });
-  await writeFile11(receiptOut, result.text);
+  await mkdir13(dirname9(receiptOut), { recursive: true });
+  await writeFile13(receiptOut, result.text);
   process.stdout.write(`${JSON.stringify({
     ok: true,
     out: receiptOut,
@@ -20504,10 +21389,10 @@ async function runVerifyReceipt(argv, options) {
     expectedReceiptHash: receiptSha256 || void 0
   };
   if (!packageOnly && evaluationOption) {
-    verifyOptions.evaluationPath = resolve17(evaluationOption);
+    verifyOptions.evaluationPath = resolve21(evaluationOption);
   } else if (!packageOnly) {
-    const defaultEval = join19(root, "artifacts", "evaluation", "routing-report.json");
-    if (await pathExists7(defaultEval)) verifyOptions.evaluationPath = defaultEval;
+    const defaultEval = join23(root, "artifacts", "evaluation", "routing-report.json");
+    if (await pathExists8(defaultEval)) verifyOptions.evaluationPath = defaultEval;
   }
   const result = await verifyReceipt(path, skills, verifyOptions);
   process.stdout.write(`${JSON.stringify(result, null, 2)}
@@ -20523,9 +21408,9 @@ async function runEnforce(argv) {
   const chunks = [];
   for await (const chunk of process.stdin) chunks.push(chunk);
   const event = JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
-  const policyPath = resolve17(argv[policyIndex + 1]);
-  const policy = JSON.parse(await readFile17(policyPath, "utf8"));
-  policy.__skillRoot = dirname8(policyPath);
+  const policyPath = resolve21(argv[policyIndex + 1]);
+  const policy = JSON.parse(await readFile19(policyPath, "utf8"));
+  policy.__skillRoot = dirname9(policyPath);
   policy.__projectRoot = event?.cwd || process.env.CLAUDE_PROJECT_DIR || process.env.CLAUDE_CWD || process.cwd();
   const decision = enforcePolicy(event, policy);
   if (decision) process.stdout.write(`${JSON.stringify(decision)}
@@ -20557,7 +21442,7 @@ async function runHostsCommand(argv, options) {
 `);
     return 2;
   }
-  const home = homeOption ? resolve17(homeOption) : options.home;
+  const home = homeOption ? resolve21(homeOption) : options.home;
   const hosts = await detectHosts({ home });
   const registry = HOST_REGISTRY.map((host) => ({
     id: host.id,
@@ -20614,7 +21499,7 @@ async function runInstall(argv, options) {
     process.stderr.write("--home requires a value\n");
     return 2;
   }
-  const home = homeOption ? resolve17(homeOption) : options.home;
+  const home = homeOption ? resolve21(homeOption) : options.home;
   const skillPaths = args.filter((item) => !item.startsWith("--"));
   const root = await resolveRuntimeRoot(options, { explicitPaths: skillPaths.length > 0 });
   const detected = await detectHosts({ home });
@@ -20997,8 +21882,8 @@ async function runBatchCommand(argv, options) {
   const ids = skillsForPack(catalog, pack) ?? [];
   const reports = [];
   for (const id of ids) {
-    const dir = join19(root, "plugins", "skillsforge", "skills", id);
-    if (!await pathExists7(dir)) {
+    const dir = join23(root, "plugins", "skillsforge", "skills", id);
+    if (!await pathExists8(dir)) {
       reports.push({ id, ok: false, error: "missing" });
       continue;
     }
@@ -21258,7 +22143,7 @@ async function runOsPortsCommand(argv) {
   if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
   const attempts = process.platform === "win32" ? [["netstat", ["-ano", "-p", "tcp"]]] : [["lsof", ["-nP", "-iTCP", "-sTCP:LISTEN"]], ["netstat", ["-an"]]];
   for (const [command, commandArgs] of attempts) {
-    const result = await runProcess(command, commandArgs, { timeoutMs: 5e3 });
+    const result = await runProcess2(command, commandArgs, { timeoutMs: 5e3 });
     if (result.status === 0 && result.stdout.trim()) {
       const lines = result.stdout.split(/\r?\n/).filter(Boolean).slice(0, 200);
       return writeOsResult({
@@ -21300,7 +22185,7 @@ async function runOsOpenCommand(argv, options) {
     return writeOsResult(payload, json, (item) => `${item.launcher.join(" ")}
 `);
   }
-  const result = await runProcess(launcher.command, launcher.args, { timeoutMs: 1e4 });
+  const result = await runProcess2(launcher.command, launcher.args, { timeoutMs: 1e4 });
   return writeOsResult({ ...payload, result }, json, () => result.stderr || result.stdout || "", result.status === 0 ? 0 : 1);
 }
 async function runOsRunCommand(argv, options) {
@@ -21337,7 +22222,7 @@ async function runOsRunCommand(argv, options) {
     return writeOsResult(payload, json, (item) => `${item.argv.join(" ")}
 `);
   }
-  const result = await runProcess(command, commandArgs, { cwd, timeoutMs });
+  const result = await runProcess2(command, commandArgs, { cwd, timeoutMs });
   return writeOsResult({ ...payload, result, ok: result.status === 0 }, json, () => result.stdout + result.stderr, result.status === 0 ? 0 : 1);
 }
 async function runOsCopyPathCommand(argv, options) {
@@ -21373,11 +22258,11 @@ async function runOsCleanCommand(argv, options) {
   const names = ["node_modules", "dist", "artifacts", "coverage", ".next", ".turbo", "tests/.tmp-runner"];
   const candidates = [];
   for (const name of names) {
-    const path = resolve17(root, name);
-    if (await pathExists7(path)) {
+    const path = resolve21(root, name);
+    if (await pathExists8(path)) {
       candidates.push({
         path,
-        relativePath: relative10(root, path).replaceAll("\\", "/"),
+        relativePath: relative13(root, path).replaceAll("\\", "/"),
         bytes: await directorySize(path)
       });
     }
@@ -21390,6 +22275,194 @@ async function runOsCleanCommand(argv, options) {
     candidates,
     note: "phase 1 inventory only; no files deleted"
   }, json, (payload) => payload.candidates.map((item) => `${item.bytes}	${item.relativePath}`).join("\n") + (payload.candidates.length ? "\n" : ""));
+}
+async function runWorkbenchCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const limitValue = consumeOption(args, "--limit") ?? "80";
+  const queryOption = consumeOption(args, "--query");
+  if (limitValue === null) return usage("--limit requires a value");
+  if (queryOption === null) return usage("--query requires a value");
+  const task = args.shift() ?? "status";
+  const query = queryOption ?? args.join(" ");
+  if (hasUnknownOption(args)) return usage(`unknown wb option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const payload = await runWorkbench(root, task, {
+    query,
+    limit: Number(limitValue) || 80
+  });
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  else process.stdout.write(formatWorkbenchText(payload));
+  return payload.ok ? 0 : 1;
+}
+async function runLibCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, "--json");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  const out = consumeOption(args, "--out");
+  const homeOption = consumeOption(args, "--home");
+  if (out === null) return usage("--out requires a value");
+  if (homeOption === null) return usage("--home requires a value");
+  const root = await resolveRuntimeRoot(options);
+  const home = homeOption ? resolve21(homeOption) : options.home;
+  if (subcommand === "build") {
+    if (hasUnknownOption(args)) return usage(`unknown lib build option: ${hasUnknownOption(args)}`);
+    let result;
+    try {
+      result = await writeLibraryArtifacts(root, { outDir: out ?? void 0, home, allowAbsolute });
+    } catch (error) {
+      process.stderr.write(`${error.message}
+`);
+      return 1;
+    }
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (subcommand === "check") {
+    const skill = consumeOption(args, "--skill") ?? args.shift();
+    if (skill === null) return usage("--skill requires a value");
+    if (hasUnknownOption(args)) return usage(`unknown lib check option: ${hasUnknownOption(args)}`);
+    const index = await buildLibraryIndex(root, { home });
+    const record = skill ? index.skills.find((item) => item.id === skill) : null;
+    const result = record ? { ok: true, skill: record } : { ok: false, error: `unknown skill: ${skill}` };
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (subcommand === "remove") {
+    const dryRun = consumeFlag(args, "--dry-run");
+    const allowMutations = consumeFlag(args, "--allow-mutations");
+    const yes = consumeFlag(args, "--yes");
+    const host = consumeOption(args, "--host");
+    const skill = consumeOption(args, "--skill");
+    if (host === null) return usage("--host requires a value");
+    if (skill === null) return usage("--skill requires a value");
+    if (hasUnknownOption(args)) return usage(`unknown lib remove option: ${hasUnknownOption(args)}`);
+    if (!host || !skill) return usage("usage: skillsforge lib remove --host <id> --skill <id> [--dry-run|--allow-mutations --yes]");
+    const result = dryRun || !allowMutations || !yes ? await planSkillRemoval(root, { host, skill, home }) : await removeInstalledSkill(root, { host, skill, home, allowMutations, yes });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (subcommand === "serve") {
+    const allowMutations = consumeFlag(args, "--allow-mutations");
+    const host = consumeOption(args, "--host") ?? "127.0.0.1";
+    const portValue = consumeOption(args, "--port") ?? "4763";
+    if (host === null) return usage("--host requires a value");
+    if (portValue === null) return usage("--port requires a value");
+    if (hasUnknownOption(args)) return usage(`unknown lib serve option: ${hasUnknownOption(args)}`);
+    const result = await serveLibrary(root, {
+      host,
+      port: Number(portValue) || 4763,
+      allowMutations,
+      home
+    });
+    process.stdout.write(`${JSON.stringify({ ok: result.ok, url: result.url, readOnly: result.readOnly }, null, 2)}
+`);
+    return 0;
+  }
+  if (!subcommand) return usage("usage: skillsforge lib <build|serve|check|remove>");
+  return usage(`unknown lib command: ${subcommand}`);
+}
+async function runWorkflowsCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift() ?? "list";
+  const json = consumeFlag(args, "--json");
+  const limitValue = consumeOption(args, "--limit") ?? "20";
+  const category = consumeOption(args, "--category");
+  const queryOption = consumeOption(args, "--query");
+  const idOption = consumeOption(args, "--id");
+  const dryRun = consumeFlag(args, "--dry-run");
+  if (limitValue === null) return usage("--limit requires a value");
+  if (category === null) return usage("--category requires a value");
+  if (queryOption === null) return usage("--query requires a value");
+  if (idOption === null) return usage("--id requires a value");
+  const root = await resolveRuntimeRoot(options);
+  let result;
+  if (subcommand === "list") {
+    const loaded = await loadWorkflows(root);
+    const workflows = loaded.workflows.filter((workflow) => !category || workflow.category === category).slice(0, Math.max(1, Number(limitValue) || 20));
+    result = { ok: loaded.ok, workflows, count: loaded.workflows.length, errors: loaded.errors };
+  } else if (subcommand === "show") {
+    const id = idOption ?? args.shift();
+    if (!id) return usage("usage: skillsforge workflows show --id <workflow-id>");
+    result = await showWorkflow(root, id);
+  } else if (subcommand === "recommend") {
+    const query = queryOption ?? args.join(" ");
+    if (!query) return usage("usage: skillsforge workflows recommend --query <text>");
+    result = await recommendWorkflows(root, query, {
+      category: category ?? void 0,
+      limit: Number(limitValue) || 20
+    });
+  } else if (subcommand === "run") {
+    const id = idOption ?? args.shift();
+    if (!dryRun) return usage("skillsforge workflows run requires --dry-run");
+    if (!id) return usage("usage: skillsforge workflows run --id <workflow-id> --dry-run");
+    result = await runWorkflowDryRun(root, id);
+  } else if (subcommand === "export-html") {
+    const out = consumeOption(args, "--out");
+    if (out === null) return usage("--out requires a value");
+    result = await writeLibraryArtifacts(root, { outDir: out ?? void 0 });
+  } else {
+    return usage(`unknown workflows command: ${subcommand}`);
+  }
+  if (hasUnknownOption(args)) return usage(`unknown workflows option: ${hasUnknownOption(args)}`);
+  if (json || subcommand !== "list") process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else {
+    for (const workflow of result.workflows) process.stdout.write(`${workflow.id}	${workflow.category}	${workflow.goal}
+`);
+  }
+  return result.ok ? 0 : 1;
+}
+async function runAutoCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, "--json");
+  const readOnly = consumeFlag(args, "--read-only");
+  const queryOption = consumeOption(args, "--query");
+  const limitValue = consumeOption(args, "--limit") ?? "5";
+  if (queryOption === null) return usage("--query requires a value");
+  if (limitValue === null) return usage("--limit requires a value");
+  const query = queryOption ?? args.join(" ");
+  if (!query) return usage("usage: skillsforge auto <plan|run> --query <text>");
+  if (hasUnknownOption(args)) return usage(`unknown auto option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  let result;
+  if (subcommand === "plan") {
+    result = await planAuto(root, query, { limit: Number(limitValue) || 5 });
+  } else if (subcommand === "run") {
+    if (!readOnly) return usage("skillsforge auto run requires --read-only");
+    result = await runAutoReadOnly(root, query, { limit: Number(limitValue) || 5 });
+  } else {
+    return usage("usage: skillsforge auto <plan|run> --query <text>");
+  }
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runPsCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, "--json");
+  const out = consumeOption(args, "--out");
+  if (out === null) return usage("--out requires a value");
+  if (subcommand !== "export") return usage("usage: skillsforge ps export [--out <dir>] [--json]");
+  if (hasUnknownOption(args)) return usage(`unknown ps option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const result = await exportPowerShellHelpers(root, { outDir: out ?? void 0 });
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else {
+    for (const file of result.files) process.stdout.write(`${file.name}	${file.path}
+`);
+  }
+  return result.ok ? 0 : 1;
 }
 async function runWatchCommand(argv, options) {
   const args = [...argv];
@@ -21447,7 +22520,7 @@ async function walkFind(root, dir, regex, matches, limit) {
   if (matches.length >= limit) return;
   let entries;
   try {
-    entries = await readdir9(dir, { withFileTypes: true });
+    entries = await readdir11(dir, { withFileTypes: true });
   } catch {
     return;
   }
@@ -21455,8 +22528,8 @@ async function walkFind(root, dir, regex, matches, limit) {
   for (const entry of entries) {
     if (matches.length >= limit) return;
     if (shouldSkipFindEntry(entry.name)) continue;
-    const full = join19(dir, entry.name);
-    const rel = relative10(root, full).replaceAll("\\", "/");
+    const full = join23(dir, entry.name);
+    const rel = relative13(root, full).replaceAll("\\", "/");
     const type = entry.isDirectory() ? "dir" : entry.isFile() ? "file" : "other";
     if (regex.test(entry.name) || regex.test(rel)) matches.push({ path: rel, type });
     if (entry.isDirectory()) await walkFind(root, full, regex, matches, limit);
@@ -21475,9 +22548,9 @@ function platformOpenCommand(target) {
   if (process.platform === "darwin") return { command: "open", args: [target] };
   return { command: "xdg-open", args: [target] };
 }
-function runProcess(command, args, options = {}) {
+function runProcess2(command, args, options = {}) {
   return new Promise((resolveProcess) => {
-    const child = spawn(command, args, {
+    const child = spawn2(command, args, {
       cwd: options.cwd ?? process.cwd(),
       shell: false,
       windowsHide: true
@@ -21509,7 +22582,7 @@ function runProcess(command, args, options = {}) {
 async function directorySize(path) {
   let info;
   try {
-    info = await stat3(path);
+    info = await stat4(path);
   } catch {
     return 0;
   }
@@ -21517,12 +22590,12 @@ async function directorySize(path) {
   let total = 0;
   let entries;
   try {
-    entries = await readdir9(path, { withFileTypes: true });
+    entries = await readdir11(path, { withFileTypes: true });
   } catch {
     return 0;
   }
   for (const entry of entries) {
-    total += await directorySize(join19(path, entry.name));
+    total += await directorySize(join23(path, entry.name));
   }
   return total;
 }
@@ -21531,7 +22604,7 @@ if (process.argv[1]) {
   try {
     sameEntry = realpathSync(process.argv[1]) === realpathSync(modulePath2);
   } catch {
-    sameEntry = resolve17(process.argv[1]) === modulePath2;
+    sameEntry = resolve21(process.argv[1]) === modulePath2;
   }
   if (sameEntry) {
     process.exitCode = await main();

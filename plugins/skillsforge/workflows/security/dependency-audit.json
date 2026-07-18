@@ -1,0 +1,65 @@
+{
+  "id": "security.dependency-audit",
+  "category": "security",
+  "goal": "Audit dependencies and separate runtime from dev risk.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "sec-deps",
+      "agent": "package-auditor",
+      "command": "skillsforge route --query \"Audit dependencies and separate runtime from dev risk.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "sec-supply-chain",
+      "agent": "security-officer"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "eng-deps-upgrade",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "sec-deps",
+    "sec-supply-chain",
+    "eng-deps-upgrade"
+  ],
+  "recommendedAgents": [
+    "package-auditor",
+    "security-officer"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Audit dependencies and separate runtime from dev risk.\"",
+    "skillsforge workflows run --id security.dependency-audit --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "high"
+}
