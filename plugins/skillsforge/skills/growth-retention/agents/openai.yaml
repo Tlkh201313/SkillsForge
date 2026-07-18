@@ -1,0 +1,6 @@
+interface:
+  display_name: Growth Retention
+  short_description: Use when you need growth retention in a SkillsForge growth workflow.
+  default_prompt: Use the growth-retention skill for this task.
+policy:
+  allow_implicit_invocation: true

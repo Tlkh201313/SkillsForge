@@ -1,0 +1,6 @@
+interface:
+  display_name: Role Sre
+  short_description: Use when you need role sre in a SkillsForge roles workflow.
+  default_prompt: Use the role-sre skill for this task.
+policy:
+  allow_implicit_invocation: true

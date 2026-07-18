@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Image Brief
+  short_description: Use when you need media image brief in a SkillsForge media workflow.
+  default_prompt: Use the media-image-brief skill for this task.
+policy:
+  allow_implicit_invocation: true

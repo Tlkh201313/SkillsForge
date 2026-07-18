@@ -1,0 +1,6 @@
+interface:
+  display_name: Write Plan
+  short_description: Use when you need write plan in a SkillsForge methodology workflow.
+  default_prompt: Use the write-plan skill for this task.
+policy:
+  allow_implicit_invocation: true

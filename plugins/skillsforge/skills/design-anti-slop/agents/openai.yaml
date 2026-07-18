@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Anti Slop
+  short_description: Use when you need design anti slop in a SkillsForge design workflow.
+  default_prompt: Use the design-anti-slop skill for this task.
+policy:
+  allow_implicit_invocation: true

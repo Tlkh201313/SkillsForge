@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Layout
+  short_description: Use when you need design layout in a SkillsForge design workflow.
+  default_prompt: Use the design-layout skill for this task.
+policy:
+  allow_implicit_invocation: true

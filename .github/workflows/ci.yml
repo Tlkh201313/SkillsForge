@@ -39,6 +39,11 @@ jobs:
         run: npm test
       - name: Evaluate routing holdout
         run: npm run eval
+      - name: Codex plugin source smoke
+        shell: bash
+        run: |
+          test -f plugins/skillsforge/.codex-plugin/plugin.json
+          test -f plugins/skillsforge/skills/using-skillsforge/agents/openai.yaml
 
   release-contract:
     name: Plugin and bundle contract
@@ -80,6 +85,13 @@ jobs:
         run: |
           mkdir -p artifacts
           npm run smoke:dist 2>&1 | tee artifacts/smoke-dist.log
+      - name: Codex dist smoke
+        run: |
+          test -f dist/codex/.codex-plugin/plugin.json
+          test -f dist/codex/skills/using-skillsforge/agents/openai.yaml
+          test -f dist/codex-interop.json
+      - name: Build evidence bundle
+        run: npm run evidence -- --out artifacts/evidence
       - name: Strict host validate (marketplace + plugin + dist)
         run: npm run validate:host
       - name: Upload release evidence artifacts
@@ -92,9 +104,11 @@ jobs:
             artifacts/evaluation/routing-report.json
             artifacts/host-validation.json
             artifacts/smoke-dist.log
+            artifacts/evidence/**
             dist/trust-receipt.json
             dist/cursor-lossiness.json
             dist/build-report.json
+            dist/codex-interop.json
 
   release-windows:
     name: Windows release smoke
@@ -120,6 +134,14 @@ jobs:
         run: npm run build:dist
       - name: Smoke cached plugin distribution
         run: npm run smoke:dist
+      - name: Codex dist smoke
+        shell: bash
+        run: |
+          test -f dist/codex/.codex-plugin/plugin.json
+          test -f dist/codex/skills/using-skillsforge/agents/openai.yaml
+          test -f dist/codex-interop.json
+      - name: Build evidence bundle
+        run: npm run evidence -- --out artifacts/evidence
       - name: Strict host validate (marketplace + plugin + dist)
         # Local @anthropic-ai/claude-code binary; fail closed (no soft-skip).
         # If Windows Claude packaging is flaky upstream, fix validate:host — do not soften.

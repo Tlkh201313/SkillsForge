@@ -1,0 +1,59 @@
+---
+name: lang-wasm
+description: Use when you need lang wasm in a SkillsForge lang workflow.
+license: MIT
+hooks:
+  PreToolUse:
+    - matcher: Bash|Write|Edit|WebFetch|WebSearch
+      hooks:
+        - type: command
+          command: node "${CLAUDE_PLUGIN_ROOT}/hooks/pre-tool-policy.mjs" --policy
+            "${CLAUDE_PLUGIN_ROOT}/skills/lang-wasm/skillsforge.json"
+---
+
+# Lang Wasm
+
+## Overview
+
+Original SkillsForge skill for lang wasm (lang pack).
+
+## Purpose
+
+Deliver a trustworthy, repeatable outcome for Lang Wasm without copying third-party skill bodies.
+
+## When to Use
+
+- Use when you need lang wasm in a SkillsForge lang workflow.
+- Need lang wasm with trusted SkillsForge artifacts
+
+## Phases
+
+1. Clarify the goal and constraints.
+2. Gather evidence from the repo or user.
+3. Produce the artifact under docs/work/ or the stated path.
+4. Verify against the exit criteria below.
+
+## Exit
+
+- Concrete artifact written (or explicit skip with reason)
+- Risks and open questions listed
+- Next SkillsForge skill or CLI command recommended
+
+## Anti-patterns
+
+- Skipping verification
+- Inventing credentials or Session IDs
+- Copying third-party SKILL.md text
+
+## Handoff
+
+Recommend `skillsforge route --pack lang` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+
+## Common Mistakes
+
+- Vague triggers that collide with other packs
+- Workflow summaries inside the description field (breaks CSO)
+
+## Pressure stub
+
+See `pressure/` fixtures when this is a discipline skill.

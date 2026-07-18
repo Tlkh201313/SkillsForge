@@ -1,0 +1,6 @@
+interface:
+  display_name: Fw Vue
+  short_description: Use when you need fw vue in a SkillsForge framework workflow.
+  default_prompt: Use the fw-vue skill for this task.
+policy:
+  allow_implicit_invocation: true

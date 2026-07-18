@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Feature Flags
+  short_description: Use when you need eng feature flags in a SkillsForge eng workflow.
+  default_prompt: Use the eng-feature-flags skill for this task.
+policy:
+  allow_implicit_invocation: true

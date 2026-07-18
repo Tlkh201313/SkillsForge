@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "brainstorm first",
+      "compare approaches",
+      "option tradeoffs before plan",
+      "ideate before coding",
+      "methodology brainstorm"
+    ],
+    "antiTriggers": [
+      "execute existing plan as-is",
+      "validate skill package only",
+      "incident rollback now"
+    ],
+    "mode": "explicit",
+    "pack": "methodology"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

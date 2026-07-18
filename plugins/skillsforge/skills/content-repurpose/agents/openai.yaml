@@ -1,0 +1,6 @@
+interface:
+  display_name: Content Repurpose
+  short_description: Use when you need content repurpose in a SkillsForge content workflow.
+  default_prompt: Use the content-repurpose skill for this task.
+policy:
+  allow_implicit_invocation: true

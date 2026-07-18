@@ -3,7 +3,7 @@ import { access, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promise
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { exportPortableSkill } from '../lib/capabilities/export.mjs';
+import { exportHostPackage, exportPortableSkill } from '../lib/capabilities/export.mjs';
 import { installSkills } from '../lib/capabilities/install.mjs';
 import { loadSkill } from '../lib/capabilities/skill-loader.mjs';
 
@@ -30,35 +30,84 @@ test('exportPortableSkill matches previous build-dist cursor format without requ
   assert.equal(exportPortableSkill(skill).files[0].contents, expected);
 });
 
-test('installSkills portable copy strips sidecar; full copy keeps it', async (context) => {
+test('exportHostPackage preserves resources and strips Claude hooks', async () => {
+  const skill = await loadSkill(join(process.cwd(), 'plugins', 'skillsforge', 'skills', 'validate-agent-skill'));
+  const exported = await exportHostPackage(skill, { runtimeEnforced: false, usesSidecar: false });
+  assert.ok(exported.files.some((file) => file.path === 'SKILL.md'));
+  assert.ok(exported.files.some((file) => file.path === 'skillsforge.json'));
+  const skillMd = exported.files.find((file) => file.path === 'SKILL.md').contents.toString('utf8');
+  assert.doesNotMatch(skillMd, /\bhooks:|\bPreToolUse\b/);
+  assert.match(skillMd, /^---\n/);
+  assert.ok(exported.interop.ignored.includes('hooks') || exported.interop.losses.includes('claude-extensions'));
+});
+
+test('installSkills package copy keeps sidecar+resources; Claude full keeps hooks', async (context) => {
   const home = await mkdtemp(join(tmpdir(), 'sf-install-'));
   context.after(() => rm(home, { recursive: true, force: true }));
   await mkdir(join(home, '.claude'), { recursive: true });
   await mkdir(join(home, '.cursor'), { recursive: true });
+  await mkdir(join(home, '.agents'), { recursive: true });
 
-  const fixture = join(process.cwd(), 'tests', 'fixtures', 'skills', 'good-with-sidecar');
-  const skill = await loadSkill(fixture);
+  const fixtureRoot = await mkdtemp(join(tmpdir(), 'sf-skill-pkg-'));
+  context.after(() => rm(fixtureRoot, { recursive: true, force: true }));
+  const skillDir = join(fixtureRoot, 'pkg-skill');
+  await mkdir(join(skillDir, 'scripts'), { recursive: true });
+  await mkdir(join(skillDir, 'references'), { recursive: true });
+  await writeFile(join(skillDir, 'SKILL.md'), `---
+name: pkg-skill
+description: Package fidelity fixture with resources.
+hooks:
+  PreToolUse:
+    - matcher: Bash
+      hooks:
+        - type: command
+          command: echo nope
+---
 
+# Package skill
+
+Body text.
+`);
+  await writeFile(join(skillDir, 'skillsforge.json'), JSON.stringify({
+    schemaVersion: 1,
+    routing: { triggers: ['package fidelity'], antiTriggers: [] },
+    capabilities: {
+      exec: { allowed: true, commands: ['node scripts/helper.mjs'] },
+      network: { allowed: false, hosts: [] },
+      write: { scope: 'none' }
+    }
+  }));
+  await writeFile(join(skillDir, 'scripts', 'helper.mjs'), 'console.log("ok");\n');
+  await writeFile(join(skillDir, 'references', 'notes.md'), '# notes\n');
+
+  const skill = await loadSkill(skillDir);
   const result = await installSkills({
     skills: [skill],
-    hostIds: ['claude-code', 'cursor'],
+    hostIds: ['claude-code', 'cursor', 'codex'],
     home,
-    root: process.cwd(),
+    root: fixtureRoot,
     force: true
   });
   assert.equal(result.ok, true, JSON.stringify(result));
 
-  const claudeSkill = join(home, '.claude', 'skills', skill.name, 'SKILL.md');
-  const claudeSidecar = join(home, '.claude', 'skills', skill.name, 'skillsforge.json');
-  const cursorSkill = join(home, '.cursor', 'skills', skill.name, 'SKILL.md');
-  await access(claudeSkill);
-  await access(claudeSidecar);
-  await access(cursorSkill);
-  await assert.rejects(() => access(join(home, '.cursor', 'skills', skill.name, 'skillsforge.json')));
+  const claudeSkill = await readFile(join(home, '.claude', 'skills', 'pkg-skill', 'SKILL.md'), 'utf8');
+  assert.match(claudeSkill, /PreToolUse/);
+  await access(join(home, '.claude', 'skills', 'pkg-skill', 'skillsforge.json'));
+  await access(join(home, '.claude', 'skills', 'pkg-skill', 'scripts', 'helper.mjs'));
 
-  const portable = await readFile(cursorSkill, 'utf8');
-  assert.doesNotMatch(portable, /PreToolUse|hooks:/);
-  assert.match(portable, /^---\nname: /);
+  const cursorSkill = await readFile(join(home, '.cursor', 'skills', 'pkg-skill', 'SKILL.md'), 'utf8');
+  assert.doesNotMatch(cursorSkill, /PreToolUse|hooks:/);
+  await access(join(home, '.cursor', 'skills', 'pkg-skill', 'skillsforge.json'));
+  await access(join(home, '.cursor', 'skills', 'pkg-skill', 'scripts', 'helper.mjs'));
+  await access(join(home, '.cursor', 'skills', 'pkg-skill', 'references', 'notes.md'));
+
+  await access(join(home, '.agents', 'skills', 'pkg-skill', 'SKILL.md'));
+  await access(join(home, '.agents', 'skills', 'pkg-skill', 'scripts', 'helper.mjs'));
+
+  const cursorInstall = result.installs.find((item) => item.host === 'cursor');
+  assert.equal(cursorInstall.fidelity, 'package');
+  assert.ok(cursorInstall.interop);
+  assert.equal(cursorInstall.interop.runtimeEnforced, false);
 });
 
 test('installSkills skips existing targets without force', async (context) => {
@@ -106,12 +155,10 @@ test('installSkills aborts on invalid skill with no writes', async (context) => 
   await mkdir(badDir, { recursive: true });
   await writeFile(join(badDir, 'SKILL.md'), '---\nname: bad\n---\n\nbody\n');
 
-  // loadSkill will work for minimal, but validate should fail (missing description)
   let skill;
   try {
     skill = await loadSkill(badDir);
   } catch {
-    // If loadSkill itself fails, craft a minimal skill object pointing at the dir
     skill = {
       name: 'bad',
       description: '',

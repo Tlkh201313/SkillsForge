@@ -1,0 +1,6 @@
+interface:
+  display_name: Data Sql Review
+  short_description: Use when you need data sql review in a SkillsForge data workflow.
+  default_prompt: Use the data-sql-review skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Versioning
+  short_description: Use when you need eng versioning in a SkillsForge eng workflow.
+  default_prompt: Use the eng-versioning skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": ["draft documentation page", "write readme section", "changelog notes"],
+    "antiTriggers": ["validate agent skill", "skillsforge route", "forge capability"]
+  },
+  "capabilities": {
+    "exec": { "allowed": false, "commands": [] },
+    "network": { "allowed": false, "hosts": [] },
+    "write": { "scope": "skill" }
+  },
+  "compatibility": {
+    "claude-code": "partial",
+    "cursor": "partial"
+  }
+}

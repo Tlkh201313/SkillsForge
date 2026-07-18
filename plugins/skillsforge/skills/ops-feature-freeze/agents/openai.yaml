@@ -1,0 +1,6 @@
+interface:
+  display_name: Ops Feature Freeze
+  short_description: Use when you need ops feature freeze in a SkillsForge ops workflow.
+  default_prompt: Use the ops-feature-freeze skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,7 +1,9 @@
 {
   "schemaVersion": 1,
   "maturity": "stable",
-  "requires": ["using-skillsforge"],
+  "requires": [
+    "using-skillsforge"
+  ],
   "routing": {
     "triggers": [
       "which skill applies",
@@ -16,7 +18,9 @@
       "security audit of skills",
       "route network",
       "network packets"
-    ]
+    ],
+    "mode": "auto",
+    "pack": "trust"
   },
   "capabilities": {
     "exec": {
@@ -26,8 +30,13 @@
         "node plugins/skillsforge/bin/skillsforge.mjs route"
       ]
     },
-    "network": { "allowed": false, "hosts": [] },
-    "write": { "scope": "none" }
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "none"
+    }
   },
   "compatibility": {
     "claude-code": "full",

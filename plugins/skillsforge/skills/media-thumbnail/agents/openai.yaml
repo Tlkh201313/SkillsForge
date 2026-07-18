@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Thumbnail
+  short_description: Use when you need media thumbnail in a SkillsForge media workflow.
+  default_prompt: Use the media-thumbnail skill for this task.
+policy:
+  allow_implicit_invocation: true

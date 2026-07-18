@@ -1,0 +1,6 @@
+interface:
+  display_name: Ops Backup
+  short_description: Use when you need ops backup in a SkillsForge ops workflow.
+  default_prompt: Use the ops-backup skill for this task.
+policy:
+  allow_implicit_invocation: true

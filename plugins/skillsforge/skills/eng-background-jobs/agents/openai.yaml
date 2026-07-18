@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Background Jobs
+  short_description: Use when you need eng background jobs in a SkillsForge eng workflow.
+  default_prompt: Use the eng-background-jobs skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+﻿interface:
+  display_name: Author Capability
+  short_description: Use when creating or editing a canonical SkillsForge skill so frontmatter, body sections, and the skillsforge.json sidecar pass validation on the first run.
+  default_prompt: Use this skill to author or edit a canonical SkillsForge skill that validates on first run.
+policy:
+  allow_implicit_invocation: true

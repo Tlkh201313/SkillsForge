@@ -1,0 +1,6 @@
+﻿interface:
+  display_name: Route Capability
+  short_description: Use when deciding which SkillsForge skill applies to a task and an explained, scored selection is needed.
+  default_prompt: Use this skill to route a task to the best SkillsForge skill with scored reasons.
+policy:
+  allow_implicit_invocation: true

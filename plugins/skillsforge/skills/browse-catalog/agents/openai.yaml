@@ -1,0 +1,6 @@
+interface:
+  display_name: Browse Catalog
+  short_description: Use when you need browse catalog in a SkillsForge browse-catalog workflow.
+  default_prompt: Use the browse-catalog skill for this task.
+policy:
+  allow_implicit_invocation: true

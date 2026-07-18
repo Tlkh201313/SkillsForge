@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "qa the flow",
+      "acceptance path testing",
+      "end to end qa",
+      "lifecycle qa",
+      "exercise success criteria"
+    ],
+    "antiTriggers": [
+      "unit test one function only",
+      "forge new skill dry run",
+      "profile catalog listing"
+    ],
+    "mode": "explicit",
+    "pack": "lifecycle"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

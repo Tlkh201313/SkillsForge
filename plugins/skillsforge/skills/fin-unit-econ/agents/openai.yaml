@@ -1,0 +1,6 @@
+interface:
+  display_name: Fin Unit Econ
+  short_description: Use when you need fin unit econ in a SkillsForge finance-lite workflow.
+  default_prompt: Use the fin-unit-econ skill for this task.
+policy:
+  allow_implicit_invocation: true

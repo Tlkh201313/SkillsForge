@@ -1,0 +1,6 @@
+interface:
+  display_name: Ops Env Parity
+  short_description: Use when you need ops env parity in a SkillsForge ops workflow.
+  default_prompt: Use the ops-env-parity skill for this task.
+policy:
+  allow_implicit_invocation: true

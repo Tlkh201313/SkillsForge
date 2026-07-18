@@ -1,0 +1,6 @@
+interface:
+  display_name: Mobile Push
+  short_description: Use when you need mobile push in a SkillsForge mobile workflow.
+  default_prompt: Use the mobile-push skill for this task.
+policy:
+  allow_implicit_invocation: true

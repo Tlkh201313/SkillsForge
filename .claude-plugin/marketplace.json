@@ -20,7 +20,7 @@
       ],
       "strict": true,
       "description": "Validate, forge, route, policy-scan, and package portable Agent Skills with evidence receipts.",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "author": {
         "name": "Tlkh201313",
         "url": "https://github.com/Tlkh201313"

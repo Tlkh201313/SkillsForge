@@ -1,0 +1,6 @@
+interface:
+  display_name: Ops Capacity
+  short_description: Use when you need ops capacity in a SkillsForge ops workflow.
+  default_prompt: Use the ops-capacity skill for this task.
+policy:
+  allow_implicit_invocation: true

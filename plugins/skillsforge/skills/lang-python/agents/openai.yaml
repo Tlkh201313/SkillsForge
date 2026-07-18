@@ -1,0 +1,6 @@
+interface:
+  display_name: Lang Python
+  short_description: Use when you need lang python in a SkillsForge lang workflow.
+  default_prompt: Use the lang-python skill for this task.
+policy:
+  allow_implicit_invocation: true

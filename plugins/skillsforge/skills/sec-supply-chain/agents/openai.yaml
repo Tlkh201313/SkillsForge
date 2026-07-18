@@ -1,0 +1,6 @@
+interface:
+  display_name: Sec Supply Chain
+  short_description: Use when you need sec supply chain in a SkillsForge security workflow.
+  default_prompt: Use the sec-supply-chain skill for this task.
+policy:
+  allow_implicit_invocation: true

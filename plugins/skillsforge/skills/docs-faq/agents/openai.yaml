@@ -1,0 +1,6 @@
+interface:
+  display_name: Docs Faq
+  short_description: Use when you need docs faq in a SkillsForge docs workflow.
+  default_prompt: Use the docs-faq skill for this task.
+policy:
+  allow_implicit_invocation: true

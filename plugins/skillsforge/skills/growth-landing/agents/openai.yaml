@@ -1,0 +1,6 @@
+interface:
+  display_name: Growth Landing
+  short_description: Use when you need growth landing in a SkillsForge growth workflow.
+  default_prompt: Use the growth-landing skill for this task.
+policy:
+  allow_implicit_invocation: true

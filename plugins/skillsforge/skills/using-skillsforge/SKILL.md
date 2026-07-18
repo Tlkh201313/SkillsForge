@@ -14,23 +14,40 @@ hooks:
 
 # Using SkillsForge
 
-## Overview
+## Purpose
 
-SkillsForge validates, forges, routes, policy-scans, and packages portable Agent Skills with evidence receipts.
+Orient the agent to the SkillsForge trust and routing layer: which CLI commands exist, when to validate vs route vs package, and where work artifacts live under `docs/work/`.
 
 ## When to Use
 
-At session start, or whenever unsure which SkillsForge command applies.
+At session start, after a host install, or whenever the user asks which SkillsForge command applies.
 
-## Commands
+## Phases
 
-- `skillsforge doctor`
-- `skillsforge validate`
-- `skillsforge route --query "<task>"`
-- `skillsforge forge --spec <file> --dry-run`
-- `skillsforge install --list`
-- `skillsforge install --hosts cursor --yes --dry-run`
-- `skillsforge receipt --out <file>`
-- `skillsforge verify-receipt <file>`
+1. **Surface health** — Run `skillsforge doctor --json` (or `node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" doctor --json`) and report PASS/FAIL checks only.
+2. **Map the spine** — Point to validate → route → forge → package → evidence; do not invent commands outside `skillsforge --help`.
+3. **Name the Work OS paths** — `docs/work/brief.md`, `plan.md`, `design-lock.md`, `proof.md`, `ship-notes.md`, `learning.md`, `findings.md`.
+4. **Offer the magical moment** — Suggest `npx skillsforge vibe` or `skillsforge catalog --profile vibe` when the user wants a quick start.
 
-`install` copies validated skills into detected agent hosts. Claude Code gets a full package; Cursor/Codex/OpenCode/Gemini get a portable `SKILL.md` only (no runtime policy parity).
+## Exit
+
+- Doctor (or validate) result summarized with concrete failures
+- At least one next command named (`route`, `catalog`, `vibe`, or `validate`)
+- No claim of sandboxing or certification beyond scanner/hook evidence
+
+## Anti-patterns
+
+- Reimplementing routing in prose instead of calling `skillsforge route`
+- Editing skills during an orientation session
+- Inventing Session IDs, credentials, or marketplace claims
+
+## Handoff
+
+If the user has a concrete task, run `skillsforge route --query "<task>"`. If they want pack discovery, use `skillsforge catalog` / skill `browse-catalog`. Capture session learnings with `skillsforge capture --insight "..."`.
+
+## Quick Reference
+
+- `skillsforge validate --all`
+- `skillsforge route --query "..."`
+- `skillsforge evidence --out artifacts/evidence`
+- `skillsforge package --host codex --skill <dir> --dry-run`

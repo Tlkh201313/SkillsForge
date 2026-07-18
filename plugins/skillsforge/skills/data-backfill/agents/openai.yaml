@@ -1,0 +1,6 @@
+interface:
+  display_name: Data Backfill
+  short_description: Use when you need data backfill in a SkillsForge data workflow.
+  default_prompt: Use the data-backfill skill for this task.
+policy:
+  allow_implicit_invocation: true

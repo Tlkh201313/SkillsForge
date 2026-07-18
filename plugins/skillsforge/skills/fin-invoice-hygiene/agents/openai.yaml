@@ -1,0 +1,6 @@
+interface:
+  display_name: Fin Invoice Hygiene
+  short_description: Use when you need fin invoice hygiene in a SkillsForge finance-lite workflow.
+  default_prompt: Use the fin-invoice-hygiene skill for this task.
+policy:
+  allow_implicit_invocation: true

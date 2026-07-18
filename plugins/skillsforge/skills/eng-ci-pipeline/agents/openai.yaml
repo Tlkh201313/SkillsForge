@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Ci Pipeline
+  short_description: Use when you need eng ci pipeline in a SkillsForge eng workflow.
+  default_prompt: Use the eng-ci-pipeline skill for this task.
+policy:
+  allow_implicit_invocation: true

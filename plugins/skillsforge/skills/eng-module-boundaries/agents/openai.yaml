@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Module Boundaries
+  short_description: Use when you need eng module boundaries in a SkillsForge eng workflow.
+  default_prompt: Use the eng-module-boundaries skill for this task.
+policy:
+  allow_implicit_invocation: true

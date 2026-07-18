@@ -1,0 +1,6 @@
+interface:
+  display_name: Data Analytics Plan
+  short_description: Use when you need data analytics plan in a SkillsForge data workflow.
+  default_prompt: Use the data-analytics-plan skill for this task.
+policy:
+  allow_implicit_invocation: true

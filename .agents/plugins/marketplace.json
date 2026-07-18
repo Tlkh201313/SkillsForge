@@ -1,0 +1,20 @@
+{
+  "name": "skillsforge-marketplace",
+  "interface": {
+    "displayName": "SkillsForge Marketplace"
+  },
+  "plugins": [
+    {
+      "name": "skillsforge",
+      "source": {
+        "source": "local",
+        "path": "./plugins/skillsforge"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

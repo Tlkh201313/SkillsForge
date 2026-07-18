@@ -1,9 +1,8 @@
 ---
 name: validate-agent-skill
-description: Validate Agent Skills packages and Claude Code skill extensions for
-  metadata, YAML, naming, instructions, and local resource links. Use when
-  creating, reviewing, debugging, or preparing a SKILL.md package for
-  distribution.
+description: Use when creating, reviewing, debugging, or preparing a SKILL.md package
+  for distribution and structural Agent Skills checks must pass before quality
+  judgment.
 license: MIT
 hooks:
   PreToolUse:
@@ -16,15 +15,34 @@ hooks:
 
 # Validate an Agent Skill
 
-Validate the requested skill before judging its quality.
+## Purpose
 
-Requires the bundled SkillsForge command, or Node.js 20+ when used from a SkillsForge checkout.
+Prove structural conformance of a skill directory (frontmatter, naming, links, optional Claude Code extensions, and sidecar policy) before anyone debates writing quality.
 
-1. Identify the skill directory containing `SKILL.md`.
-2. Run `skillsforge-validate <skill-directory>` for the portable Agent Skills profile.
-3. Use `skillsforge-validate --profile claude-code <skill-directory>` only when the skill intentionally uses Claude Code frontmatter extensions.
-4. If the bundled command is unavailable in a SkillsForge checkout, run `node scripts/validate-skill.mjs <skill-directory>`.
-5. Report failures before advisory improvements. Include the affected field or resource path and a concrete correction.
-6. Do not edit the skill unless the user asked for changes.
+## When to Use
 
-Use `--json` when another tool needs structured diagnostics. Validation success proves structural conformance, not instruction quality; review triggering precision, safety, and workflow usefulness separately.
+On create/review/debug of a skill package, before `package`, `install`, or PR merge of skill trees.
+
+## Phases
+
+1. **Locate** — Identify the directory containing `SKILL.md` (and usually `skillsforge.json`).
+2. **Canonical validate** — Run `skillsforge validate <skill-dir>` or `node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" validate --profile claude-code <skill-dir>`.
+3. **Bulk option** — For library health: `skillsforge validate --all --json`.
+4. **Report** — List failures with field/path and a concrete fix; advisory notes only after blockers.
+5. **Separate quality** — Reminder: validate ≠ quality. Follow with `skillsforge quality --skill <dir>` when the user asks about CSO/body depth.
+
+## Exit
+
+- CLI exit code interpreted (0 success, 1 validation/policy failure, 2 bad usage)
+- Blocking findings enumerated with remediation
+- No silent file edits unless the user requested fixes
+
+## Anti-patterns
+
+- Judging “good skill” from prose without running validate
+- Editing during validate-only requests
+- Claiming safety certification from structural PASS alone
+
+## Handoff
+
+On PASS → `verify-capability` / `skillsforge doctor` for installed-set health, or `skillsforge package --host codex --skill <dir> --dry-run`. On FAIL → `author-capability` to repair via forge.

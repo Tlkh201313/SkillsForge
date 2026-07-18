@@ -74,7 +74,7 @@ async function tryValidatePlugin(pluginRoot) {
   for (const [command, args] of attempts) {
     const result = await runCommand(command, args);
     if (result.spawnError) continue;
-    if (/unknown command|not found|Cannot find module|ENOENT/i.test(`${result.stdout}\n${result.stderr}`)) {
+    if (/unknown command|not found|Cannot find module|ENOENT|is not recognized|not recognised/i.test(`${result.stdout}\n${result.stderr}`)) {
       continue;
     }
     return result;

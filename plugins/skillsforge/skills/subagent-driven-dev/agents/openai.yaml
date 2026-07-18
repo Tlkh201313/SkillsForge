@@ -1,0 +1,6 @@
+interface:
+  display_name: Subagent Driven Dev
+  short_description: Use when you need subagent driven dev in a SkillsForge methodology workflow.
+  default_prompt: Use the subagent-driven-dev skill for this task.
+policy:
+  allow_implicit_invocation: true

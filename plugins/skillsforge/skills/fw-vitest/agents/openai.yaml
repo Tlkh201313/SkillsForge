@@ -1,0 +1,6 @@
+interface:
+  display_name: Fw Vitest
+  short_description: Use when you need fw vitest in a SkillsForge framework workflow.
+  default_prompt: Use the fw-vitest skill for this task.
+policy:
+  allow_implicit_invocation: true

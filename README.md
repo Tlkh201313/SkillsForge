@@ -1,118 +1,173 @@
-![SkillsForge — Portable Agent Skills validation](assets/skillsforge-banner.svg)
+![SkillsForge — Trust engine for portable Agent Skills](assets/skillsforge-banner.svg)
 
 [![CI](https://github.com/Tlkh201313/SkillsForge/actions/workflows/ci.yml/badge.svg)](https://github.com/Tlkh201313/SkillsForge/actions/workflows/ci.yml)
-![Version](https://img.shields.io/badge/version-0.3.0-7c3aed)
+![Version](https://img.shields.io/badge/version-0.4.0-7c3aed)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 
-SkillsForge ships **one** production plugin: a capability / trust engine for portable [Agent Skills](https://agentskills.io/specification). Version 0.3.0 validates, forges, routes, policy-scans, and packages skills with evidence receipts — primarily for Claude Code.
+**Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, and tamper-evident.**
 
-## Host support matrix
+SkillsForge is a Developer Tools **trust engine** for portable [Agent Skills](https://agentskills.io/specification): validate → deny unsafe → package safe → PreToolUse → tamper-evident receipt. Catalog scale (354 entries, ~25 production-depth heroes) is supporting evidence — the product is the trust pipeline.
 
-| Host | Status | What that means |
+---
+
+## Demo video
+
+[![SkillsForge demo — click to play MP4](assets/skillsforge-demo-poster.png)](assets/video/skillsforge-demo.mp4)
+
+**[▶ Watch the demo (MP4)](assets/video/skillsforge-demo.mp4)** — ~90s Remotion presentation that mirrors `npx skillsforge demo`. Click the poster or the link; GitHub plays the committed file in-browser (no YouTube required).
+
+| Beat | What you’ll see |
+|---|---|
+| Thesis | Why untrusted Agent Skills are a real operator risk |
+| **Unsafe deny** | `examples/codex-unsafe-release` fails validation — undeclared exec/network blocked **without executing** the skill |
+| **Safe package** | `examples/codex-safe-release` passes → compiles to a guarded Codex plugin tree |
+| **Receipt** | Scoreboard: false-allow = 0, tamper-evident receipt hash |
+| Scale punchline | 354 catalog entries / ~25 heroes — proof of inventory, not the pitch |
+| CTA | Clone + `npx skillsforge demo` |
+
+Regenerate locally: `npm run video:render` (MP4) / `npm run video:still` (poster). Details: [docs/video.md](docs/video.md). Source: [`video/`](video/).
+
+---
+
+## Why SkillsForge
+
+Agent Skills travel across hosts. A “release helper” can ship undeclared shell, network, or write paths — and most catalogs optimize for **surface**, not **trust**.
+
+SkillsForge closes that gap:
+
+1. **Static capability scan** against a `skillsforge.json` sidecar (100% of catalog skills carry one)
+2. **Fail closed** on undeclared capabilities before anything is packaged
+3. **Compile** one safe skill into a guarded native Codex plugin (`package --host codex`)
+4. **Enforce** at PreToolUse when the host honors the decision
+5. **Prove** bytes with an unsigned, reproducible receipt hash
+
+![Trust pipeline: validate → deny unsafe → package safe → PreToolUse → receipt](assets/skillsforge-trust-pipeline.svg)
+
+```mermaid
+flowchart LR
+    Skill["Agent Skill package"] --> Validate["Validate + capability scan"]
+    Validate -->|pass| Package["Compile native Codex plugin"]
+    Validate -->|fail| Report["Actionable finding report"]
+    Package --> Codex["Codex installs plugin"]
+    Codex --> Hook["PreToolUse policy guard"]
+    Hook -->|allow| Tool["Tool executes"]
+    Hook -->|deny| Block["Undeclared behavior blocked"]
+    Package --> Evidence["Eval + package receipt"]
+    Evidence --> Verify["Tamper verification"]
+```
+
+---
+
+## Why this idea (vs ECC, Superpowers, gstack)
+
+We built SkillsForge **because** Everything Claude Code (ECC) and Superpowers already exist — and still leave a trust hole.
+
+| Project | What it’s great at | What SkillsForge adds |
 |---|---|---|
-| Claude Code | Full | Marketplace install, SessionStart, skill-scoped PreToolUse guardrails, bundled `skillsforge` CLI, receipts, eval; `skillsforge install` copies full skill packages |
-| Cursor | Portable copy | `skillsforge install` / `dist/cursor` deterministic `SKILL.md` + lossiness report — **not** runtime policy parity |
-| Codex CLI | Portable copy | `skillsforge install` copies portable `SKILL.md` only — no runtime policy parity |
-| OpenCode | Portable copy | `skillsforge install` copies portable `SKILL.md` only — no runtime policy parity |
-| Gemini CLI | Portable copy | `skillsforge install` copies portable `SKILL.md` only — no runtime policy parity |
+| **ECC-class packs** | Surface completeness, profiles, cross-harness breadth | A **trust pipeline** (sidecars, validate/package, PreToolUse, receipts) — not another pack dump |
+| **Superpowers** | Discipline / TDD iron laws | Those laws as skills **plus** capability policy, SkillShield (best-effort), and operator CLI (`demo` / `vibe` / `quality`) |
+| **gstack** (briefly) | Role lenses, ship/QA workflows | Portable skill packages with trust sidecars; we do **not** clone browse daemons or binaries |
 
-## What ships today
+**Honest differentiation** ([docs/competitive-matrix.md](docs/competitive-matrix.md), [docs/inspiration.md](docs/inspiration.md)):
+
+| Dimension | ECC | Superpowers | SkillsForge |
+|---|---|---|---|
+| Core pitch | Pack / surface completeness | Process discipline | **Trust engine for Agent Skills** |
+| Trust sidecars | Rare | No | **100%** (354/354) |
+| Trust pipeline | Rare | No | validate → package → PreToolUse → receipt |
+| Operator CLI | Weak | No | `demo`, `vibe`, `quality`, `bench`, `compare-skill`, … |
+| SkillShield | AgentShield (code) | No | Skill-body scanner (**best-effort**) |
+| Pressure | No | Process | Fixture gate + expanding |
+| Swarm / MCP | Varies | No | Thin trust MCP only (`validate` / `route` / `skillshield`); complement Ruflo — **not** a swarm clone |
+
+Inspiration is attributed; skill bodies are original SkillsForge text (no-copy rule). Catalog count is scale proof — judges should hit the trust demo first.
+
+---
+
+## Magical moment (&lt;90s)
+
+```sh
+git clone https://github.com/Tlkh201313/SkillsForge.git
+cd SkillsForge
+npm ci
+npx skillsforge demo
+```
+
+You should see: **unsafe deny → safe package → receipt hash** (false-allow = 0).
+
+Optional follow-ups:
+
+```sh
+npx skillsforge compare-skill --a examples/codex-unsafe-release --b examples/codex-safe-release
+npx skillsforge vibe
+npx skillsforge catalog --pack trust
+```
+
+Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/roadmap-next.md](docs/roadmap-next.md).
+
+---
+
+## What you get today
 
 | Surface | Actual implementation |
 |---|---|
-| One plugin | `skillsforge` only |
-| Slash commands | `validate`, `route`, `forge`, `doctor`, `verify-receipt` |
-| Claude Code skills | `validate-agent-skill`, `author-capability`, `route-capability`, `verify-capability`, `using-skillsforge` |
-| Runtime CLI | Full `skillsforge` CLI (`validate`, `doctor`, `route`, `forge`, `receipt`, `verify-receipt`, `enforce`, `eval`, `install`, `help`) + `skillsforge-validate` shim |
-| Host installer | CodeGraph-style `skillsforge install` TUI + `--hosts` / `--yes` non-interactive path |
-| Canonical sidecar | `skillsforge.json` (routing, capabilities, compatibility) validated with Ajv |
-| Forge | Deterministic skill generation from forge-spec (`--dry-run` / `--write`) |
-| Routing | Explainable scores with holdout evaluation gate |
-| Policy | Static scan + skill-scoped PreToolUse enforce (guardrails ≠ OS sandbox) |
-| Receipts | Reproducible full-package hashes + Cursor lossiness proof |
-| Diagnostics | Human-readable and JSON output with non-zero failure exits |
+| One plugin | `skillsforge` (Claude + Codex manifests) |
+| Trust demo | `skillsforge demo` — unsafe deny → safe package → receipt |
+| Catalog | **354** skills, **25** packs, **10** profiles — `catalog/skillsforge.catalog.yaml` |
+| Sidecars | **100%** (`skillsforge.json` beside every production skill) |
+| Depth honesty | **~25** production-depth heroes; domain packs are lean scaffolds on purpose |
+| Agents | **70** agents (depth varies — fuller leads vs thinner stubs) |
+| Commands | **107** shims (fuller contracts on trust/lifecycle; long-tail thinner) |
+| Operator CLI | `vibe`, `catalog`, `quality`, `bench`, `scorecard`, `scaffold`, `pressure`, `skillshield`, `compare-skill`, … |
+| Trust CLI | `validate`, `doctor`, `route`, `forge`, `receipt`, `package`, `evidence`, `demo`, `enforce` |
+| Thin MCP | `scripts/skillsforge-mcp.mjs` — **only** `validate` / `route` / `skillshield` |
+| Evidence | Deterministic trust/eval bundle (`skillsforge evidence`) |
 
-## Anti-goals (not claimed)
+### Host support
 
-This release does **not** ship or claim: MCP servers, LSP, monitors, token / usage ledgers, domain skill packs, multi-host runtime parity, OS sandboxing, or third-party attestation.
-
-## Validation pipeline
-
-```mermaid
-flowchart LR
-    A["SKILL.md package"] --> B["YAML parser"]
-    B --> C["Selected profile"]
-    C --> D["Resource boundary checks"]
-    D --> E{"skillsforge.json present?"}
-    E -->|yes| F["Capability policy scan"]
-    E -->|no| G["Structural diagnostics only"]
-    F --> H["Text or JSON diagnostics"]
-    G --> H
-```
-
-The parser accepts valid BOM, CRLF, comments, quoted values, and multiline YAML. Profile validation uses Draft 2020-12 JSON Schema. Resource checks reject missing files, unsupported URI schemes, sibling-prefix escapes, and links whose real path leaves the skill directory. Sidecar skills also fail closed on blocking policy findings.
-
-## Plugin component map
-
-```mermaid
-flowchart TD
-    Marketplace["Marketplace install"] --> Plugin["skillsforge plugin"]
-    Plugin --> Commands["commands/"]
-    Plugin --> Skills["skills/"]
-    Plugin --> Agents["agents/"]
-    Plugin --> Hooks["hooks/"]
-    Plugin --> Bin["bin/skillsforge.mjs"]
-    Commands --> Bin
-    Skills --> Bin
-    Agents --> Bin
-    Hooks --> Bin
-    Bin --> Engine["validate / route / forge / doctor / receipt / enforce / eval / install"]
-```
-
-## Trust pipeline
-
-```mermaid
-flowchart LR
-    Spec["forge-spec.json"] --> Forge["forge"]
-    Forge --> Package["SKILL.md + skillsforge.json"]
-    Package --> Validate["validate + policy scan"]
-    Package --> Route["route"]
-    Validate --> Enforce["PreToolUse enforce"]
-    Package --> Receipt["receipt"]
-    Route --> EvalGate["eval holdout gate"]
-    EvalGate --> Receipt
-    Receipt --> Verify["verify-receipt"]
-```
-
-The committed CLI bundle contains its runtime dependencies, so a marketplace installation does not run `npm install`. Source and bundle drift is blocked by `npm run build:check`.
-
-## Plugin
-
-| Plugin | Purpose | Version 0.3.0 | Install command |
-|---|---|:---:|---|
-| `skillsforge` | Capability trust engine: forge, validate, route, policy-enforce, package | Available | `/plugin install skillsforge@skillsforge-marketplace` |
-
-### Plugin components
-
-| Component | Paths | What you get |
+| Host | Status | What that means |
 |---|---|---|
-| Slash commands | `commands/` | `/skillsforge:validate`, `/skillsforge:route`, `/skillsforge:forge`, `/skillsforge:doctor`, `/skillsforge:verify-receipt` |
-| Skills | `skills/` | `validate-agent-skill`, `author-capability`, `route-capability`, `verify-capability`, `using-skillsforge` |
-| Agents | `agents/` | `validator` (explain-only after authoritative checks) |
-| Hooks | `hooks/` | `SessionStart` banner + skill-scoped `PreToolUse` policy guardrails |
-| CLI | `bin/` | Bundled `skillsforge.mjs` + `skillsforge-validate` shim |
+| Codex CLI | **Native plugin + guarded package** | Marketplace via `.agents/plugins/marketplace.json`; `package --host codex` → PreToolUse hooks; `install` copies packages to `~/.agents/skills` |
+| Claude Code | Full | Marketplace, SessionStart, skill-scoped PreToolUse, bundled CLI, receipts, eval |
+| Cursor | Package fidelity | Complete skill dirs + thin `rules/` — **not** runtime policy parity |
+| OpenCode | Package fidelity | Complete skill package install — no runtime policy parity |
+| Gemini CLI | Package fidelity | Complete skill package install — no runtime policy parity |
 
-See [docs/architecture.md](docs/architecture.md), [docs/threat-model.md](docs/threat-model.md), and [docs/hackathon-demo.md](docs/hackathon-demo.md).
+---
 
-## Install in Claude Code
+## Install
+
+### Codex (native plugin)
+
+From a clone of this repository:
+
+**POSIX**
+
+```sh
+codex plugin marketplace add "$(pwd)"
+codex plugin list --json
+codex plugin add skillsforge@skillsforge-marketplace
+```
+
+**Windows (PowerShell)**
+
+```powershell
+codex plugin marketplace add (Get-Location).Path
+codex plugin list --json
+codex plugin add skillsforge@skillsforge-marketplace
+```
+
+Marketplace: [`.agents/plugins/marketplace.json`](.agents/plugins/marketplace.json) → `plugins/skillsforge` ([`.codex-plugin/plugin.json`](plugins/skillsforge/.codex-plugin/plugin.json)).
+
+Codex **runtime** policy for an external skill requires `skillsforge package --host codex` (one guarded skill → native plugin), not `install` alone.
+
+### Claude Code
 
 ```text
 /plugin marketplace add Tlkh201313/SkillsForge
 /plugin install skillsforge@skillsforge-marketplace
 ```
-
-Invoke a slash command:
 
 ```text
 /skillsforge:validate path/to/skill
@@ -120,57 +175,26 @@ Invoke a slash command:
 /skillsforge:doctor
 ```
 
-Or invoke an installed skill:
+### Multi-host skill install
 
-```text
-/skillsforge:validate-agent-skill path/to/skill
+Detects agent config dirs under your home folder, then copies validated skills:
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs install
 ```
-
-Claude Code loads the command or skill, runs the bundled CLI, and reports structural or policy failures before qualitative advice.
-
-## Install skills into your agents
-
-CodeGraph-style host picker. Detects agent config dirs under your home folder, then copies validated skills:
-
-```text
-$ node ./plugins/skillsforge/bin/skillsforge.mjs install
-
-Which agents should SkillsForge configure?
-
-> [x] Claude Code — full
-  [x] Cursor — portable
-  [ ] Codex CLI — portable (not detected)
-  [ ] OpenCode — portable (not detected)
-  [x] Gemini CLI — portable
-
-↑/↓ move · space toggle · enter confirm · q abort
-```
-
-Fidelity:
 
 | Host | What gets installed |
 |---|---|
-| Claude Code (`full`) | Entire skill package (`SKILL.md`, `skillsforge.json`, references, hooks frontmatter) → `~/.claude/skills/<name>/` |
-| Cursor / Codex / OpenCode / Gemini (`portable`) | Portable `SKILL.md` only (name + description + body; sidecar/hooks stripped) → host skills dir |
+| Claude Code (`full`) | Entire skill package → `~/.claude/skills/<name>/` with runtime policy |
+| Codex / Cursor / OpenCode / Gemini (`package`) | Complete skill package; Claude-only frontmatter may be stripped |
 
-This is **not** multi-host runtime policy parity. PreToolUse guardrails only apply inside Claude Code.
+Non-interactive: `--hosts claude-code,cursor --yes` (host ids: `claude-code`, `cursor`, `codex`, `opencode`, `gemini`).
 
-Non-interactive examples:
+---
 
-```sh
-# List detected hosts
-node ./plugins/skillsforge/bin/skillsforge.mjs install --list --json
+## Core CLI
 
-# Dry-run portable install into Cursor
-node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts cursor --yes --dry-run
-
-# Install specific skills into Claude Code + Cursor (overwrite)
-node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts claude-code,cursor --yes --force path/to/skill
-```
-
-## CLI reference
-
-Build once, then use the bundled binary (marketplace installs already ship it):
+Requires Node.js ≥ 20. Build once for the bundled binary (marketplace installs already ship it):
 
 ```sh
 npm ci
@@ -184,173 +208,128 @@ On Windows PowerShell, always invoke with Node:
 node .\plugins\skillsforge\bin\skillsforge.mjs help
 ```
 
-The `skillsforge-validate` shim forwards to `skillsforge validate`.
+Exit codes: `0` success · `1` failure · `2` invalid usage.
 
-Exit codes for every command: `0` success, `1` failure, `2` invalid usage.
+| Command | Purpose |
+|---|---|
+| `demo` | Judge path: unsafe deny → safe package → receipt |
+| `validate [paths…]` | Structure + capability policy (when sidecar present) |
+| `package --host codex` | One skill → guarded Codex plugin (`--dry-run` default; `--write` to materialize) |
+| `receipt` / `verify-receipt` | Build / verify tamper-evident package receipt |
+| `enforce --policy <sidecar>` | PreToolUse allow/deny from stdin event JSON |
+| `evidence --out <dir>` | Deterministic trust/eval evidence bundle |
+| `route --query <text>` | Explainable skill routing |
+| `forge --spec <file>` | Deterministic skill generation (`--dry-run` / `--write`) |
+| `doctor` | Plugin + installed-skill health |
+| `install` | Multi-host skill install (interactive or `--hosts` + `--yes`) |
+| `vibe` / `catalog` / `quality` | Magical moment, pack browse, quality score 0–100 |
+| `skillshield` / `pressure` | Best-effort body scan / fixture pressure gate |
+| `compare-skill --a … --b …` | Side-by-side trust delta |
+| `eval` | Holdout routing evaluation (P/R gate) |
 
-### `validate`
+Full flag list: `skillsforge help`. Architecture: [docs/architecture.md](docs/architecture.md).
 
-Validate skill packages (YAML / schema / paths). When a `skillsforge.json` sidecar is present, also run the capability policy scan.
+### Quick examples
 
 ```sh
-node ./plugins/skillsforge/bin/skillsforge.mjs validate path/to/skill
-node ./plugins/skillsforge/bin/skillsforge.mjs validate --profile claude-code path/to/skill
-node ./plugins/skillsforge/bin/skillsforge.mjs validate --json path/to/skill
+# Validate
+node ./plugins/skillsforge/bin/skillsforge.mjs validate examples/codex-safe-release
 node ./plugins/skillsforge/bin/skillsforge.mjs validate --all
-node ./plugins/skillsforge/bin/skillsforge.mjs validate --all --allow-empty
+
+# Package (POSIX) — dry-run first
+node ./plugins/skillsforge/bin/skillsforge.mjs package --host codex \
+  --skill examples/codex-safe-release --out /tmp/codex-safe-release-plugin --dry-run
+
+# Unsafe skills fail closed before any write
+node ./plugins/skillsforge/bin/skillsforge.mjs package --host codex \
+  --skill examples/codex-unsafe-release --out /tmp/should-not-exist --write
+# exits non-zero; --out stays empty / unwritten
+
+# Evidence + receipt
+node ./plugins/skillsforge/bin/skillsforge.mjs evidence --out artifacts/evidence
+node ./plugins/skillsforge/bin/skillsforge.mjs receipt --out dist/trust-receipt.json --package dist/codex
 ```
 
-Flags: `--json`, `--all`, `--allow-empty`, `--profile <canonical|claude-code>` (default `canonical`).
-
-Shim:
-
-```sh
-./plugins/skillsforge/bin/skillsforge-validate --profile claude-code path/to/skill
+```powershell
+# Package (Windows)
+node .\plugins\skillsforge\bin\skillsforge.mjs package --host codex `
+  --skill examples\codex-safe-release --out $env:TEMP\codex-safe-release-plugin --dry-run
 ```
 
-### `doctor`
+### Demo examples
 
-Plugin and installed-skill health checks (includes blocking policy findings).
+| Example | Intent |
+|---|---|
+| [`examples/codex-unsafe-release/`](examples/codex-unsafe-release/) | Undeclared exec + network — **FAIL** validate / package |
+| [`examples/codex-safe-release/`](examples/codex-safe-release/) | Least-privilege declarations — **PASS** validate / package |
+| [`examples/safe-dependency-upgrade/`](examples/safe-dependency-upgrade/) | Forge-spec dry-run fixture |
 
-```sh
-node ./plugins/skillsforge/bin/skillsforge.mjs doctor
-node ./plugins/skillsforge/bin/skillsforge.mjs doctor --json
-```
+---
 
-### `route`
+## Claim boundaries / security
 
-Explainable skill routing for a natural-language query.
+### Anti-goals (not claimed)
 
-```sh
-node ./plugins/skillsforge/bin/skillsforge.mjs route --query "validate this skill package"
-```
+This release does **not** ship or claim: Ruflo-style MCP swarms / AgentDB / consensus, desktop operator dashboards, OS sandboxing, or third-party attestation. Domain packs are **lean curated scaffolds**, not unvalidated dumps from skills.sh.
 
-### `forge`
+### Say aloud
 
-Deterministic skill generation from a forge-spec. Dry-run is the default; `--write` materializes files.
+- **Hook guardrail ≠ OS sandbox.** PreToolUse denies matched tools when the host honors the decision; it does not confine processes or replace containers/VMs.
+- **Regex / static checks are best-effort.** Encoded payloads and unscanned binaries can bypass the scanner. SkillShield is a **skill-body scanner (best-effort)**.
+- **Pressure = fixture gate + expanding.** Fixtures check expected violation/compliance shape today; behavioral agent pressure is expanding.
+- **Receipts are unsigned tamper evidence.** Reproducible hashes prove bytes changed; they are not third-party certification.
+- **No copied third-party skill bodies.** Inspiration is attributed; bodies are original SkillsForge text.
+- **Honest depth:** 354 catalog entries; ~25 heroes carry production-depth Purpose/Phases. Domain packs stay lean on purpose.
+- **No invented Session IDs.** Build Week provenance lives in [BUILD_WEEK.md](BUILD_WEEK.md) when filled — never fabricate one for demos or docs.
 
-```sh
-node ./plugins/skillsforge/bin/skillsforge.mjs forge --spec examples/safe-dependency-upgrade/forge-spec.json --dry-run
-node ./plugins/skillsforge/bin/skillsforge.mjs forge --spec path/to/forge-spec.json --write
-node ./plugins/skillsforge/bin/skillsforge.mjs forge --spec path/to/forge-spec.json --write --force --out path/to/skills
-```
+### Security boundary
 
-Flags: `--spec <file>` (required), `--dry-run`, `--write`, `--force`, `--out <dir>`.
+- Skill scripts are never executed during validation.
+- Local Markdown resources must remain inside the skill directory after real-path resolution.
+- Only HTTP, HTTPS, mailto, fragment, and valid local links are accepted.
+- Empty production skill libraries fail closed unless `--allow-empty` is explicitly supplied.
+- Codex does not comprehensively intercept every tool path; changed hooks need `/hooks` trust review; invalid hook output can fail open at the host.
 
-### `receipt`
+Threat model: [docs/threat-model.md](docs/threat-model.md).
 
-Build a trust receipt over packaged plugin bytes (optional evaluation evidence).
-
-```sh
-node ./plugins/skillsforge/bin/skillsforge.mjs receipt --out dist/trust-receipt.json --package dist/claude-code
-node ./plugins/skillsforge/bin/skillsforge.mjs receipt --out dist/trust-receipt.json --package dist/claude-code --evaluation artifacts/evaluation/routing-report.json --require-evaluation
-```
-
-Flags: `--out <file>`, `--package <dir>`, `--evaluation <file>`, `--require-evaluation`.
-
-### `verify-receipt`
-
-Verify a receipt against package bytes and optional evaluation report.
-
-```sh
-node ./plugins/skillsforge/bin/skillsforge.mjs verify-receipt dist/trust-receipt.json --package dist/claude-code --package-only
-node ./plugins/skillsforge/bin/skillsforge.mjs verify-receipt dist/trust-receipt.json --package dist/claude-code --evaluation artifacts/evaluation/routing-report.json
-```
-
-Flags: `--package <dir>`, `--evaluation <file>`, `--package-only`.
-
-### `enforce`
-
-Decide PreToolUse allow/deny from a sidecar policy. Reads the Claude tool-use event JSON from stdin (hook runtime).
-
-```sh
-echo '{"tool_name":"WebSearch","tool_input":{"query":"x"}}' | node ./plugins/skillsforge/bin/skillsforge.mjs enforce --policy path/to/skillsforge.json
-```
-
-Flag: `--policy <sidecar.json>` (required).
-
-### `eval`
-
-Run the holdout routing evaluation gate (precision / recall thresholds).
-
-```sh
-node ./plugins/skillsforge/bin/skillsforge.mjs eval
-# or
-npm run eval
-```
-
-### `install`
-
-Install validated skills into detected agent hosts (interactive TUI or `--hosts` + `--yes`).
-
-```sh
-node ./plugins/skillsforge/bin/skillsforge.mjs install
-node ./plugins/skillsforge/bin/skillsforge.mjs install --list --json
-node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts cursor,gemini --yes --dry-run
-node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts claude-code --yes --force path/to/skill
-```
-
-Flags: `--hosts <ids>`, `--yes`, `--list`, `--dry-run`, `--force`, `--json`, `--home <dir>`.
-
-Host ids: `claude-code`, `cursor`, `codex`, `opencode`, `gemini`.
-
-### `help`
-
-```sh
-node ./plugins/skillsforge/bin/skillsforge.mjs help
-```
-
-## Profiles
+### Validation profiles
 
 | Capability | `canonical` | `claude-code` |
 |---|:---:|:---:|
 | Agent Skills core fields | ✓ | ✓ |
 | `metadata` string map | ✓ | ✓ |
 | Portable `allowed-tools` string | ✓ | ✓ |
-| Claude tool arrays | — | ✓ |
-| Invocation controls | — | ✓ |
-| Claude model, context, agent, and hooks | — | ✓ |
+| Claude tool arrays / invocation / hooks | — | ✓ |
 | Unknown top-level fields | Rejected | Rejected |
 
 Put portable project-specific values under `metadata`. Select `claude-code` only when the package intentionally uses Claude extensions.
 
-## Example output
-
-Successful package:
-
-```text
-PASS validate-agent-skill (canonical)
-```
-
-Invalid package:
-
-```text
-FAIL example-skill
-  - frontmatter / must contain description
-  - relative markdown link must resolve: references/missing.md
-```
+---
 
 ## Verification
-
-Run the same release-contract dry run locally from the repository root:
 
 ```sh
 npm ci
 npm run check
 ```
 
-`npm run check` includes validate, test, eval, demo, build, `build:dist`, `smoke:dist`, and hard `validate:host` (`claude plugin validate --strict` via local `@anthropic-ai/claude-code`; no soft-skip).
+`npm run check` runs validate, test, eval, demo, build, `build:dist`, `smoke:dist`, hard `validate:host`, and evidence. Evidence artifacts: eval report, host-validation JSON, receipt, Codex dist, evidence bundle.
 
-GitHub Actions runs the unit matrix on Ubuntu, Windows, and macOS with Node.js 20 and 22. The release-contract job (Ubuntu) runs the full gate including demo, `build:dist`, `smoke:dist`, and `validate:host`. A Windows release-smoke job covers test + demo + dist + host validate. Evidence artifacts: eval report, host-validation JSON, receipt, lossiness, smoke log.
+### Docs map
 
-## Security boundary
+| Doc | Use |
+|---|---|
+| [docs/architecture.md](docs/architecture.md) | Surfaces, Codex compile, hook flow |
+| [docs/threat-model.md](docs/threat-model.md) | Trust boundaries and limitations |
+| [docs/hackathon-demo.md](docs/hackathon-demo.md) | Timed judge script |
+| [docs/video.md](docs/video.md) | Remotion render / poster |
+| [docs/competitive-matrix.md](docs/competitive-matrix.md) | ECC / Superpowers / gstack matrix |
+| [docs/inspiration.md](docs/inspiration.md) | No-copy attribution |
+| [docs/submission.md](docs/submission.md) / [docs/submit-checklist.md](docs/submit-checklist.md) | Devpost / Stage One |
+| [docs/roadmap-next.md](docs/roadmap-next.md) | Post-0.4.0 priorities |
+| [BUILD_WEEK.md](BUILD_WEEK.md) | Build Week provenance |
 
-- Skill scripts are never executed during validation.
-- Local Markdown resources must remain inside the skill directory after real-path resolution.
-- Only HTTP, HTTPS, mailto, fragment, and valid local links are accepted.
-- Empty production skill libraries fail closed unless `--allow-empty` is explicitly supplied.
-- PreToolUse hooks are guardrails honored by the host — not an OS sandbox.
-- `VERSION`, `package.json`, every plugin and marketplace entry, and the README badge must use the same release version.
+---
 
 ## License
 

@@ -1,0 +1,6 @@
+interface:
+  display_name: Design System
+  short_description: Use when you need design system in a SkillsForge design workflow.
+  default_prompt: Use the design-system skill for this task.
+policy:
+  allow_implicit_invocation: true

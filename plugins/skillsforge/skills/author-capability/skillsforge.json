@@ -1,7 +1,9 @@
 {
   "schemaVersion": 1,
   "maturity": "stable",
-  "requires": ["using-skillsforge"],
+  "requires": [
+    "using-skillsforge"
+  ],
   "routing": {
     "triggers": [
       "create a skill",
@@ -20,7 +22,9 @@
       "security audit of skills",
       "forge steel",
       "capability bracket"
-    ]
+    ],
+    "mode": "auto",
+    "pack": "trust"
   },
   "capabilities": {
     "exec": {
@@ -32,8 +36,13 @@
         "node plugins/skillsforge/bin/skillsforge.mjs validate"
       ]
     },
-    "network": { "allowed": false, "hosts": [] },
-    "write": { "scope": "project" }
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
   },
   "compatibility": {
     "claude-code": "full",

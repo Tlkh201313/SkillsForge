@@ -12,7 +12,13 @@
       "skillsforge session",
       "session starts"
     ],
-    "antiTriggers": ["write a new skill", "compile skills", "skill marketplace"]
+    "antiTriggers": [
+      "write a new skill",
+      "compile skills",
+      "skill marketplace"
+    ],
+    "mode": "auto",
+    "pack": "trust"
   },
   "capabilities": {
     "exec": {
@@ -24,8 +30,13 @@
         "node plugins/skillsforge/bin/skillsforge-validate"
       ]
     },
-    "network": { "allowed": false, "hosts": [] },
-    "write": { "scope": "none" }
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "none"
+    }
   },
   "compatibility": {
     "claude-code": "full",

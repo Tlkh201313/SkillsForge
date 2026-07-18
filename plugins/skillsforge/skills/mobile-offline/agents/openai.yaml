@@ -1,0 +1,6 @@
+interface:
+  display_name: Mobile Offline
+  short_description: Use when you need mobile offline in a SkillsForge mobile workflow.
+  default_prompt: Use the mobile-offline skill for this task.
+policy:
+  allow_implicit_invocation: true

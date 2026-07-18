@@ -1,0 +1,6 @@
+interface:
+  display_name: Lang Css
+  short_description: Use when you need lang css in a SkillsForge lang workflow.
+  default_prompt: Use the lang-css skill for this task.
+policy:
+  allow_implicit_invocation: true

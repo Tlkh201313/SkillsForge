@@ -1,0 +1,6 @@
+interface:
+  display_name: Data Experiment Design
+  short_description: Use when you need data experiment design in a SkillsForge data workflow.
+  default_prompt: Use the data-experiment-design skill for this task.
+policy:
+  allow_implicit_invocation: true

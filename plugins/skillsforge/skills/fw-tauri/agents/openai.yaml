@@ -1,0 +1,6 @@
+interface:
+  display_name: Fw Tauri
+  short_description: Use when you need fw tauri in a SkillsForge framework workflow.
+  default_prompt: Use the fw-tauri skill for this task.
+policy:
+  allow_implicit_invocation: true

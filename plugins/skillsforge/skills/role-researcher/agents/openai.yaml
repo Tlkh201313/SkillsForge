@@ -1,0 +1,6 @@
+interface:
+  display_name: Role Researcher
+  short_description: Use when you need role researcher in a SkillsForge roles workflow.
+  default_prompt: Use the role-researcher skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: Docs Readme
+  short_description: Use when you need docs readme in a SkillsForge docs workflow.
+  default_prompt: Use the docs-readme skill for this task.
+policy:
+  allow_implicit_invocation: true

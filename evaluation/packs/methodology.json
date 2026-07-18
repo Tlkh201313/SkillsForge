@@ -1,0 +1,23 @@
+{
+  "pack": "methodology",
+  "cases": [
+    {
+      "id": "tdd-first-positive",
+      "query": "run tdd first skill",
+      "expected": "tdd-first",
+      "pack": "methodology"
+    },
+    {
+      "id": "brainstorm-first-positive",
+      "query": "help with brainstorm first",
+      "expected": "brainstorm-first",
+      "pack": "methodology"
+    },
+    {
+      "id": "write-plan-positive",
+      "query": "write plan skill",
+      "expected": "write-plan",
+      "pack": "methodology"
+    }
+  ]
+}

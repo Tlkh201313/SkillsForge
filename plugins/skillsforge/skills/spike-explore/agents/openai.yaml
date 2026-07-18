@@ -1,0 +1,6 @@
+interface:
+  display_name: Spike Explore
+  short_description: Use when you need spike explore in a SkillsForge lifecycle workflow.
+  default_prompt: Use the spike-explore skill for this task.
+policy:
+  allow_implicit_invocation: true

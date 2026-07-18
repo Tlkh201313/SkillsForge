@@ -1,0 +1,6 @@
+interface:
+  display_name: Mobile Beta
+  short_description: Use when you need mobile beta in a SkillsForge mobile workflow.
+  default_prompt: Use the mobile-beta skill for this task.
+policy:
+  allow_implicit_invocation: true

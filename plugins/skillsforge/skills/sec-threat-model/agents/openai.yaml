@@ -1,0 +1,6 @@
+interface:
+  display_name: Sec Threat Model
+  short_description: Use when you need sec threat model in a SkillsForge security workflow.
+  default_prompt: Use the sec-threat-model skill for this task.
+policy:
+  allow_implicit_invocation: true

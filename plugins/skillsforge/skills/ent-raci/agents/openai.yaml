@@ -1,0 +1,6 @@
+interface:
+  display_name: Ent Raci
+  short_description: Use when you need ent raci in a SkillsForge enterprise workflow.
+  default_prompt: Use the ent-raci skill for this task.
+policy:
+  allow_implicit_invocation: true

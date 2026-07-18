@@ -1,0 +1,6 @@
+interface:
+  display_name: Fin Budget
+  short_description: Use when you need fin budget in a SkillsForge finance-lite workflow.
+  default_prompt: Use the fin-budget skill for this task.
+policy:
+  allow_implicit_invocation: true

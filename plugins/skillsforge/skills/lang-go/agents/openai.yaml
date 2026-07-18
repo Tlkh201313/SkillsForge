@@ -1,0 +1,6 @@
+interface:
+  display_name: Lang Go
+  short_description: Use when you need lang go in a SkillsForge lang workflow.
+  default_prompt: Use the lang-go skill for this task.
+policy:
+  allow_implicit_invocation: true

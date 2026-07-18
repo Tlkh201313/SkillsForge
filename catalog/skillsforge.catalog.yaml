@@ -1,0 +1,523 @@
+schemaVersion: 1
+packs:
+  trust:
+    description: "SkillsForge trust spine (validate, forge, route, verify)"
+    skills:
+    - using-skillsforge
+    - author-capability
+    - route-capability
+    - validate-agent-skill
+    - verify-capability
+  browse-catalog:
+    description: "Discover SkillsForge packs and profiles"
+    skills:
+    - browse-catalog
+  methodology:
+    description: "Discipline iron laws — brainstorm, plan, TDD, verify (original)"
+    skills:
+    - brainstorm-first
+    - write-plan
+    - tdd-first
+    - verify-before-done
+    - design-before-code
+    - subagent-driven-dev
+    - executing-plans
+    - no-rationalize
+    - pressure-test-skill
+    - cso-skill-description
+    - completeness-over-shortcut
+    - finish-with-evidence
+  roles:
+    description: "Role lenses for product, eng, design, QA, security, ship"
+    skills:
+    - role-ceo-review
+    - role-eng-review
+    - role-design-review
+    - role-devex-review
+    - role-qa-lead
+    - role-security-officer
+    - role-shipper
+    - role-growth-lead
+    - role-researcher
+    - role-pm
+    - role-tech-writer
+    - role-sre
+    - role-support
+    - role-data-analyst
+    - role-founder
+    - role-crew-coordinator
+  lifecycle:
+    description: "Work OS spine from shape to prove and learn"
+    skills:
+    - shape-intent
+    - plan-work
+    - lock-design
+    - run-build
+    - review-diff
+    - debug-issue
+    - qa-flow
+    - crew-handoff
+    - ship-release
+    - prove-outcome
+    - capture-learning
+    - triage-inbox
+    - spike-explore
+    - retro-improve
+  eng:
+    description: "Software engineering patterns"
+    skills:
+    - eng-api-design
+    - eng-refactor-safe
+    - eng-perf-profile
+    - eng-code-review
+    - eng-ci-pipeline
+    - eng-feature-flags
+    - eng-migrations
+    - eng-error-handling
+    - eng-logging
+    - eng-caching
+    - eng-concurrency
+    - eng-idempotency
+    - eng-contracts
+    - eng-versioning
+    - eng-deps-upgrade
+    - eng-dead-code
+    - eng-types-strict
+    - eng-module-boundaries
+    - eng-config-hygiene
+    - eng-secrets-handling
+    - eng-rate-limits
+    - eng-pagination
+    - eng-webhooks
+    - eng-background-jobs
+    - eng-observability
+    - eng-rollback
+    - eng-hotfixes
+    - eng-tech-debt
+  design:
+    description: "Product design and UI craft"
+    skills:
+    - design-anti-slop
+    - design-a11y
+    - design-motion
+    - design-brand
+    - design-critique
+    - design-system
+    - design-typography
+    - design-color
+    - design-layout
+    - design-forms
+    - design-empty-states
+    - design-responsive
+    - design-dark-mode
+    - design-icons
+    - design-prototype
+    - design-handoff
+    - design-tokens
+    - design-content
+  product:
+    description: "Product management and discovery"
+    skills:
+    - product-jtbd
+    - product-rice
+    - product-prd
+    - product-launch
+    - product-postmortem
+    - product-roadmap
+    - product-metrics
+    - product-experiment
+    - product-persona
+    - product-onboarding
+    - product-pricing-signal
+    - product-feedback
+    - product-scope-cut
+    - product-north-star
+  growth:
+    description: "Growth, SEO, retention, launch"
+    skills:
+    - growth-seo
+    - growth-copy
+    - growth-launch
+    - growth-retention
+    - growth-pricing
+    - growth-referral
+    - growth-landing
+    - growth-email
+    - growth-analytics
+    - growth-activation
+    - growth-churn
+    - growth-viral
+    - growth-content-engine
+    - growth-waitlist
+    - growth-partnerships
+    - growth-positioning
+  research:
+    description: "Research and competitive teardown"
+    skills:
+    - research-question
+    - research-sources
+    - research-teardown
+    - research-synth
+    - research-interview
+    - research-survey
+    - research-desk
+    - research-market
+    - research-user-journey
+    - research-assumptions
+    - research-evidence-grade
+    - research-contradictions
+  docs:
+    description: "Documentation and developer writing"
+    skills:
+    - docs-readme
+    - docs-quickstart
+    - docs-adr
+    - docs-runbook
+    - docs-llms-txt
+    - docs-api-ref
+    - docs-changelog
+    - docs-contributing
+    - docs-migration
+    - docs-faq
+    - docs-troubleshooting
+    - docs-examples
+  security:
+    description: "Security and privacy practices"
+    skills:
+    - sec-threat-model
+    - sec-secrets
+    - sec-authz
+    - sec-deps
+    - sec-incident
+    - sec-privacy
+    - sec-owasp
+    - sec-supply-chain
+    - sec-input-validation
+    - sec-session
+    - sec-crypto-hygiene
+    - sec-audit-log
+    - sec-pentest-prep
+    - sec-disclosure
+  ops:
+    description: "Operations and reliability"
+    skills:
+    - ops-deploy
+    - ops-health
+    - ops-oncall
+    - ops-cost
+    - ops-env-parity
+    - ops-backup
+    - ops-capacity
+    - ops-slos
+    - ops-incident-comms
+    - ops-runbook-drill
+    - ops-feature-freeze
+    - ops-canary
+  agentic:
+    description: "Agentic workflows and crew patterns"
+    skills:
+    - agent-crew
+    - agent-fanout
+    - agent-babysit
+    - agent-context
+    - agent-eval-loop
+    - agent-handoff
+    - agent-tool-policy
+    - agent-prompt-budget
+    - agent-memory-lite
+    - agent-parallel
+    - agent-stop-gates
+    - agent-critique
+    - agent-replay
+    - agent-sandbox
+  lang:
+    description: "Language-specific lean patterns (original)"
+    skills:
+    - lang-js
+    - lang-ts
+    - lang-python
+    - lang-go
+    - lang-rust
+    - lang-java
+    - lang-kotlin
+    - lang-swift
+    - lang-sql
+    - lang-bash
+    - lang-powershell
+    - lang-ruby
+    - lang-php
+    - lang-csharp
+    - lang-cpp
+    - lang-scala
+    - lang-elixir
+    - lang-dart
+    - lang-r
+    - lang-lua
+    - lang-html
+    - lang-css
+    - lang-graphql
+    - lang-protobuf
+    - lang-wasm
+    - lang-terraform
+    - lang-yaml
+    - lang-json-schema
+    - lang-markdown
+    - lang-regex
+  framework:
+    description: "Framework lean patterns (original)"
+    skills:
+    - fw-react
+    - fw-next
+    - fw-vue
+    - fw-svelte
+    - fw-angular
+    - fw-django
+    - fw-fastapi
+    - fw-flask
+    - fw-rails
+    - fw-laravel
+    - fw-spring
+    - fw-express
+    - fw-nest
+    - fw-hono
+    - fw-remix
+    - fw-astro
+    - fw-flutter
+    - fw-rn
+    - fw-electron
+    - fw-tauri
+    - fw-prisma
+    - fw-drizzle
+    - fw-tailwind
+    - fw-vitest
+    - fw-playwright
+    - fw-jest
+    - fw-pytest
+    - fw-docker
+  data:
+    description: "Data and analytics planning"
+    skills:
+    - data-schema
+    - data-etl
+    - data-warehouse
+    - data-analytics-plan
+    - data-quality
+    - data-lineage
+    - data-privacy
+    - data-metrics-dict
+    - data-experiment-design
+    - data-dashboard
+    - data-sql-review
+    - data-pipelines
+    - data-streaming
+    - data-backfill
+    - data-contracts
+    - data-governance
+  testing:
+    description: "Testing strategies"
+    skills:
+    - test-unit
+    - test-e2e
+    - test-property
+    - test-load
+    - test-fixture
+    - test-contract
+    - test-snapshot
+    - test-mutation
+    - test-flaky
+    - test-coverage
+    - test-smoke
+    - test-regression
+    - test-a11y
+    - test-visual
+    - test-security
+    - test-chaos
+  media:
+    description: "Media and creative briefs"
+    skills:
+    - media-image-brief
+    - media-video-script
+    - media-brand-asset
+    - media-podcast
+    - media-thumbnail
+    - media-storyboard
+    - media-alt-text
+    - media-compression
+    - media-style-guide
+    - media-ugc
+    - media-localization
+    - media-accessibility
+  mobile:
+    description: "Mobile release and store"
+    skills:
+    - mobile-ios-release
+    - mobile-android-release
+    - mobile-store-listing
+    - mobile-push
+    - mobile-offline
+    - mobile-perf
+    - mobile-deep-links
+    - mobile-permissions
+    - mobile-crash
+    - mobile-beta
+  enterprise:
+    description: "Enterprise stakeholder and process lite"
+    skills:
+    - ent-stakeholder-brief
+    - ent-raci
+    - ent-compliance-lite
+    - ent-procurement
+    - ent-sla
+    - ent-change-mgmt
+    - ent-vendor
+    - ent-security-review
+    - ent-audit-prep
+    - ent-training
+    - ent-support-tiers
+    - ent-roadmap-align
+  content:
+    description: "Content production"
+    skills:
+    - content-longform
+    - content-social
+    - content-newsletter
+    - content-blog
+    - content-docs-voice
+    - content-case-study
+    - content-script
+    - content-edit
+    - content-seo-draft
+    - content-repurpose
+    - content-calendar
+    - content-cta
+  legal-lite:
+    description: "Non-advice legal awareness helpers"
+    skills:
+    - legal-nda-skim
+    - legal-clause-risk
+    - legal-license-pick
+    - legal-tos-outline
+    - legal-privacy-outline
+    - legal-disclaimer
+    - legal-oss-notice
+    - legal-data-processing
+  finance-lite:
+    description: "Lightweight finance notes for builders"
+    skills:
+    - fin-unit-econ
+    - fin-pricing-table
+    - fin-runway
+    - fin-budget
+    - fin-invoice-hygiene
+    - fin-mrr
+    - fin-burn
+    - fin-forecast-lite
+  cloud-devops:
+    description: "Cloud and DevOps basics"
+    skills:
+    - cloud-docker
+    - cloud-k8s-basics
+    - cloud-ci-providers
+    - cloud-iac
+    - cloud-secrets-mgr
+    - cloud-networking
+    - cloud-cdn
+    - cloud-observability
+    - cloud-cost-tags
+    - cloud-iam
+    - cloud-serverless
+    - cloud-queues
+    - cloud-storage
+    - cloud-dns
+profiles:
+  vibe:
+    description: "Magical moment — trust + lifecycle + browse"
+    packs:
+    - trust
+    - browse-catalog
+    - lifecycle
+  core:
+    description: "Default install for vibecoders"
+    packs:
+    - trust
+    - browse-catalog
+    - lifecycle
+    - methodology
+    - roles
+    - eng
+    - design
+  full:
+    description: "Everything — beat ECC surface"
+    packs:
+    - trust
+    - browse-catalog
+    - methodology
+    - roles
+    - lifecycle
+    - eng
+    - design
+    - product
+    - growth
+    - research
+    - docs
+    - security
+    - ops
+    - agentic
+    - lang
+    - framework
+    - data
+    - testing
+    - media
+    - mobile
+    - enterprise
+    - content
+    - legal-lite
+    - finance-lite
+    - cloud-devops
+  eng:
+    description: "Engineering focus"
+    packs:
+    - trust
+    - methodology
+    - eng
+    - testing
+    - lang
+    - framework
+  design:
+    description: "Design focus"
+    packs:
+    - trust
+    - design
+    - roles
+    - content
+  product:
+    description: "Product focus"
+    packs:
+    - trust
+    - product
+    - research
+    - growth
+  growth:
+    description: "Growth focus"
+    packs:
+    - trust
+    - growth
+    - content
+    - media
+  ops:
+    description: "Ops focus"
+    packs:
+    - trust
+    - ops
+    - security
+    - cloud-devops
+  methodology:
+    description: "Discipline only"
+    packs:
+    - trust
+    - methodology
+  roles:
+    description: "Role lenses"
+    packs:
+    - trust
+    - roles

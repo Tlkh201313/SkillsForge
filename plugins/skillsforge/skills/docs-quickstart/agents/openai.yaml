@@ -1,0 +1,6 @@
+interface:
+  display_name: Docs Quickstart
+  short_description: Use when you need docs quickstart in a SkillsForge docs workflow.
+  default_prompt: Use the docs-quickstart skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: Triage Inbox
+  short_description: Use when you need triage inbox in a SkillsForge lifecycle workflow.
+  default_prompt: Use the triage-inbox skill for this task.
+policy:
+  allow_implicit_invocation: true

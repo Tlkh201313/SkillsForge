@@ -1,0 +1,6 @@
+﻿interface:
+  display_name: Using SkillsForge
+  short_description: Use when a SkillsForge session starts and the agent needs to know which SkillsForge commands, checks, and evidence surfaces are available.
+  default_prompt: Use this skill to learn which SkillsForge commands, checks, and evidence surfaces apply this session.
+policy:
+  allow_implicit_invocation: true

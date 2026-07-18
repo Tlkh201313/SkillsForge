@@ -1,0 +1,6 @@
+interface:
+  display_name: Finish With Evidence
+  short_description: Use when you need finish with evidence in a SkillsForge methodology workflow.
+  default_prompt: Use the finish-with-evidence skill for this task.
+policy:
+  allow_implicit_invocation: true

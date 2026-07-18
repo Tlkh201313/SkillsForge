@@ -1,7 +1,7 @@
 {
   "name": "skillsforge",
-  "version": "0.3.0",
-  "description": "Validate, forge, route, policy-scan, and package portable Agent Skills with evidence receipts.",
+  "version": "0.4.0",
+  "description": "Trusted Agent Skills pipeline — validate, forge, route, demo, evidence receipts. 354 catalog entries with ~25 production-depth heroes.",
   "type": "module",
   "bin": {
     "skillsforge": "./plugins/skillsforge/bin/skillsforge.mjs",
@@ -18,13 +18,23 @@
     "test": "node scripts/test.mjs",
     "eval": "node scripts/eval.mjs",
     "demo": "node scripts/demo.mjs",
+    "demo:judge": "node plugins/skillsforge/bin/skillsforge.mjs demo",
+    "mcp": "node scripts/skillsforge-mcp.mjs",
     "gen:schemas": "node scripts/gen-schemas.mjs",
     "gen:schemas:check": "node scripts/build.mjs --check",
     "build": "node scripts/build.mjs",
     "build:check": "node scripts/build.mjs --check",
     "build:dist": "node scripts/build-dist.mjs",
     "smoke:dist": "node --test tests/dist-smoke.test.mjs",
-    "check": "npm run validate:repo && npm run validate && npm test && npm run eval && npm run demo && npm run build:check && npm run build && npm run build:dist && npm run smoke:dist && npm run validate:host"
+    "evidence": "node scripts/evidence.mjs",
+    "gen:packs": "node scripts/gen-pack-skills.mjs",
+    "vibe": "node plugins/skillsforge/bin/skillsforge.mjs vibe",
+    "quality": "node plugins/skillsforge/bin/skillsforge.mjs quality",
+    "bench": "node plugins/skillsforge/bin/skillsforge.mjs bench",
+    "video:studio": "npm --prefix video run studio",
+    "video:render": "npm --prefix video run render",
+    "video:still": "npm --prefix video run still",
+    "check": "npm run validate:repo && npm run validate && npm test && npm run eval && npm run demo && npm run build:check && npm run build && npm run build:dist && npm run smoke:dist && npm run validate:host && npm run evidence -- --out artifacts/evidence"
   },
   "license": "MIT",
   "dependencies": {

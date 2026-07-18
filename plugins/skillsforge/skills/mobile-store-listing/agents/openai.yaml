@@ -1,0 +1,6 @@
+interface:
+  display_name: Mobile Store Listing
+  short_description: Use when you need mobile store listing in a SkillsForge mobile workflow.
+  default_prompt: Use the mobile-store-listing skill for this task.
+policy:
+  allow_implicit_invocation: true

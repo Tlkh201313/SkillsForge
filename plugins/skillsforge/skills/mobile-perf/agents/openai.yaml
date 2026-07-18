@@ -1,0 +1,6 @@
+interface:
+  display_name: Mobile Perf
+  short_description: Use when you need mobile perf in a SkillsForge mobile workflow.
+  default_prompt: Use the mobile-perf skill for this task.
+policy:
+  allow_implicit_invocation: true

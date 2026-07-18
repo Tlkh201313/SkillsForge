@@ -1,0 +1,6 @@
+interface:
+  display_name: Role Ceo Review
+  short_description: Use when you need role ceo review in a SkillsForge roles workflow.
+  default_prompt: Use the role-ceo-review skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Concurrency
+  short_description: Use when you need eng concurrency in a SkillsForge eng workflow.
+  default_prompt: Use the eng-concurrency skill for this task.
+policy:
+  allow_implicit_invocation: true

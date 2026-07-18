@@ -15,21 +15,34 @@ hooks:
 
 # Verify a Capability
 
-## Overview
+## Purpose
 
-Verification contract: structural validation, capability policy scan, dependency analysis, routing evaluation, and receipt checks. Explain evidence only; never edit files or override policy.
-
-`skillsforge validate` and `skillsforge doctor` both run the verify orchestrator: structural checks first, then capability policy scan for skills that ship a `skillsforge.json` sidecar. Sidecar-free portable skills stay structural-only. Blocking policy findings fail the command (exit 1). Doctor also fails when any installed skill has a blocking capability finding.
+Run the verification contract end-to-end: structural validation, capability policy scan, routing evaluation, and trust receipts — explain evidence only; never override policy.
 
 ## When to Use
 
-Before packaging, after editing any skill, and whenever a routing or policy result looks wrong.
+Before packaging, after editing any skill/sidecar, when routing looks wrong, or when integrity of a receipt is in doubt.
 
-## Checks
+## Phases
 
-1. Run `skillsforge doctor --json` first (or `skillsforge validate --json` for a single skill path). Both include capability policy scanning when sidecars are present.
-2. Treat deterministic JSON output as authoritative (`ok`, `reports`, `findings` with `rule`, `evidence`, `fix`, `blocking`). Explain failures with exact fields, files, rules, and remediation; do not invent status.
-3. Run `skillsforge eval` when routing changed.
-4. Run `skillsforge receipt` and `skillsforge verify-receipt` when packaging or integrity is in question.
-5. Never claim sandboxing, certification, or safety beyond scanner/hook evidence.
-6. Never edit skill files, sidecars, or receipts while verifying.
+1. **Doctor / validate** — `skillsforge doctor --json` for plugin+installed set, or `skillsforge validate --json <path>` for one skill. Treat JSON `ok`, `findings` (`rule`, `evidence`, `fix`, `blocking`) as authoritative.
+2. **Routing regressions** — If triggers/modes changed: `skillsforge eval`.
+3. **Integrity** — `skillsforge receipt --out dist/trust-receipt.json` then `skillsforge verify-receipt <file>` (add `--package <dir>` when hashing packaged bytes).
+4. **Evidence bundle** — For ship/CI: `skillsforge evidence --out artifacts/evidence`.
+5. **SkillShield (optional)** — `skillsforge skillshield --skill <dir>` for unsafe-pattern scan; do not conflate with validate.
+
+## Exit
+
+- Blocking findings listed with exact remediation
+- Explicit statement of what was *not* proven (no sandbox/certification claims)
+- Zero skill file edits during verify — **Never edit** skill or sidecar files in this skill
+
+## Anti-patterns
+
+- Editing sidecars “to make doctor green” without user approval
+- Inventing PASS when CLI exited 1
+- Skipping receipt verify after packaging
+
+## Handoff
+
+Failures → `author-capability` or `validate-agent-skill`. Clean verify → `skillsforge package` / `finish-with-evidence` / work artifact `docs/work/proof.md`.

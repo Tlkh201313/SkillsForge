@@ -1,0 +1,6 @@
+interface:
+  display_name: Role Growth Lead
+  short_description: Use when you need role growth lead in a SkillsForge roles workflow.
+  default_prompt: Use the role-growth-lead skill for this task.
+policy:
+  allow_implicit_invocation: true

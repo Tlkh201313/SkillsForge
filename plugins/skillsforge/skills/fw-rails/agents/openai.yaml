@@ -1,0 +1,6 @@
+interface:
+  display_name: Fw Rails
+  short_description: Use when you need fw rails in a SkillsForge framework workflow.
+  default_prompt: Use the fw-rails skill for this task.
+policy:
+  allow_implicit_invocation: true

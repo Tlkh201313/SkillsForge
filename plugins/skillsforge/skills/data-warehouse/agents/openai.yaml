@@ -1,0 +1,6 @@
+interface:
+  display_name: Data Warehouse
+  short_description: Use when you need data warehouse in a SkillsForge data workflow.
+  default_prompt: Use the data-warehouse skill for this task.
+policy:
+  allow_implicit_invocation: true

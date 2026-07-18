@@ -1,0 +1,6 @@
+interface:
+  display_name: Ent Training
+  short_description: Use when you need ent training in a SkillsForge enterprise workflow.
+  default_prompt: Use the ent-training skill for this task.
+policy:
+  allow_implicit_invocation: true

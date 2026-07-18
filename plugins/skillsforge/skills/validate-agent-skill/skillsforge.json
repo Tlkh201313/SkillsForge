@@ -24,7 +24,9 @@
       "validate agent payroll",
       "skill marketplace",
       "deploy skill marketplace"
-    ]
+    ],
+    "mode": "auto",
+    "pack": "trust"
   },
   "capabilities": {
     "exec": {
@@ -36,8 +38,13 @@
         "skillsforge validate"
       ]
     },
-    "network": { "allowed": false, "hosts": [] },
-    "write": { "scope": "none" }
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "none"
+    }
   },
   "compatibility": {
     "claude-code": "full",

@@ -1,0 +1,6 @@
+interface:
+  display_name: Fin Mrr
+  short_description: Use when you need fin mrr in a SkillsForge finance-lite workflow.
+  default_prompt: Use the fin-mrr skill for this task.
+policy:
+  allow_implicit_invocation: true
