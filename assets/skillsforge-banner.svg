@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="title description">
   <title id="title">SkillsForge</title>
-  <desc id="description">SkillsForge banner showing a forged hexagonal check mark and the words Portable Agent Skills validation.</desc>
+  <desc id="description">SkillsForge banner: trust engine for portable Agent Skills — validate, deny unsafe, package safe, evidence receipt.</desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#080b18"/>
@@ -35,12 +35,13 @@
     <path d="M168 17l10-16m8 34 19-5m-24 27 14 12" fill="none" stroke="url(#spark)" stroke-width="5" stroke-linecap="round"/>
   </g>
 
-  <g fill="#f8fafc" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif">
-    <text x="330" y="137" font-size="72" font-weight="760" letter-spacing="-2">SkillsForge</text>
-    <text x="334" y="184" font-size="25" font-weight="500" fill="#cbd5e1">Portable Agent Skills validation</text>
-    <text x="334" y="225" font-size="18" fill="#94a3b8">Claude Code plugin · standalone CLI · strict diagnostics</text>
+  <g fill="#f8fafc" font-family="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif">
+    <text x="330" y="132" font-size="72" font-weight="760" letter-spacing="-2">SkillsForge</text>
+    <text x="334" y="182" font-size="24" font-weight="500" fill="#cbd5e1">Trust engine for portable Agent Skills</text>
+    <text x="334" y="222" font-size="17" fill="#94a3b8">Validate → deny unsafe → package safe → PreToolUse → receipt</text>
+    <text x="334" y="255" font-size="15" fill="#64748b">Codex + Claude Code · standalone CLI · multi-host install</text>
   </g>
-  <rect x="334" y="251" width="92" height="3" rx="2" fill="#67e8f9"/>
-  <rect x="434" y="251" width="58" height="3" rx="2" fill="#818cf8"/>
-  <rect x="500" y="251" width="32" height="3" rx="2" fill="#c084fc"/>
+  <rect x="334" y="275" width="92" height="3" rx="2" fill="#67e8f9"/>
+  <rect x="434" y="275" width="58" height="3" rx="2" fill="#818cf8"/>
+  <rect x="500" y="275" width="32" height="3" rx="2" fill="#c084fc"/>
 </svg>

@@ -1,6 +1,6 @@
 # SkillsForge Remotion presentation video
 
-Programmatic judge-demo video for GitHub / Devpost (~2:30). Mirrors `npx skillsforge demo`.
+Programmatic judge-demo video for GitHub / Devpost (~90s). Mirrors `npx skillsforge demo`.
 
 ## Preview (Studio)
 
