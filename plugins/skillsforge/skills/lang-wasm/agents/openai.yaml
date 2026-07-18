@@ -1,0 +1,6 @@
+interface:
+  display_name: Lang Wasm
+  short_description: Use when you need lang wasm in a SkillsForge lang workflow.
+  default_prompt: Use the lang-wasm skill for this task.
+policy:
+  allow_implicit_invocation: true

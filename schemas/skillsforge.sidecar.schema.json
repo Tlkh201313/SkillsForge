@@ -37,6 +37,16 @@
           "type": "array",
           "items": { "type": "string", "minLength": 1 },
           "uniqueItems": true
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["auto", "explicit"],
+          "default": "explicit"
+        },
+        "pack": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "minLength": 1
         }
       }
     },

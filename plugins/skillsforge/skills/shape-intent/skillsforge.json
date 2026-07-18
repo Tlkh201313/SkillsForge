@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "shape the intent",
+      "write a problem brief",
+      "clarify success criteria",
+      "shape before planning",
+      "docs work brief"
+    ],
+    "antiTriggers": [
+      "skip straight to implementation",
+      "only run unit tests",
+      "package codex plugin now"
+    ],
+    "mode": "auto",
+    "pack": "lifecycle"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

@@ -160,7 +160,8 @@ test('CLI package --host codex help and dry-run', async () => {
     'package',
     '--host', 'codex',
     '--skill', join('tests', 'fixtures', 'skills', 'good-with-sidecar'),
-    '--out', out
+    '--out', out,
+    '--allow-absolute'
   ]);
   assert.equal(dry.code, 0, dry.stderr || dry.stdout);
   const json = JSON.parse(dry.stdout);

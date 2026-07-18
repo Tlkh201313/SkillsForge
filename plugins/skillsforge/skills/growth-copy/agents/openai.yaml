@@ -1,0 +1,6 @@
+interface:
+  display_name: Growth Copy
+  short_description: Use when you need growth copy in a SkillsForge growth workflow.
+  default_prompt: Use the growth-copy skill for this task.
+policy:
+  allow_implicit_invocation: true

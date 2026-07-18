@@ -57,12 +57,13 @@ test('sidecar schema rejects invalid hosts', async () => {
   assert.match(result.errors.join('\n'), /hosts/);
 });
 
-test('sidecar schema accepts optional network.searchAllowed', async () => {
+test('sidecar schema accepts routing.mode and routing.pack', async () => {
   const result = await validateWithSchema(schema, {
     ...valid,
-    capabilities: {
-      ...valid.capabilities,
-      network: { allowed: true, searchAllowed: true, hosts: ['api.example.com'] }
+    routing: {
+      ...valid.routing,
+      mode: 'explicit',
+      pack: 'eng'
     }
   });
   assert.deepEqual(result.errors, []);

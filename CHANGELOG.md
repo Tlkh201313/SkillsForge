@@ -2,6 +2,23 @@
 
 All notable changes to SkillsForge are recorded here.
 
+## [0.4.0] - 2026-07-18
+
+### Added — Total Dominance Work OS
+
+- Catalog substrate: `catalog/skillsforge.catalog.yaml`, 25 packs, 10 profiles, pack-scoped routing (`routing.mode` / `routing.pack`).
+- **354** original skills (100% sidecars + PreToolUse + Codex `agents/openai.yaml`), **70** agents, **107** commands — beyond ECC surface with trust.
+- Vibe CLI toolkit: `vibe`, `catalog`, `quality`, `lint-skill`, `bench`, `compose`, `watch`, `scorecard`, `scaffold`, `stocktake`, `batch`, `compare`, `pressure`, `skillshield`, `export-agents`, `capture`, `forge-from-capture`.
+- Skill Authoring Factory: scaffold + CSO quality rubric + pressure fixtures for methodology/auto heroes.
+- Cross-harness: `export-agents` → `AGENTS.md`; Cursor rules under `plugins/skillsforge/rules/`.
+- Docs: `docs/inspiration.md`, `docs/competitive-matrix.md`, `docs/skill-authoring.md`, `docs/work-os.md`, Work Artifact Contract under `docs/work/`.
+- Generator: `npm run gen:packs` (`scripts/gen-pack-skills.mjs` + `scripts/pack-inventory.mjs`).
+
+### Changed
+
+- Default `route` only considers `routing.mode: auto` (or unset legacy) skills; use `--pack` / `--include-explicit` for domain packs.
+- README leads with &lt;90s `skillsforge vibe` magical moment and competitive posture.
+
 ## [0.3.0] - 2026-07-13
 
 ### Added

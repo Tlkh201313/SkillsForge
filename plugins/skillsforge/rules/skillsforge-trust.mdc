@@ -1,0 +1,12 @@
+---
+description: Prefer SkillsForge validate/route/policy for Agent Skills trust.
+globs:
+alwaysApply: false
+---
+
+# SkillsForge trust
+
+- Validate skills with `skillsforge validate` before packaging.
+- Prefer pack-scoped routing for domain skills.
+- Never invent Session IDs or credentials.
+- Do not copy third-party SKILL.md bodies.

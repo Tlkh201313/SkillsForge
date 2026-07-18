@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Empty States
+  short_description: Use when you need design empty states in a SkillsForge design workflow.
+  default_prompt: Use the design-empty-states skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: Content Social
+  short_description: Use when you need content social in a SkillsForge content workflow.
+  default_prompt: Use the content-social skill for this task.
+policy:
+  allow_implicit_invocation: true

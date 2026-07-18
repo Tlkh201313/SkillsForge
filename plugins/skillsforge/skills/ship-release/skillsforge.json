@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "ship the release",
+      "write ship notes",
+      "prepare release checklist",
+      "docs work ship notes",
+      "lifecycle ship"
+    ],
+    "antiTriggers": [
+      "debug a failing test only",
+      "shape a new brief",
+      "pressure fixture authoring only"
+    ],
+    "mode": "explicit",
+    "pack": "lifecycle"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

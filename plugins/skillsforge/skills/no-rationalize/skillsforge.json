@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "no rationalize",
+      "stop justifying the failure",
+      "do not excuse the bug",
+      "face the failing check",
+      "methodology no rationalize"
+    ],
+    "antiTriggers": [
+      "celebratory ship notes",
+      "catalog profile overview",
+      "pure documentation typo"
+    ],
+    "mode": "explicit",
+    "pack": "methodology"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

@@ -1,0 +1,6 @@
+interface:
+  display_name: Plan Work
+  short_description: Use when you need plan work in a SkillsForge lifecycle workflow.
+  default_prompt: Use the plan-work skill for this task.
+policy:
+  allow_implicit_invocation: true

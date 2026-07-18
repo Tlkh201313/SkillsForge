@@ -1,0 +1,6 @@
+interface:
+  display_name: Data Dashboard
+  short_description: Use when you need data dashboard in a SkillsForge data workflow.
+  default_prompt: Use the data-dashboard skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: Research Contradictions
+  short_description: Use when you need research contradictions in a SkillsForge research workflow.
+  default_prompt: Use the research-contradictions skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: Data Privacy
+  short_description: Use when you need data privacy in a SkillsForge data workflow.
+  default_prompt: Use the data-privacy skill for this task.
+policy:
+  allow_implicit_invocation: true

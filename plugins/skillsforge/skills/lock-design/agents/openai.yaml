@@ -1,0 +1,6 @@
+interface:
+  display_name: Lock Design
+  short_description: Use when you need lock design in a SkillsForge lifecycle workflow.
+  default_prompt: Use the lock-design skill for this task.
+policy:
+  allow_implicit_invocation: true

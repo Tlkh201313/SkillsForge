@@ -1,0 +1,6 @@
+interface:
+  display_name: Lang Rust
+  short_description: Use when you need lang rust in a SkillsForge lang workflow.
+  default_prompt: Use the lang-rust skill for this task.
+policy:
+  allow_implicit_invocation: true

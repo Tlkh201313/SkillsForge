@@ -1,0 +1,6 @@
+interface:
+  display_name: Sec Deps
+  short_description: Use when you need sec deps in a SkillsForge security workflow.
+  default_prompt: Use the sec-deps skill for this task.
+policy:
+  allow_implicit_invocation: true

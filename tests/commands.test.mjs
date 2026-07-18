@@ -7,14 +7,17 @@ import { parseFrontmatter } from '../scripts/validate-skill-lib.mjs';
 
 const repoRoot = process.cwd();
 const commandsRoot = join(repoRoot, 'plugins', 'skillsforge', 'commands');
-const expectedCommands = ['validate', 'route', 'forge', 'doctor', 'verify-receipt'];
+const requiredCommands = ['validate', 'route', 'forge', 'doctor', 'verify-receipt'];
 
-test('plugin ships five slash commands with required frontmatter', async () => {
+test('plugin ships required slash commands plus dominance entrypoints', async () => {
   const entries = await readdir(commandsRoot);
   const names = entries.filter((name) => name.endsWith('.md')).map((name) => name.replace(/\.md$/, '')).sort();
-  assert.deepEqual(names, [...expectedCommands].sort());
+  assert.ok(names.length >= 100, `expected ≥100 commands, got ${names.length}`);
+  for (const name of requiredCommands) {
+    assert.ok(names.includes(name), `missing required command ${name}`);
+  }
 
-  for (const name of expectedCommands) {
+  for (const name of requiredCommands) {
     const source = await readFile(join(commandsRoot, `${name}.md`), 'utf8');
     const parsed = parseFrontmatter(source);
     assert.ok(parsed, `${name}.md must have YAML frontmatter`);
@@ -38,8 +41,17 @@ test('slash commands only reference the bundled CLI binary that exists', async (
   const cliPath = join(repoRoot, 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
   await access(cliPath);
 
-  for (const name of expectedCommands) {
+  for (const name of requiredCommands) {
     const source = await readFile(join(commandsRoot, `${name}.md`), 'utf8');
     assert.match(source, /bin\/skillsforge\.mjs/);
   }
+});
+
+test('dominance command stubs have frontmatter name and description', async () => {
+  const source = await readFile(join(commandsRoot, 'vibe.md'), 'utf8');
+  const parsed = parseFrontmatter(source);
+  assert.ok(parsed);
+  const front = parseDocument(parsed.yaml).toJS();
+  assert.equal(front.name, 'vibe');
+  assert.ok(String(front.description).length > 10);
 });

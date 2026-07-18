@@ -1,0 +1,6 @@
+interface:
+  display_name: Sec Incident
+  short_description: Use when you need sec incident in a SkillsForge security workflow.
+  default_prompt: Use the sec-incident skill for this task.
+policy:
+  allow_implicit_invocation: true

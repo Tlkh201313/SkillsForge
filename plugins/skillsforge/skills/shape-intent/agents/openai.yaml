@@ -1,0 +1,6 @@
+interface:
+  display_name: Shape Intent
+  short_description: Use when you need shape intent in a SkillsForge lifecycle workflow.
+  default_prompt: Use the shape-intent skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: Lang Dart
+  short_description: Use when you need lang dart in a SkillsForge lang workflow.
+  default_prompt: Use the lang-dart skill for this task.
+policy:
+  allow_implicit_invocation: true

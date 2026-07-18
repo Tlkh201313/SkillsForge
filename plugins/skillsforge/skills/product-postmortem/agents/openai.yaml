@@ -1,0 +1,6 @@
+interface:
+  display_name: Product Postmortem
+  short_description: Use when you need product postmortem in a SkillsForge product workflow.
+  default_prompt: Use the product-postmortem skill for this task.
+policy:
+  allow_implicit_invocation: true

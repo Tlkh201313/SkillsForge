@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "browse catalog",
+      "list skillsforge packs",
+      "which profile to install",
+      "search skillsforge skills",
+      "catalog packs and profiles"
+    ],
+    "antiTriggers": [
+      "write a new skill from scratch",
+      "validate one skill directory",
+      "unrelated application bugfix"
+    ],
+    "mode": "auto",
+    "pack": "browse-catalog"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "none"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

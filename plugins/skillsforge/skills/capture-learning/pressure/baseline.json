@@ -1,0 +1,12 @@
+{
+  "name": "baseline-skip",
+  "baselineViolations": [
+    "skipped-verification",
+    "rationalized-shortcut"
+  ],
+  "expectedCompliance": [
+    "follow-phases",
+    "write-exit-criteria",
+    "no-rationalize"
+  ]
+}

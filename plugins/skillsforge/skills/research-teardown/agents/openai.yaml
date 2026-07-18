@@ -1,0 +1,6 @@
+interface:
+  display_name: Research Teardown
+  short_description: Use when you need research teardown in a SkillsForge research workflow.
+  default_prompt: Use the research-teardown skill for this task.
+policy:
+  allow_implicit_invocation: true

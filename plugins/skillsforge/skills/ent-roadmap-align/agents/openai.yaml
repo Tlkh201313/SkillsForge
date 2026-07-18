@@ -1,0 +1,6 @@
+interface:
+  display_name: Ent Roadmap Align
+  short_description: Use when you need ent roadmap align in a SkillsForge enterprise workflow.
+  default_prompt: Use the ent-roadmap-align skill for this task.
+policy:
+  allow_implicit_invocation: true

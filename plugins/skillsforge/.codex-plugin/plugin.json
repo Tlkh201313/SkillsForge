@@ -1,6 +1,6 @@
 {
   "name": "skillsforge",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Make Agent Skills reviewable, least-privilege, measurable, and tamper-evident before teams run them in Codex.",
   "author": {
     "name": "Tlkh201313"

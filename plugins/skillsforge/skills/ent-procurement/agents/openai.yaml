@@ -1,0 +1,6 @@
+interface:
+  display_name: Ent Procurement
+  short_description: Use when you need ent procurement in a SkillsForge enterprise workflow.
+  default_prompt: Use the ent-procurement skill for this task.
+policy:
+  allow_implicit_invocation: true

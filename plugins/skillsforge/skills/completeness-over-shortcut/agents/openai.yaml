@@ -1,0 +1,6 @@
+interface:
+  display_name: Completeness Over Shortcut
+  short_description: Use when you need completeness over shortcut in a SkillsForge methodology workflow.
+  default_prompt: Use the completeness-over-shortcut skill for this task.
+policy:
+  allow_implicit_invocation: true

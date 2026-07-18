@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Config Hygiene
+  short_description: Use when you need eng config hygiene in a SkillsForge eng workflow.
+  default_prompt: Use the eng-config-hygiene skill for this task.
+policy:
+  allow_implicit_invocation: true

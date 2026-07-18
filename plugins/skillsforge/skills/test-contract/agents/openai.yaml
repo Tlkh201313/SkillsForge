@@ -1,0 +1,6 @@
+interface:
+  display_name: Test Contract
+  short_description: Use when you need test contract in a SkillsForge testing workflow.
+  default_prompt: Use the test-contract skill for this task.
+policy:
+  allow_implicit_invocation: true

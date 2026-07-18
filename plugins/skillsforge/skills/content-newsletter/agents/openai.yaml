@@ -1,0 +1,6 @@
+interface:
+  display_name: Content Newsletter
+  short_description: Use when you need content newsletter in a SkillsForge content workflow.
+  default_prompt: Use the content-newsletter skill for this task.
+policy:
+  allow_implicit_invocation: true

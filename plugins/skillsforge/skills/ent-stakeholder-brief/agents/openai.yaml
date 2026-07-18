@@ -1,0 +1,6 @@
+interface:
+  display_name: Ent Stakeholder Brief
+  short_description: Use when you need ent stakeholder brief in a SkillsForge enterprise workflow.
+  default_prompt: Use the ent-stakeholder-brief skill for this task.
+policy:
+  allow_implicit_invocation: true

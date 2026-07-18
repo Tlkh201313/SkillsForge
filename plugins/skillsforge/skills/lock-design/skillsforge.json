@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "lock the design",
+      "freeze ui decisions",
+      "design lock artifact",
+      "docs work design lock",
+      "stop redesign churn"
+    ],
+    "antiTriggers": [
+      "backend only api change",
+      "receipt verification only",
+      "pressure test authoring"
+    ],
+    "mode": "explicit",
+    "pack": "lifecycle"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

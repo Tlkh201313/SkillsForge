@@ -1,0 +1,6 @@
+interface:
+  display_name: Research Assumptions
+  short_description: Use when you need research assumptions in a SkillsForge research workflow.
+  default_prompt: Use the research-assumptions skill for this task.
+policy:
+  allow_implicit_invocation: true

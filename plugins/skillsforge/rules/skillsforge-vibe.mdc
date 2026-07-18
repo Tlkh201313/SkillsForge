@@ -1,0 +1,9 @@
+---
+description: Vibecoder quickstart via skillsforge vibe.
+globs:
+alwaysApply: false
+---
+
+# SkillsForge vibe
+
+Start with `npx skillsforge vibe` then `skillsforge catalog`.

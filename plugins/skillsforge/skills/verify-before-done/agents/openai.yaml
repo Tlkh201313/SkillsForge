@@ -1,0 +1,6 @@
+interface:
+  display_name: Verify Before Done
+  short_description: Use when you need verify before done in a SkillsForge methodology workflow.
+  default_prompt: Use the verify-before-done skill for this task.
+policy:
+  allow_implicit_invocation: true

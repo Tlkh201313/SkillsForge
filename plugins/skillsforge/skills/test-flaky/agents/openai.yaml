@@ -1,0 +1,6 @@
+interface:
+  display_name: Test Flaky
+  short_description: Use when you need test flaky in a SkillsForge testing workflow.
+  default_prompt: Use the test-flaky skill for this task.
+policy:
+  allow_implicit_invocation: true

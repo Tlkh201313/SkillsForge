@@ -15,6 +15,16 @@ import { pickHosts } from '../lib/capabilities/install-tui.mjs';
 import { HOST_REGISTRY } from '../lib/capabilities/hosts.mjs';
 import { exportPortableSkill } from '../lib/capabilities/export.mjs';
 import { packageCodexPlugin } from '../lib/capabilities/codex-package.mjs';
+import { loadCatalog, listPacks, listProfiles, searchCatalog, catalogStats, skillsForPack, skillsForProfile } from '../lib/capabilities/catalog.mjs';
+import { runVibe } from '../lib/capabilities/vibe.mjs';
+import { scoreSkillQuality, lintSkill } from '../lib/capabilities/quality.mjs';
+import { scaffoldSkill } from '../lib/capabilities/scaffold.mjs';
+import { runBench, runScorecard, runCompose, runStocktake, runPressure } from '../lib/capabilities/bench.mjs';
+import { runSkillShield, runSkillShieldMany } from '../lib/capabilities/skillshield.mjs';
+import { exportAgentsMd, captureLearning, forgeFromCapture } from '../lib/capabilities/export-agents.mjs';
+import { loadSkill } from '../lib/capabilities/skill-loader.mjs';
+import { resolveUnderRoot } from '../lib/capabilities/paths.mjs';
+import { runJudgeDemo, compareSkillTrust, formatPackScorecard } from '../lib/capabilities/demo.mjs';
 
 export { enforcePolicy, exportPortableSkill };
 
@@ -97,6 +107,37 @@ Commands:
     --force                         Overwrite a non-empty --out directory
   evidence --out <dir>              Emit deterministic trust/eval evidence bundle
                                     (writes when --out is set; default CI path: artifacts/evidence)
+  vibe                              Magical moment: work stubs + catalog summary + quality sample
+    --json                          Machine-readable output
+  catalog                           List packs/profiles/skills
+    --pack <id>                     Filter by pack
+    --profile <id>                  List skills for profile
+    --search <text>                 Search skill ids
+    --json                          Machine-readable output
+  quality --skill <dir>             Score skill quality 0-100
+    --json
+  lint-skill --skill <dir>          Fail if quality below threshold
+    --threshold <n>                 Default 70
+    --hero                          Require ≥85
+  scaffold --name <id>              Scaffold original skill + sidecar + openai.yaml
+    --pack <id>                     Pack id (default eng)
+    --mode auto|explicit
+    --write                         Persist (default dry-run)
+    --force                         Overwrite
+  bench                             Measure route/validate latency → artifacts/bench/latest.json
+  scorecard                         Pack coverage + last bench
+  compose --workflow <file>         Run skill DAG from JSON workflow
+  stocktake                         Diff installed skills vs catalog
+  batch --pack <id> --action quality|validate|skillshield
+  pressure --skill <dir>            Run skill pressure fixtures
+  skillshield [--skill <dir>|--all] Scan skills for unsafe patterns
+  export-agents [--out <file>]      Write AGENTS.md from catalog/agents
+  capture --insight <text>          Append learning to artifacts/capture + docs/work/learning.md
+  forge-from-capture                Propose skill candidates from repeated learnings
+  compare --a <dir> --b <dir>       Diff two skill sidecars/descriptions
+  compare-skill --a <dir> --b <dir> Side-by-side sidecar vs policy (trust delta)
+  demo                              Judge path: unsafe deny → safe package → receipt
+  watch --skill <dir>               Re-quality on interval (single pass in CI)
 
 Exit codes: 0 success, 1 command failure, 2 invalid usage
 `);
@@ -126,6 +167,44 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runPackage(argv.slice(1), options);
     case 'evidence':
       return runEvidence(argv.slice(1), options);
+    case 'vibe':
+      return runVibeCommand(argv.slice(1), options);
+    case 'catalog':
+      return runCatalogCommand(argv.slice(1), options);
+    case 'quality':
+      return runQualityCommand(argv.slice(1), options);
+    case 'lint-skill':
+      return runLintSkillCommand(argv.slice(1), options);
+    case 'scaffold':
+      return runScaffoldCommand(argv.slice(1), options);
+    case 'bench':
+      return runBenchCommand(argv.slice(1), options);
+    case 'scorecard':
+      return runScorecardCommand(argv.slice(1), options);
+    case 'compose':
+      return runComposeCommand(argv.slice(1), options);
+    case 'stocktake':
+      return runStocktakeCommand(argv.slice(1), options);
+    case 'batch':
+      return runBatchCommand(argv.slice(1), options);
+    case 'pressure':
+      return runPressureCommand(argv.slice(1), options);
+    case 'skillshield':
+      return runSkillShieldCommand(argv.slice(1), options);
+    case 'export-agents':
+      return runExportAgentsCommand(argv.slice(1), options);
+    case 'capture':
+      return runCaptureCommand(argv.slice(1), options);
+    case 'forge-from-capture':
+      return runForgeFromCaptureCommand(argv.slice(1), options);
+    case 'compare':
+      return runCompareCommand(argv.slice(1), options);
+    case 'compare-skill':
+      return runCompareSkillCommand(argv.slice(1), options);
+    case 'demo':
+      return runDemoCommand(argv.slice(1), options);
+    case 'watch':
+      return runWatchCommand(argv.slice(1), options);
     default:
       process.stderr.write(`unknown command: ${command}\n`);
       return 2;
@@ -182,6 +261,10 @@ function consumeOption(values, flag) {
   return value;
 }
 
+function resolveUserPath(root, value, allowAbsolute = false) {
+  return resolveUnderRoot(root, value, { allowAbsolute });
+}
+
 async function runDoctorCommand(argv, options) {
   const json = argv.includes('--json');
   const result = await runDoctor(await resolveRuntimeRoot(options));
@@ -195,14 +278,24 @@ async function runDoctorCommand(argv, options) {
 }
 
 async function runRoute(argv, options) {
-  const queryIndex = argv.indexOf('--query');
-  const query = queryIndex >= 0 ? argv[queryIndex + 1] : argv.filter((item) => !item.startsWith('--')).join(' ');
+  const args = [...argv];
+  const pack = consumeOption(args, '--pack');
+  if (pack === null) {
+    process.stderr.write('--pack requires a value\n');
+    return 2;
+  }
+  const includeExplicit = consumeFlag(args, '--include-explicit');
+  const queryIndex = args.indexOf('--query');
+  const query = queryIndex >= 0 ? args[queryIndex + 1] : args.filter((item) => !item.startsWith('--')).join(' ');
   if (!query) {
-    process.stderr.write('usage: skillsforge route --query <text>\n');
+    process.stderr.write('usage: skillsforge route --query <text> [--pack <id>] [--include-explicit]\n');
     return 2;
   }
   const skills = await loadAllSkills(await resolveRuntimeRoot(options));
-  const result = routeQuery(query, skills);
+  const result = routeQuery(query, skills, {
+    pack: pack ?? undefined,
+    includeExplicit: includeExplicit || Boolean(pack)
+  });
   process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
   return 0;
 }
@@ -481,6 +574,7 @@ async function runPackage(argv, options) {
   const write = consumeFlag(args, '--write');
   consumeFlag(args, '--dry-run');
   const force = consumeFlag(args, '--force');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
 
   if (!host || !skill || !out) {
     process.stderr.write('usage: skillsforge package --host codex --skill <dir> --out <dir> [--force] [--dry-run|--write]\n');
@@ -496,9 +590,18 @@ async function runPackage(argv, options) {
   }
 
   const root = await resolveRuntimeRoot(options);
+  let skillDir;
+  let outDir;
+  try {
+    skillDir = resolveUnderRoot(root, skill, { allowAbsolute });
+    outDir = resolveUnderRoot(root, out, { allowAbsolute });
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    return 1;
+  }
   const result = await packageCodexPlugin({
-    skillDir: resolve(root, skill),
-    outDir: resolve(root, out),
+    skillDir,
+    outDir,
     write,
     dryRun: !write,
     force
@@ -510,6 +613,7 @@ async function runPackage(argv, options) {
 async function runEvidence(argv, options) {
   const args = [...argv];
   const out = consumeOption(args, '--out');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
   if (out === null) {
     process.stderr.write('--out requires a value\n');
     return 2;
@@ -525,9 +629,16 @@ async function runEvidence(argv, options) {
 
   const { buildEvidenceBundleWithPackageMeta } = await import('../lib/capabilities/evidence.mjs');
   const root = await resolveRuntimeRoot(options);
+  let outDir;
+  try {
+    outDir = resolveUserPath(root, out, allowAbsolute);
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    return 1;
+  }
   const result = await buildEvidenceBundleWithPackageMeta({
     root,
-    outDir: resolve(root, out),
+    outDir,
     write: true
   });
   process.stdout.write(`${JSON.stringify({
@@ -537,6 +648,371 @@ async function runEvidence(argv, options) {
     files: result.files
   }, null, 2)}\n`);
   return result.ok ? 0 : 1;
+}
+
+async function runVibeCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const root = await resolveRuntimeRoot(options);
+  const result = await runVibe(root, { json });
+  if (json) process.stdout.write(`${JSON.stringify(result.data, null, 2)}\n`);
+  else process.stdout.write(result.text);
+  return result.ok ? 0 : 1;
+}
+
+async function runCatalogCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const pack = consumeOption(args, '--pack');
+  const profile = consumeOption(args, '--profile');
+  const search = consumeOption(args, '--search');
+  if (pack === null || profile === null || search === null) {
+    process.stderr.write('option requires a value\n');
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  const { catalog } = await loadCatalog(root);
+  let payload;
+  if (search) payload = { search, hits: searchCatalog(catalog, search) };
+  else if (pack) payload = { pack, skills: skillsForPack(catalog, pack) };
+  else if (profile) payload = { profile, skills: skillsForProfile(catalog, profile) };
+  else {
+    payload = {
+      stats: catalogStats(catalog),
+      packs: listPacks(catalog),
+      profiles: listProfiles(catalog)
+    };
+  }
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+  else {
+    process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+  }
+  return 0;
+}
+
+async function runQualityCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const skill = consumeOption(args, '--skill');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  if (!skill) {
+    process.stderr.write('usage: skillsforge quality --skill <dir>\n');
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let skillDir;
+  try {
+    skillDir = resolveUserPath(root, skill, allowAbsolute);
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    return 1;
+  }
+  const result = await scoreSkillQuality(skillDir, { root });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  return result.pass ? 0 : 1;
+}
+
+async function runLintSkillCommand(argv, options) {
+  const args = [...argv];
+  const skill = consumeOption(args, '--skill');
+  const thresholdRaw = consumeOption(args, '--threshold');
+  const hero = consumeFlag(args, '--hero');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  if (!skill) {
+    process.stderr.write('usage: skillsforge lint-skill --skill <dir> [--threshold n] [--hero]\n');
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let skillDir;
+  try {
+    skillDir = resolveUserPath(root, skill, allowAbsolute);
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    return 1;
+  }
+  const result = await lintSkill(skillDir, {
+    root,
+    threshold: thresholdRaw ? Number(thresholdRaw) : 70,
+    hero
+  });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  return result.ok ? 0 : 1;
+}
+
+async function runScaffoldCommand(argv, options) {
+  const args = [...argv];
+  const name = consumeOption(args, '--name');
+  const pack = consumeOption(args, '--pack') ?? 'eng';
+  const mode = consumeOption(args, '--mode') ?? 'explicit';
+  const write = consumeFlag(args, '--write');
+  const force = consumeFlag(args, '--force');
+  if (!name) {
+    process.stderr.write('usage: skillsforge scaffold --name <id> [--pack <id>] [--mode auto|explicit] [--write] [--force]\n');
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  const result = await scaffoldSkill(root, { name, pack, mode }, { write, force, dryRun: !write });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  return result.ok ? 0 : 1;
+}
+
+async function runBenchCommand(argv, options) {
+  const root = await resolveRuntimeRoot(options);
+  const result = await runBench(root);
+  process.stdout.write(`${JSON.stringify(result.summary, null, 2)}\n`);
+  return result.ok ? 0 : 1;
+}
+
+async function runScorecardCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const root = await resolveRuntimeRoot(options);
+  const result = await runScorecard(root);
+  if (json) {
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  } else {
+    process.stdout.write(`${formatPackScorecard(result, { color: true })}\n`);
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  }
+  return 0;
+}
+
+async function runComposeCommand(argv, options) {
+  const args = [...argv];
+  const workflow = consumeOption(args, '--workflow');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  if (!workflow) {
+    process.stderr.write('usage: skillsforge compose --workflow <file>\n');
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let workflowPath;
+  try {
+    workflowPath = resolveUnderRoot(root, workflow, { allowAbsolute });
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    return 1;
+  }
+  const result = await runCompose(root, workflowPath);
+  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  return result.ok ? 0 : 1;
+}
+
+async function runStocktakeCommand(argv, options) {
+  const root = await resolveRuntimeRoot(options);
+  const result = await runStocktake(root);
+  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  return result.missing.length === 0 ? 0 : 1;
+}
+
+async function runBatchCommand(argv, options) {
+  const args = [...argv];
+  const pack = consumeOption(args, '--pack');
+  const action = consumeOption(args, '--action') ?? 'quality';
+  if (!pack) {
+    process.stderr.write('usage: skillsforge batch --pack <id> --action quality|validate|skillshield\n');
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  const { catalog } = await loadCatalog(root);
+  const ids = skillsForPack(catalog, pack) ?? [];
+  const reports = [];
+  for (const id of ids) {
+    const dir = join(root, 'plugins', 'skillsforge', 'skills', id);
+    if (!(await pathExists(dir))) {
+      reports.push({ id, ok: false, error: 'missing' });
+      continue;
+    }
+    if (action === 'quality') reports.push({ id, ...(await scoreSkillQuality(dir, { root })) });
+    else if (action === 'skillshield') reports.push({ id, ...(await runSkillShield(dir, { root })) });
+    else {
+      const { verifySkillPaths } = await import('../lib/capabilities/verify.mjs');
+      const v = await verifySkillPaths([dir], { root, profile: 'claude-code' });
+      reports.push({ id, ok: v.ok });
+    }
+  }
+  const ok = reports.every((r) => r.ok || r.pass);
+  process.stdout.write(`${JSON.stringify({ pack, action, ok, reports }, null, 2)}\n`);
+  return ok ? 0 : 1;
+}
+
+async function runPressureCommand(argv, options) {
+  const args = [...argv];
+  const skill = consumeOption(args, '--skill');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  if (!skill) {
+    process.stderr.write('usage: skillsforge pressure --skill <dir>\n');
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let skillDir;
+  try {
+    skillDir = resolveUserPath(root, skill, allowAbsolute);
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    return 1;
+  }
+  const result = await runPressure(skillDir);
+  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  return result.ok ? 0 : 1;
+}
+
+async function runSkillShieldCommand(argv, options) {
+  const args = [...argv];
+  const all = consumeFlag(args, '--all');
+  const skill = consumeOption(args, '--skill');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  const root = await resolveRuntimeRoot(options);
+  if (all) {
+    const skills = await loadAllSkills(root);
+    const result = await runSkillShieldMany(skills.map((s) => s.directory), { root });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    return result.ok ? 0 : 1;
+  }
+  if (!skill) {
+    process.stderr.write('usage: skillsforge skillshield --skill <dir> | --all\n');
+    return 2;
+  }
+  try {
+    const result = await runSkillShield(resolveUserPath(root, skill, allowAbsolute), { root });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    return result.ok ? 0 : 1;
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    return 1;
+  }
+}
+
+async function runExportAgentsCommand(argv, options) {
+  const args = [...argv];
+  const out = consumeOption(args, '--out');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  const root = await resolveRuntimeRoot(options);
+  const result = await exportAgentsMd(root, {
+    out: out ?? undefined,
+    allowAbsolute
+  });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  return result.ok ? 0 : 1;
+}
+
+async function runCaptureCommand(argv, options) {
+  const args = [...argv];
+  const insight = consumeOption(args, '--insight');
+  const key = consumeOption(args, '--key');
+  if (!insight) {
+    process.stderr.write('usage: skillsforge capture --insight <text> [--key <slug>]\n');
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  const result = await captureLearning(root, { insight, key: key ?? undefined });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  return result.ok ? 0 : 1;
+}
+
+async function runForgeFromCaptureCommand(argv, options) {
+  const root = await resolveRuntimeRoot(options);
+  const result = await forgeFromCapture(root);
+  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  return result.ok ? 0 : 1;
+}
+
+async function runCompareCommand(argv, options) {
+  const args = [...argv];
+  const a = consumeOption(args, '--a');
+  const b = consumeOption(args, '--b');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  if (!a || !b) {
+    process.stderr.write('usage: skillsforge compare --a <dir> --b <dir>\n');
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let leftDir;
+  let rightDir;
+  try {
+    leftDir = resolveUnderRoot(root, a, { allowAbsolute });
+    rightDir = resolveUnderRoot(root, b, { allowAbsolute });
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    return 1;
+  }
+  const left = await loadSkill(leftDir, { root });
+  const right = await loadSkill(rightDir, { root });
+  const payload = {
+    a: { name: left.name, description: left.description, routing: left.sidecar?.routing },
+    b: { name: right.name, description: right.description, routing: right.sidecar?.routing },
+    sameDescription: left.description === right.description,
+    sameTriggers: JSON.stringify(left.sidecar?.routing?.triggers) === JSON.stringify(right.sidecar?.routing?.triggers)
+  };
+  process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+  return 0;
+}
+
+async function runCompareSkillCommand(argv, options) {
+  const args = [...argv];
+  const a = consumeOption(args, '--a');
+  const b = consumeOption(args, '--b');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  if (!a || !b) {
+    process.stderr.write('usage: skillsforge compare-skill --a <dir> --b <dir>\n');
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let leftDir;
+  let rightDir;
+  try {
+    leftDir = resolveUnderRoot(root, a, { allowAbsolute });
+    rightDir = resolveUnderRoot(root, b, { allowAbsolute });
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    return 1;
+  }
+  const payload = await compareSkillTrust(root, leftDir, rightDir);
+  process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+  return 0;
+}
+
+async function runDemoCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const root = await resolveRuntimeRoot(options);
+  const result = await runJudgeDemo(root, { color: !json });
+  if (result.scoreboard && !json) {
+    process.stdout.write(`${result.scoreboard}\n\n`);
+  }
+  process.stdout.write(`${JSON.stringify({
+    ok: result.ok,
+    elapsedMs: result.elapsedMs,
+    underBudget: result.underBudget,
+    falseAllow: result.falseAllow,
+    receiptHash: result.receiptHash,
+    evidencePath: result.evidencePath,
+    urls: result.urls,
+    steps: result.steps,
+    error: result.error
+  }, null, 2)}\n`);
+  return result.ok ? 0 : 1;
+}
+
+async function runWatchCommand(argv, options) {
+  const args = [...argv];
+  const skill = consumeOption(args, '--skill');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  if (!skill) {
+    process.stderr.write('usage: skillsforge watch --skill <dir> (single quality pass)\n');
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let skillDir;
+  try {
+    skillDir = resolveUserPath(root, skill, allowAbsolute);
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    return 1;
+  }
+  const result = await scoreSkillQuality(skillDir, { root });
+  process.stdout.write(`${JSON.stringify({ watch: 'single-pass', ...result }, null, 2)}\n`);
+  return result.pass ? 0 : 1;
 }
 
 if (process.argv[1]) {

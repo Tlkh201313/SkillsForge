@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Icons
+  short_description: Use when you need design icons in a SkillsForge design workflow.
+  default_prompt: Use the design-icons skill for this task.
+policy:
+  allow_implicit_invocation: true

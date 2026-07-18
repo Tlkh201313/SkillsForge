@@ -1,0 +1,6 @@
+interface:
+  display_name: Cso Skill Description
+  short_description: Use when you need cso skill description in a SkillsForge methodology workflow.
+  default_prompt: Use the cso-skill-description skill for this task.
+policy:
+  allow_implicit_invocation: true

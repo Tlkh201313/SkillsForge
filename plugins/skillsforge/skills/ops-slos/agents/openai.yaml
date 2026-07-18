@@ -1,0 +1,6 @@
+interface:
+  display_name: Ops Slos
+  short_description: Use when you need ops slos in a SkillsForge ops workflow.
+  default_prompt: Use the ops-slos skill for this task.
+policy:
+  allow_implicit_invocation: true

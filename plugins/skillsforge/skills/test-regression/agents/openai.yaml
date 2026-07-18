@@ -1,0 +1,6 @@
+interface:
+  display_name: Test Regression
+  short_description: Use when you need test regression in a SkillsForge testing workflow.
+  default_prompt: Use the test-regression skill for this task.
+policy:
+  allow_implicit_invocation: true

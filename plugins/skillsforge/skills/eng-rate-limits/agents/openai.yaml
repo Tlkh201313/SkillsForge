@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Rate Limits
+  short_description: Use when you need eng rate limits in a SkillsForge eng workflow.
+  default_prompt: Use the eng-rate-limits skill for this task.
+policy:
+  allow_implicit_invocation: true

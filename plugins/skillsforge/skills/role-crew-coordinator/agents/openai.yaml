@@ -1,0 +1,6 @@
+interface:
+  display_name: Role Crew Coordinator
+  short_description: Use when you need role crew coordinator in a SkillsForge roles workflow.
+  default_prompt: Use the role-crew-coordinator skill for this task.
+policy:
+  allow_implicit_invocation: true

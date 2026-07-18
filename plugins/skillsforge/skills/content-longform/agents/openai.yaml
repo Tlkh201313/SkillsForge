@@ -1,0 +1,6 @@
+interface:
+  display_name: Content Longform
+  short_description: Use when you need content longform in a SkillsForge content workflow.
+  default_prompt: Use the content-longform skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: Docs Runbook
+  short_description: Use when you need docs runbook in a SkillsForge docs workflow.
+  default_prompt: Use the docs-runbook skill for this task.
+policy:
+  allow_implicit_invocation: true

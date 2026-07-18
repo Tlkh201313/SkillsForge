@@ -1,0 +1,6 @@
+interface:
+  display_name: Ops Oncall
+  short_description: Use when you need ops oncall in a SkillsForge ops workflow.
+  default_prompt: Use the ops-oncall skill for this task.
+policy:
+  allow_implicit_invocation: true

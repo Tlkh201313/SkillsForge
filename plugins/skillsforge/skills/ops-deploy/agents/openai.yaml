@@ -1,0 +1,6 @@
+interface:
+  display_name: Ops Deploy
+  short_description: Use when you need ops deploy in a SkillsForge ops workflow.
+  default_prompt: Use the ops-deploy skill for this task.
+policy:
+  allow_implicit_invocation: true

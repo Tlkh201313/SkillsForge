@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "plan the work",
+      "write work plan",
+      "sequence the build",
+      "docs work plan",
+      "lifecycle planning"
+    ],
+    "antiTriggers": [
+      "shape the brief only",
+      "ship to production now",
+      "run skillshield only"
+    ],
+    "mode": "explicit",
+    "pack": "lifecycle"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

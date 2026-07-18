@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "verify before done",
+      "are we actually done",
+      "recheck against plan",
+      "done checklist verify",
+      "methodology verify done"
+    ],
+    "antiTriggers": [
+      "start greenfield brainstorm",
+      "install plugin hosts",
+      "only format markdown"
+    ],
+    "mode": "explicit",
+    "pack": "methodology"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

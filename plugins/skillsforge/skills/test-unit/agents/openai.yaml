@@ -1,0 +1,6 @@
+interface:
+  display_name: Test Unit
+  short_description: Use when you need test unit in a SkillsForge testing workflow.
+  default_prompt: Use the test-unit skill for this task.
+policy:
+  allow_implicit_invocation: true

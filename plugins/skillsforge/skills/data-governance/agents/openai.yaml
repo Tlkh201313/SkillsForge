@@ -1,0 +1,6 @@
+interface:
+  display_name: Data Governance
+  short_description: Use when you need data governance in a SkillsForge data workflow.
+  default_prompt: Use the data-governance skill for this task.
+policy:
+  allow_implicit_invocation: true

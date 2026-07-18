@@ -1,0 +1,6 @@
+interface:
+  display_name: Lang Terraform
+  short_description: Use when you need lang terraform in a SkillsForge lang workflow.
+  default_prompt: Use the lang-terraform skill for this task.
+policy:
+  allow_implicit_invocation: true

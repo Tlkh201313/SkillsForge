@@ -1,0 +1,6 @@
+interface:
+  display_name: Sec Disclosure
+  short_description: Use when you need sec disclosure in a SkillsForge security workflow.
+  default_prompt: Use the sec-disclosure skill for this task.
+policy:
+  allow_implicit_invocation: true

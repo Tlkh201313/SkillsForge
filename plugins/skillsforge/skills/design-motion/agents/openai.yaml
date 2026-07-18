@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Motion
+  short_description: Use when you need design motion in a SkillsForge design workflow.
+  default_prompt: Use the design-motion skill for this task.
+policy:
+  allow_implicit_invocation: true

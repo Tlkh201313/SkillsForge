@@ -1,0 +1,6 @@
+interface:
+  display_name: Agent Babysit
+  short_description: Use when you need agent babysit in a SkillsForge agentic workflow.
+  default_prompt: Use the agent-babysit skill for this task.
+policy:
+  allow_implicit_invocation: true

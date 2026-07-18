@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "finish with evidence",
+      "emit evidence bundle",
+      "close out with artifacts",
+      "methodology finish evidence",
+      "artifacts evidence out"
+    ],
+    "antiTriggers": [
+      "casual chat no ship",
+      "brainstorm only",
+      "scaffold dry run only"
+    ],
+    "mode": "explicit",
+    "pack": "methodology"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

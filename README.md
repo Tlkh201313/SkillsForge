@@ -1,13 +1,34 @@
 ![SkillsForge — Portable Agent Skills validation](assets/skillsforge-banner.svg)
 
 [![CI](https://github.com/Tlkh201313/SkillsForge/actions/workflows/ci.yml/badge.svg)](https://github.com/Tlkh201313/SkillsForge/actions/workflows/ci.yml)
-![Version](https://img.shields.io/badge/version-0.3.0-7c3aed)
+![Version](https://img.shields.io/badge/version-0.4.0-7c3aed)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 
-**Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, and tamper-evident before teams run them.**
+**Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, and tamper-evident — with a &lt;90s demo that proves it.**
 
-SkillsForge is a Developer Tools trust pipeline for portable [Agent Skills](https://agentskills.io/specification). Version 0.3.0 ships as a **native Codex plugin** that validates packages, scans declared capabilities, compiles one guarded skill into a Codex plugin, enforces PreToolUse policy on matched tools, and emits reproducible evidence receipts. Claude Code remains fully supported; Cursor, OpenCode, and Gemini get package-fidelity installs.
+SkillsForge is a Developer Tools **trust engine** for portable [Agent Skills](https://agentskills.io/specification): validate → deny unsafe → package safe → evidence receipt. Scale (354 catalog entries, **25 production-depth heroes**) is supporting evidence — the product is the trust pipeline.
+
+## Judge path (&lt;90s)
+
+```sh
+git clone https://github.com/Tlkh201313/SkillsForge.git
+cd SkillsForge
+npm ci
+npx skillsforge demo
+```
+
+You should see: **unsafe deny → safe package → receipt hash** (false-allow = 0). Then optionally:
+
+```sh
+npx skillsforge compare-skill --a examples/codex-unsafe-release --b examples/codex-safe-release
+npx skillsforge vibe
+npx skillsforge catalog --pack trust
+```
+
+Presentation video (Remotion): see [docs/video.md](docs/video.md) — `npm run video:studio` / `npm run video:render`.
+
+Roadmap: [docs/roadmap-next.md](docs/roadmap-next.md).
 
 ## Host support matrix
 
@@ -15,7 +36,7 @@ SkillsForge is a Developer Tools trust pipeline for portable [Agent Skills](http
 |---|---|---|
 | Codex CLI | **Native plugin + guarded package** | Marketplace install via `.agents/plugins/marketplace.json`; `skillsforge package --host codex` compiles one skill → native plugin with PreToolUse hooks; `skillsforge install` copies complete skill packages to `~/.agents/skills` |
 | Claude Code | Full | Marketplace install, SessionStart, skill-scoped PreToolUse guardrails, bundled CLI, receipts, eval; installer copies full packages |
-| Cursor | Package fidelity | `skillsforge install` copies complete skill directories (scripts/references/assets); Claude-only frontmatter stripped — **not** runtime policy parity |
+| Cursor | Package fidelity | Complete skill directories + thin `rules/`; Claude-only frontmatter stripped — **not** runtime policy parity |
 | OpenCode | Package fidelity | Complete skill package install under OpenCode skills root — no runtime policy parity |
 | Gemini CLI | Package fidelity | Complete skill package install — no runtime policy parity |
 
@@ -24,23 +45,44 @@ SkillsForge is a Developer Tools trust pipeline for portable [Agent Skills](http
 | Surface | Actual implementation |
 |---|---|
 | One plugin | `skillsforge` (Claude + Codex manifests) |
-| Slash commands | `validate`, `route`, `forge`, `doctor`, `verify-receipt` |
-| Bundled skills | `validate-agent-skill`, `author-capability`, `route-capability`, `verify-capability`, `using-skillsforge` |
-| Runtime CLI | `validate`, `doctor`, `route`, `forge`, `receipt`, `verify-receipt`, `enforce`, `eval`, `install`, `package`, `evidence`, `help` |
-| Codex packaging | `skillsforge package --host codex` — one guarded skill per generated plugin |
-| Evidence | `skillsforge evidence` — deterministic trust/eval bundle |
-| Policy | Static scan + host PreToolUse enforce (guardrails ≠ OS sandbox) |
-| Receipts | Reproducible package hashes — unsigned tamper evidence, not attestation |
+| Trust demo | `skillsforge demo` — unsafe deny → safe package → receipt |
+| Catalog | 25 packs, 10 profiles — see `catalog/skillsforge.catalog.yaml` |
+| Skills | **354 catalog entries** (100% sidecar); **~25 production-depth heroes**; domain packs are lean scaffolds |
+| Agents | **70** agents (12 playbook-depth; rest experimental stubs) |
+| Commands | **107** shims (**15** full slash contracts; long-tail = aliases) |
+| Vibe CLI | `vibe`, `catalog`, `quality`, `bench`, `scorecard`, `scaffold`, `pressure`, `skillshield`, `compare-skill`, … |
+| Trust CLI | `validate`, `doctor`, `route`, `forge`, `receipt`, `package`, `evidence`, `demo` |
+| Thin MCP | `scripts/skillsforge-mcp.mjs` — **only** `validate` / `route` / `skillshield` |
+| Evidence | Deterministic trust/eval bundle |
+
+## Competitive posture (honest)
+
+| Dimension | ECC-class packs | SkillsForge |
+|---|---|---|
+| Trust pipeline | rare | **validate → package → PreToolUse → receipt** |
+| Sidecars | rare | **100%** |
+| Skill count | ~278 | 354 catalog (scale proof; not the pitch) |
+| Operator CLI | weak | `demo` / `vibe` / `quality` / `bench` |
+| Pressure | no | fixture gate + expanding |
+| SkillShield | code scanners | skill-body scanner (best-effort) |
+| Swarm/MCP | varies | thin trust MCP only; complement Ruflo |
+
+Catalog count tables live below for operators — judges should hit the trust demo first.
+
+See [docs/competitive-matrix.md](docs/competitive-matrix.md) and [docs/inspiration.md](docs/inspiration.md) (no-copy rule).
 
 ## Anti-goals (not claimed)
 
-This release does **not** ship or claim: MCP servers, LSP, monitors, token / usage ledgers, domain skill packs, multi-host runtime parity, OS sandboxing, or third-party attestation.
+This release does **not** ship or claim: Ruflo-style MCP swarms / AgentDB / consensus, desktop operator dashboards, OS sandboxing, or third-party attestation. Domain packs are **lean curated scaffolds**, not unvalidated dumps from skills.sh.
 
 ## Claim boundaries (say aloud)
 
 - **Hook guardrail ≠ OS sandbox.** PreToolUse denies matched tools when the host honors the decision; it does not confine processes or replace containers/VMs.
-- **Regex / static checks are best-effort.** Encoded payloads and unscanned binaries can bypass the scanner.
+- **Regex / static checks are best-effort.** Encoded payloads and unscanned binaries can bypass the scanner. SkillShield is a **skill-body scanner (best-effort)**.
+- **Pressure = fixture gate + expanding.** Fixtures check expected violation/compliance shape today; behavioral agent pressure is expanding.
 - **Receipts are unsigned tamper evidence.** Reproducible hashes prove bytes changed; they are not third-party certification.
+- **No copied third-party skill bodies.** Inspiration is attributed; bodies are original SkillsForge text.
+- **Honest depth:** 354 catalog entries; ~25 heroes carry production-depth Purpose/Phases. Domain packs stay lean on purpose.
 
 ## Trust pipeline
 

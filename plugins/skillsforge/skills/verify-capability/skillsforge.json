@@ -1,7 +1,9 @@
 {
   "schemaVersion": 1,
   "maturity": "stable",
-  "requires": ["using-skillsforge"],
+  "requires": [
+    "using-skillsforge"
+  ],
   "routing": {
     "triggers": [
       "is this skill safe",
@@ -19,7 +21,9 @@
       "security audit of cloud",
       "container layers",
       "security scan only"
-    ]
+    ],
+    "mode": "auto",
+    "pack": "trust"
   },
   "capabilities": {
     "exec": {
@@ -37,8 +41,13 @@
         "node plugins/skillsforge/bin/skillsforge.mjs verify-receipt"
       ]
     },
-    "network": { "allowed": false, "hosts": [] },
-    "write": { "scope": "project" }
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
   },
   "compatibility": {
     "claude-code": "full",

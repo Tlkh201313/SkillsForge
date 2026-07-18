@@ -1,0 +1,6 @@
+interface:
+  display_name: Research User Journey
+  short_description: Use when you need research user journey in a SkillsForge research workflow.
+  default_prompt: Use the research-user-journey skill for this task.
+policy:
+  allow_implicit_invocation: true

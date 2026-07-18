@@ -1,7 +1,7 @@
 {
   "name": "skillsforge",
-  "version": "0.3.0",
-  "description": "Validate, forge, route, policy-scan, and package portable Agent Skills with evidence receipts.",
+  "version": "0.4.0",
+  "description": "Trusted Work OS for Agent Skills - 350+ original pack skills with vibe CLI, SkillShield, and evidence receipts.",
   "author": {
     "name": "Tlkh201313",
     "url": "https://github.com/Tlkh201313"
@@ -13,6 +13,7 @@
     "skills",
     "validation",
     "agent-skills",
-    "claude-code"
+    "claude-code",
+    "codex"
   ]
 }

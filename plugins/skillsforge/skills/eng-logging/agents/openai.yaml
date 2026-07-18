@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Logging
+  short_description: Use when you need eng logging in a SkillsForge eng workflow.
+  default_prompt: Use the eng-logging skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: Sec Owasp
+  short_description: Use when you need sec owasp in a SkillsForge security workflow.
+  default_prompt: Use the sec-owasp skill for this task.
+policy:
+  allow_implicit_invocation: true

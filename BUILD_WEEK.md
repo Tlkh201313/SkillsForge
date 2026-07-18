@@ -3,7 +3,7 @@
 **Track:** Developer Tools  
 **Project:** SkillsForge — Agent Skills trust pipeline for Codex  
 **Build window:** 2026-07-13 09:00 PT → 2026-07-21 17:00 PT  
-**Branch:** `feat/codex-hackathon-win`
+**Branch:** `feat/skillsforge-total-dominance`
 
 ## Codex / GPT-5.6 Session ID (required)
 

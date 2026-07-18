@@ -1,0 +1,6 @@
+interface:
+  display_name: Data Lineage
+  short_description: Use when you need data lineage in a SkillsForge data workflow.
+  default_prompt: Use the data-lineage skill for this task.
+policy:
+  allow_implicit_invocation: true

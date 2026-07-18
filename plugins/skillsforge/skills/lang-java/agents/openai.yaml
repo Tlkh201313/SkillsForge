@@ -1,0 +1,6 @@
+interface:
+  display_name: Lang Java
+  short_description: Use when you need lang java in a SkillsForge lang workflow.
+  default_prompt: Use the lang-java skill for this task.
+policy:
+  allow_implicit_invocation: true

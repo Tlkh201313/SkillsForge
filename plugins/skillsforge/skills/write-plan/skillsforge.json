@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "write a plan",
+      "detailed implementation plan",
+      "milestones and risks plan",
+      "methodology write plan",
+      "planning document for build"
+    ],
+    "antiTriggers": [
+      "execute code without plan",
+      "only validate existing skill",
+      "emergency incident command"
+    ],
+    "mode": "explicit",
+    "pack": "methodology"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

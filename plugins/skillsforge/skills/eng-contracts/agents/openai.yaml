@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Contracts
+  short_description: Use when you need eng contracts in a SkillsForge eng workflow.
+  default_prompt: Use the eng-contracts skill for this task.
+policy:
+  allow_implicit_invocation: true

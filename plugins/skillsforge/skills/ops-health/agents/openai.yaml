@@ -1,0 +1,6 @@
+interface:
+  display_name: Ops Health
+  short_description: Use when you need ops health in a SkillsForge ops workflow.
+  default_prompt: Use the ops-health skill for this task.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: Growth Pricing
+  short_description: Use when you need growth pricing in a SkillsForge growth workflow.
+  default_prompt: Use the growth-pricing skill for this task.
+policy:
+  allow_implicit_invocation: true

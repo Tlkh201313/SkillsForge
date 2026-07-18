@@ -1,0 +1,6 @@
+interface:
+  display_name: Role Security Officer
+  short_description: Use when you need role security officer in a SkillsForge roles workflow.
+  default_prompt: Use the role-security-officer skill for this task.
+policy:
+  allow_implicit_invocation: true
