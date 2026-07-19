@@ -1,13 +1,25 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 
 const binary = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge-validate');
-const npmCli = join(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js');
+const npmCliCandidates = [
+  process.env.npm_execpath,
+  join(dirname(process.execPath), '..', 'lib', 'node_modules', 'npm', 'bin', 'npm-cli.js'),
+  join(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js')
+].filter(Boolean);
+const npmCli = npmCliCandidates.find((candidate) => existsSync(candidate));
 
 function runNpm(args) {
-  return spawnSync(process.execPath, [npmCli, ...args], {
+  if (npmCli) {
+    return spawnSync(process.execPath, [npmCli, ...args], {
+      cwd: process.cwd(),
+      encoding: 'utf8'
+    });
+  }
+  return spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', args, {
     cwd: process.cwd(),
     encoding: 'utf8'
   });
