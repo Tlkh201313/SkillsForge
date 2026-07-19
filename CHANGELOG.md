@@ -2,6 +2,16 @@
 
 All notable changes to SkillsForge are recorded here.
 
+## [0.4.2] - 2026-07-19
+
+### Changed — Work OS quality pass
+
+- CLI `help` regrouped: Productivity → Trust & ship → Compat (os-*).
+- `lib recommend` uses confidence threshold (aligned with router); returns `confidence: none` + note instead of forcing weak matches.
+- Library UI shows explicit “No confident match” empty state.
+- Lean scaffold/gen-pack description templates now use Use-when + stop/verify wording (existing lean skills unchanged until `gen:packs`).
+- AGENTS.md productivity framing; claim/media/no-match tests added.
+
 ## [0.4.1] - 2026-07-19
 
 ### Changed — Productivity-first framing

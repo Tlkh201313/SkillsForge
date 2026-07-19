@@ -1,6 +1,6 @@
 {
   "name": "skillsforge",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Work OS for productive Agent Skills in Codex — route skills, run workflows, keep a local library, and ship with least-privilege packaging.",
   "author": {
     "name": "Tlkh201313"

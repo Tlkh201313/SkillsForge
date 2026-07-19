@@ -1,6 +1,6 @@
 {
   "name": "skillsforge",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Work OS for productive Agent Skills: route, workflows, library, multi-host install — with validate/package/receipts as the safety layer.",
   "type": "module",
   "bin": {

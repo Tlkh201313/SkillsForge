@@ -21,8 +21,8 @@ async function pathExists(path) {
 }
 
 const fixedBuildMeta = Object.freeze({
-  evidenceVersion: '0.4.1',
-  packageVersion: '0.4.1',
+  evidenceVersion: '0.4.2',
+  packageVersion: '0.4.2',
   node: { major: 22, platform: 'test', arch: 'x64' },
   ci: false,
   github: { ref: null, sha: null, runId: null },
@@ -93,7 +93,7 @@ const fixedReports = {
   },
   codexReport: {
     host: 'codex',
-    plugin: { name: 'skillsforge', version: '0.4.1', skills: './skills/', interface: { displayName: 'SkillsForge', shortDescription: 'x' } },
+    plugin: { name: 'skillsforge', version: '0.4.2', skills: './skills/', interface: { displayName: 'SkillsForge', shortDescription: 'x' } },
     skills: [{ name: 'using-skillsforge', openaiYaml: true, sidecar: true }],
     dist: { pluginJson: true, openaiYamlCount: 1 },
     interop: { host: 'codex', accepted: ['SKILL.md'], transformed: [], ignored: [], runtimeEnforced: false, losses: [], usesSidecar: false }

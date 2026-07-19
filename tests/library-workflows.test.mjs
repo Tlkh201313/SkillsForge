@@ -149,6 +149,7 @@ Use this installed helper when local docs and media claims need strict review.
   });
   assert.equal(recommendation.ok, true);
   assert.equal(recommendation.sessionHost, 'codex');
+  assert.ok(recommendation.confidence === 'high' || recommendation.confidence === 'low');
   assert.equal(recommendation.skills[0].id, 'external-review-helper');
   assert.ok(recommendation.skills[0].reasons.includes('session-installed'));
 });

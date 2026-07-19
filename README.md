@@ -1,7 +1,7 @@
 ![SkillsForge — Work OS for productive Agent Skills](assets/skillsforge-banner.svg)
 
 [![CI](https://github.com/Tlkh201313/SkillsForge/actions/workflows/ci.yml/badge.svg)](https://github.com/Tlkh201313/SkillsForge/actions/workflows/ci.yml)
-![Version](https://img.shields.io/badge/version-0.4.1-7c3aed)
+![Version](https://img.shields.io/badge/version-0.4.2-7c3aed)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 
@@ -294,7 +294,7 @@ npm run check
 | [docs/hackathon-demo.md](docs/hackathon-demo.md) | Timed judge script |
 | [docs/competitive-matrix.md](docs/competitive-matrix.md) | Claim boundaries |
 | [docs/submit-checklist.md](docs/submit-checklist.md) | Human submit gates |
-| [docs/roadmap-next.md](docs/roadmap-next.md) | Post-0.4.1 priorities |
+| [docs/roadmap-next.md](docs/roadmap-next.md) | Post-0.4.2 priorities |
 
 ---
 

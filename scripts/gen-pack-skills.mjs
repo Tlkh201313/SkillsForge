@@ -29,7 +29,8 @@ function humanize(id) {
 }
 
 function descriptionFor(skill) {
-  return `Use when you need ${humanize(skill.id)} in a SkillsForge ${skill.pack} workflow.`;
+  const topic = humanize(skill.id);
+  return `Use when doing ${topic} work and you need bounded ${skill.pack}-pack steps, stop conditions, and a verification check before shipping.`;
 }
 
 function triggersFor(skill) {
