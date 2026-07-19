@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { access, mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,6 +10,15 @@ import {
 } from '../lib/capabilities/evidence.mjs';
 
 const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
+
+async function pathExists(path) {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 const fixedBuildMeta = Object.freeze({
   evidenceVersion: '0.4.0',
@@ -170,14 +179,23 @@ test('live evidence run writes expected files and detects policy false-allow den
   const dir = await mkdtemp(join(tmpdir(), 'sf-evidence-live-'));
   context.after(() => rm(dir, { recursive: true, force: true }));
 
+  // dist/ is gitignored — CI clones have no trust receipt; allow synthetic probe there.
+  const hasDistReceipt = await pathExists(join(repoRoot, 'dist', 'trust-receipt.json'))
+    && await pathExists(join(repoRoot, 'dist', 'claude-code', '.claude-plugin', 'plugin.json'));
+
   const result = await buildEvidenceBundle({
     root: repoRoot,
     outDir: dir,
     write: true,
-    buildMeta: fixedBuildMeta
+    buildMeta: fixedBuildMeta,
+    allowSynthetic: !hasDistReceipt
   });
 
-  assert.equal(result.ok, true, JSON.stringify(result.reports?.policyAdversarial ?? result, null, 2));
+  assert.equal(result.ok, true, JSON.stringify({
+    ok: result.ok,
+    receipt: result.reports?.['receipt.json'],
+    policy: result.reports?.['policy-adversarial.json']
+  }, null, 2));
   for (const name of [
     'manifest.json',
     'validation.json',
@@ -207,6 +225,9 @@ test('live evidence run writes expected files and detects policy false-allow den
   const receipt = JSON.parse(await readFile(join(dir, 'receipt.json'), 'utf8'));
   assert.equal(receipt.verify.ok, true);
   assert.equal(receipt.tamper.ok, false);
+  if (!hasDistReceipt) {
+    assert.equal(receipt.mode, 'synthetic');
+  }
 });
 
 test('evidence ok fails closed on empty policy corpus', async (context) => {
