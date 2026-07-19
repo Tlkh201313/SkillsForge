@@ -7,7 +7,7 @@ All notable changes to SkillsForge are recorded here.
 ### Added - Workbench, Library, And Workflow Routing
 
 - Catalog substrate: `catalog/skillsforge.catalog.yaml`, 26 packs, 10 profiles, pack-scoped routing (`routing.mode` / `routing.pack`).
-- **366** cataloged skills with sidecars and host metadata, **98** agents, **124** commands, and **100** dry-run workflow definitions.
+- **367** cataloged skills with sidecars and host metadata, **98** agents, **124** commands, and **100** dry-run workflow definitions.
 - Vibe CLI toolkit: `vibe`, `catalog`, `quality`, `lint-skill`, `bench`, `compose`, `watch`, `scorecard`, `scaffold`, `stocktake`, `batch`, `compare`, `pressure`, `skillshield`, `export-agents`, `capture`, `forge-from-capture`.
 - Token-friendly workbench commands: `wb status|tree|find|grep|diff|errors|bigfiles|recent|proof`.
 - Local skill library: `lib build|update|recommend` emits JSON, single-file HTML, AI index, and session-aware recommendations across repo and installed user skills; `lib serve` is localhost and read-only by default.

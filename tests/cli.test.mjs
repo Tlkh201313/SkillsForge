@@ -158,7 +158,7 @@ test('bundled CLI exposes workbench, workflow, auto, library, and PowerShell com
     assert.equal(library.status, 0, library.stderr || library.stdout);
     assert.equal(JSON.parse(library.stdout).stats.workflows, 100);
 
-    const ps = spawnSync(process.execPath, [cli, 'ps', 'export', '--json', '--out', outDir], {
+    const ps = spawnSync(process.execPath, [cli, 'ps', 'export', '--json', '--allow-absolute', '--out', outDir], {
       cwd: process.cwd(),
       encoding: 'utf8'
     });

@@ -92,7 +92,7 @@ test('library index and HTML artifacts include skills, workflows, hosts, and AI 
   context.after(() => rm(outDir, { recursive: true, force: true }));
 
   const index = await buildLibraryIndex(root, { home: outDir });
-  assert.ok(index.stats.skills >= 366);
+  assert.ok(index.stats.skills >= 367);
   assert.equal(index.stats.workflows, 100);
   assert.ok(index.skills.some((skill) => skill.id === 'using-skillsforge'));
   assert.ok(index.skills.some((skill) => skill.id === 'update-skill-library'));
@@ -169,7 +169,7 @@ test('library removal is dry-run by default', async (context) => {
 test('PowerShell export creates helper scripts and manifest', async (context) => {
   const outDir = await mkdtemp(join(tmpdir(), 'sf-ps-'));
   context.after(() => rm(outDir, { recursive: true, force: true }));
-  const result = await exportPowerShellHelpers(root, { outDir });
+  const result = await exportPowerShellHelpers(root, { outDir, allowAbsolute: true });
   assert.equal(result.ok, true);
   assert.equal(result.files.length, POWERSHELL_HELPERS.length);
   await access(result.manifest);

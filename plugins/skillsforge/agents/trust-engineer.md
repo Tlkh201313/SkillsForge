@@ -14,7 +14,7 @@ Own the trust spine: validate, route, forge, package, evidence.
 2. Routing changes → `eval` + `route --query` samples.
 3. Author via `forge --spec --dry-run` then `--write`.
 4. `evidence --out artifacts/evidence`; never claim certification beyond scanner output.
-5. Keep AUTO mode inventory: only the seven auto heroes.
+5. Keep AUTO mode inventory: only the eight auto heroes.
 
 ## CLI
 

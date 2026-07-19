@@ -4,21 +4,25 @@
  * Tools: validate, route, skillshield, and read-only library/workflow recommendation.
  * No swarm, AgentDB, consensus, or default write tools.
  *
- * Protocol: newline-delimited JSON requests:
+ * Protocol: newline-delimited JSON (NDJSON) on stdin/stdout — default and only framing:
  *   {"id":1,"method":"tools/list"}
  *   {"id":2,"method":"tools/call","params":{"name":"validate","arguments":{...}}}
  *
- * Or MCP-ish initialize/tools/list/tools/call over Content-Length framing
- * when SKILLSFORGE_MCP_FRAMING=content-length.
+ * Content-Length framing is NOT implemented. If SKILLSFORGE_MCP_FRAMING=content-length,
+ * the process exits with a clear error (use NDJSON instead).
+ *
+ * Optional `home` tool args are home-bound like install `--home`: relative values resolve
+ * under the user home and must stay inside it; absolute overrides are allowed for tests.
  */
 import { createInterface } from 'node:readline';
-import { dirname, join, resolve } from 'node:path';
+import { homedir } from 'node:os';
+import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadAllSkills } from '../lib/capabilities/skill-loader.mjs';
 import { routeQuery } from '../lib/capabilities/router.mjs';
 import { verifySkillPaths } from '../lib/capabilities/verify.mjs';
 import { runSkillShield } from '../lib/capabilities/skillshield.mjs';
-import { resolveUnderRoot } from '../lib/capabilities/paths.mjs';
+import { isInside, resolveUnderRoot } from '../lib/capabilities/paths.mjs';
 import { buildLibraryIndex, recommendFromLibrary } from '../lib/capabilities/library.mjs';
 import { recommendWorkflows, showWorkflow } from '../lib/capabilities/workflows.mjs';
 
@@ -68,7 +72,7 @@ const TOOLS = [
     inputSchema: {
       type: 'object',
       properties: {
-        home: { type: 'string', description: 'Optional home directory override for tests' },
+        home: { type: 'string', description: 'Optional home directory override (home-bound like install --home)' },
         sessionHost: { type: 'string', description: 'Optional host id override for the current session' }
       }
     }
@@ -80,7 +84,7 @@ const TOOLS = [
       type: 'object',
       properties: {
         query: { type: 'string' },
-        home: { type: 'string', description: 'Optional home directory override for tests' },
+        home: { type: 'string', description: 'Optional home directory override (home-bound like install --home)' },
         sessionHost: { type: 'string', description: 'Optional host id override for the current session' },
         limit: { type: 'number', default: 5 }
       },
@@ -113,6 +117,27 @@ const TOOLS = [
   }
 ];
 
+/**
+ * Resolve MCP `home` like install `--home`: relative paths bind under the user home
+ * and must not escape it; absolute paths are accepted as an explicit home root.
+ */
+function resolveMcpHome(homeArg, baseHome = homedir()) {
+  if (homeArg == null || homeArg === '') return undefined;
+  const raw = String(homeArg);
+  if (raw.includes('\0')) {
+    throw new Error('MCP home contains NUL');
+  }
+  const homeRoot = resolve(baseHome);
+  if (!isAbsolute(raw)) {
+    const bound = resolve(homeRoot, raw);
+    if (!isInside(homeRoot, bound)) {
+      throw new Error(`MCP home escapes user home: ${homeArg}`);
+    }
+    return bound;
+  }
+  return resolve(raw);
+}
+
 async function callTool(name, args = {}) {
   if (name === 'validate') {
     const skillDir = resolveUnderRoot(root, args.skill);
@@ -138,11 +163,14 @@ async function callTool(name, args = {}) {
     return runSkillShield(skillDir, { root });
   }
   if (name === 'library_index') {
-    return buildLibraryIndex(root, { home: args.home, sessionHost: args.sessionHost });
+    return buildLibraryIndex(root, {
+      home: resolveMcpHome(args.home),
+      sessionHost: args.sessionHost
+    });
   }
   if (name === 'recommend_skill') {
     const index = await buildLibraryIndex(root, {
-      home: args.home,
+      home: resolveMcpHome(args.home),
       sessionHost: args.sessionHost
     });
     return recommendFromLibrary(index, args.query, {
@@ -209,6 +237,21 @@ async function handleMessage(msg) {
 }
 
 async function main() {
+  const framing = String(process.env.SKILLSFORGE_MCP_FRAMING ?? '').trim().toLowerCase();
+  if (framing === 'content-length') {
+    process.stderr.write(
+      'SkillsForge MCP does not support Content-Length framing (SKILLSFORGE_MCP_FRAMING=content-length). '
+      + 'Use the default newline-delimited JSON (NDJSON) protocol instead.\n'
+    );
+    process.exit(2);
+  }
+  if (framing && framing !== 'ndjson' && framing !== 'newline') {
+    process.stderr.write(
+      `SkillsForge MCP unknown framing "${framing}". Only NDJSON (default) is supported.\n`
+    );
+    process.exit(2);
+  }
+
   const rl = createInterface({ input: process.stdin, crlfDelay: Infinity });
   for await (const line of rl) {
     const trimmed = line.trim();
@@ -228,4 +271,4 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   await main();
 }
 
-export { TOOLS, callTool, handleMessage };
+export { TOOLS, callTool, handleMessage, resolveMcpHome };

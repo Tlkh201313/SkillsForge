@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
+import { POWERSHELL_HELPERS } from '../lib/capabilities/powershell.mjs';
 
 const cli = join(process.cwd(), 'scripts', 'skillsforge-cli.mjs');
 
@@ -77,4 +80,23 @@ test('auto run requires explicit read-only mode', () => {
   const result = run(['auto', 'run', '--query', 'safe refactor code']);
   assert.equal(result.status, 2);
   assert.match(result.stderr, /requires --read-only/);
+});
+
+test('ps export confines --out and emits expected sf-* helpers', async (context) => {
+  const outDir = await mkdtemp(join(tmpdir(), 'sf-ps-escape-'));
+  context.after(() => rm(outDir, { recursive: true, force: true }));
+
+  const escaped = run(['ps', 'export', '--out', outDir, '--json']);
+  assert.equal(escaped.status, 1, escaped.stdout);
+  assert.match(escaped.stderr, /powershell export path escapes root/);
+
+  const ok = run(['ps', 'export', '--out', 'artifacts/powershell-test', '--json']);
+  assert.equal(ok.status, 0, ok.stderr || ok.stdout);
+  const payload = JSON.parse(ok.stdout);
+  assert.equal(payload.ok, true);
+  const names = payload.files.map((file) => file.name).sort();
+  assert.deepEqual(names, POWERSHELL_HELPERS.map((helper) => helper.name).sort());
+  assert.ok(names.includes('sf-status'));
+  assert.ok(names.includes('sf-lib-update'));
+  assert.ok(names.includes('sf-auto'));
 });

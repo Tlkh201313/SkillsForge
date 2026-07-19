@@ -15,7 +15,7 @@ Use SkillsForge as the trust and routing layer for Agent Skills.
 
 ## Catalog
 
-SkillsForge catalog: **366** catalog entries, **26** packs, **10** profiles.
+SkillsForge catalog: **367** catalog entries, **26** packs, **10** profiles.
 
 Hero depth: trust spine + lifecycle + methodology skills are production-depth; domain packs are lean scaffolds.
 
@@ -33,7 +33,7 @@ Hero depth: trust spine + lifecycle + methodology skills are production-depth; d
 
 ### Packs
 - `agentic` (14): Agentic workflows and crew patterns
-- `browse-catalog` (1): Discover SkillsForge packs and profiles
+- `browse-catalog` (2): Discover SkillsForge packs and profiles
 - `cloud-devops` (14): Cloud and DevOps basics
 - `content` (12): Content production
 - `data` (16): Data and analytics planning
@@ -102,7 +102,7 @@ Hero depth: trust spine + lifecycle + methodology skills are production-depth; d
 - `content-edit` — Use when you need content edit in a SkillsForge content workflow.
 - `content-longform` — Use when you need content longform in a SkillsForge content workflow.
 
-… and 326 more.
+… and 327 more.
 
 
 ## Agents

@@ -4,7 +4,7 @@
 
 SkillsForge validates, forges, routes, policy-scans, and packages Agent Skills for **Codex** (native plugin + guarded package) and **Claude Code** (full), with package-fidelity installs for Cursor / OpenCode / ZCode / Hermes / Gemini and custom local AI CLI targets. This document covers trust boundaries for static capability scanning and host PreToolUse policy hooks.
 
-One plugin: `skillsforge`. No MCP servers, LSP, monitors, token ledgers, or domain packs are in scope.
+One plugin: `skillsforge`. Thin read-only MCP only (`scripts/skillsforge-mcp.mjs`: validate/route/skillshield plus library/workflow recommendation). No LSP, monitors, token ledgers, or domain packs are in scope.
 
 ## Assets
 
@@ -68,9 +68,11 @@ SkillsForge’s Codex runner still aims to **fail closed** on missing/invalid po
 - Preventing a malicious local user from editing their own sidecar or disabling hooks
 - Guaranteeing confidentiality against a compromised host runtime
 - Replacing container/VM sandboxing for untrusted code execution
-- Claiming MCP, LSP, monitors, token ledgers, domain packs, multi-host parity, or attestation
+- Claiming full MCP product surface, LSP, monitors, token ledgers, domain packs, multi-host parity, or attestation (thin read-only MCP tools are in scope; see Scope)
 - Claiming that package-fidelity installs for Cursor/OpenCode/ZCode/Hermes/Gemini/custom hosts enforce runtime policy
 
 ## Residual risk
 
 Static scanning is best-effort over text-like content. Encoded payloads, novel interpreters, and host tools outside the matcher can bypass both scanner and hook. Treat receipts and policy findings as **unsigned tamper evidence**, not proof of safety or third-party certification. A trust receipt hashes packaged plugin bytes plus optional evaluation report SHA; verification detects byte-level tampering, not semantic safety.
+
+Write confinement uses `realpath` when the skill/project root and candidate path already exist. **Residual:** creating a new path (file does not exist yet) cannot be realpath-checked; only the lexical `isInside` check applies until the path exists on disk.
