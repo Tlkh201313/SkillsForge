@@ -35,7 +35,7 @@ Before writing or modifying any skill under `plugins/*/skills/`.
 
 - Validate exit 0 on the skill directory
 - Quality score reported; heroes must be ≥85
-- Sidecar `routing.mode` matches inventory (`auto` only for the seven auto heroes)
+- Sidecar `routing.mode` matches inventory (`auto` only for the eight auto heroes)
 - Description passes CSO (starts with `Use when…`, no workflow summary)
 
 ## Anti-patterns

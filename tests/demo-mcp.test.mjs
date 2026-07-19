@@ -81,3 +81,18 @@ test('MCP stdio tools/list responds', async () => {
   const msg = JSON.parse(line);
   assert.equal(msg.result.tools.length, 7);
 });
+
+test('MCP content-length framing is rejected with a clear error', async () => {
+  const child = spawn(process.execPath, [join(root, 'scripts', 'skillsforge-mcp.mjs')], {
+    cwd: root,
+    stdio: ['pipe', 'pipe', 'pipe'],
+    env: { ...process.env, SKILLSFORGE_ROOT: root, SKILLSFORGE_MCP_FRAMING: 'content-length' }
+  });
+  let stderr = '';
+  child.stderr.on('data', (c) => { stderr += c; });
+  child.stdin.end();
+  const code = await new Promise((resolve) => child.on('exit', (c) => resolve(c ?? 1)));
+  assert.equal(code, 2);
+  assert.match(stderr, /does not support Content-Length framing/i);
+  assert.match(stderr, /NDJSON/i);
+});

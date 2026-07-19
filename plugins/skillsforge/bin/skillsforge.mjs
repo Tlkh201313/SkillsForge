@@ -4010,10 +4010,10 @@ var require_resolve_block_map = __commonJS({
       let offset = bm.offset;
       let commentEnd = null;
       for (const collItem of bm.items) {
-        const { start, key, sep: sep13, value } = collItem;
+        const { start, key, sep: sep11, value } = collItem;
         const keyProps = resolveProps.resolveProps(start, {
           indicator: "explicit-key-ind",
-          next: key ?? sep13?.[0],
+          next: key ?? sep11?.[0],
           offset,
           onError,
           parentIndent: bm.indent,
@@ -4027,7 +4027,7 @@ var require_resolve_block_map = __commonJS({
             else if ("indent" in key && key.indent !== bm.indent)
               onError(offset, "BAD_INDENT", startColMsg);
           }
-          if (!keyProps.anchor && !keyProps.tag && !sep13) {
+          if (!keyProps.anchor && !keyProps.tag && !sep11) {
             commentEnd = keyProps.end;
             if (keyProps.comment) {
               if (map.comment)
@@ -4051,7 +4051,7 @@ var require_resolve_block_map = __commonJS({
         ctx.atKey = false;
         if (utilMapIncludes.mapIncludes(ctx, map.items, keyNode))
           onError(keyStart, "DUPLICATE_KEY", "Map keys must be unique");
-        const valueProps = resolveProps.resolveProps(sep13 ?? [], {
+        const valueProps = resolveProps.resolveProps(sep11 ?? [], {
           indicator: "map-value-ind",
           next: value,
           offset: keyNode.range[2],
@@ -4067,7 +4067,7 @@ var require_resolve_block_map = __commonJS({
             if (ctx.options.strict && keyProps.start < valueProps.found.offset - 1024)
               onError(keyNode.range, "KEY_OVER_1024_CHARS", "The : indicator must be at most 1024 chars after the start of an implicit block mapping key");
           }
-          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep13, null, valueProps, onError);
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep11, null, valueProps, onError);
           if (ctx.schema.compat)
             utilFlowIndentCheck.flowIndentCheck(bm.indent, value, onError);
           offset = valueNode.range[2];
@@ -4158,7 +4158,7 @@ var require_resolve_end = __commonJS({
       let comment = "";
       if (end) {
         let hasSpace = false;
-        let sep13 = "";
+        let sep11 = "";
         for (const token of end) {
           const { source, type } = token;
           switch (type) {
@@ -4172,13 +4172,13 @@ var require_resolve_end = __commonJS({
               if (!comment)
                 comment = cb;
               else
-                comment += sep13 + cb;
-              sep13 = "";
+                comment += sep11 + cb;
+              sep11 = "";
               break;
             }
             case "newline":
               if (comment)
-                sep13 += source;
+                sep11 += source;
               hasSpace = true;
               break;
             default:
@@ -4221,18 +4221,18 @@ var require_resolve_flow_collection = __commonJS({
       let offset = fc.offset + fc.start.source.length;
       for (let i = 0; i < fc.items.length; ++i) {
         const collItem = fc.items[i];
-        const { start, key, sep: sep13, value } = collItem;
+        const { start, key, sep: sep11, value } = collItem;
         const props = resolveProps.resolveProps(start, {
           flow: fcName,
           indicator: "explicit-key-ind",
-          next: key ?? sep13?.[0],
+          next: key ?? sep11?.[0],
           offset,
           onError,
           parentIndent: fc.indent,
           startOnNewline: false
         });
         if (!props.found) {
-          if (!props.anchor && !props.tag && !sep13 && !value) {
+          if (!props.anchor && !props.tag && !sep11 && !value) {
             if (i === 0 && props.comma)
               onError(props.comma, "UNEXPECTED_TOKEN", `Unexpected , in ${fcName}`);
             else if (i < fc.items.length - 1)
@@ -4286,8 +4286,8 @@ var require_resolve_flow_collection = __commonJS({
             }
           }
         }
-        if (!isMap && !sep13 && !props.found) {
-          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep13, null, props, onError);
+        if (!isMap && !sep11 && !props.found) {
+          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep11, null, props, onError);
           coll.items.push(valueNode);
           offset = valueNode.range[2];
           if (isBlock(value))
@@ -4299,7 +4299,7 @@ var require_resolve_flow_collection = __commonJS({
           if (isBlock(key))
             onError(keyNode.range, "BLOCK_IN_FLOW", blockMsg);
           ctx.atKey = false;
-          const valueProps = resolveProps.resolveProps(sep13 ?? [], {
+          const valueProps = resolveProps.resolveProps(sep11 ?? [], {
             flow: fcName,
             indicator: "map-value-ind",
             next: value,
@@ -4310,8 +4310,8 @@ var require_resolve_flow_collection = __commonJS({
           });
           if (valueProps.found) {
             if (!isMap && !props.found && ctx.options.strict) {
-              if (sep13)
-                for (const st of sep13) {
+              if (sep11)
+                for (const st of sep11) {
                   if (st === valueProps.found)
                     break;
                   if (st.type === "newline") {
@@ -4328,7 +4328,7 @@ var require_resolve_flow_collection = __commonJS({
             else
               onError(valueProps.start, "MISSING_CHAR", `Missing , or : between ${fcName} items`);
           }
-          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep13, null, valueProps, onError) : null;
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep11, null, valueProps, onError) : null;
           if (valueNode) {
             if (isBlock(value))
               onError(valueNode.range, "BLOCK_IN_FLOW", blockMsg);
@@ -4508,7 +4508,7 @@ var require_resolve_block_scalar = __commonJS({
           chompStart = i + 1;
       }
       let value = "";
-      let sep13 = "";
+      let sep11 = "";
       let prevMoreIndented = false;
       for (let i = 0; i < contentStart; ++i)
         value += lines[i][0].slice(trimIndent) + "\n";
@@ -4525,24 +4525,24 @@ var require_resolve_block_scalar = __commonJS({
           indent = "";
         }
         if (type === Scalar.Scalar.BLOCK_LITERAL) {
-          value += sep13 + indent.slice(trimIndent) + content;
-          sep13 = "\n";
+          value += sep11 + indent.slice(trimIndent) + content;
+          sep11 = "\n";
         } else if (indent.length > trimIndent || content[0] === "	") {
-          if (sep13 === " ")
-            sep13 = "\n";
-          else if (!prevMoreIndented && sep13 === "\n")
-            sep13 = "\n\n";
-          value += sep13 + indent.slice(trimIndent) + content;
-          sep13 = "\n";
+          if (sep11 === " ")
+            sep11 = "\n";
+          else if (!prevMoreIndented && sep11 === "\n")
+            sep11 = "\n\n";
+          value += sep11 + indent.slice(trimIndent) + content;
+          sep11 = "\n";
           prevMoreIndented = true;
         } else if (content === "") {
-          if (sep13 === "\n")
+          if (sep11 === "\n")
             value += "\n";
           else
-            sep13 = "\n";
+            sep11 = "\n";
         } else {
-          value += sep13 + content;
-          sep13 = " ";
+          value += sep11 + content;
+          sep11 = " ";
           prevMoreIndented = false;
         }
       }
@@ -4724,25 +4724,25 @@ var require_resolve_flow_scalar = __commonJS({
       if (!match)
         return source;
       let res = match[1];
-      let sep13 = " ";
+      let sep11 = " ";
       let pos = first.lastIndex;
       line.lastIndex = pos;
       while (match = line.exec(source)) {
         if (match[1] === "") {
-          if (sep13 === "\n")
-            res += sep13;
+          if (sep11 === "\n")
+            res += sep11;
           else
-            sep13 = "\n";
+            sep11 = "\n";
         } else {
-          res += sep13 + match[1];
-          sep13 = " ";
+          res += sep11 + match[1];
+          sep11 = " ";
         }
         pos = line.lastIndex;
       }
       const last = /[ \t]*(.*)/sy;
       last.lastIndex = pos;
       match = last.exec(source);
-      return res + sep13 + (match?.[1] ?? "");
+      return res + sep11 + (match?.[1] ?? "");
     }
     function doubleQuotedValue(source, onError) {
       let res = "";
@@ -5552,14 +5552,14 @@ var require_cst_stringify = __commonJS({
         }
       }
     }
-    function stringifyItem({ start, key, sep: sep13, value }) {
+    function stringifyItem({ start, key, sep: sep11, value }) {
       let res = "";
       for (const st of start)
         res += st.source;
       if (key)
         res += stringifyToken(key);
-      if (sep13)
-        for (const st of sep13)
+      if (sep11)
+        for (const st of sep11)
           res += st.source;
       if (value)
         res += stringifyToken(value);
@@ -6726,18 +6726,18 @@ var require_parser = __commonJS({
         if (this.type === "map-value-ind") {
           const prev = getPrevProps(this.peek(2));
           const start = getFirstKeyStartProps(prev);
-          let sep13;
+          let sep11;
           if (scalar.end) {
-            sep13 = scalar.end;
-            sep13.push(this.sourceToken);
+            sep11 = scalar.end;
+            sep11.push(this.sourceToken);
             delete scalar.end;
           } else
-            sep13 = [this.sourceToken];
+            sep11 = [this.sourceToken];
           const map = {
             type: "block-map",
             offset: scalar.offset,
             indent: scalar.indent,
-            items: [{ start, key: scalar, sep: sep13 }]
+            items: [{ start, key: scalar, sep: sep11 }]
           };
           this.onKeyLine = true;
           this.stack[this.stack.length - 1] = map;
@@ -6890,15 +6890,15 @@ var require_parser = __commonJS({
                 } else if (isFlowToken(it.key) && !includesToken(it.sep, "newline")) {
                   const start2 = getFirstKeyStartProps(it.start);
                   const key = it.key;
-                  const sep13 = it.sep;
-                  sep13.push(this.sourceToken);
+                  const sep11 = it.sep;
+                  sep11.push(this.sourceToken);
                   delete it.key;
                   delete it.sep;
                   this.stack.push({
                     type: "block-map",
                     offset: this.offset,
                     indent: this.indent,
-                    items: [{ start: start2, key, sep: sep13 }]
+                    items: [{ start: start2, key, sep: sep11 }]
                   });
                 } else if (start.length > 0) {
                   it.sep = it.sep.concat(start, this.sourceToken);
@@ -7092,13 +7092,13 @@ var require_parser = __commonJS({
             const prev = getPrevProps(parent);
             const start = getFirstKeyStartProps(prev);
             fixFlowSeqItems(fc);
-            const sep13 = fc.end.splice(1, fc.end.length);
-            sep13.push(this.sourceToken);
+            const sep11 = fc.end.splice(1, fc.end.length);
+            sep11.push(this.sourceToken);
             const map = {
               type: "block-map",
               offset: fc.offset,
               indent: fc.indent,
-              items: [{ start, key: fc, sep: sep13 }]
+              items: [{ start, key: fc, sep: sep11 }]
             };
             this.onKeyLine = true;
             this.stack[this.stack.length - 1] = map;
@@ -7373,6 +7373,238 @@ var require_dist = __commonJS({
     exports.stringify = publicApi.stringify;
     exports.visit = visit.visit;
     exports.visitAsync = visit.visitAsync;
+  }
+});
+
+// lib/capabilities/paths.mjs
+import { existsSync, realpathSync } from "node:fs";
+import { isAbsolute, relative, resolve, sep } from "node:path";
+function assertSkillId(name) {
+  if (typeof name !== "string" || !SKILL_ID_RE.test(name)) {
+    throw new Error(`invalid skill id "${name}": must match ${SKILL_ID_RE}`);
+  }
+  return name;
+}
+function isInside(root, candidate) {
+  const parent = resolve(root);
+  const child = resolve(candidate);
+  if (parent === child) return true;
+  const rel = relative(parent, child);
+  return rel !== "" && !rel.startsWith(`..${sep}`) && rel !== ".." && !isAbsolute(rel);
+}
+function resolveUnderRoot(root, userPath, options = {}) {
+  if (userPath == null || userPath === "") {
+    throw new Error("path is required");
+  }
+  const raw = String(userPath);
+  if (raw.includes("\0")) {
+    throw new Error("path contains NUL");
+  }
+  const base = resolve(root);
+  const target = isAbsolute(raw) ? resolve(raw) : resolve(base, raw);
+  const inside = isInside(base, target) || target === base;
+  if (!inside) {
+    if (isAbsolute(raw) && !options.allowAbsolute) {
+      throw new Error(`absolute path rejected (pass --allow-absolute to override): ${raw}`);
+    }
+    if (!options.allowAbsolute) {
+      throw new Error(`path escapes repository root: ${raw}`);
+    }
+  }
+  return target;
+}
+function confineWriteCandidate(root, candidate) {
+  if (root == null || root === "" || candidate == null || candidate === "") {
+    return { ok: false, reason: "write root or path unavailable" };
+  }
+  const absRoot = resolve(root);
+  const absCandidate = resolve(candidate);
+  if (!isInside(absRoot, absCandidate)) {
+    return { ok: false, reason: "write escapes scope" };
+  }
+  let realRoot;
+  try {
+    realRoot = realpathSync(absRoot);
+  } catch {
+    return { ok: true, mode: "lexical" };
+  }
+  if (!existsSync(absCandidate)) {
+    return { ok: true, mode: "lexical-create" };
+  }
+  let realCandidate;
+  try {
+    realCandidate = realpathSync(absCandidate);
+  } catch {
+    return { ok: false, reason: "write path realpath failed" };
+  }
+  if (!isInside(realRoot, realCandidate)) {
+    return { ok: false, reason: "write escapes scope after realpath" };
+  }
+  return { ok: true, mode: "realpath" };
+}
+var SKILL_ID_RE;
+var init_paths = __esm({
+  "lib/capabilities/paths.mjs"() {
+    SKILL_ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  }
+});
+
+// lib/capabilities/policy-shell.mjs
+function hasShellControlSyntax(command) {
+  return SHELL_CONTROL_SYNTAX.test(String(command ?? ""));
+}
+function tokenizeCommand(command) {
+  const tokens = [];
+  const source = String(command ?? "").trim();
+  let current = "";
+  let quote = null;
+  for (let i = 0; i < source.length; i += 1) {
+    const ch = source[i];
+    if (quote) {
+      if (ch === quote) {
+        quote = null;
+      } else if (ch === "\\" && quote === '"' && i + 1 < source.length) {
+        current += source[i + 1];
+        i += 1;
+      } else {
+        current += ch;
+      }
+      continue;
+    }
+    if (ch === "'" || ch === '"') {
+      quote = ch;
+      continue;
+    }
+    if (/\s/.test(ch)) {
+      if (current) {
+        tokens.push(current);
+        current = "";
+      }
+      continue;
+    }
+    current += ch;
+  }
+  if (quote) return null;
+  if (current) tokens.push(current);
+  return tokens;
+}
+function argHasMetacharacters(arg) {
+  return /[;&|`$<>\\]/.test(String(arg ?? "")) || /\$\(/.test(String(arg ?? ""));
+}
+function commandAllowed(command, declaredCommands = []) {
+  const normalized = command.trim();
+  if (!normalized || hasShellControlSyntax(normalized)) return false;
+  const cmdTokens = tokenizeCommand(normalized);
+  if (!cmdTokens) return false;
+  return declaredCommands.some((declared) => {
+    const allowed = String(declared).trim();
+    if (!allowed || hasShellControlSyntax(allowed)) return false;
+    if (normalized === allowed) return true;
+    const allowedTokens = tokenizeCommand(allowed);
+    if (!allowedTokens || allowedTokens.length === 0) return false;
+    if (cmdTokens.length < allowedTokens.length) return false;
+    for (let i = 0; i < allowedTokens.length; i += 1) {
+      if (cmdTokens[i] !== allowedTokens[i]) return false;
+    }
+    const remaining = cmdTokens.slice(allowedTokens.length);
+    return remaining.every((token) => !argHasMetacharacters(token));
+  });
+}
+function commandExactlyAllowed(command, declaredCommands = []) {
+  const normalized = String(command ?? "").trim();
+  if (!normalized || hasShellControlSyntax(normalized)) return false;
+  return declaredCommands.some((declared) => normalized === String(declared).trim());
+}
+function shellImpliesNetwork(command) {
+  if (SHELL_NETWORK_CLIENTS.test(command)) return true;
+  if (/\bpython(?:3)?\b/i.test(command) && /\s-c\b/.test(command) && /\b(urllib|requests|http\.client|httpx|urlopen)\b/i.test(command)) {
+    return true;
+  }
+  if (/\bnode\b/i.test(command) && /\s-e\b/.test(command) && /\b(fetch|https?:\/\/|https?\.|axios|got)\b/i.test(command)) {
+    return true;
+  }
+  return false;
+}
+function shellImpliesWrite(command) {
+  const text = String(command ?? "");
+  const tokens = tokenizeCommand(text);
+  if (!tokens || tokens.length === 0) return true;
+  const commandName = tokens[0].split(/[\\/]/).pop().toLowerCase();
+  if (SHELL_WRITE_COMMANDS.has(commandName)) {
+    if (commandName === "git") {
+      return /^(add|am|apply|checkout|clean|commit|merge|mv|pull|push|rebase|reset|restore|rm|stash|switch)\b/i.test(tokens[1] ?? "");
+    }
+    if (["npm", "pnpm", "yarn"].includes(commandName)) {
+      return /^(add|ci|install|link|pack|publish|remove|run|uninstall)\b/i.test(tokens[1] ?? "");
+    }
+    return true;
+  }
+  if (tokens.some((token) => SHELL_WRITE_FLAGS.has(token.toLowerCase()))) return true;
+  if (INLINE_WRITE_PATTERNS.some((pattern) => pattern.test(text))) return true;
+  return false;
+}
+function hostFromUrl(value) {
+  try {
+    return new URL(String(value)).host.toLowerCase();
+  } catch {
+    return null;
+  }
+}
+function hostAllowed(host, declaredHosts = []) {
+  const normalized = host.toLowerCase();
+  return declaredHosts.some((declared) => {
+    const allowed = String(declared).toLowerCase();
+    return normalized === allowed || allowed.startsWith("*.") && normalized.endsWith(allowed.slice(1));
+  });
+}
+var SHELL_CONTROL_SYNTAX, SHELL_NETWORK_CLIENTS, SHELL_WRITE_COMMANDS, SHELL_WRITE_FLAGS, INLINE_WRITE_PATTERNS;
+var init_policy_shell = __esm({
+  "lib/capabilities/policy-shell.mjs"() {
+    SHELL_CONTROL_SYNTAX = /[;&|`\n\r<>]|\$\(/;
+    SHELL_NETWORK_CLIENTS = /\b(curl|wget|Invoke-WebRequest|Invoke-RestMethod|iwr|bitsadmin|certutil|fetch)\b/i;
+    SHELL_WRITE_COMMANDS = /* @__PURE__ */ new Set([
+      "add-content",
+      "copy",
+      "copy-item",
+      "cp",
+      "del",
+      "git",
+      "install",
+      "mkdir",
+      "move",
+      "move-item",
+      "mv",
+      "new-item",
+      "npm",
+      "out-file",
+      "pnpm",
+      "remove-item",
+      "rm",
+      "rmdir",
+      "set-content",
+      "tee",
+      "touch",
+      "yarn"
+    ]);
+    SHELL_WRITE_FLAGS = /* @__PURE__ */ new Set([
+      "-o",
+      "--dest",
+      "--destination",
+      "--force",
+      "--home",
+      "--out",
+      "--output",
+      "--save",
+      "--save-dev",
+      "--write"
+    ]);
+    INLINE_WRITE_PATTERNS = [
+      /\b(?:writeFile|writeFileSync|appendFile|appendFileSync|createWriteStream|rename|renameSync|rm|rmSync|unlink|unlinkSync|mkdir|mkdirSync|cp|cpSync)\s*\(/i,
+      /\b(?:Set-Content|Add-Content|Out-File|New-Item|Copy-Item|Move-Item|Remove-Item)\b/i,
+      /\bopen\s*\([^)]*,\s*['"](?:w|a|x|w\+|a\+)/i,
+      /\bPath\s*\([^)]*\)\.(?:write_text|write_bytes|unlink|rename|mkdir)\s*\(/i,
+      /\b(?:shutil\.(?:copy|copyfile|move|rmtree)|os\.(?:remove|unlink|rename|mkdir|makedirs|rmdir))\s*\(/i
+    ];
   }
 });
 
@@ -9578,8 +9810,8 @@ var require_resolve = __commonJS({
       }
       return count;
     }
-    function getFullPath(resolver, id = "", normalize4) {
-      if (normalize4 !== false)
+    function getFullPath(resolver, id = "", normalize2) {
+      if (normalize2 !== false)
         id = normalizeId(id);
       const p = resolver.parse(id);
       return _getFullPath(resolver, p);
@@ -10327,7 +10559,7 @@ var require_compile = __commonJS({
       const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve22.call(this, root, ref);
+      let _sch = resolve27.call(this, root, ref);
       if (_sch === void 0) {
         const schema = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
         const { schemaId } = this.opts;
@@ -10354,7 +10586,7 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve22(root, ref) {
+    function resolve27(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
@@ -10975,7 +11207,7 @@ var require_fast_uri = __commonJS({
     "use strict";
     var { normalizeIPv6, removeDotSegments, recomposeAuthority, normalizePercentEncoding, normalizePathEncoding, escapePreservingEscapes, reescapeHostDelimiters, isIPv4, nonSimpleDomain } = require_utils();
     var { SCHEMES, getSchemeHandler } = require_schemes();
-    function normalize4(uri, options) {
+    function normalize2(uri, options) {
       if (typeof uri === "string") {
         uri = /** @type {T} */
         normalizeString(uri, options);
@@ -10985,55 +11217,55 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve22(baseURI, relativeURI, options) {
+    function resolve27(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const resolved = resolveComponent(parse(baseURI, schemelessOptions), parse(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
       return serialize(resolved, schemelessOptions);
     }
-    function resolveComponent(base, relative14, options, skipNormalization) {
+    function resolveComponent(base, relative15, options, skipNormalization) {
       const target = {};
       if (!skipNormalization) {
         base = parse(serialize(base, options), options);
-        relative14 = parse(serialize(relative14, options), options);
+        relative15 = parse(serialize(relative15, options), options);
       }
       options = options || {};
-      if (!options.tolerant && relative14.scheme) {
-        target.scheme = relative14.scheme;
-        target.userinfo = relative14.userinfo;
-        target.host = relative14.host;
-        target.port = relative14.port;
-        target.path = removeDotSegments(relative14.path || "");
-        target.query = relative14.query;
+      if (!options.tolerant && relative15.scheme) {
+        target.scheme = relative15.scheme;
+        target.userinfo = relative15.userinfo;
+        target.host = relative15.host;
+        target.port = relative15.port;
+        target.path = removeDotSegments(relative15.path || "");
+        target.query = relative15.query;
       } else {
-        if (relative14.userinfo !== void 0 || relative14.host !== void 0 || relative14.port !== void 0) {
-          target.userinfo = relative14.userinfo;
-          target.host = relative14.host;
-          target.port = relative14.port;
-          target.path = removeDotSegments(relative14.path || "");
-          target.query = relative14.query;
+        if (relative15.userinfo !== void 0 || relative15.host !== void 0 || relative15.port !== void 0) {
+          target.userinfo = relative15.userinfo;
+          target.host = relative15.host;
+          target.port = relative15.port;
+          target.path = removeDotSegments(relative15.path || "");
+          target.query = relative15.query;
         } else {
-          if (!relative14.path) {
+          if (!relative15.path) {
             target.path = base.path;
-            if (relative14.query !== void 0) {
-              target.query = relative14.query;
+            if (relative15.query !== void 0) {
+              target.query = relative15.query;
             } else {
               target.query = base.query;
             }
           } else {
-            if (relative14.path[0] === "/") {
-              target.path = removeDotSegments(relative14.path);
+            if (relative15.path[0] === "/") {
+              target.path = removeDotSegments(relative15.path);
             } else {
               if ((base.userinfo !== void 0 || base.host !== void 0 || base.port !== void 0) && !base.path) {
-                target.path = "/" + relative14.path;
+                target.path = "/" + relative15.path;
               } else if (!base.path) {
-                target.path = relative14.path;
+                target.path = relative15.path;
               } else {
-                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative14.path;
+                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative15.path;
               }
               target.path = removeDotSegments(target.path);
             }
-            target.query = relative14.query;
+            target.query = relative15.query;
           }
           target.userinfo = base.userinfo;
           target.host = base.host;
@@ -11041,7 +11273,7 @@ var require_fast_uri = __commonJS({
         }
         target.scheme = base.scheme;
       }
-      target.fragment = relative14.fragment;
+      target.fragment = relative15.fragment;
       return target;
     }
     function equal(uriA, uriB, options) {
@@ -11242,8 +11474,8 @@ var require_fast_uri = __commonJS({
     }
     var fastUri = {
       SCHEMES,
-      normalize: normalize4,
-      resolve: resolve22,
+      normalize: normalize2,
+      resolve: resolve27,
       resolveComponent,
       equal,
       serialize,
@@ -15465,7 +15697,7 @@ var init_schemas_generated = __esm({
 
 // scripts/validate-skill-lib.mjs
 import { access, readFile as readFile2, readdir, realpath, stat } from "node:fs/promises";
-import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, isAbsolute as isAbsolute3, join, relative as relative2, resolve as resolve3, sep as sep2 } from "node:path";
 import { fileURLToPath } from "node:url";
 async function validateSkillPaths(paths, options = {}) {
   const root = options.root ?? process.cwd();
@@ -15490,7 +15722,7 @@ async function validateSkillPath(skillPath, options = {}) {
   const profile = options.profile ?? "canonical";
   const schema = skillSchemasByProfile[profile];
   if (!schema) throw new Error(`Unknown validation profile: ${profile}`);
-  const absolute = resolve(root, skillPath);
+  const absolute = resolve3(root, skillPath);
   const name = basename(absolute);
   const file = join(absolute, "SKILL.md");
   const errors = [];
@@ -15502,7 +15734,7 @@ async function validateSkillPath(skillPath, options = {}) {
   }
   const parsed = parseFrontmatter(source);
   if (!parsed) return failReport(name, absolute, ["YAML frontmatter block must exist and use complete --- delimiter lines"]);
-  const document = (0, import_yaml.parseDocument)(parsed.yaml, {
+  const document = (0, import_yaml2.parseDocument)(parsed.yaml, {
     prettyErrors: true,
     strict: true,
     uniqueKeys: true
@@ -15567,8 +15799,8 @@ async function validateBody(body, skillDirectory, errors) {
     }
     const clean = target.split("#")[0];
     if (clean === "") continue;
-    const resolved = resolve(skillDirectory, clean);
-    if (!isInside(skillDirectory, resolved)) {
+    const resolved = resolve3(skillDirectory, clean);
+    if (!isInside2(skillDirectory, resolved)) {
       errors.push(`relative markdown link must stay inside skill directory: ${rawTarget}`);
       continue;
     }
@@ -15589,13 +15821,13 @@ function normalizeMarkdownTarget(rawTarget) {
     return withoutTitle;
   }
 }
-function isInside(parent, candidate) {
-  const path = relative(resolve(parent), resolve(candidate));
-  return path === "" || !path.startsWith(`..${sep}`) && path !== ".." && !isAbsolute(path);
+function isInside2(parent, candidate) {
+  const path = relative2(resolve3(parent), resolve3(candidate));
+  return path === "" || !path.startsWith(`..${sep2}`) && path !== ".." && !isAbsolute3(path);
 }
 async function realPathIsInside(parent, candidate) {
   try {
-    return isInside(await realpath(parent), await realpath(candidate));
+    return isInside2(await realpath(parent), await realpath(candidate));
   } catch {
     return false;
   }
@@ -15618,7 +15850,7 @@ async function expandSkillPathPatterns(patterns, root) {
     const regex = new RegExp(`^${namePattern.split("*").map(escapeRegex).join(".*")}$`);
     let entries;
     try {
-      entries = await readdir(resolve(root, parent), { withFileTypes: true });
+      entries = await readdir(resolve3(root, parent), { withFileTypes: true });
     } catch {
       expanded.push(pattern);
       continue;
@@ -15627,7 +15859,7 @@ async function expandSkillPathPatterns(patterns, root) {
     for (const entry of entries) {
       if (!entry.isDirectory() || !regex.test(entry.name)) continue;
       const candidate = join(parent, entry.name);
-      if (await fileExists(resolve(root, candidate, "SKILL.md"))) matches.push(candidate);
+      if (await fileExists(resolve3(root, candidate, "SKILL.md"))) matches.push(candidate);
     }
     matches.sort((left, right) => left.localeCompare(right));
     expanded.push(...matches.length === 0 ? [pattern] : matches);
@@ -15686,28 +15918,28 @@ function isPlainObject(value) {
 function pathsWithoutDuplicates(paths) {
   return [...new Set(paths)];
 }
-var import_yaml, adjacentSkillsRoot, sidecarSchema;
+var import_yaml2, adjacentSkillsRoot, sidecarSchema;
 var init_validate_skill_lib = __esm({
   "scripts/validate-skill-lib.mjs"() {
-    import_yaml = __toESM(require_dist(), 1);
+    import_yaml2 = __toESM(require_dist(), 1);
     init_schema_lib();
     init_schemas_generated();
-    adjacentSkillsRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "skills");
+    adjacentSkillsRoot = resolve3(dirname(fileURLToPath(import.meta.url)), "..", "skills");
     sidecarSchema = schemas["skillsforge.sidecar"];
   }
 });
 
 // lib/capabilities/skill-loader.mjs
-import { access as access2, readFile as readFile3, readdir as readdir2, realpath as realpath2, stat as stat2 } from "node:fs/promises";
+import { access as access2, readFile as readFile4, readdir as readdir2, realpath as realpath2, stat as stat2 } from "node:fs/promises";
 import { homedir } from "node:os";
-import { basename as basename2, dirname as dirname2, isAbsolute as isAbsolute2, join as join2, relative as relative2, resolve as resolve2, sep as sep2 } from "node:path";
+import { basename as basename2, dirname as dirname2, isAbsolute as isAbsolute4, join as join2, relative as relative4, resolve as resolve4, sep as sep4 } from "node:path";
 async function loadSkill(dir, options = {}) {
-  const abs = resolve2(options.root ?? process.cwd(), dir);
+  const abs = resolve4(options.root ?? process.cwd(), dir);
   const skillFile = join2(abs, "SKILL.md");
-  const source = await readFile3(skillFile, "utf8");
+  const source = await readFile4(skillFile, "utf8");
   const parsed = parseFrontmatter(source);
   if (!parsed) throw new Error(`SKILL.md frontmatter missing in ${abs}`);
-  const document = (0, import_yaml2.parseDocument)(parsed.yaml, { prettyErrors: true, strict: true, uniqueKeys: true });
+  const document = (0, import_yaml4.parseDocument)(parsed.yaml, { prettyErrors: true, strict: true, uniqueKeys: true });
   if (document.errors.length > 0) {
     throw new Error(document.errors.map((error) => error.message).join("; "));
   }
@@ -15718,7 +15950,7 @@ async function loadSkill(dir, options = {}) {
   try {
     await access2(sidecarFile);
     sidecarExists = true;
-    sidecar = JSON.parse(await readFile3(sidecarFile, "utf8"));
+    sidecar = JSON.parse(await readFile4(sidecarFile, "utf8"));
     const result = await validateWithSchema(sidecarSchema2, sidecar);
     if (!result.valid) {
       throw new Error(result.errors.map((error) => `skillsforge.json ${error}`).join("; "));
@@ -15729,7 +15961,7 @@ async function loadSkill(dir, options = {}) {
   const files = await collectFiles(abs);
   for (const file of files) {
     if (!await realPathIsInside2(abs, file)) {
-      throw new Error(`skill file escapes skill root: ${relative2(abs, file)}`);
+      throw new Error(`skill file escapes skill root: ${relative4(abs, file)}`);
     }
   }
   return {
@@ -15760,23 +15992,29 @@ async function skillsRootsFingerprint(skillsRoots) {
   return parts.join("|");
 }
 async function loadAllSkills(root, options = {}) {
-  const absRoot = resolve2(root);
+  const absRoot = resolve4(root);
+  const home = resolve4(options.home ?? homedir());
   const skillsRoots = await discoverSkillsRoots(absRoot, options);
   const fingerprint = await skillsRootsFingerprint(skillsRoots);
   const cacheKey = [
     absRoot,
     options.includeInstalled === true ? "installed" : "repo",
-    resolve2(options.home ?? homedir())
+    home
   ].join("|");
   if (!options.noCache) {
     const hit = skillIndexCache.get(cacheKey);
     if (hit && hit.fingerprint === fingerprint) {
+      if (options.collectErrors === true) {
+        return { skills: hit.skills, errors: hit.errors ?? [], ok: (hit.coreErrors ?? 0) === 0 };
+      }
       return hit.skills;
     }
   }
   const skills = [];
   const errors = [];
+  const coreErrors = [];
   for (const skillsRoot of skillsRoots) {
+    const optional = options.includeInstalled === true && isOptionalInstalledRoot(skillsRoot, absRoot, home);
     let entries = [];
     try {
       entries = await readdir2(skillsRoot, { withFileTypes: true });
@@ -15796,17 +16034,30 @@ async function loadAllSkills(root, options = {}) {
         skill.sourceRoot = skillsRoot;
         skills.push(skill);
       } catch (error) {
-        errors.push({ directory: candidate, message: error.message });
+        const item = { directory: candidate, message: error.message, optional };
+        errors.push(item);
+        if (!optional) coreErrors.push(item);
       }
     }
   }
-  if (errors.length > 0 && options.tolerateErrors !== true) {
-    const details = errors.map((error) => `${error.directory}: ${error.message}`).join("\n");
+  skillIndexCache.set(cacheKey, {
+    fingerprint,
+    skills,
+    errors,
+    coreErrors: coreErrors.length
+  });
+  if (options.collectErrors === true) {
+    return { skills, errors, ok: coreErrors.length === 0 };
+  }
+  if (coreErrors.length > 0 && options.tolerateErrors !== true) {
+    const details = coreErrors.map((error) => `${error.directory}: ${error.message}`).join("\n");
     throw new Error(`failed to load skills:
 ${details}`);
   }
-  skillIndexCache.set(cacheKey, { fingerprint, skills });
   return skills;
+}
+function isOptionalInstalledRoot(skillsRoot, absRoot, home) {
+  return isInside3(home, skillsRoot) && !isInside3(absRoot, skillsRoot);
 }
 async function discoverSkillsRoots(root, options = {}) {
   const roots = [join2(root, "skills")];
@@ -15819,7 +16070,7 @@ async function discoverSkillsRoots(root, options = {}) {
   } catch {
   }
   if (options.includeInstalled === true) {
-    const home = resolve2(options.home ?? homedir());
+    const home = resolve4(options.home ?? homedir());
     roots.push(
       join2(home, ".codex", "skills"),
       join2(home, ".codex", "skills", ".system"),
@@ -15856,7 +16107,7 @@ async function discoverCachedSkillRoots(cacheRoot) {
       await walk(join2(dir, entry.name), depth + 1);
     }
   }
-  await walk(resolve2(cacheRoot), 0);
+  await walk(resolve4(cacheRoot), 0);
   return roots;
 }
 async function hasSkillChildren(dir) {
@@ -15879,7 +16130,7 @@ async function hasSkillChildren(dir) {
 function dedupePaths(paths) {
   const seen = /* @__PURE__ */ new Set();
   const out = [];
-  for (const path of paths.map((item) => resolve2(item))) {
+  for (const path of paths.map((item) => resolve4(item))) {
     const key = process.platform === "win32" ? path.toLowerCase() : path;
     if (seen.has(key)) continue;
     seen.add(key);
@@ -15896,22 +16147,22 @@ async function collectFiles(dir) {
   }
   return out.sort((left, right) => left.localeCompare(right));
 }
-function isInside2(parent, candidate) {
-  const path = relative2(resolve2(parent), resolve2(candidate));
-  return path === "" || !path.startsWith(`..${sep2}`) && path !== ".." && !isAbsolute2(path);
+function isInside3(parent, candidate) {
+  const path = relative4(resolve4(parent), resolve4(candidate));
+  return path === "" || !path.startsWith(`..${sep4}`) && path !== ".." && !isAbsolute4(path);
 }
 async function realPathIsInside2(parent, candidate) {
   try {
-    return isInside2(await realpath2(parent), await realpath2(candidate));
+    return isInside3(await realpath2(parent), await realpath2(candidate));
   } catch {
     return false;
   }
 }
-var import_yaml2, sidecarSchema2, skillIndexCache;
+var import_yaml4, sidecarSchema2, skillIndexCache;
 var init_skill_loader = __esm({
   "lib/capabilities/skill-loader.mjs"() {
     init_validate_skill_lib();
-    import_yaml2 = __toESM(require_dist(), 1);
+    import_yaml4 = __toESM(require_dist(), 1);
     init_schema_lib();
     init_schemas_generated();
     sidecarSchema2 = schemas["skillsforge.sidecar"];
@@ -16013,8 +16264,8 @@ var init_router = __esm({
 });
 
 // lib/capabilities/policy.mjs
-import { readFile as readFile4, readdir as readdir3, realpath as realpath3, lstat } from "node:fs/promises";
-import { extname, isAbsolute as isAbsolute3, join as join3, relative as relative3, resolve as resolve3, sep as sep3 } from "node:path";
+import { readFile as readFile5, readdir as readdir3, realpath as realpath3, lstat } from "node:fs/promises";
+import { extname, isAbsolute as isAbsolute5, join as join3, relative as relative5, resolve as resolve5, sep as sep5 } from "node:path";
 async function scanSkill(skill) {
   const findings = [];
   const caps = skill.sidecar?.capabilities ?? {
@@ -16025,7 +16276,7 @@ async function scanSkill(skill) {
   const files = skill.files ?? await collectFiles2(skill.directory);
   const unscanned = [];
   for (const file of files) {
-    const relativePath = relative3(skill.directory, file).replaceAll("\\", "/");
+    const relativePath = relative5(skill.directory, file).replaceAll("\\", "/");
     let stats2;
     try {
       stats2 = await lstat(file);
@@ -16036,7 +16287,7 @@ async function scanSkill(skill) {
       try {
         const real = await realpath3(file);
         const realDir = await realpath3(skill.directory);
-        if (!isInside3(realDir, real)) {
+        if (!isInside4(realDir, real)) {
           findings.push(finding(
             "symlink-escape",
             true,
@@ -16068,7 +16319,7 @@ async function scanSkill(skill) {
         { executableFile: relativePath }
       ));
     }
-    const raw = await readFile4(file);
+    const raw = await readFile5(file);
     const looksText = TEXT_EXTENSIONS.has(extension) || isProbablyText(raw);
     if (!looksText) {
       if (stats2.size > 0) unscanned.push(relativePath);
@@ -16118,7 +16369,7 @@ async function scanSkill(skill) {
       for (const match of body.matchAll(HOST_PATTERN)) {
         const host = normalizeHost(match[1]);
         if (!host) continue;
-        if (!hostAllowed(host, allowedHosts)) {
+        if (!hostAllowed2(host, allowedHosts)) {
           const line = lineNumberAt(body, match.index ?? 0) + lineOffset;
           findings.push(finding(
             "undeclared-host",
@@ -16134,7 +16385,7 @@ async function scanSkill(skill) {
     if (caps.write?.scope === "skill" || caps.write?.scope === "none") {
       for (const match of body.matchAll(PATH_ESCAPE)) {
         const candidate = match[1];
-        if (candidate.includes("..") || isAbsolute3(candidate)) {
+        if (candidate.includes("..") || isAbsolute5(candidate)) {
           const line = lineNumberAt(body, match.index ?? 0) + lineOffset;
           findings.push(finding(
             "write-scope-escape",
@@ -16192,9 +16443,9 @@ async function collectFiles2(dir) {
   }
   return out;
 }
-function isInside3(parent, candidate) {
-  const path = relative3(resolve3(parent), resolve3(candidate));
-  return path === "" || !path.startsWith(`..${sep3}`) && path !== ".." && !isAbsolute3(path);
+function isInside4(parent, candidate) {
+  const path = relative5(resolve5(parent), resolve5(candidate));
+  return path === "" || !path.startsWith(`..${sep5}`) && path !== ".." && !isAbsolute5(path);
 }
 function isProbablyText(buffer) {
   if (buffer.byteLength === 0) return false;
@@ -16232,7 +16483,7 @@ function lineNumberAt(text, index) {
 function normalizeHost(value) {
   return String(value ?? "").toLowerCase().replace(/[),.;]+$/g, "").trim();
 }
-function hostAllowed(host, declaredHosts = []) {
+function hostAllowed2(host, declaredHosts = []) {
   const normalized = host.toLowerCase();
   return declaredHosts.some((declared) => {
     const allowed = String(declared).toLowerCase();
@@ -16267,7 +16518,7 @@ var init_policy = __esm({
     EXEC_CONTENT = /\b(?:child_process|exec(?:File|Sync)\b|exec\s*\(|\.exec\b|spawn(?:Sync)?\s*\(|spawn(?:Sync)?\b)/;
     NETWORK_CONTENT = /\b(?:fetch\s*\(|axios\b|curl\b|wget\b|WebFetch|WebSearch|https?:\/\/|wss?:\/\/)/i;
     HOST_PATTERN = /\b(?:https?|wss?):\/\/([^/\s"'`]+)/gi;
-    PATH_ESCAPE = /(?:^|[\s"'`=(])((?:\.\.\/)+[^\s"'`)]+|\/(?:etc|tmp|var|home|Users)\/[^\s"'`)]+|[A-Za-z]:\\[^\s"'`)]+)/g;
+    PATH_ESCAPE = /(?:^|[\s"'`=(])((?:\.\.[\\/])+[^\s"'`)]+|\/(?:etc|tmp|var|home|Users)\/[^\s"'`)]+|[A-Za-z]:\\[^\s"'`)]+)/g;
     MAX_TEXT_BYTES = 256e3;
     POLICY_RULES = Object.freeze([
       "undeclared-exec-file",
@@ -16327,13 +16578,13 @@ var init_dependency_graph = __esm({
 
 // lib/capabilities/receipt.mjs
 import { createHash } from "node:crypto";
-import { readdir as readdir4, readFile as readFile5 } from "node:fs/promises";
-import { join as join5, relative as relative4, resolve as resolve5 } from "node:path";
+import { readdir as readdir4, readFile as readFile6 } from "node:fs/promises";
+import { join as join5, relative as relative6, resolve as resolve7 } from "node:path";
 function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
 }
 function toPosixRelative(from, file) {
-  return relative4(from, file).replaceAll("\\", "/");
+  return relative6(from, file).replaceAll("\\", "/");
 }
 function comparePosixPath(left, right) {
   if (left < right) return -1;
@@ -16358,7 +16609,7 @@ function normalizeEvaluation(evaluation, options = {}) {
 async function hashSkillFiles(skill) {
   const fileHashes = [];
   for (const file of skill.files ?? []) {
-    const content = await readFile5(file);
+    const content = await readFile6(file);
     fileHashes.push({
       path: toPosixRelative(skill.directory, file),
       sha256: sha256(content)
@@ -16378,11 +16629,11 @@ async function collectFilesRecursive(dir) {
   return out;
 }
 async function hashPackageTree(packageRoot) {
-  const root = resolve5(packageRoot);
+  const root = resolve7(packageRoot);
   const files = await collectFilesRecursive(root);
   const fileHashes = [];
   for (const file of files) {
-    const content = await readFile5(file);
+    const content = await readFile6(file);
     fileHashes.push({
       path: toPosixRelative(root, file),
       sha256: sha256(content)
@@ -16468,7 +16719,7 @@ async function buildReceipt(skills, options = {}) {
   return { ok: true, receipt, receiptHash: sha256(text), text };
 }
 async function verifyReceipt(receiptPath, skills, options = {}) {
-  const expectedText = await readFile5(receiptPath, "utf8");
+  const expectedText = await readFile6(receiptPath, "utf8");
   const expected = JSON.parse(expectedText);
   const actualReceiptHash = sha256(expectedText);
   const packageOnly = Boolean(options.packageOnly);
@@ -16582,7 +16833,7 @@ async function verifyEvaluationEvidence(embedded, options) {
   let reportBytes = options.reportBytes ?? null;
   let report = options.evaluation ?? null;
   if (options.evaluationPath) {
-    reportBytes = reportBytes ?? await readFile5(options.evaluationPath);
+    reportBytes = reportBytes ?? await readFile6(options.evaluationPath);
     report = report ?? JSON.parse(reportBytes.toString("utf8"));
   } else if (report && !reportBytes) {
     reportBytes = Buffer.from(`${JSON.stringify(report, null, 2)}
@@ -16626,8 +16877,8 @@ var init_receipt = __esm({
   "lib/capabilities/receipt.mjs"() {
     init_dependency_graph();
     init_policy();
-    SCANNER_VERSION = "0.3.0";
-    RECEIPT_VERSION = "0.3.0";
+    SCANNER_VERSION = "0.4.0";
+    RECEIPT_VERSION = "0.4.0";
   }
 });
 
@@ -16790,366 +17041,8 @@ var init_verify = __esm({
   }
 });
 
-// lib/capabilities/policy-shell.mjs
-function hasShellControlSyntax(command) {
-  return SHELL_CONTROL_SYNTAX.test(String(command ?? ""));
-}
-function tokenizeCommand(command) {
-  const tokens = [];
-  const source = String(command ?? "").trim();
-  let current = "";
-  let quote = null;
-  for (let i = 0; i < source.length; i += 1) {
-    const ch = source[i];
-    if (quote) {
-      if (ch === quote) {
-        quote = null;
-      } else if (ch === "\\" && quote === '"' && i + 1 < source.length) {
-        current += source[i + 1];
-        i += 1;
-      } else {
-        current += ch;
-      }
-      continue;
-    }
-    if (ch === "'" || ch === '"') {
-      quote = ch;
-      continue;
-    }
-    if (/\s/.test(ch)) {
-      if (current) {
-        tokens.push(current);
-        current = "";
-      }
-      continue;
-    }
-    current += ch;
-  }
-  if (quote) return null;
-  if (current) tokens.push(current);
-  return tokens;
-}
-function argHasMetacharacters(arg) {
-  return /[;&|`$<>\\]/.test(String(arg ?? "")) || /\$\(/.test(String(arg ?? ""));
-}
-function commandAllowed(command, declaredCommands = []) {
-  const normalized = command.trim();
-  if (!normalized || hasShellControlSyntax(normalized)) return false;
-  const cmdTokens = tokenizeCommand(normalized);
-  if (!cmdTokens) return false;
-  return declaredCommands.some((declared) => {
-    const allowed = String(declared).trim();
-    if (!allowed || hasShellControlSyntax(allowed)) return false;
-    if (normalized === allowed) return true;
-    const allowedTokens = tokenizeCommand(allowed);
-    if (!allowedTokens || allowedTokens.length === 0) return false;
-    if (cmdTokens.length < allowedTokens.length) return false;
-    for (let i = 0; i < allowedTokens.length; i += 1) {
-      if (cmdTokens[i] !== allowedTokens[i]) return false;
-    }
-    const remaining = cmdTokens.slice(allowedTokens.length);
-    return remaining.every((token) => !argHasMetacharacters(token));
-  });
-}
-function commandExactlyAllowed(command, declaredCommands = []) {
-  const normalized = String(command ?? "").trim();
-  if (!normalized || hasShellControlSyntax(normalized)) return false;
-  return declaredCommands.some((declared) => normalized === String(declared).trim());
-}
-function shellImpliesNetwork(command) {
-  if (SHELL_NETWORK_CLIENTS.test(command)) return true;
-  if (/\bpython(?:3)?\b/i.test(command) && /\s-c\b/.test(command) && /\b(urllib|requests|http\.client|httpx|urlopen)\b/i.test(command)) {
-    return true;
-  }
-  if (/\bnode\b/i.test(command) && /\s-e\b/.test(command) && /\b(fetch|https?:\/\/|https?\.|axios|got)\b/i.test(command)) {
-    return true;
-  }
-  return false;
-}
-function shellImpliesWrite(command) {
-  const text = String(command ?? "");
-  const tokens = tokenizeCommand(text);
-  if (!tokens || tokens.length === 0) return true;
-  const commandName = tokens[0].split(/[\\/]/).pop().toLowerCase();
-  if (SHELL_WRITE_COMMANDS.has(commandName)) {
-    if (commandName === "git") {
-      return /^(add|am|apply|checkout|clean|commit|merge|mv|pull|push|rebase|reset|restore|rm|stash|switch)\b/i.test(tokens[1] ?? "");
-    }
-    if (["npm", "pnpm", "yarn"].includes(commandName)) {
-      return /^(add|ci|install|link|pack|publish|remove|run|uninstall)\b/i.test(tokens[1] ?? "");
-    }
-    return true;
-  }
-  if (tokens.some((token) => SHELL_WRITE_FLAGS.has(token.toLowerCase()))) return true;
-  if (INLINE_WRITE_PATTERNS.some((pattern) => pattern.test(text))) return true;
-  return false;
-}
-function hostFromUrl(value) {
-  try {
-    return new URL(String(value)).host.toLowerCase();
-  } catch {
-    return null;
-  }
-}
-function hostAllowed2(host, declaredHosts = []) {
-  const normalized = host.toLowerCase();
-  return declaredHosts.some((declared) => {
-    const allowed = String(declared).toLowerCase();
-    return normalized === allowed || allowed.startsWith("*.") && normalized.endsWith(allowed.slice(1));
-  });
-}
-var SHELL_CONTROL_SYNTAX, SHELL_NETWORK_CLIENTS, SHELL_WRITE_COMMANDS, SHELL_WRITE_FLAGS, INLINE_WRITE_PATTERNS;
-var init_policy_shell = __esm({
-  "lib/capabilities/policy-shell.mjs"() {
-    SHELL_CONTROL_SYNTAX = /[;&|`\n\r<>]|\$\(/;
-    SHELL_NETWORK_CLIENTS = /\b(curl|wget|Invoke-WebRequest|Invoke-RestMethod|iwr|bitsadmin|certutil|fetch)\b/i;
-    SHELL_WRITE_COMMANDS = /* @__PURE__ */ new Set([
-      "add-content",
-      "copy",
-      "copy-item",
-      "cp",
-      "del",
-      "git",
-      "install",
-      "mkdir",
-      "move",
-      "move-item",
-      "mv",
-      "new-item",
-      "npm",
-      "out-file",
-      "pnpm",
-      "remove-item",
-      "rm",
-      "rmdir",
-      "set-content",
-      "tee",
-      "touch",
-      "yarn"
-    ]);
-    SHELL_WRITE_FLAGS = /* @__PURE__ */ new Set([
-      "-o",
-      "--dest",
-      "--destination",
-      "--force",
-      "--home",
-      "--out",
-      "--output",
-      "--save",
-      "--save-dev",
-      "--write"
-    ]);
-    INLINE_WRITE_PATTERNS = [
-      /\b(?:writeFile|writeFileSync|appendFile|appendFileSync|createWriteStream|rename|renameSync|rm|rmSync|unlink|unlinkSync|mkdir|mkdirSync|cp|cpSync)\s*\(/i,
-      /\b(?:Set-Content|Add-Content|Out-File|New-Item|Copy-Item|Move-Item|Remove-Item)\b/i,
-      /\bopen\s*\([^)]*,\s*['"](?:w|a|x|w\+|a\+)/i,
-      /\bPath\s*\([^)]*\)\.(?:write_text|write_bytes|unlink|rename|mkdir)\s*\(/i,
-      /\b(?:shutil\.(?:copy|copyfile|move|rmtree)|os\.(?:remove|unlink|rename|mkdir|makedirs|rmdir))\s*\(/i
-    ];
-  }
-});
-
-// lib/capabilities/hosts.mjs
-import { access as access5 } from "node:fs/promises";
-import { homedir as homedir2 } from "node:os";
-import { join as join7, resolve as resolve7, sep as sep6 } from "node:path";
-function isInsideHome(home, candidate) {
-  const root = resolve7(home);
-  const path = resolve7(candidate);
-  return path === root || path.startsWith(root.endsWith(sep6) ? root : `${root}${sep6}`);
-}
-async function pathExists2(path) {
-  try {
-    await access5(path);
-    return true;
-  } catch {
-    return false;
-  }
-}
-async function detectHosts(options = {}) {
-  const home = resolve7(options.home ?? homedir2());
-  const results = [];
-  for (const host of HOST_REGISTRY) {
-    const detectDirs = host.detectRels.map((rel) => resolve7(home, rel));
-    const skillsDir = resolve7(home, host.skillsRel);
-    for (const detectDir of detectDirs) {
-      if (!isInsideHome(home, detectDir)) {
-        throw new Error(`host path escaped home: ${host.id}`);
-      }
-    }
-    if (!isInsideHome(home, skillsDir)) {
-      throw new Error(`host path escaped home: ${host.id}`);
-    }
-    let detected = false;
-    let primaryDetect = detectDirs[0];
-    for (const detectDir of detectDirs) {
-      if (await pathExists2(detectDir)) {
-        detected = true;
-        primaryDetect = detectDir;
-        break;
-      }
-    }
-    results.push({
-      id: host.id,
-      label: host.label,
-      detected,
-      detectDir: primaryDetect,
-      detectDirs,
-      skillsDir,
-      fidelity: host.fidelity,
-      runtimeEnforced: host.runtimeEnforced,
-      usesSidecar: host.usesSidecar,
-      installHint: host.installHint
-    });
-  }
-  return results;
-}
-function buildCustomHost(spec, options = {}) {
-  const home = resolve7(options.home ?? homedir2());
-  const source = String(spec ?? "");
-  const separator = source.indexOf(":");
-  const id = separator === -1 ? source : source.slice(0, separator);
-  const dir = separator === -1 ? "" : source.slice(separator + 1);
-  if (!id || !/^[a-z0-9][a-z0-9-]*$/i.test(id)) {
-    throw new Error("custom host id must be kebab-case");
-  }
-  if (!dir) {
-    throw new Error("custom host requires <id>:<skills-dir>");
-  }
-  const skillsDir = resolve7(home, dir);
-  if (!isInsideHome(home, skillsDir)) {
-    throw new Error(`custom host path escaped home: ${id}`);
-  }
-  return {
-    id,
-    label: `Custom host: ${id}`,
-    detected: true,
-    detectDir: skillsDir,
-    detectDirs: [skillsDir],
-    skillsDir,
-    fidelity: (
-      /** @type {HostFidelity} */
-      "package"
-    ),
-    runtimeEnforced: false,
-    usesSidecar: false,
-    installHint: "Custom package-fidelity target. SkillsForge copies validated skill packages only."
-  };
-}
-async function resolveHostSelection(ids, options = {}) {
-  const detected = await detectHosts(options);
-  const byId = new Map(detected.map((host) => [host.id, host]));
-  const selected = [];
-  const unknown = [];
-  for (const id of ids) {
-    const host = byId.get(id);
-    if (!host) unknown.push(id);
-    else selected.push(host);
-  }
-  return { selected, unknown, all: detected };
-}
-var HOST_REGISTRY;
-var init_hosts = __esm({
-  "lib/capabilities/hosts.mjs"() {
-    HOST_REGISTRY = Object.freeze([
-      Object.freeze({
-        id: "claude-code",
-        label: "Claude Code",
-        detectRels: [".claude"],
-        skillsRel: join7(".claude", "skills"),
-        fidelity: (
-          /** @type {HostFidelity} */
-          "full"
-        ),
-        runtimeEnforced: true,
-        usesSidecar: true,
-        installHint: "Full-fidelity install. Claude Code hooks and SkillsForge sidecar stay in place."
-      }),
-      Object.freeze({
-        id: "cursor",
-        label: "Cursor",
-        detectRels: [".cursor"],
-        skillsRel: join7(".cursor", "skills"),
-        fidelity: (
-          /** @type {HostFidelity} */
-          "package"
-        ),
-        runtimeEnforced: false,
-        usesSidecar: false,
-        installHint: "Package-fidelity install. Runtime policy enforcement is not claimed."
-      }),
-      Object.freeze({
-        id: "codex",
-        label: "Codex CLI",
-        // Detect Codex client config and/or the shared agents skill root.
-        detectRels: [".codex", ".agents"],
-        skillsRel: join7(".agents", "skills"),
-        fidelity: (
-          /** @type {HostFidelity} */
-          "package"
-        ),
-        runtimeEnforced: false,
-        usesSidecar: false,
-        installHint: "Package-fidelity skill install; use package --host codex for a guarded Codex plugin bundle."
-      }),
-      Object.freeze({
-        id: "opencode",
-        label: "OpenCode",
-        detectRels: [join7(".config", "opencode"), ".agents"],
-        skillsRel: join7(".config", "opencode", "skills"),
-        fidelity: (
-          /** @type {HostFidelity} */
-          "package"
-        ),
-        runtimeEnforced: false,
-        usesSidecar: false,
-        installHint: "Package-fidelity install. Verify the configured OpenCode skill directory for your local build."
-      }),
-      Object.freeze({
-        id: "zcode",
-        label: "ZCode-compatible local agent",
-        detectRels: [".zcode", join7(".config", "zcode")],
-        skillsRel: join7(".zcode", "skills"),
-        fidelity: (
-          /** @type {HostFidelity} */
-          "package"
-        ),
-        runtimeEnforced: false,
-        usesSidecar: false,
-        installHint: "Package-fidelity install. Verify the configured ZCode skill directory for your local build."
-      }),
-      Object.freeze({
-        id: "hermes",
-        label: "Hermes Agent",
-        detectRels: [".hermes", join7(".config", "hermes")],
-        skillsRel: join7(".hermes", "skills"),
-        fidelity: (
-          /** @type {HostFidelity} */
-          "package"
-        ),
-        runtimeEnforced: false,
-        usesSidecar: false,
-        installHint: "Package-fidelity install. Runtime policy enforcement is not claimed."
-      }),
-      Object.freeze({
-        id: "gemini",
-        label: "Gemini CLI",
-        detectRels: [".gemini"],
-        skillsRel: join7(".gemini", "skills"),
-        fidelity: (
-          /** @type {HostFidelity} */
-          "package"
-        ),
-        runtimeEnforced: false,
-        usesSidecar: false,
-        installHint: "Package-fidelity install. Runtime policy enforcement is not claimed."
-      })
-    ]);
-  }
-});
-
 // lib/capabilities/codex-policy-compiler.mjs
-import { isAbsolute as isAbsolute5, normalize as normalize2, resolve as resolve8, sep as sep8 } from "node:path";
+import { isAbsolute as isAbsolute6, resolve as resolve8 } from "node:path";
 function compileCodexHooks({ policyRelativePath }) {
   const policyPath = String(policyRelativePath ?? "policy/skillsforge.json").replaceAll("\\", "/");
   return {
@@ -17200,7 +17093,7 @@ function enforceBash(command, caps) {
   if (caps.network?.allowed === true) {
     for (const url of command.match(/\b(?:https?|wss?):\/\/[^\s"'`]+/gi) ?? []) {
       const host = hostFromUrl(url);
-      if (!host || !hostAllowed2(host, caps.network.hosts)) {
+      if (!host || !hostAllowed(host, caps.network.hosts)) {
         return deny2(`network host is not declared: ${host ?? "invalid URL"}`);
       }
     }
@@ -17226,16 +17119,20 @@ function enforceApplyPatch(patchText, caps, policy) {
     }
     if (caps.write.scope === "skill") {
       const skillRoot = policy.__skillRoot;
-      const candidate = skillRoot && !isAbsolute5(filePath) ? resolve8(skillRoot, filePath) : resolve8(filePath);
-      if (skillRoot && !isInside5(skillRoot, candidate)) {
-        return deny2(`write escapes skill scope: ${filePath}`);
+      if (!skillRoot) return deny2("skill root unavailable");
+      const candidate = !isAbsolute6(filePath) ? resolve8(skillRoot, filePath) : resolve8(filePath);
+      const confined = confineWriteCandidate(skillRoot, candidate);
+      if (!confined.ok) {
+        return deny2(confined.reason === "write path realpath failed" ? `write path realpath failed: ${filePath}` : `write escapes skill scope: ${filePath}`);
       }
     }
     if (caps.write.scope === "project") {
       const projectRoot = policy.__projectRoot;
-      const candidate = projectRoot && !isAbsolute5(filePath) ? resolve8(projectRoot, filePath) : resolve8(filePath);
-      if (projectRoot && !isInside5(projectRoot, candidate)) {
-        return deny2(`write escapes project scope: ${filePath}`);
+      if (!projectRoot) return deny2("project root unavailable");
+      const candidate = !isAbsolute6(filePath) ? resolve8(projectRoot, filePath) : resolve8(filePath);
+      const confined = confineWriteCandidate(projectRoot, candidate);
+      if (!confined.ok) {
+        return deny2(confined.reason === "write path realpath failed" ? `write path realpath failed: ${filePath}` : `write escapes project scope: ${filePath}`);
       }
     }
   }
@@ -17274,13 +17171,9 @@ function deny2(reason) {
     }
   };
 }
-function isInside5(parent, candidate) {
-  const normalizedParent = normalize2(resolve8(parent));
-  const normalizedCandidate = normalize2(resolve8(candidate));
-  return normalizedCandidate === normalizedParent || normalizedCandidate.startsWith(normalizedParent.endsWith(sep8) ? normalizedParent : normalizedParent + sep8);
-}
 var init_codex_policy_compiler = __esm({
   "lib/capabilities/codex-policy-compiler.mjs"() {
+    init_paths();
     init_policy_shell();
   }
 });
@@ -17297,10 +17190,10 @@ __export(catalog_exports, {
   skillsForProfile: () => skillsForProfile
 });
 import { readFile as readFile10 } from "node:fs/promises";
-import { join as join10, resolve as resolve10 } from "node:path";
+import { join as join8, resolve as resolve10 } from "node:path";
 async function loadCatalog(root) {
   const abs = resolve10(root);
-  const catalogPath = join10(abs, "catalog", "skillsforge.catalog.yaml");
+  const catalogPath = join8(abs, "catalog", "skillsforge.catalog.yaml");
   const source = await readFile10(catalogPath, "utf8");
   const document = (0, import_yaml5.parseDocument)(source, { prettyErrors: true, strict: true, uniqueKeys: true });
   if (document.errors.length > 0) {
@@ -17386,9 +17279,9 @@ __export(eval_exports, {
   runEvaluation: () => runEvaluation
 });
 import { createHash as createHash2 } from "node:crypto";
-import { mkdir as mkdir11, readFile as readFile17, writeFile as writeFile11 } from "node:fs/promises";
-import { dirname as dirname7, join as join21, resolve as resolve19 } from "node:path";
-import { fileURLToPath as fileURLToPath3 } from "node:url";
+import { mkdir as mkdir5, readFile as readFile13, writeFile as writeFile5 } from "node:fs/promises";
+import { dirname as dirname6, join as join13, resolve as resolve14 } from "node:path";
+import { fileURLToPath as fileURLToPath4 } from "node:url";
 function percentile(values, p) {
   if (values.length === 0) return null;
   const sorted = [...values].sort((left, right) => left - right);
@@ -17447,8 +17340,8 @@ function calculateMetrics(cases, select) {
 async function runEvaluation(options = {}) {
   const root = options.root ?? repositoryRoot;
   const corpusName = options.corpus ?? "routing-holdout.json";
-  const corpusPath = join21(root, "evaluation", corpusName);
-  const corpusSource = await readFile17(corpusPath);
+  const corpusPath = join13(root, "evaluation", corpusName);
+  const corpusSource = await readFile13(corpusPath);
   const corpus = JSON.parse(corpusSource.toString("utf8"));
   const skills = await loadAllSkills(root);
   const started = Date.now();
@@ -17475,8 +17368,8 @@ async function runEvaluation(options = {}) {
     durationMs: Date.now() - started
   };
   if (options.write !== false) {
-    await mkdir11(join21(root, "artifacts", "evaluation"), { recursive: true });
-    await writeFile11(join21(root, "artifacts", "evaluation", "routing-report.json"), `${JSON.stringify(report, null, 2)}
+    await mkdir5(join13(root, "artifacts", "evaluation"), { recursive: true });
+    await writeFile5(join13(root, "artifacts", "evaluation", "routing-report.json"), `${JSON.stringify(report, null, 2)}
 `);
   }
   return report;
@@ -17486,11 +17379,11 @@ var init_eval = __esm({
   async "scripts/eval.mjs"() {
     init_skill_loader();
     init_router();
-    modulePath = fileURLToPath3(import.meta.url);
-    repositoryRoot = resolve19(dirname7(modulePath), "..");
+    modulePath = fileURLToPath4(import.meta.url);
+    repositoryRoot = resolve14(dirname6(modulePath), "..");
     HOLDOUT_PRECISION_MIN = 0.95;
     HOLDOUT_RECALL_MIN = 0.9;
-    if (process.argv[1] && resolve19(process.argv[1]) === modulePath) {
+    if (process.argv[1] && resolve14(process.argv[1]) === modulePath) {
       const report = await runEvaluation();
       console.log(
         `routing: ${report.tp}+${report.tn}/${report.total} exact=${report.exactMatchAccuracy?.toFixed(2)} P=${report.precision?.toFixed(2)} R=${report.recall?.toFixed(2)} p50=${report.latencyMs?.p50?.toFixed(2)}ms p95=${report.latencyMs?.p95?.toFixed(2)}ms`
@@ -17506,6 +17399,205 @@ var init_eval = __esm({
   }
 });
 
+// lib/capabilities/hosts.mjs
+import { access as access8 } from "node:fs/promises";
+import { homedir as homedir3 } from "node:os";
+import { join as join14, resolve as resolve15, sep as sep7 } from "node:path";
+function isInsideHome(home, candidate) {
+  const root = resolve15(home);
+  const path = resolve15(candidate);
+  return path === root || path.startsWith(root.endsWith(sep7) ? root : `${root}${sep7}`);
+}
+async function pathExists5(path) {
+  try {
+    await access8(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+async function detectHosts(options = {}) {
+  const home = resolve15(options.home ?? homedir3());
+  const results = [];
+  for (const host of HOST_REGISTRY) {
+    const detectDirs = host.detectRels.map((rel) => resolve15(home, rel));
+    const skillsDir = resolve15(home, host.skillsRel);
+    for (const detectDir of detectDirs) {
+      if (!isInsideHome(home, detectDir)) {
+        throw new Error(`host path escaped home: ${host.id}`);
+      }
+    }
+    if (!isInsideHome(home, skillsDir)) {
+      throw new Error(`host path escaped home: ${host.id}`);
+    }
+    let detected = false;
+    let primaryDetect = detectDirs[0];
+    for (const detectDir of detectDirs) {
+      if (await pathExists5(detectDir)) {
+        detected = true;
+        primaryDetect = detectDir;
+        break;
+      }
+    }
+    results.push({
+      id: host.id,
+      label: host.label,
+      detected,
+      detectDir: primaryDetect,
+      detectDirs,
+      skillsDir,
+      fidelity: host.fidelity,
+      runtimeEnforced: host.runtimeEnforced,
+      usesSidecar: host.usesSidecar,
+      installHint: host.installHint
+    });
+  }
+  return results;
+}
+function buildCustomHost(spec, options = {}) {
+  const home = resolve15(options.home ?? homedir3());
+  const source = String(spec ?? "");
+  const separator = source.indexOf(":");
+  const id = separator === -1 ? source : source.slice(0, separator);
+  const dir = separator === -1 ? "" : source.slice(separator + 1);
+  if (!id || !/^[a-z0-9][a-z0-9-]*$/i.test(id)) {
+    throw new Error("custom host id must be kebab-case");
+  }
+  if (!dir) {
+    throw new Error("custom host requires <id>:<skills-dir>");
+  }
+  const skillsDir = resolve15(home, dir);
+  if (!isInsideHome(home, skillsDir)) {
+    throw new Error(`custom host path escaped home: ${id}`);
+  }
+  return {
+    id,
+    label: `Custom host: ${id}`,
+    detected: true,
+    detectDir: skillsDir,
+    detectDirs: [skillsDir],
+    skillsDir,
+    fidelity: (
+      /** @type {HostFidelity} */
+      "package"
+    ),
+    runtimeEnforced: false,
+    usesSidecar: false,
+    installHint: "Custom package-fidelity target. SkillsForge copies validated skill packages only."
+  };
+}
+async function resolveHostSelection(ids, options = {}) {
+  const detected = await detectHosts(options);
+  const byId = new Map(detected.map((host) => [host.id, host]));
+  const selected = [];
+  const unknown = [];
+  for (const id of ids) {
+    const host = byId.get(id);
+    if (!host) unknown.push(id);
+    else selected.push(host);
+  }
+  return { selected, unknown, all: detected };
+}
+var HOST_REGISTRY;
+var init_hosts = __esm({
+  "lib/capabilities/hosts.mjs"() {
+    HOST_REGISTRY = Object.freeze([
+      Object.freeze({
+        id: "claude-code",
+        label: "Claude Code",
+        detectRels: [".claude"],
+        skillsRel: join14(".claude", "skills"),
+        fidelity: (
+          /** @type {HostFidelity} */
+          "full"
+        ),
+        runtimeEnforced: true,
+        usesSidecar: true,
+        installHint: "Full-fidelity install. Claude Code hooks and SkillsForge sidecar stay in place."
+      }),
+      Object.freeze({
+        id: "cursor",
+        label: "Cursor",
+        detectRels: [".cursor"],
+        skillsRel: join14(".cursor", "skills"),
+        fidelity: (
+          /** @type {HostFidelity} */
+          "package"
+        ),
+        runtimeEnforced: false,
+        usesSidecar: false,
+        installHint: "Package-fidelity install. Runtime policy enforcement is not claimed."
+      }),
+      Object.freeze({
+        id: "codex",
+        label: "Codex CLI",
+        // Detect Codex client config and/or the shared agents skill root.
+        detectRels: [".codex", ".agents"],
+        skillsRel: join14(".agents", "skills"),
+        fidelity: (
+          /** @type {HostFidelity} */
+          "package"
+        ),
+        runtimeEnforced: false,
+        usesSidecar: false,
+        installHint: "Package-fidelity skill install; use package --host codex for a guarded Codex plugin bundle."
+      }),
+      Object.freeze({
+        id: "opencode",
+        label: "OpenCode",
+        detectRels: [join14(".config", "opencode"), ".agents"],
+        skillsRel: join14(".config", "opencode", "skills"),
+        fidelity: (
+          /** @type {HostFidelity} */
+          "package"
+        ),
+        runtimeEnforced: false,
+        usesSidecar: false,
+        installHint: "Package-fidelity install. Verify the configured OpenCode skill directory for your local build."
+      }),
+      Object.freeze({
+        id: "zcode",
+        label: "ZCode-compatible local agent",
+        detectRels: [".zcode", join14(".config", "zcode")],
+        skillsRel: join14(".zcode", "skills"),
+        fidelity: (
+          /** @type {HostFidelity} */
+          "package"
+        ),
+        runtimeEnforced: false,
+        usesSidecar: false,
+        installHint: "Package-fidelity install. Verify the configured ZCode skill directory for your local build."
+      }),
+      Object.freeze({
+        id: "hermes",
+        label: "Hermes Agent",
+        detectRels: [".hermes", join14(".config", "hermes")],
+        skillsRel: join14(".hermes", "skills"),
+        fidelity: (
+          /** @type {HostFidelity} */
+          "package"
+        ),
+        runtimeEnforced: false,
+        usesSidecar: false,
+        installHint: "Package-fidelity install. Runtime policy enforcement is not claimed."
+      }),
+      Object.freeze({
+        id: "gemini",
+        label: "Gemini CLI",
+        detectRels: [".gemini"],
+        skillsRel: join14(".gemini", "skills"),
+        fidelity: (
+          /** @type {HostFidelity} */
+          "package"
+        ),
+        runtimeEnforced: false,
+        usesSidecar: false,
+        installHint: "Package-fidelity install. Runtime policy enforcement is not claimed."
+      })
+    ]);
+  }
+});
+
 // lib/capabilities/evidence.mjs
 var evidence_exports = {};
 __export(evidence_exports, {
@@ -17514,12 +17606,12 @@ __export(evidence_exports, {
   stableStringify: () => stableStringify
 });
 import { createHash as createHash3 } from "node:crypto";
-import { access as access14, mkdir as mkdir12, readFile as readFile18, readdir as readdir10, writeFile as writeFile12 } from "node:fs/promises";
-import { dirname as dirname8, join as join22, relative as relative12, resolve as resolve20 } from "node:path";
-import { fileURLToPath as fileURLToPath4 } from "node:url";
+import { access as access9, mkdir as mkdir6, readFile as readFile14, readdir as readdir8, writeFile as writeFile6 } from "node:fs/promises";
+import { dirname as dirname7, join as join15, relative as relative9, resolve as resolve16 } from "node:path";
+import { fileURLToPath as fileURLToPath5 } from "node:url";
 async function buildEvidenceBundle(options = {}) {
-  const root = resolve20(options.root ?? moduleRoot);
-  const outDir = options.outDir ? resolve20(options.outDir) : null;
+  const root = resolve16(options.root ?? moduleRoot);
+  const outDir = options.outDir ? resolve16(options.outDir) : null;
   const write = outDir != null && options.write !== false;
   if (!outDir) {
     return { ok: false, errors: ["--out <dir> is required"], files: [], bundleHash: null };
@@ -17551,8 +17643,8 @@ async function buildEvidenceBundle(options = {}) {
     const sha2562 = sha256Text(text);
     fileEntries.push({ path: name, sha256: sha2562, bytes: Buffer.byteLength(text) });
     if (write) {
-      await mkdir12(outDir, { recursive: true });
-      await writeFile12(join22(outDir, name), text);
+      await mkdir6(outDir, { recursive: true });
+      await writeFile6(join15(outDir, name), text);
     }
   }
   const manifestBody = {
@@ -17564,9 +17656,10 @@ async function buildEvidenceBundle(options = {}) {
   const manifest = { ...manifestBody, bundleHash };
   const manifestWithHash = stableStringify(manifest);
   if (write) {
-    await writeFile12(join22(outDir, "manifest.json"), manifestWithHash);
+    await writeFile6(join15(outDir, "manifest.json"), manifestWithHash);
   }
-  const ok = Boolean(validation.ok) && policyReport.falseAllow === 0 && receiptReport.verify?.ok === true && receiptReport.tamper?.ok === false;
+  const allowSynthetic = options.allowSynthetic === true;
+  const ok = Boolean(validation.ok) && policyReport.falseAllow === 0 && Number(policyReport.total) > 0 && (allowSynthetic || receiptReport.mode !== "synthetic") && receiptReport.verify?.ok === true && receiptReport.tamper?.ok === false;
   return {
     ok,
     outDir,
@@ -17668,8 +17761,8 @@ async function collectPolicyAdversarial(root, injectedCorpus) {
   };
 }
 async function loadPolicyCorpus(root) {
-  const path = join22(root, "evaluation", "policy-adversarial.json");
-  const source = await readFile18(path);
+  const path = join15(root, "evaluation", "policy-adversarial.json");
+  const source = await readFile14(path);
   const parsed = JSON.parse(source.toString("utf8"));
   return {
     ...parsed,
@@ -17679,16 +17772,16 @@ async function loadPolicyCorpus(root) {
 }
 async function collectIndependentFixtures(root, fixtureRoots) {
   const roots = fixtureRoots ?? [
-    join22(root, "tests", "fixtures", "skills", "public-docs-helper"),
-    join22(root, "tests", "fixtures", "skills", "public-router-helper"),
-    join22(root, "tests", "fixtures", "skills", "public-security-scan")
+    join15(root, "tests", "fixtures", "skills", "public-docs-helper"),
+    join15(root, "tests", "fixtures", "skills", "public-router-helper"),
+    join15(root, "tests", "fixtures", "skills", "public-security-scan")
   ];
   const reports = [];
   for (const dir of roots) {
-    const abs = resolve20(dir);
+    const abs = resolve16(dir);
     let exists = true;
     try {
-      await access14(join22(abs, "SKILL.md"));
+      await access9(join15(abs, "SKILL.md"));
     } catch {
       exists = false;
     }
@@ -17719,41 +17812,41 @@ async function collectIndependentFixtures(root, fixtureRoots) {
   };
 }
 async function collectCodexPackageSummary(root) {
-  const pluginPath = join22(root, "plugins", "skillsforge", ".codex-plugin", "plugin.json");
+  const pluginPath = join15(root, "plugins", "skillsforge", ".codex-plugin", "plugin.json");
   let plugin = null;
   try {
-    plugin = JSON.parse(await readFile18(pluginPath, "utf8"));
+    plugin = JSON.parse(await readFile14(pluginPath, "utf8"));
   } catch {
     plugin = null;
   }
-  const skillsRoot = join22(root, "plugins", "skillsforge", "skills");
+  const skillsRoot = join15(root, "plugins", "skillsforge", "skills");
   const skillSummaries = [];
   let entries = [];
   try {
-    entries = await readdir10(skillsRoot, { withFileTypes: true });
+    entries = await readdir8(skillsRoot, { withFileTypes: true });
   } catch {
     entries = [];
   }
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    const skillDir = join22(skillsRoot, entry.name);
-    const hasSkill = await pathExists7(join22(skillDir, "SKILL.md"));
+    const skillDir = join15(skillsRoot, entry.name);
+    const hasSkill = await pathExists6(join15(skillDir, "SKILL.md"));
     if (!hasSkill) continue;
     skillSummaries.push({
       name: entry.name,
-      openaiYaml: await pathExists7(join22(skillDir, "agents", "openai.yaml")),
-      sidecar: await pathExists7(join22(skillDir, "skillsforge.json"))
+      openaiYaml: await pathExists6(join15(skillDir, "agents", "openai.yaml")),
+      sidecar: await pathExists6(join15(skillDir, "skillsforge.json"))
     });
   }
   skillSummaries.sort((left, right) => left.name.localeCompare(right.name));
   let distInterop = null;
   try {
-    distInterop = JSON.parse(await readFile18(join22(root, "dist", "codex-interop.json"), "utf8"));
+    distInterop = JSON.parse(await readFile14(join15(root, "dist", "codex-interop.json"), "utf8"));
   } catch {
     distInterop = null;
   }
   const distPresent = {
-    pluginJson: await pathExists7(join22(root, "dist", "codex", ".codex-plugin", "plugin.json")),
+    pluginJson: await pathExists6(join15(root, "dist", "codex", ".codex-plugin", "plugin.json")),
     openaiYamlCount: skillSummaries.filter((item) => item.openaiYaml).length
   };
   return {
@@ -17793,17 +17886,17 @@ async function collectCodexPackageSummary(root) {
   };
 }
 async function collectReceiptEvidence(root, options) {
-  const packageRoot = resolve20(
-    options.packageRoot ?? join22(root, "dist", "claude-code")
+  const packageRoot = resolve16(
+    options.packageRoot ?? join15(root, "dist", "claude-code")
   );
-  const receiptPath = resolve20(
-    options.receiptPath ?? join22(root, "dist", "trust-receipt.json")
+  const receiptPath = resolve16(
+    options.receiptPath ?? join15(root, "dist", "trust-receipt.json")
   );
-  const evaluationPath = resolve20(
-    options.evaluationPath ?? join22(root, "artifacts", "evaluation", "routing-report.json")
+  const evaluationPath = resolve16(
+    options.evaluationPath ?? join15(root, "artifacts", "evaluation", "routing-report.json")
   );
-  const packageReady = await pathExists7(join22(packageRoot, ".claude-plugin", "plugin.json"));
-  const receiptReady = await pathExists7(receiptPath);
+  const packageReady = await pathExists6(join15(packageRoot, ".claude-plugin", "plugin.json"));
+  const receiptReady = await pathExists6(receiptPath);
   if (!packageReady || !receiptReady) {
     return await synthesizeReceiptProof(root, options);
   }
@@ -17813,7 +17906,7 @@ async function collectReceiptEvidence(root, options) {
     packageOnly: false,
     requireEvaluation: true
   };
-  if (await pathExists7(evaluationPath)) {
+  if (await pathExists6(evaluationPath)) {
     verifyOptions.evaluationPath = evaluationPath;
   }
   const verify = await verifyReceipt(receiptPath, skills, verifyOptions);
@@ -17837,7 +17930,7 @@ async function collectReceiptEvidence(root, options) {
   };
 }
 async function synthesizeReceiptProof(root, options) {
-  const skills = options.skills ?? await loadAllSkills(join22(root, "plugins", "skillsforge"));
+  const skills = options.skills ?? await loadAllSkills(join15(root, "plugins", "skillsforge"));
   const evaluation = options.evaluationSummary ?? {
     corpusSha256: "synthetic-corpus",
     total: 2,
@@ -17851,14 +17944,27 @@ async function synthesizeReceiptProof(root, options) {
     evaluation,
     reportBytes,
     requireEvaluation: true,
-    packageRoot: join22(root, "plugins", "skillsforge")
+    packageRoot: join15(root, "plugins", "skillsforge")
   });
-  if (!built.ok) {
+  const allowSynthetic = options.allowSynthetic === true;
+  if (!built.ok || !allowSynthetic) {
     return {
       receiptPath: null,
-      packageRoot: toPosix(root, join22(root, "plugins", "skillsforge")),
-      verify: { ok: false, mismatches: built.errors ?? ["receipt build failed"], packageVerified: false, evaluationVerified: false, receiptHash: null },
-      tamper: { ok: false, prepared: false, mismatches: ["receipt unavailable"], note: "Could not prepare tamper proof." }
+      packageRoot: toPosix(root, join15(root, "plugins", "skillsforge")),
+      mode: "synthetic",
+      verify: {
+        ok: false,
+        packageVerified: false,
+        evaluationVerified: false,
+        mismatches: allowSynthetic ? built.errors ?? ["receipt build failed"] : ["dist trust receipt missing; pass allowSynthetic to probe"],
+        receiptHash: null
+      },
+      tamper: {
+        ok: false,
+        prepared: false,
+        mismatches: ["dist trust receipt missing"],
+        note: "Could not prepare tamper proof without dist receipt."
+      }
     };
   }
   const verify = {
@@ -17870,11 +17976,11 @@ async function synthesizeReceiptProof(root, options) {
   };
   const tamperedText = mutateReceiptForTamper(built.text);
   const tamper = await evaluateTamperedReceipt(tamperedText, skills, {
-    packageRoot: join22(root, "plugins", "skillsforge")
+    packageRoot: join15(root, "plugins", "skillsforge")
   });
   return {
     receiptPath: null,
-    packageRoot: toPosix(root, join22(root, "plugins", "skillsforge")),
+    packageRoot: toPosix(root, join15(root, "plugins", "skillsforge")),
     mode: "synthetic",
     verify,
     tamper: {
@@ -17885,7 +17991,7 @@ async function synthesizeReceiptProof(root, options) {
   };
 }
 async function verifyOneByteTamper(receiptPath, skills, verifyOptions) {
-  const original = await readFile18(receiptPath, "utf8");
+  const original = await readFile14(receiptPath, "utf8");
   const mutated = mutateReceiptForTamper(original);
   return evaluateTamperedReceipt(mutated, skills, verifyOptions);
 }
@@ -17946,12 +18052,12 @@ function defaultBuildMeta(root) {
       sha: process.env.GITHUB_SHA ?? null,
       runId: process.env.GITHUB_RUN_ID ?? null
     },
-    rootName: relative12(dirname8(root), root).replaceAll("\\", "/") || "."
+    rootName: relative9(dirname7(root), root).replaceAll("\\", "/") || "."
   };
 }
 async function readPackageVersion(root) {
   try {
-    const pkg = JSON.parse(await readFile18(join22(root, "package.json"), "utf8"));
+    const pkg = JSON.parse(await readFile14(join15(root, "package.json"), "utf8"));
     return pkg.version ?? null;
   } catch {
     return null;
@@ -18009,18 +18115,18 @@ function compareFinding(left, right) {
   return leftKey.localeCompare(rightKey);
 }
 function toPosix(root, abs) {
-  return relative12(root, abs).replaceAll("\\", "/");
+  return relative9(root, abs).replaceAll("\\", "/");
 }
-async function pathExists7(path) {
+async function pathExists6(path) {
   try {
-    await access14(path);
+    await access9(path);
     return true;
   } catch {
     return false;
   }
 }
 async function buildEvidenceBundleWithPackageMeta(options = {}) {
-  const root = resolve20(options.root ?? moduleRoot);
+  const root = resolve16(options.root ?? moduleRoot);
   const packageVersion = await readPackageVersion(root);
   return buildEvidenceBundle({
     ...options,
@@ -18041,18 +18147,222 @@ var init_evidence = __esm({
     init_receipt();
     init_verify();
     EVIDENCE_VERSION = "0.4.0";
-    moduleRoot = resolve20(dirname8(fileURLToPath4(import.meta.url)), "../..");
+    moduleRoot = resolve16(dirname7(fileURLToPath5(import.meta.url)), "../..");
   }
 });
 
 // scripts/skillsforge-cli.mjs
+import { realpathSync as realpathSync2 } from "node:fs";
+import { resolve as resolve26 } from "node:path";
+import { fileURLToPath as fileURLToPath6 } from "node:url";
+
+// lib/capabilities/claude-policy-compiler.mjs
+var import_yaml = __toESM(require_dist(), 1);
+init_paths();
+init_policy_shell();
+import { isAbsolute as isAbsolute2, resolve as resolve2 } from "node:path";
+var CLAUDE_POLICY_TOOLS = /* @__PURE__ */ new Set(["Bash", "Write", "Edit", "WebFetch", "WebSearch"]);
+function enforcePolicy(event, policy) {
+  const caps = policy?.capabilities ?? {
+    exec: { allowed: false, commands: [] },
+    network: { allowed: false, hosts: [] },
+    write: { scope: "skill" }
+  };
+  const tool = event?.tool_name == null || event.tool_name === "" ? "" : String(event.tool_name);
+  const input = event?.tool_input ?? {};
+  if (!tool || !CLAUDE_POLICY_TOOLS.has(tool)) {
+    return deny(`unsupported tool for Claude policy: ${tool || "(missing)"}`);
+  }
+  if (tool === "WebSearch") {
+    if (caps.network?.allowed !== true || caps.network?.searchAllowed !== true) {
+      return deny(
+        caps.network?.allowed !== true ? "network capability is not declared" : "network searchAllowed is not declared"
+      );
+    }
+  }
+  if (tool === "WebFetch" && caps.network?.allowed !== true) {
+    return deny("network capability is not declared");
+  }
+  if (tool === "WebFetch" && caps.network?.allowed === true) {
+    const host = hostFromUrl(input.url);
+    if (!host || !hostAllowed(host, caps.network.hosts)) {
+      return deny(`network host is not declared: ${host ?? "invalid URL"}`);
+    }
+  }
+  if (tool === "Bash") {
+    const command = String(input.command ?? "");
+    if (caps.exec?.allowed !== true) return deny("exec capability is not declared");
+    if (hasShellControlSyntax(command)) {
+      return deny("shell command contains disallowed control syntax");
+    }
+    if (!commandAllowed(command, caps.exec.commands)) {
+      return deny("shell command is not declared");
+    }
+    if (caps.network?.allowed !== true && shellImpliesNetwork(command)) {
+      return deny("network capability is not declared for shell command");
+    }
+    if (caps.network?.allowed === true) {
+      for (const url of command.match(/\b(?:https?|wss?):\/\/[^\s"'`]+/gi) ?? []) {
+        const host = hostFromUrl(url);
+        if (!host || !hostAllowed(host, caps.network.hosts)) {
+          return deny(`network host is not declared: ${host ?? "invalid URL"}`);
+        }
+      }
+    }
+    if ((caps.write?.scope === "skill" || caps.write?.scope === "none") && /(?:^|\s)(?:rm|del|Remove-Item)\b/i.test(command)) {
+      return deny("write scope forbids destructive shell writes");
+    }
+    if (caps.write?.scope === "none" && (!commandExactlyAllowed(command, caps.exec.commands) || shellImpliesWrite(command))) {
+      return deny("write scope forbids shell writes");
+    }
+  }
+  if (tool === "Write" || tool === "Edit") {
+    if (!caps.write) return deny("write capability is not declared");
+    const filePath = String(input.file_path ?? input.path ?? "");
+    if (!filePath) {
+      return deny("write path is required");
+    }
+    if (caps.write.scope === "none") return deny("write capability scope is none");
+    if (caps.write.scope === "skill") {
+      const skillRoot = policy.__skillRoot;
+      if (!skillRoot) return deny("skill root unavailable");
+      const candidate = !isAbsolute2(filePath) ? resolve2(skillRoot, filePath) : resolve2(filePath);
+      const confined = confineWriteCandidate(skillRoot, candidate);
+      if (!confined.ok) {
+        return deny(confined.reason === "write path realpath failed" ? "write path realpath failed" : "write escapes skill scope");
+      }
+    }
+    if (caps.write.scope === "project") {
+      const projectRoot = policy.__projectRoot;
+      if (!projectRoot) return deny("project root unavailable");
+      const candidate = !isAbsolute2(filePath) ? resolve2(projectRoot, filePath) : resolve2(filePath);
+      const confined = confineWriteCandidate(projectRoot, candidate);
+      if (!confined.ok) {
+        return deny(confined.reason === "write path realpath failed" ? "write path realpath failed" : "write escapes project scope");
+      }
+    }
+  }
+  return null;
+}
+function deny(reason) {
+  return {
+    hookSpecificOutput: {
+      hookEventName: "PreToolUse",
+      permissionDecision: "deny",
+      permissionDecisionReason: `SkillsForge policy: ${reason}`
+    }
+  };
+}
+
+// lib/capabilities/export.mjs
+var import_yaml3 = __toESM(require_dist(), 1);
+init_validate_skill_lib();
+import { readFile as readFile3 } from "node:fs/promises";
+import { relative as relative3, sep as sep3 } from "node:path";
+var CLAUDE_ONLY_FRONTMATTER_KEYS = Object.freeze([
+  "hooks",
+  "when_to_use",
+  "argument-hint",
+  "disable-model-invocation",
+  "user-invocable",
+  "model",
+  "effort",
+  "context",
+  "agent",
+  "paths",
+  "shell",
+  "disallowed-tools"
+]);
+function exportPortableSkill(skill) {
+  const requires = Array.isArray(skill.requires) ? skill.requires : [];
+  const requiresNote = requires.length ? `
+
+## Requires
+${requires.map((name) => `- ${name}`).join("\n")}` : "";
+  const contents = `---
+name: ${skill.name}
+description: ${skill.description}
+---
+${String(skill.body ?? "").trim()}${requiresNote}
+`;
+  return {
+    files: [{ path: "SKILL.md", contents }],
+    interop: {
+      accepted: ["name", "description", "body"],
+      transformed: requires.length ? ["requires"] : [],
+      ignored: ["skillsforge.json", "hooks", "routing", "capabilities", "scripts", "references", "assets"],
+      runtimeEnforced: false,
+      losses: ["scripts", "references", "assets", "sidecar", "claude-extensions"]
+    }
+  };
+}
+async function exportHostPackage(skill, host = {}) {
+  const source = await readFile3(skill.skillFile, "utf8");
+  const parsed = parseFrontmatter(source);
+  if (!parsed) throw new Error(`SKILL.md frontmatter missing in ${skill.directory}`);
+  const document = (0, import_yaml3.parseDocument)(parsed.yaml, { prettyErrors: true, strict: true, uniqueKeys: true });
+  if (document.errors.length) {
+    throw new Error(document.errors.map((error) => error.message).join("; "));
+  }
+  const front = document.toJS() ?? {};
+  const ignored = [];
+  const transformed = [];
+  for (const key of CLAUDE_ONLY_FRONTMATTER_KEYS) {
+    if (Object.prototype.hasOwnProperty.call(front, key)) {
+      ignored.push(key);
+      delete front[key];
+    }
+  }
+  if (Array.isArray(front["allowed-tools"])) {
+    ignored.push("allowed-tools(array)");
+    delete front["allowed-tools"];
+  }
+  front.name = skill.name;
+  if (typeof skill.description === "string" && skill.description) {
+    front.description = skill.description;
+  }
+  const skillMd = `---
+${(0, import_yaml3.stringify)(front).trim()}
+---
+${parsed.body.replace(/^\r?\n/, "")}`;
+  const files = [{ path: "SKILL.md", contents: skillMd }];
+  const accepted = ["name", "description", "body"];
+  for (const abs of skill.files ?? []) {
+    const rel = relative3(skill.directory, abs).split(sep3).join("/");
+    if (!rel || rel === "SKILL.md") continue;
+    if (rel.startsWith("..")) continue;
+    const contents = await readFile3(abs);
+    files.push({ path: rel, contents });
+    if (rel === "skillsforge.json") {
+      if (host.usesSidecar) accepted.push("skillsforge.json");
+      else {
+        transformed.push("skillsforge.json(provenance)");
+      }
+    } else if (rel.startsWith("scripts/") || rel.startsWith("references/") || rel.startsWith("assets/")) {
+      accepted.push(rel.split("/")[0]);
+    } else {
+      accepted.push(rel);
+    }
+  }
+  const uniqueAccepted = [...new Set(accepted)];
+  return {
+    files,
+    interop: {
+      accepted: uniqueAccepted,
+      transformed: [...new Set(transformed)],
+      ignored: [...new Set(ignored)],
+      runtimeEnforced: Boolean(host.runtimeEnforced),
+      losses: ignored.length ? ["claude-extensions"] : [],
+      usesSidecar: Boolean(host.usesSidecar)
+    }
+  };
+}
+
+// scripts/cli/commands/trust.mjs
 init_skill_loader();
 init_router();
-import { access as access15, readFile as readFile19, writeFile as writeFile13, mkdir as mkdir13, readdir as readdir11, stat as stat4 } from "node:fs/promises";
-import { realpathSync } from "node:fs";
-import { spawn as spawn2 } from "node:child_process";
-import { basename as basename6, dirname as dirname9, join as join23, relative as relative13, resolve as resolve21 } from "node:path";
-import { fileURLToPath as fileURLToPath5 } from "node:url";
+import { readFile as readFile15, writeFile as writeFile7, mkdir as mkdir7 } from "node:fs/promises";
+import { basename as basename4, dirname as dirname8, join as join16, resolve as resolve17 } from "node:path";
 
 // lib/capabilities/forge.mjs
 init_schema_lib();
@@ -18061,14 +18371,14 @@ init_validate_skill_lib();
 init_skill_loader();
 init_policy();
 import { access as access3, mkdir, rename, rm, writeFile } from "node:fs/promises";
-import { dirname as dirname3, join as join4, resolve as resolve4 } from "node:path";
+import { dirname as dirname3, join as join4, resolve as resolve6 } from "node:path";
 var forgeSchema = schemas["forge-spec"];
 async function forgeSkill(spec, options = {}) {
   const schemaResult = await validateWithSchema(forgeSchema, spec);
   if (!schemaResult.valid) {
     return { ok: false, errors: schemaResult.errors.map((error) => `forge-spec ${error}`), files: [] };
   }
-  const outRoot = resolve4(options.outRoot ?? join4(process.cwd(), "plugins", "skillsforge", "skills"));
+  const outRoot = resolve6(options.outRoot ?? join4(process.cwd(), "plugins", "skillsforge", "skills"));
   const target = join4(outRoot, spec.name);
   const skillMarkdown = renderSkillMarkdown(spec);
   const sidecar = renderSidecar(spec);
@@ -18171,12 +18481,12 @@ function renderSidecar(spec) {
   };
 }
 
-// scripts/skillsforge-cli.mjs
+// scripts/cli/commands/trust.mjs
 init_receipt();
 
 // lib/capabilities/doctor.mjs
 init_verify();
-import { access as access4, readFile as readFile6 } from "node:fs/promises";
+import { access as access4, readFile as readFile7 } from "node:fs/promises";
 import { join as join6 } from "node:path";
 async function runDoctor(root = process.cwd()) {
   const checks = [];
@@ -18243,7 +18553,7 @@ async function pathExists(path) {
 async function fileCheck(name, path) {
   try {
     await access4(path);
-    const raw = await readFile6(path, "utf8");
+    const raw = await readFile7(path, "utf8");
     JSON.parse(raw);
     return { name, ok: true, detail: path };
   } catch (error) {
@@ -18259,436 +18569,9 @@ async function optionalFileCheck(name, path) {
   }
 }
 
-// lib/capabilities/claude-policy-compiler.mjs
-var import_yaml3 = __toESM(require_dist(), 1);
-init_policy_shell();
-import { isAbsolute as isAbsolute4, normalize, resolve as resolve6, sep as sep4 } from "node:path";
-function enforcePolicy(event, policy) {
-  const caps = policy?.capabilities ?? {
-    exec: { allowed: false, commands: [] },
-    network: { allowed: false, hosts: [] },
-    write: { scope: "skill" }
-  };
-  const tool = event.tool_name;
-  const input = event.tool_input ?? {};
-  if (tool === "WebSearch") {
-    if (caps.network?.allowed !== true || caps.network?.searchAllowed !== true) {
-      return deny(
-        caps.network?.allowed !== true ? "network capability is not declared" : "network searchAllowed is not declared"
-      );
-    }
-  }
-  if (tool === "WebFetch" && caps.network?.allowed !== true) {
-    return deny("network capability is not declared");
-  }
-  if (tool === "WebFetch" && caps.network?.allowed === true) {
-    const host = hostFromUrl(input.url);
-    if (!host || !hostAllowed2(host, caps.network.hosts)) {
-      return deny(`network host is not declared: ${host ?? "invalid URL"}`);
-    }
-  }
-  if (tool === "Bash") {
-    const command = String(input.command ?? "");
-    if (caps.exec?.allowed !== true) return deny("exec capability is not declared");
-    if (hasShellControlSyntax(command)) {
-      return deny("shell command contains disallowed control syntax");
-    }
-    if (!commandAllowed(command, caps.exec.commands)) {
-      return deny("shell command is not declared");
-    }
-    if (caps.network?.allowed !== true && shellImpliesNetwork(command)) {
-      return deny("network capability is not declared for shell command");
-    }
-    if (caps.network?.allowed === true) {
-      for (const url of command.match(/\b(?:https?|wss?):\/\/[^\s"'`]+/gi) ?? []) {
-        const host = hostFromUrl(url);
-        if (!host || !hostAllowed2(host, caps.network.hosts)) {
-          return deny(`network host is not declared: ${host ?? "invalid URL"}`);
-        }
-      }
-    }
-    if ((caps.write?.scope === "skill" || caps.write?.scope === "none") && /(?:^|\s)(?:rm|del|Remove-Item)\b/i.test(command)) {
-      return deny("write scope forbids destructive shell writes");
-    }
-    if (caps.write?.scope === "none" && (!commandExactlyAllowed(command, caps.exec.commands) || shellImpliesWrite(command))) {
-      return deny("write scope forbids shell writes");
-    }
-  }
-  if ((tool === "Write" || tool === "Edit") && caps.write) {
-    const filePath = String(input.file_path ?? input.path ?? "");
-    if (!filePath) {
-      return deny("write path is required");
-    }
-    if (caps.write.scope === "none") return deny("write capability scope is none");
-    if (caps.write.scope === "skill") {
-      const skillRoot = policy.__skillRoot;
-      const candidate = skillRoot && !isAbsolute4(filePath) ? resolve6(skillRoot, filePath) : resolve6(filePath);
-      if (skillRoot && !isInside4(skillRoot, candidate)) {
-        return deny("write escapes skill scope");
-      }
-    }
-    if (caps.write.scope === "project") {
-      const projectRoot = policy.__projectRoot;
-      const candidate = projectRoot && !isAbsolute4(filePath) ? resolve6(projectRoot, filePath) : resolve6(filePath);
-      if (projectRoot && !isInside4(projectRoot, candidate)) {
-        return deny("write escapes project scope");
-      }
-    }
-  }
-  return null;
-}
-function deny(reason) {
-  return {
-    hookSpecificOutput: {
-      hookEventName: "PreToolUse",
-      permissionDecision: "deny",
-      permissionDecisionReason: `SkillsForge policy: ${reason}`
-    }
-  };
-}
-function isInside4(parent, candidate) {
-  const normalizedParent = normalize(resolve6(parent));
-  const normalizedCandidate = normalize(resolve6(candidate));
-  return normalizedCandidate === normalizedParent || normalizedCandidate.startsWith(normalizedParent.endsWith(sep4) ? normalizedParent : normalizedParent + sep4);
-}
-
-// scripts/skillsforge-cli.mjs
+// scripts/cli/commands/trust.mjs
 init_dependency_graph();
 init_verify();
-
-// lib/capabilities/install.mjs
-import { access as access6, mkdir as mkdir2, readFile as readFile8, writeFile as writeFile2 } from "node:fs/promises";
-import { dirname as dirname4, join as join8, relative as relative6, sep as sep7 } from "node:path";
-
-// lib/capabilities/export.mjs
-var import_yaml4 = __toESM(require_dist(), 1);
-init_validate_skill_lib();
-import { readFile as readFile7 } from "node:fs/promises";
-import { relative as relative5, sep as sep5 } from "node:path";
-var CLAUDE_ONLY_FRONTMATTER_KEYS = Object.freeze([
-  "hooks",
-  "when_to_use",
-  "argument-hint",
-  "disable-model-invocation",
-  "user-invocable",
-  "model",
-  "effort",
-  "context",
-  "agent",
-  "paths",
-  "shell",
-  "disallowed-tools"
-]);
-function exportPortableSkill(skill) {
-  const requires = Array.isArray(skill.requires) ? skill.requires : [];
-  const requiresNote = requires.length ? `
-
-## Requires
-${requires.map((name) => `- ${name}`).join("\n")}` : "";
-  const contents = `---
-name: ${skill.name}
-description: ${skill.description}
----
-${String(skill.body ?? "").trim()}${requiresNote}
-`;
-  return {
-    files: [{ path: "SKILL.md", contents }],
-    interop: {
-      accepted: ["name", "description", "body"],
-      transformed: requires.length ? ["requires"] : [],
-      ignored: ["skillsforge.json", "hooks", "routing", "capabilities", "scripts", "references", "assets"],
-      runtimeEnforced: false,
-      losses: ["scripts", "references", "assets", "sidecar", "claude-extensions"]
-    }
-  };
-}
-async function exportHostPackage(skill, host = {}) {
-  const source = await readFile7(skill.skillFile, "utf8");
-  const parsed = parseFrontmatter(source);
-  if (!parsed) throw new Error(`SKILL.md frontmatter missing in ${skill.directory}`);
-  const document = (0, import_yaml4.parseDocument)(parsed.yaml, { prettyErrors: true, strict: true, uniqueKeys: true });
-  if (document.errors.length) {
-    throw new Error(document.errors.map((error) => error.message).join("; "));
-  }
-  const front = document.toJS() ?? {};
-  const ignored = [];
-  const transformed = [];
-  for (const key of CLAUDE_ONLY_FRONTMATTER_KEYS) {
-    if (Object.prototype.hasOwnProperty.call(front, key)) {
-      ignored.push(key);
-      delete front[key];
-    }
-  }
-  if (Array.isArray(front["allowed-tools"])) {
-    ignored.push("allowed-tools(array)");
-    delete front["allowed-tools"];
-  }
-  front.name = skill.name;
-  if (typeof skill.description === "string" && skill.description) {
-    front.description = skill.description;
-  }
-  const skillMd = `---
-${(0, import_yaml4.stringify)(front).trim()}
----
-${parsed.body.replace(/^\r?\n/, "")}`;
-  const files = [{ path: "SKILL.md", contents: skillMd }];
-  const accepted = ["name", "description", "body"];
-  for (const abs of skill.files ?? []) {
-    const rel = relative5(skill.directory, abs).split(sep5).join("/");
-    if (!rel || rel === "SKILL.md") continue;
-    if (rel.startsWith("..")) continue;
-    const contents = await readFile7(abs);
-    files.push({ path: rel, contents });
-    if (rel === "skillsforge.json") {
-      if (host.usesSidecar) accepted.push("skillsforge.json");
-      else {
-        transformed.push("skillsforge.json(provenance)");
-      }
-    } else if (rel.startsWith("scripts/") || rel.startsWith("references/") || rel.startsWith("assets/")) {
-      accepted.push(rel.split("/")[0]);
-    } else {
-      accepted.push(rel);
-    }
-  }
-  const uniqueAccepted = [...new Set(accepted)];
-  return {
-    files,
-    interop: {
-      accepted: uniqueAccepted,
-      transformed: [...new Set(transformed)],
-      ignored: [...new Set(ignored)],
-      runtimeEnforced: Boolean(host.runtimeEnforced),
-      losses: ignored.length ? ["claude-extensions"] : [],
-      usesSidecar: Boolean(host.usesSidecar)
-    }
-  };
-}
-
-// lib/capabilities/install.mjs
-init_hosts();
-init_skill_loader();
-init_verify();
-async function pathExists3(path) {
-  try {
-    await access6(path);
-    return true;
-  } catch {
-    return false;
-  }
-}
-async function installSkills(options = {}) {
-  const home = options.home;
-  const root = options.root ?? process.cwd();
-  const dryRun = Boolean(options.dryRun);
-  const force = Boolean(options.force);
-  let hosts = options.hosts;
-  if (!hosts) {
-    if (!options.hostIds?.length) {
-      return {
-        ok: false,
-        error: "no hosts selected",
-        installs: [],
-        validation: null
-      };
-    }
-    const selection = await resolveHostSelection(options.hostIds, { home });
-    if (selection.unknown.length) {
-      return {
-        ok: false,
-        error: `unknown hosts: ${selection.unknown.join(", ")}`,
-        installs: [],
-        validation: null,
-        hosts: selection.all
-      };
-    }
-    hosts = selection.selected;
-  }
-  if (!hosts.length) {
-    return { ok: false, error: "no hosts selected", installs: [], validation: null };
-  }
-  let skills = options.skills;
-  if (!skills) {
-    if (options.skillPaths?.length) {
-      skills = [];
-      for (const path of options.skillPaths) {
-        skills.push(await loadSkill(path, { root }));
-      }
-    } else {
-      skills = await loadAllSkills(root);
-    }
-  }
-  if (!skills.length) {
-    return { ok: false, error: "no skills to install", installs: [], validation: null };
-  }
-  const paths = skills.map((skill) => skill.directory);
-  const validation = await verifySkillPaths(paths, {
-    root,
-    profile: "claude-code",
-    all: false,
-    dependencies: false
-  });
-  if (!validation.ok) {
-    return {
-      ok: false,
-      error: "validation failed",
-      installs: [],
-      validation,
-      planned: []
-    };
-  }
-  const installs = [];
-  const planned = [];
-  for (const host of hosts) {
-    for (const skill of skills) {
-      const targetDir = join8(host.skillsDir, skill.name);
-      const exists = await pathExists3(targetDir);
-      const entry = {
-        host: host.id,
-        skill: skill.name,
-        dir: targetDir,
-        fidelity: host.fidelity,
-        status: "pending"
-      };
-      if (exists && !force) {
-        entry.status = "skipped";
-        entry.reason = "target exists (pass --force to overwrite)";
-        installs.push(entry);
-        continue;
-      }
-      const materialization = host.fidelity === "full" ? await exportFullClaudePackage(skill, host) : await exportHostPackage(skill, host);
-      entry.interop = materialization.interop;
-      for (const file of materialization.files) {
-        planned.push({ host: host.id, skill: skill.name, path: join8(targetDir, file.path) });
-      }
-      if (!dryRun) {
-        await mkdir2(targetDir, { recursive: true });
-        for (const file of materialization.files) {
-          const dest = join8(targetDir, file.path);
-          await mkdir2(dirname4(dest), { recursive: true });
-          await writeFile2(dest, file.contents);
-        }
-      }
-      entry.status = dryRun ? "planned" : "installed";
-      entry.files = materialization.files.map((file) => file.path);
-      installs.push(entry);
-    }
-  }
-  const blocked = installs.some((item) => item.status === "pending");
-  return {
-    ok: !blocked,
-    dryRun,
-    installs,
-    planned,
-    validation,
-    hosts: await detectHosts({ home })
-  };
-}
-async function exportFullClaudePackage(skill, host) {
-  const files = [];
-  for (const abs of skill.files ?? []) {
-    const rel = relative6(skill.directory, abs).split(sep7).join("/");
-    if (!rel || rel.startsWith("..")) continue;
-    files.push({ path: rel, contents: await readFile8(abs) });
-  }
-  return {
-    files,
-    interop: {
-      accepted: files.map((file) => file.path),
-      transformed: [],
-      ignored: [],
-      runtimeEnforced: Boolean(host.runtimeEnforced),
-      losses: [],
-      usesSidecar: Boolean(host.usesSidecar)
-    }
-  };
-}
-
-// lib/capabilities/install-tui.mjs
-import readline from "node:readline";
-async function pickHosts(hosts, options = {}) {
-  const input = options.input ?? process.stdin;
-  const output = options.output ?? process.stdout;
-  if (!input.isTTY || typeof input.setRawMode !== "function") {
-    throw new Error("interactive picker requires a TTY; pass --hosts <ids> --yes");
-  }
-  const selected = new Set(hosts.filter((host) => host.detected).map((host) => host.id));
-  let cursor = 0;
-  let done = false;
-  let aborted = false;
-  function render() {
-    output.write("\x1B[?25l");
-    output.write("\x1B[H\x1B[J");
-    output.write("Which agents should SkillsForge configure?\n\n");
-    hosts.forEach((host, index) => {
-      const pointer = index === cursor ? ">" : " ";
-      const mark = selected.has(host.id) ? "[x]" : "[ ]";
-      const note = host.detected ? "" : " (not detected)";
-      const fidelity = host.fidelity === "full" ? "full" : "package";
-      const dimStart = host.detected ? "" : "\x1B[2m";
-      const dimEnd = host.detected ? "" : "\x1B[0m";
-      output.write(`${dimStart}${pointer} ${mark} ${host.label} \u2014 ${fidelity}${note}${dimEnd}
-`);
-    });
-    output.write("\n\u2191/\u2193 move \xB7 space toggle \xB7 enter confirm \xB7 q abort\n");
-  }
-  return await new Promise((resolvePromise) => {
-    const rl = readline.createInterface({ input, output, terminal: true });
-    readline.emitKeypressEvents(input, rl);
-    input.setRawMode(true);
-    render();
-    function cleanup(result) {
-      if (done) return;
-      done = true;
-      input.setRawMode(false);
-      input.removeListener("keypress", onKeypress);
-      rl.close();
-      output.write("\x1B[?25h");
-      resolvePromise(result);
-    }
-    function onKeypress(_str, key) {
-      if (!key) return;
-      if (key.ctrl && key.name === "c") {
-        aborted = true;
-        cleanup(null);
-        return;
-      }
-      switch (key.name) {
-        case "up":
-          cursor = (cursor - 1 + hosts.length) % hosts.length;
-          render();
-          break;
-        case "down":
-          cursor = (cursor + 1) % hosts.length;
-          render();
-          break;
-        case "space": {
-          const id = hosts[cursor].id;
-          if (selected.has(id)) selected.delete(id);
-          else selected.add(id);
-          render();
-          break;
-        }
-        case "return":
-        case "enter":
-          cleanup([...selected]);
-          break;
-        case "q":
-        case "escape":
-          aborted = true;
-          cleanup(null);
-          break;
-        default:
-          break;
-      }
-      if (aborted) {
-      }
-    }
-    input.on("keypress", onKeypress);
-  });
-}
-
-// scripts/skillsforge-cli.mjs
-init_hosts();
 
 // lib/capabilities/codex-package.mjs
 init_schema_lib();
@@ -18696,9 +18579,9 @@ init_schemas_generated();
 init_skill_loader();
 init_verify();
 init_codex_policy_compiler();
-import { access as access7, cp, mkdir as mkdir3, readFile as readFile9, readdir as readdir5, realpath as realpath4, rename as rename2, rm as rm2, writeFile as writeFile3 } from "node:fs/promises";
-import { homedir as homedir3 } from "node:os";
-import { basename as basename3, dirname as dirname5, join as join9, normalize as normalize3, relative as relative7, resolve as resolve9, sep as sep9 } from "node:path";
+import { access as access5, cp, mkdir as mkdir2, readFile as readFile8, readdir as readdir5, realpath as realpath4, rename as rename2, rm as rm2, writeFile as writeFile2 } from "node:fs/promises";
+import { homedir as homedir2 } from "node:os";
+import { basename as basename3, dirname as dirname4, join as join7, normalize, relative as relative7, resolve as resolve9, sep as sep6 } from "node:path";
 import { fileURLToPath as fileURLToPath2 } from "node:url";
 var MULTI_SKILL_MESSAGE = "Codex packaging rejects multi-skill inputs; package one skill at a time with --skill <skill-dir>";
 async function packageCodexPlugin(options = {}) {
@@ -18740,7 +18623,7 @@ async function packageCodexPlugin(options = {}) {
     return fail(skillRoot, outDir, dryRun, [`failed to load skill: ${error.message}`]);
   }
   const validation = await verifySkillPaths([skillRoot], {
-    root: dirname5(skillRoot),
+    root: dirname4(skillRoot),
     all: false,
     allowEmpty: false,
     profile: "claude-code",
@@ -18779,7 +18662,7 @@ async function packageCodexPlugin(options = {}) {
   }
   if (!force) {
     try {
-      await access7(outDir);
+      await access5(outDir);
       const entries = await readdir5(outDir);
       if (entries.length > 0) {
         return fail(skill.name, outDir, false, [`refusing to overwrite non-empty out dir without --force: ${outDir}`]);
@@ -18794,25 +18677,25 @@ async function packageCodexPlugin(options = {}) {
   try {
     await rm2(stagingRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
     await rm2(backupRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
-    await mkdir3(stagingRoot, { recursive: true });
+    await mkdir2(stagingRoot, { recursive: true });
     for (const file of planned.files) {
-      const absolute = join9(stagingRoot, file.path);
-      await mkdir3(dirname5(absolute), { recursive: true });
+      const absolute = join7(stagingRoot, file.path);
+      await mkdir2(dirname4(absolute), { recursive: true });
       if (file.bytes != null) {
-        await writeFile3(absolute, file.bytes);
+        await writeFile2(absolute, file.bytes);
       } else if (file.from) {
         await cp(file.from, absolute, { recursive: false });
       } else {
-        await writeFile3(absolute, file.contents ?? "");
+        await writeFile2(absolute, file.contents ?? "");
       }
     }
-    await writeFile3(
-      join9(stagingRoot, "package-receipt.json"),
+    await writeFile2(
+      join7(stagingRoot, "package-receipt.json"),
       `${JSON.stringify({ ...receipt, dryRun: false }, null, 2)}
 `
     );
-    await mkdir3(dirname5(outDir), { recursive: true });
-    if (await pathExists4(outDir)) {
+    await mkdir2(dirname4(outDir), { recursive: true });
+    if (await pathExists2(outDir)) {
       await rename2(outDir, backupRoot);
       backedUp = true;
     }
@@ -18822,20 +18705,40 @@ async function packageCodexPlugin(options = {}) {
       backedUp = false;
     }
   } catch (error) {
-    await rm2(stagingRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 }).catch(() => {
-    });
-    if (backedUp) {
-      await rm2(outDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 }).catch(() => {
-      });
-      await rename2(backupRoot, outDir).catch(() => {
-      });
+    const recovery = [];
+    try {
+      await rm2(stagingRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
+    } catch (cleanupError) {
+      recovery.push(`staging cleanup failed: ${cleanupError.message}`);
     }
-    return fail(skill.name, outDir, false, [`package write failed: ${error.message}`]);
+    if (backedUp) {
+      try {
+        await rm2(outDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
+      } catch (cleanupError) {
+        recovery.push(`failed-out cleanup failed: ${cleanupError.message}`);
+      }
+      try {
+        await rename2(backupRoot, outDir);
+        backedUp = false;
+      } catch (restoreError) {
+        recovery.push(`backup restore failed: ${restoreError.message}`);
+      }
+    }
+    return fail(skill.name, outDir, false, [
+      `package write failed: ${error.message}`,
+      ...recovery
+    ]);
   } finally {
-    await rm2(stagingRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 }).catch(() => {
-    });
-    await rm2(backupRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 }).catch(() => {
-    });
+    try {
+      await rm2(stagingRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
+    } catch {
+    }
+    if (!backedUp) {
+      try {
+        await rm2(backupRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
+      } catch {
+      }
+    }
   }
   return {
     ...receipt,
@@ -18850,7 +18753,7 @@ async function validateCodexOutputDir(outDir, skillRoot) {
   const candidate = await resolveRealCandidate(outDir);
   const repoRoot = await resolveRealCandidate(await findPackageSourceRoot());
   const sourceRoot = await resolveRealCandidate(skillRoot);
-  const homeRoot = await resolveRealCandidate(homedir3());
+  const homeRoot = await resolveRealCandidate(homedir2());
   if (isFilesystemRoot(candidate)) {
     return { ok: false, errors: [`protected output directory rejected: filesystem root ${candidate}`] };
   }
@@ -18871,33 +18774,33 @@ async function resolveRealCandidate(target) {
   while (true) {
     try {
       const real = await realpath4(current);
-      return normalize3(resolve9(real, ...missing.reverse()));
+      return normalize(resolve9(real, ...missing.reverse()));
     } catch {
-      const parent = dirname5(current);
-      if (parent === current) return normalize3(resolve9(target));
+      const parent = dirname4(current);
+      if (parent === current) return normalize(resolve9(target));
       missing.push(basename3(current));
       current = parent;
     }
   }
 }
 function isFilesystemRoot(path) {
-  return dirname5(path) === path;
+  return dirname4(path) === path;
 }
 function samePath(left, right) {
-  return normalize3(resolve9(left)).toLowerCase() === normalize3(resolve9(right)).toLowerCase();
+  return normalize(resolve9(left)).toLowerCase() === normalize(resolve9(right)).toLowerCase();
 }
 function isInsidePath(parent, candidate) {
-  const normalizedParent = normalize3(resolve9(parent)).toLowerCase();
-  const normalizedCandidate = normalize3(resolve9(candidate)).toLowerCase();
-  return normalizedCandidate.startsWith(normalizedParent.endsWith(sep9) ? normalizedParent : normalizedParent + sep9);
+  const normalizedParent = normalize(resolve9(parent)).toLowerCase();
+  const normalizedCandidate = normalize(resolve9(candidate)).toLowerCase();
+  return normalizedCandidate.startsWith(normalizedParent.endsWith(sep6) ? normalizedParent : normalizedParent + sep6);
 }
 async function resolveSingleSkillDir(skillDir) {
   const abs = resolve9(skillDir);
-  if (await pathExists4(join9(abs, "SKILL.md"))) {
+  if (await pathExists2(join7(abs, "SKILL.md"))) {
     return { ok: true, skillDir: abs };
   }
   const nestedRoots = [];
-  for (const candidate of [join9(abs, "skills"), abs]) {
+  for (const candidate of [join7(abs, "skills"), abs]) {
     const found = await listSkillDirectories(candidate);
     nestedRoots.push(...found);
   }
@@ -18920,8 +18823,8 @@ async function listSkillDirectories(root) {
   }
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    const dir = join9(root, entry.name);
-    if (await pathExists4(join9(dir, "SKILL.md"))) out.push(dir);
+    const dir = join7(root, entry.name);
+    if (await pathExists2(join7(dir, "SKILL.md"))) out.push(dir);
   }
   return out;
 }
@@ -18943,15 +18846,15 @@ async function planCodexPackage(skill) {
     }
   };
   files.push({
-    path: join9(".codex-plugin", "plugin.json"),
+    path: join7(".codex-plugin", "plugin.json"),
     action: "generate",
     contents: `${JSON.stringify(plugin, null, 2)}
 `
   });
   accepted.push(".codex-plugin/plugin.json");
-  const skillPrefix = join9("skills", skill.name);
-  const skillMd = await readFile9(skill.skillFile);
-  files.push({ path: join9(skillPrefix, "SKILL.md"), action: "copy", bytes: skillMd });
+  const skillPrefix = join7("skills", skill.name);
+  const skillMd = await readFile8(skill.skillFile);
+  files.push({ path: join7(skillPrefix, "SKILL.md"), action: "copy", bytes: skillMd });
   accepted.push("SKILL.md");
   if (/\bhooks\s*:/i.test(skillMd.toString("utf8")) || /\bPreToolUse\b/.test(skillMd.toString("utf8"))) {
     ignored.push("Claude-only PreToolUse hooks in SKILL.md");
@@ -18959,9 +18862,9 @@ async function planCodexPackage(skill) {
     notes.push("Claude-only hooks in SKILL.md are ignored for Codex packaging; plugin-level hooks enforce policy.");
   }
   if (skill.sidecarFile) {
-    const sidecarBytes = await readFile9(skill.sidecarFile);
-    files.push({ path: join9(skillPrefix, "skillsforge.json"), action: "copy", bytes: sidecarBytes });
-    files.push({ path: join9("policy", "skillsforge.json"), action: "copy", bytes: sidecarBytes });
+    const sidecarBytes = await readFile8(skill.sidecarFile);
+    files.push({ path: join7(skillPrefix, "skillsforge.json"), action: "copy", bytes: sidecarBytes });
+    files.push({ path: join7("policy", "skillsforge.json"), action: "copy", bytes: sidecarBytes });
     accepted.push("skillsforge.json");
     accepted.push("policy/skillsforge.json");
   } else {
@@ -18977,22 +18880,22 @@ async function planCodexPackage(skill) {
     };
     const contents = `${JSON.stringify(denyAll, null, 2)}
 `;
-    files.push({ path: join9(skillPrefix, "skillsforge.json"), action: "generate", contents });
-    files.push({ path: join9("policy", "skillsforge.json"), action: "generate", contents });
+    files.push({ path: join7(skillPrefix, "skillsforge.json"), action: "generate", contents });
+    files.push({ path: join7("policy", "skillsforge.json"), action: "generate", contents });
     transformed.push("skillsforge.json(deny-all-generated)");
     notes.push("No sidecar present; generated deny-all policy for guarded Codex packaging.");
   }
-  const openaiPath = join9(skill.directory, "agents", "openai.yaml");
-  if (await pathExists4(openaiPath)) {
+  const openaiPath = join7(skill.directory, "agents", "openai.yaml");
+  if (await pathExists2(openaiPath)) {
     files.push({
-      path: join9(skillPrefix, "agents", "openai.yaml"),
+      path: join7(skillPrefix, "agents", "openai.yaml"),
       action: "copy",
-      bytes: await readFile9(openaiPath)
+      bytes: await readFile8(openaiPath)
     });
     accepted.push("agents/openai.yaml");
   } else {
     files.push({
-      path: join9(skillPrefix, "agents", "openai.yaml"),
+      path: join7(skillPrefix, "agents", "openai.yaml"),
       action: "generate",
       contents: renderOpenAiYaml(skill)
     });
@@ -19000,43 +18903,43 @@ async function planCodexPackage(skill) {
     accepted.push("agents/openai.yaml");
   }
   for (const resource of ["scripts", "references", "assets"]) {
-    const resourceDir = join9(skill.directory, resource);
-    if (!await pathExists4(resourceDir)) continue;
+    const resourceDir = join7(skill.directory, resource);
+    if (!await pathExists2(resourceDir)) continue;
     const resourceFiles = await listFilesRecursive(resourceDir);
     for (const file of resourceFiles) {
-      const rel = relative7(skill.directory, file).split(sep9).join("/");
+      const rel = relative7(skill.directory, file).split(sep6).join("/");
       files.push({
-        path: join9(skillPrefix, ...rel.split("/")),
+        path: join7(skillPrefix, ...rel.split("/")),
         action: "copy",
-        bytes: await readFile9(file)
+        bytes: await readFile8(file)
       });
     }
     accepted.push(resource);
   }
   const hooks = compileCodexHooks({ policyRelativePath: "policy/skillsforge.json" });
   files.push({
-    path: join9("hooks", "hooks.json"),
+    path: join7("hooks", "hooks.json"),
     action: "generate",
     contents: `${JSON.stringify(hooks, null, 2)}
 `
   });
   accepted.push("hooks/hooks.json");
   const repoRoot = await findPackageSourceRoot();
-  const hookSource = join9(repoRoot, "plugins", "skillsforge", "hooks", "codex-pre-tool-policy.mjs");
+  const hookSource = join7(repoRoot, "plugins", "skillsforge", "hooks", "codex-pre-tool-policy.mjs");
   files.push({
-    path: join9("hooks", "codex-pre-tool-policy.mjs"),
+    path: join7("hooks", "codex-pre-tool-policy.mjs"),
     action: "copy",
-    bytes: await readFile9(hookSource)
+    bytes: await readFile8(hookSource)
   });
   files.push({
-    path: join9("hooks", "codex-policy-compiler.mjs"),
+    path: join7("hooks", "codex-policy-compiler.mjs"),
     action: "copy",
-    bytes: await readFile9(join9(repoRoot, "lib", "capabilities", "codex-policy-compiler.mjs")).then((buf) => Buffer.from(buf.toString("utf8").replaceAll("from './policy-shell.mjs'", "from './policy-shell.mjs'")))
+    bytes: await readFile8(join7(repoRoot, "lib", "capabilities", "codex-policy-compiler.mjs")).then((buf) => Buffer.from(buf.toString("utf8").replaceAll("from './policy-shell.mjs'", "from './policy-shell.mjs'")))
   });
   files.push({
-    path: join9("hooks", "policy-shell.mjs"),
+    path: join7("hooks", "policy-shell.mjs"),
     action: "copy",
-    bytes: await readFile9(join9(repoRoot, "lib", "capabilities", "policy-shell.mjs"))
+    bytes: await readFile8(join7(repoRoot, "lib", "capabilities", "policy-shell.mjs"))
   });
   accepted.push("hooks/codex-pre-tool-policy.mjs");
   return {
@@ -19082,7 +18985,7 @@ function truncate(value, max) {
   return `${text.slice(0, max - 1)}\u2026`;
 }
 async function findPackageSourceRoot() {
-  const here = dirname5(fileURLToPath2(import.meta.url));
+  const here = dirname4(fileURLToPath2(import.meta.url));
   const candidates = [
     resolve9(here, "../.."),
     // source: lib/capabilities → repo
@@ -19093,8 +18996,8 @@ async function findPackageSourceRoot() {
     process.cwd()
   ];
   for (const root of candidates) {
-    const marker = join9(root, "plugins", "skillsforge", "hooks", "codex-pre-tool-policy.mjs");
-    if (await pathExists4(marker)) return root;
+    const marker = join7(root, "plugins", "skillsforge", "hooks", "codex-pre-tool-policy.mjs");
+    if (await pathExists2(marker)) return root;
   }
   throw new Error("cannot locate SkillsForge repo root (missing plugins/skillsforge/hooks/codex-pre-tool-policy.mjs)");
 }
@@ -19121,9 +19024,9 @@ function fail(skill, outDir, dryRun, errors, findings = []) {
     errors
   };
 }
-async function pathExists4(path) {
+async function pathExists2(path) {
   try {
-    await access7(path);
+    await access5(path);
     return true;
   } catch {
     return false;
@@ -19134,7 +19037,7 @@ async function listFilesRecursive(rootDir) {
   async function walk(current) {
     const entries = await readdir5(current, { withFileTypes: true });
     for (const entry of entries) {
-      const abs = join9(current, entry.name);
+      const abs = join7(current, entry.name);
       if (entry.isDirectory()) await walk(abs);
       else out.push(abs);
     }
@@ -19143,18 +19046,483 @@ async function listFilesRecursive(rootDir) {
   return out;
 }
 
-// scripts/skillsforge-cli.mjs
-init_catalog();
+// lib/capabilities/skillshield.mjs
+init_skill_loader();
+import { readFile as readFile9 } from "node:fs/promises";
+var SECRET_RE = /(api[_-]?key|secret[_-]?key|password\s*=\s*['\"][^'\"]+|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36})/i;
+var UNBOUNDED_SHELL_RE = /\b(rm\s+-rf\s+\/|curl\s+[^\n]*\|\s*(ba)?sh|eval\s*\(|sudo\s+rm)\b/i;
+var INJECTION_RE = /\b(ignore previous instructions|disregard system prompt|jailbreak)\b/i;
+var COPY_MARKERS = [
+  "obra/superpowers",
+  "everything-claude-code",
+  "garrytan/gstack",
+  "mattpocock/skills",
+  "ruvnet/ruflo",
+  "addyosmani/agent-skills"
+];
+async function runSkillShield(skillDir, options = {}) {
+  const loaded = await loadSkill(skillDir, options);
+  const findings = [];
+  const body = loaded.body ?? "";
+  const sidecarRaw = loaded.sidecarFile ? await readFile9(loaded.sidecarFile, "utf8") : "";
+  const blob = `${body}
+${sidecarRaw}
+${loaded.description ?? ""}`;
+  if (SECRET_RE.test(blob)) {
+    findings.push({ severity: "high", rule: "secret-pattern", message: "Possible secret or credential pattern in skill files" });
+  }
+  if (UNBOUNDED_SHELL_RE.test(blob)) {
+    findings.push({ severity: "high", rule: "unbounded-shell", message: "Dangerous shell pattern detected" });
+  }
+  if (INJECTION_RE.test(blob)) {
+    findings.push({ severity: "medium", rule: "prompt-injection", message: "Prompt-injection style language detected" });
+  }
+  for (const marker of COPY_MARKERS) {
+    if (blob.toLowerCase().includes(marker.toLowerCase()) && !blob.includes("inspiration") && !blob.includes("complement")) {
+      findings.push({
+        severity: "medium",
+        rule: "third-party-marker",
+        message: `References ${marker} outside an inspiration/complement context`
+      });
+    }
+  }
+  const caps = loaded.sidecar?.capabilities;
+  if (caps?.exec?.allowed === true && (!caps.exec.commands || caps.exec.commands.length === 0)) {
+    findings.push({ severity: "high", rule: "exec-without-allowlist", message: "exec.allowed true without command allowlist" });
+  }
+  if (caps?.network?.allowed === true && (!caps.network.hosts || caps.network.hosts.length === 0) && !caps.network.searchAllowed) {
+    findings.push({ severity: "medium", rule: "network-without-hosts", message: "network.allowed true without hosts or searchAllowed" });
+  }
+  if (!loaded.sidecar?.routing?.pack) {
+    findings.push({ severity: "low", rule: "missing-pack", message: "routing.pack not set" });
+  }
+  const blocking = findings.filter((f) => f.severity === "high");
+  return {
+    name: loaded.name,
+    ok: blocking.length === 0,
+    findings,
+    note: "SkillShield is a skill-body scanner (best-effort); not a full security audit."
+  };
+}
+async function runSkillShieldMany(skillDirs, options = {}) {
+  const reports = [];
+  for (const dir of skillDirs) {
+    reports.push(await runSkillShield(dir, options));
+  }
+  return {
+    ok: reports.every((r) => r.ok),
+    reports
+  };
+}
 
-// lib/capabilities/vibe.mjs
+// lib/capabilities/export-agents.mjs
 init_catalog();
-import { mkdir as mkdir4, writeFile as writeFile4, access as access8 } from "node:fs/promises";
-import { join as join12 } from "node:path";
+init_skill_loader();
+init_paths();
+import { mkdir as mkdir3, readdir as readdir6, readFile as readFile11, writeFile as writeFile3 } from "node:fs/promises";
+import { join as join9, resolve as resolve11 } from "node:path";
+var SECRET_PATTERNS = [
+  /\bsk-[A-Za-z0-9_-]{8,}\b/g,
+  /\bghp_[A-Za-z0-9]{20,}\b/g,
+  /\bgithub_pat_[A-Za-z0-9_]{20,}\b/g,
+  /\bAKIA[0-9A-Z]{16}\b/g,
+  /\bxox[baprs]-[A-Za-z0-9-]{10,}\b/g,
+  /\bAIza[0-9A-Za-z_-]{20,}\b/g
+];
+function redactSecrets(text) {
+  let out = String(text ?? "");
+  for (const pattern of SECRET_PATTERNS) {
+    out = out.replace(pattern, "[REDACTED]");
+  }
+  return out;
+}
+async function exportAgentsMd(root, options = {}) {
+  const repoRoot = resolve11(root);
+  let outPath;
+  try {
+    outPath = options.out ? resolveUnderRoot(repoRoot, options.out, { allowAbsolute: options.allowAbsolute === true }) : join9(repoRoot, "AGENTS.md");
+  } catch (error) {
+    return { ok: false, error: error.message, path: null };
+  }
+  if (!isInside(repoRoot, outPath) && outPath !== join9(repoRoot, "AGENTS.md")) {
+    if (!options.allowAbsolute) {
+      return { ok: false, error: `out path escapes repository root: ${outPath}`, path: null };
+    }
+  }
+  let catalogSection = "";
+  try {
+    const { catalog } = await loadCatalog(root);
+    const stats2 = catalogStats(catalog);
+    const packs = listPacks(catalog);
+    const profiles = listProfiles(catalog);
+    catalogSection = [
+      `SkillsForge catalog: **${stats2.skills}** catalog entries, **${stats2.packs}** packs, **${stats2.profiles}** profiles.`,
+      "",
+      "Hero depth: trust spine + lifecycle + methodology skills are production-depth; domain packs are lean scaffolds.",
+      "",
+      "### Profiles",
+      ...profiles.map((p) => `- \`${p.id}\`: ${p.description} (packs: ${p.packs.join(", ")})`),
+      "",
+      "### Packs",
+      ...packs.map((p) => `- \`${p.id}\` (${p.skillCount}): ${p.description}`)
+    ].join("\n");
+  } catch (error) {
+    catalogSection = `Catalog unavailable: ${error.message}`;
+  }
+  const skills = await loadAllSkills(root);
+  const agentsDir = join9(root, "plugins", "skillsforge", "agents");
+  let agents = [];
+  try {
+    agents = (await readdir6(agentsDir)).filter((name) => name.endsWith(".md"));
+  } catch {
+    agents = [];
+  }
+  const content = `# AGENTS.md
+
+Generated by \`skillsforge export-agents\`. Cross-harness context for Claude Code, Cursor, Codex, and OpenCode.
+
+## SkillsForge
+
+Use SkillsForge as the trust and routing layer for Agent Skills.
+
+- Magical moment: \`node plugins/skillsforge/bin/skillsforge.mjs vibe\`
+- Judge demo: \`node plugins/skillsforge/bin/skillsforge.mjs demo\`
+- Validate: \`skillsforge validate --all\`
+- Route: \`skillsforge route --query "..."\` or \`--pack <id>\`
+- Quality: \`skillsforge quality --skill <dir>\`
+- Evidence: \`skillsforge evidence --out artifacts/evidence\`
+
+## Catalog
+
+${catalogSection}
+
+## Installed skills (sample)
+
+${skills.slice(0, 40).map((s) => `- \`${s.name}\` \u2014 ${(s.description ?? "").slice(0, 120)}`).join("\n")}
+${skills.length > 40 ? `
+\u2026 and ${skills.length - 40} more.
+` : "\n"}
+
+## Agents
+
+${agents.length ? agents.map((name) => `- \`plugins/skillsforge/agents/${name}\``).join("\n") : "_No agent defs yet._"}
+
+## Complementary tools
+
+- Use Ruflo for multi-agent swarm orchestration if needed; SkillsForge does not clone swarm/MCP consensus.
+- Use SkillsForge for validate, forge, route, policy, package, and evidence.
+
+## Skill routing (short)
+
+When the request matches a SkillsForge skill, invoke it. Prefer pack-scoped routing for domain skills (\`routing.mode: explicit\`).
+`;
+  if (!options.dryRun) {
+    await writeFile3(outPath, content);
+  }
+  return { ok: true, path: outPath, skills: skills.length, agents: agents.length, dryRun: Boolean(options.dryRun) };
+}
+async function captureLearning(root, entry) {
+  const repoRoot = resolve11(root);
+  const outDir = join9(repoRoot, "artifacts", "capture");
+  if (!isInside(repoRoot, outDir)) {
+    return { ok: false, error: "capture directory escapes repository root" };
+  }
+  await mkdir3(outDir, { recursive: true });
+  const redacted = {
+    ts: (/* @__PURE__ */ new Date()).toISOString(),
+    ...entry,
+    insight: entry.insight != null ? redactSecrets(entry.insight) : void 0,
+    summary: entry.summary != null ? redactSecrets(entry.summary) : void 0,
+    key: entry.key != null ? redactSecrets(String(entry.key)) : void 0
+  };
+  const line = JSON.stringify(redacted);
+  const path = join9(outDir, "learnings.jsonl");
+  let existing = "";
+  try {
+    existing = await readFile11(path, "utf8");
+  } catch {
+    existing = "";
+  }
+  await writeFile3(path, `${existing}${line}
+`);
+  const learningMd = join9(repoRoot, "docs", "work", "learning.md");
+  if (!isInside(repoRoot, learningMd)) {
+    return { ok: false, error: "learning.md path escapes repository root" };
+  }
+  await mkdir3(join9(repoRoot, "docs", "work"), { recursive: true });
+  let md = "";
+  try {
+    md = await readFile11(learningMd, "utf8");
+  } catch {
+    md = "# learning\n\n";
+  }
+  md += `
+- ${redacted.insight ?? redacted.summary ?? JSON.stringify(redacted)}
+`;
+  await writeFile3(learningMd, md);
+  return { ok: true, path, learningMd };
+}
+async function forgeFromCapture(root, options = {}) {
+  const path = join9(resolve11(root), "artifacts", "capture", "learnings.jsonl");
+  let raw = "";
+  try {
+    raw = await readFile11(path, "utf8");
+  } catch {
+    return { ok: false, error: "no capture file" };
+  }
+  const lines = raw.trim().split("\n").filter(Boolean).map((line) => JSON.parse(line));
+  const counts = /* @__PURE__ */ new Map();
+  for (const row of lines) {
+    const key = (row.key ?? row.insight ?? row.summary ?? "").toString().slice(0, 80);
+    if (!key) continue;
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  const candidates = [...counts.entries()].filter(([, n]) => n >= (options.minCount ?? 2)).sort((a, b) => b[1] - a[1]).slice(0, options.limit ?? 5).map(([key, count]) => ({
+    key,
+    count,
+    suggestedName: key.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 48) || "captured-skill",
+    note: "Human must approve before forge --write"
+  }));
+  return { ok: true, candidates };
+}
+
+// scripts/cli/commands/trust.mjs
+init_paths();
+
+// lib/capabilities/demo.mjs
+init_verify();
+import { access as access6, cp as cp2, mkdir as mkdir4, mkdtemp, writeFile as writeFile4 } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join as join10, resolve as resolve12 } from "node:path";
+init_receipt();
+init_skill_loader();
+async function pathExists3(path) {
+  try {
+    await access6(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+async function runJudgeDemo(root, options = {}) {
+  const repo = resolve12(root);
+  const started = Date.now();
+  const steps = [];
+  const unsafeSrc = join10(repo, "examples", "codex-unsafe-release");
+  const safeSrc = join10(repo, "examples", "codex-safe-release");
+  if (!await pathExists3(unsafeSrc) || !await pathExists3(safeSrc)) {
+    return {
+      ok: false,
+      error: "missing examples/codex-unsafe-release or examples/codex-safe-release",
+      elapsedMs: Date.now() - started,
+      steps
+    };
+  }
+  const work = await mkdtemp(join10(tmpdir(), "sf-judge-"));
+  try {
+    const unsafeDir = join10(work, "codex-unsafe-release");
+    await cp2(unsafeSrc, unsafeDir, { recursive: true });
+    const unsafe = await verifySkillPaths([unsafeDir], {
+      root: work,
+      profile: "claude-code"
+    });
+    const unsafeDenied = unsafe.ok === false;
+    steps.push({
+      id: "unsafe-validate",
+      ok: unsafeDenied,
+      detail: unsafeDenied ? "denied as expected" : "unexpected pass"
+    });
+    if (!unsafeDenied) {
+      const elapsedMs2 = Date.now() - started;
+      return {
+        ok: false,
+        error: "unsafe skill unexpectedly validated",
+        elapsedMs: elapsedMs2,
+        underBudget: elapsedMs2 < 9e4,
+        falseAllow: 1,
+        steps,
+        scoreboard: formatScoreboard({
+          unsafeDeny: false,
+          safePass: false,
+          packaged: false,
+          falseAllow: 1,
+          receiptHash: null,
+          elapsedMs: elapsedMs2
+        }, { color: options.color !== false })
+      };
+    }
+    const safeDir = join10(work, "codex-safe-release");
+    await cp2(safeSrc, safeDir, { recursive: true });
+    const safe = await verifySkillPaths([safeDir], {
+      root: work,
+      profile: "claude-code"
+    });
+    steps.push({
+      id: "safe-validate",
+      ok: safe.ok === true,
+      detail: safe.ok ? "pass" : "safe skill failed validation"
+    });
+    if (!safe.ok) {
+      return fail2(steps, started, "safe skill failed validation", options);
+    }
+    const outDir = join10(work, "packaged");
+    const packaged = await packageCodexPlugin({
+      skillDir: safeDir,
+      outDir,
+      write: true,
+      force: true
+    });
+    const packageOk = packaged.ok === true;
+    steps.push({
+      id: "safe-package",
+      ok: packageOk,
+      detail: packageOk ? outDir : (packaged.errors ?? []).join("; ")
+    });
+    if (!packageOk) {
+      return fail2(steps, started, (packaged.errors ?? ["package failed"]).join("; "), options);
+    }
+    const tree = await hashPackageTree(outDir);
+    const digest = tree.packageHash;
+    const evidenceDir = join10(repo, "artifacts", "demo-evidence");
+    await mkdir4(evidenceDir, { recursive: true });
+    const evidencePath = join10(evidenceDir, "trust-receipt.json");
+    let skillMeta = null;
+    try {
+      skillMeta = await loadSkill(safeDir);
+    } catch {
+      skillMeta = { name: "codex-safe-release" };
+    }
+    await writeFile4(evidencePath, `${JSON.stringify({
+      schemaVersion: 1,
+      kind: "skillsforge-judge-demo-scoreboard",
+      skill: skillMeta.name,
+      packageTreeSha256: digest,
+      packagedFileCount: tree.files.length,
+      falseAllow: 0,
+      note: "Demo scoreboard artifact (package tree hash), not a buildReceipt/verifyReceipt trust receipt",
+      ts: (/* @__PURE__ */ new Date()).toISOString()
+    }, null, 2)}
+`);
+    steps.push({
+      id: "evidence-receipt",
+      ok: true,
+      detail: digest,
+      path: evidencePath
+    });
+    const elapsedMs = Date.now() - started;
+    const underBudget = elapsedMs < 9e4;
+    const board = {
+      unsafeDeny: true,
+      safePass: true,
+      packaged: true,
+      falseAllow: 0,
+      receiptHash: digest,
+      elapsedMs
+    };
+    return {
+      ok: underBudget,
+      error: underBudget ? void 0 : `demo exceeded 90s budget (${elapsedMs}ms)`,
+      elapsedMs,
+      underBudget,
+      falseAllow: 0,
+      receiptHash: digest,
+      evidencePath,
+      steps,
+      urls: {
+        unsafeExample: "examples/codex-unsafe-release",
+        safeExample: "examples/codex-safe-release",
+        evidence: "artifacts/demo-evidence/trust-receipt.json",
+        demoDoc: "docs/hackathon-demo.md"
+      },
+      scoreboard: formatScoreboard(board, { color: options.color !== false })
+    };
+  } finally {
+    if (!options.keepWork) {
+      const { rm: rm4 } = await import("node:fs/promises");
+      await rm4(work, { recursive: true, force: true });
+    }
+  }
+}
+function fail2(steps, started, error, options = {}) {
+  const elapsedMs = Date.now() - started;
+  return {
+    ok: false,
+    error,
+    elapsedMs,
+    underBudget: elapsedMs < 9e4,
+    falseAllow: 0,
+    steps,
+    scoreboard: formatScoreboard({
+      unsafeDeny: steps.some((s) => s.id === "unsafe-validate" && s.ok),
+      safePass: steps.some((s) => s.id === "safe-validate" && s.ok),
+      packaged: steps.some((s) => s.id === "safe-package" && s.ok),
+      falseAllow: 0,
+      receiptHash: null,
+      elapsedMs
+    }, { color: options.color !== false })
+  };
+}
+function formatScoreboard(board, options = {}) {
+  const color = options.color !== false && process.stdout.isTTY;
+  const g = (s) => color ? `\x1B[32m${s}\x1B[0m` : s;
+  const r = (s) => color ? `\x1B[31m${s}\x1B[0m` : s;
+  const b = (s) => color ? `\x1B[1m${s}\x1B[0m` : s;
+  const lines = [
+    b("SkillsForge trust scoreboard"),
+    `  unsafe deny:     ${board.unsafeDeny ? g("PASS") : r("FAIL")}`,
+    `  safe validate:   ${board.safePass ? g("PASS") : r("FAIL")}`,
+    `  packaged:        ${board.packaged ? g("PASS") : r("FAIL")}`,
+    `  false-allow:     ${board.falseAllow === 0 ? g("0") : r(String(board.falseAllow))}`,
+    `  receipt hash:    ${board.receiptHash ? `${board.receiptHash.slice(0, 16)}\u2026` : "n/a"}`,
+    `  elapsed:         ${board.elapsedMs}ms`
+  ];
+  return lines.join("\n");
+}
+async function compareSkillTrust(root, leftDir, rightDir) {
+  const left = await loadSkill(leftDir, { root });
+  const right = await loadSkill(rightDir, { root });
+  const leftHas = Boolean(left.sidecar);
+  const rightHas = Boolean(right.sidecar);
+  let leftPolicy = null;
+  let rightPolicy = null;
+  try {
+    leftPolicy = await verifySkillPaths([left.directory], { root, profile: "claude-code" });
+  } catch (error) {
+    leftPolicy = { ok: false, error: error.message };
+  }
+  try {
+    rightPolicy = await verifySkillPaths([right.directory], { root, profile: "claude-code" });
+  } catch (error) {
+    rightPolicy = { ok: false, error: error.message };
+  }
+  return {
+    left: {
+      name: left.name,
+      hasSidecar: leftHas,
+      capabilities: left.sidecar?.capabilities ?? null,
+      routing: left.sidecar?.routing ?? null,
+      policyOk: leftPolicy?.ok ?? false,
+      policyFindings: (leftPolicy?.findings ?? []).filter((f) => f.blocking).map((f) => f.rule)
+    },
+    right: {
+      name: right.name,
+      hasSidecar: rightHas,
+      capabilities: right.sidecar?.capabilities ?? null,
+      routing: right.sidecar?.routing ?? null,
+      policyOk: rightPolicy?.ok ?? false,
+      policyFindings: (rightPolicy?.findings ?? []).filter((f) => f.blocking).map((f) => f.rule)
+    },
+    delta: {
+      sidecarAdvantage: leftHas !== rightHas ? rightHas ? "right has SkillsForge sidecar" : "left has SkillsForge sidecar" : "both same sidecar presence",
+      policyDelta: leftPolicy?.ok === true !== (rightPolicy?.ok === true) ? `left.ok=${leftPolicy?.ok} right.ok=${rightPolicy?.ok}` : "same policy outcome"
+    }
+  };
+}
 
 // lib/capabilities/quality.mjs
 init_skill_loader();
 init_policy();
-import { readFile as readFile11 } from "node:fs/promises";
+import { readFile as readFile12 } from "node:fs/promises";
 import { join as join11 } from "node:path";
 var WORKFLOW_SUMMARY_RE = /\b(then|first|step\s+\d|dispatch|run the|follows? these steps)\b/i;
 async function scoreSkillQuality(skillDir, options = {}) {
@@ -19187,7 +19555,7 @@ async function scoreSkillQuality(skillDir, options = {}) {
   checks.push({ id: "body", points: bodyPoints, max: 15, ok: bodyOk });
   let openaiOk = false;
   try {
-    await readFile11(join11(loaded.directory, "agents", "openai.yaml"), "utf8");
+    await readFile12(join11(loaded.directory, "agents", "openai.yaml"), "utf8");
     openaiOk = true;
   } catch {
     openaiOk = false;
@@ -19235,7 +19603,678 @@ async function lintSkill(skillDir, options = {}) {
   return { ok, threshold: requireHero ? 85 : threshold, ...result };
 }
 
+// scripts/cli/shared.mjs
+init_paths();
+import { access as access7, readdir as readdir7, stat as stat3 } from "node:fs/promises";
+import { spawn } from "node:child_process";
+import { dirname as dirname5, join as join12, relative as relative8, resolve as resolve13 } from "node:path";
+import { fileURLToPath as fileURLToPath3 } from "node:url";
+var modulePluginRoot = resolve13(dirname5(fileURLToPath3(import.meta.url)), "../..");
+async function pathExists4(path) {
+  try {
+    await access7(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+async function isPluginRoot(root) {
+  return await pathExists4(join12(root, ".claude-plugin", "plugin.json")) && await pathExists4(join12(root, "skills"));
+}
+async function isRepositoryRoot(root) {
+  return pathExists4(join12(root, "plugins", "skillsforge", ".claude-plugin", "plugin.json"));
+}
+async function resolveRuntimeRoot(options, { explicitPaths = false } = {}) {
+  if (options.root) return options.root;
+  if (explicitPaths) return process.cwd();
+  const cwd = process.cwd();
+  if (await isRepositoryRoot(cwd)) return cwd;
+  if (await isPluginRoot(modulePluginRoot)) return modulePluginRoot;
+  if (await isPluginRoot(cwd)) return cwd;
+  return cwd;
+}
+function consumeFlag(values, flag) {
+  const index = values.indexOf(flag);
+  if (index === -1) return false;
+  values.splice(index, 1);
+  return true;
+}
+function consumeOption(values, flag) {
+  const index = values.indexOf(flag);
+  if (index === -1) return void 0;
+  const value = values[index + 1];
+  if (!value || value.startsWith("--")) {
+    values.splice(index, 1);
+    return null;
+  }
+  values.splice(index, 2);
+  return value;
+}
+function consumeOptions(values, flag) {
+  const picked = [];
+  for (; ; ) {
+    const index = values.indexOf(flag);
+    if (index === -1) return picked;
+    const value = values[index + 1];
+    if (!value || value.startsWith("--")) {
+      values.splice(index, 1);
+      return null;
+    }
+    picked.push(value);
+    values.splice(index, 2);
+  }
+}
+function resolveUserPath(root, value, allowAbsolute = false) {
+  return resolveUnderRoot(root, value, { allowAbsolute });
+}
+async function resolvePackageRoot(root, packageOption) {
+  if (packageOption) return resolve13(packageOption);
+  if (await isPluginRoot(root)) return root;
+  const distPackage = join12(root, "dist", "claude-code");
+  if (await pathExists4(join12(distPackage, ".claude-plugin", "plugin.json"))) return distPackage;
+  if (await isRepositoryRoot(root)) return join12(root, "plugins", "skillsforge");
+  return root;
+}
+function usage(message) {
+  process.stderr.write(`${message}
+`);
+  return 2;
+}
+function hasUnknownOption(args) {
+  return args.find((item) => item.startsWith("--"));
+}
+function writeOsResult(payload, json, textFormatter, status = 0) {
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  else process.stdout.write(textFormatter(payload));
+  return status;
+}
+function failOsResult(command, error, json) {
+  return writeOsResult({ ok: false, command, error }, json, (payload) => `${payload.error}
+`, 1);
+}
+function splitCommandArgs(argv) {
+  const marker = argv.indexOf("--");
+  if (marker === -1) return { options: argv, command: [] };
+  return {
+    options: argv.slice(0, marker),
+    command: argv.slice(marker + 1)
+  };
+}
+function globToRegExp(glob) {
+  const escaped = String(glob).replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*").replace(/\?/g, ".");
+  return new RegExp(`^${escaped}$`, "i");
+}
+async function walkFind(root, dir, regex, matches, limit) {
+  if (matches.length >= limit) return;
+  let entries;
+  try {
+    entries = await readdir7(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  entries.sort((a, b) => a.name.localeCompare(b.name));
+  for (const entry of entries) {
+    if (matches.length >= limit) return;
+    if (shouldSkipFindEntry(entry.name)) continue;
+    const full = join12(dir, entry.name);
+    const rel = relative8(root, full).replaceAll("\\", "/");
+    const type = entry.isDirectory() ? "dir" : entry.isFile() ? "file" : "other";
+    if (regex.test(entry.name) || regex.test(rel)) matches.push({ path: rel, type });
+    if (entry.isDirectory()) await walkFind(root, full, regex, matches, limit);
+  }
+}
+function shouldSkipFindEntry(name) {
+  return (/* @__PURE__ */ new Set([".git", ".codegraph", "node_modules", ".worktrees", "dist", "artifacts"])).has(name);
+}
+function isUrlLike(value) {
+  return /^[a-z][a-z0-9+.-]*:\/\//i.test(value) || /^mailto:/i.test(value);
+}
+function platformOpenCommand(target) {
+  if (process.platform === "win32") {
+    return { command: "powershell.exe", args: ["-NoProfile", "-Command", "Start-Process", "-FilePath", target] };
+  }
+  if (process.platform === "darwin") return { command: "open", args: [target] };
+  return { command: "xdg-open", args: [target] };
+}
+function runProcess(command, args, options = {}) {
+  return new Promise((resolveProcess) => {
+    const child = spawn(command, args, {
+      cwd: options.cwd ?? process.cwd(),
+      shell: false,
+      windowsHide: true
+    });
+    let stdout = "";
+    let stderr = "";
+    let timedOut = false;
+    const limit = 2e5;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      child.kill("SIGTERM");
+    }, options.timeoutMs ?? 3e4);
+    child.stdout?.on("data", (chunk) => {
+      stdout = (stdout + chunk.toString()).slice(-limit);
+    });
+    child.stderr?.on("data", (chunk) => {
+      stderr = (stderr + chunk.toString()).slice(-limit);
+    });
+    child.on("error", (error) => {
+      clearTimeout(timer);
+      resolveProcess({ status: 127, stdout, stderr: error.message, timedOut });
+    });
+    child.on("close", (status, signal) => {
+      clearTimeout(timer);
+      resolveProcess({ status: status ?? 1, signal, stdout, stderr, timedOut });
+    });
+  });
+}
+async function directorySize(path) {
+  let info;
+  try {
+    info = await stat3(path);
+  } catch {
+    return 0;
+  }
+  if (!info.isDirectory()) return info.size;
+  let total = 0;
+  let entries;
+  try {
+    entries = await readdir7(path, { withFileTypes: true });
+  } catch {
+    return 0;
+  }
+  for (const entry of entries) {
+    total += await directorySize(join12(path, entry.name));
+  }
+  return total;
+}
+
+// scripts/cli/commands/trust.mjs
+async function runValidate(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const all = consumeFlag(args, "--all");
+  const allowEmpty = consumeFlag(args, "--allow-empty");
+  const profile = consumeOption(args, "--profile");
+  if (profile === null) {
+    process.stderr.write("--profile requires a value\n");
+    return 2;
+  }
+  const resolvedProfile = profile ?? "canonical";
+  if (!["canonical", "claude-code"].includes(resolvedProfile)) {
+    process.stderr.write(`Unknown profile: ${resolvedProfile}
+`);
+    return 2;
+  }
+  const paths = args.filter((item) => !item.startsWith("--"));
+  const root = await resolveRuntimeRoot(options, { explicitPaths: paths.length > 0 });
+  const scanAll = paths.length === 0 || all;
+  const result = await verifySkillPaths(paths, {
+    root,
+    all: scanAll,
+    allowEmpty,
+    profile: resolvedProfile,
+    // Full install validate includes dependency graph; path-targeted validate stays local.
+    dependencies: scanAll
+  });
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else process.stdout.write(result.text);
+  return result.ok ? 0 : 1;
+}
+async function runDoctorCommand(argv, options) {
+  const json = argv.includes("--json");
+  const result = await runDoctor(await resolveRuntimeRoot(options));
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else {
+    for (const check of result.checks) {
+      process.stdout.write(`${check.ok ? "PASS" : "FAIL"} ${check.name}: ${check.detail}
+`);
+    }
+  }
+  return result.ok ? 0 : 1;
+}
+async function runRoute(argv, options) {
+  const args = [...argv];
+  const pack = consumeOption(args, "--pack");
+  if (pack === null) {
+    process.stderr.write("--pack requires a value\n");
+    return 2;
+  }
+  const includeExplicit = consumeFlag(args, "--include-explicit");
+  const queryIndex = args.indexOf("--query");
+  const query = queryIndex >= 0 ? args[queryIndex + 1] : args.filter((item) => !item.startsWith("--")).join(" ");
+  if (!query) {
+    process.stderr.write("usage: skillsforge route --query <text> [--pack <id>] [--include-explicit]\n");
+    return 2;
+  }
+  const skills = await loadAllSkills(await resolveRuntimeRoot(options));
+  const result = routeQuery(query, skills, {
+    pack: pack ?? void 0,
+    includeExplicit: includeExplicit || Boolean(pack)
+  });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return 0;
+}
+async function runForge(argv, options) {
+  const specIndex = argv.indexOf("--spec");
+  if (specIndex < 0 || !argv[specIndex + 1]) {
+    process.stderr.write("usage: skillsforge forge --spec <file> [--dry-run|--write] [--force] [--out <dir>]\n");
+    return 2;
+  }
+  const outIndex = argv.indexOf("--out");
+  const spec = JSON.parse(await readFile15(argv[specIndex + 1], "utf8"));
+  const root = await resolveRuntimeRoot(options);
+  const result = await forgeSkill(spec, {
+    write: argv.includes("--write"),
+    dryRun: !argv.includes("--write"),
+    force: argv.includes("--force"),
+    outRoot: outIndex >= 0 ? argv[outIndex + 1] : join16(root, ...await isPluginRoot(root) ? ["skills"] : ["plugins", "skillsforge", "skills"])
+  });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runReceipt(argv, options) {
+  const args = [...argv];
+  const out = consumeOption(args, "--out");
+  if (out === null) {
+    process.stderr.write("--out requires a value\n");
+    return 2;
+  }
+  const packageOption = consumeOption(args, "--package");
+  if (packageOption === null) {
+    process.stderr.write("--package requires a value\n");
+    return 2;
+  }
+  const evaluationOption = consumeOption(args, "--evaluation");
+  if (evaluationOption === null) {
+    process.stderr.write("--evaluation requires a value\n");
+    return 2;
+  }
+  const requireEvaluation = consumeFlag(args, "--require-evaluation");
+  const root = await resolveRuntimeRoot(options);
+  const packageRoot = await resolvePackageRoot(root, packageOption);
+  const receiptOut = out ?? join16(root, "dist", "trust-receipt.json");
+  const skills = await loadAllSkills(packageRoot);
+  const graph = analyzeDependencies(skills);
+  if (graph.cycles.length || graph.missing.length || graph.duplicates.length) {
+    process.stderr.write(`${JSON.stringify(graph, null, 2)}
+`);
+    return 1;
+  }
+  let evaluation = null;
+  let reportBytes = null;
+  const evaluationPath = evaluationOption ?? join16(root, "artifacts", "evaluation", "routing-report.json");
+  try {
+    reportBytes = await readFile15(evaluationPath);
+    evaluation = normalizeEvaluation(JSON.parse(reportBytes.toString("utf8")), { reportBytes });
+  } catch {
+  }
+  const result = await buildReceipt(skills, {
+    evaluation,
+    packageRoot,
+    reportBytes,
+    requireEvaluation
+  });
+  if (!result.ok) {
+    process.stderr.write(`${JSON.stringify(result, null, 2)}
+`);
+    return 1;
+  }
+  await mkdir7(dirname8(receiptOut), { recursive: true });
+  await writeFile7(receiptOut, result.text);
+  process.stdout.write(`${JSON.stringify({
+    ok: true,
+    out: receiptOut,
+    receiptHash: result.receiptHash,
+    packageHash: result.receipt.package?.packageHash ?? null
+  }, null, 2)}
+`);
+  return 0;
+}
+async function runVerifyReceipt(argv, options) {
+  const args = [...argv];
+  const packageOnly = consumeFlag(args, "--package-only");
+  const packageOption = consumeOption(args, "--package");
+  if (packageOption === null) {
+    process.stderr.write("--package requires a value\n");
+    return 2;
+  }
+  const evaluationOption = consumeOption(args, "--evaluation");
+  if (evaluationOption === null) {
+    process.stderr.write("--evaluation requires a value\n");
+    return 2;
+  }
+  const receiptSha256 = consumeOption(args, "--receipt-sha256");
+  if (receiptSha256 === null) {
+    process.stderr.write("--receipt-sha256 requires a value\n");
+    return 2;
+  }
+  const path = args.find((item) => !item.startsWith("--"));
+  if (!path) {
+    process.stderr.write("usage: skillsforge verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only] [--receipt-sha256 <hash>]\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  const packageRoot = await resolvePackageRoot(root, packageOption);
+  const skills = await loadAllSkills(packageRoot);
+  const verifyOptions = {
+    packageRoot,
+    packageOnly,
+    requireEvaluation: !packageOnly,
+    expectedReceiptHash: receiptSha256 || void 0
+  };
+  if (!packageOnly && evaluationOption) {
+    verifyOptions.evaluationPath = resolve17(evaluationOption);
+  } else if (!packageOnly) {
+    const defaultEval = join16(root, "artifacts", "evaluation", "routing-report.json");
+    if (await pathExists4(defaultEval)) verifyOptions.evaluationPath = defaultEval;
+  }
+  const result = await verifyReceipt(path, skills, verifyOptions);
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runEnforce(argv) {
+  const policyIndex = argv.indexOf("--policy");
+  if (policyIndex < 0 || !argv[policyIndex + 1]) {
+    process.stderr.write("usage: skillsforge enforce --policy <sidecar.json>\n");
+    return 2;
+  }
+  const chunks = [];
+  for await (const chunk of process.stdin) chunks.push(chunk);
+  const event = JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
+  const policyPath = resolve17(argv[policyIndex + 1]);
+  const policy = JSON.parse(await readFile15(policyPath, "utf8"));
+  policy.__skillRoot = dirname8(policyPath);
+  policy.__projectRoot = event?.cwd || process.env.CLAUDE_PROJECT_DIR || process.env.CLAUDE_CWD || process.cwd();
+  const decision = enforcePolicy(event, policy);
+  if (decision) process.stdout.write(`${JSON.stringify(decision)}
+`);
+  return 0;
+}
+async function runEvalCommand(argv, options) {
+  const { runEvaluation: runEvaluation2, HOLDOUT_PRECISION_MIN: HOLDOUT_PRECISION_MIN2, HOLDOUT_RECALL_MIN: HOLDOUT_RECALL_MIN2 } = await init_eval().then(() => eval_exports);
+  const report = await runEvaluation2({ root: await resolveRuntimeRoot(options) });
+  process.stdout.write(`${JSON.stringify(report, null, 2)}
+`);
+  return report.precision >= HOLDOUT_PRECISION_MIN2 && report.recall >= HOLDOUT_RECALL_MIN2 ? 0 : 1;
+}
+async function runPackage(argv, options) {
+  const args = [...argv];
+  const host = consumeOption(args, "--host");
+  if (host === null) {
+    process.stderr.write("--host requires a value\n");
+    return 2;
+  }
+  const skill = consumeOption(args, "--skill");
+  if (skill === null) {
+    process.stderr.write("--skill requires a value\n");
+    return 2;
+  }
+  const out = consumeOption(args, "--out");
+  if (out === null) {
+    process.stderr.write("--out requires a value\n");
+    return 2;
+  }
+  const write = consumeFlag(args, "--write");
+  consumeFlag(args, "--dry-run");
+  const force = consumeFlag(args, "--force");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  if (!host || !skill || !out) {
+    process.stderr.write("usage: skillsforge package --host codex --skill <dir> --out <dir> [--force] [--dry-run|--write]\n");
+    return 2;
+  }
+  if (host !== "codex") {
+    process.stderr.write(`unsupported package host: ${host} (supported: codex)
+`);
+    return 2;
+  }
+  if (args.some((item) => item.startsWith("--"))) {
+    process.stderr.write(`unknown package option: ${args.find((item) => item.startsWith("--"))}
+`);
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let skillDir;
+  let outDir;
+  try {
+    skillDir = resolveUnderRoot(root, skill, { allowAbsolute });
+    outDir = resolveUnderRoot(root, out, { allowAbsolute });
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  const result = await packageCodexPlugin({
+    skillDir,
+    outDir,
+    write,
+    dryRun: !write,
+    force
+  });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runEvidence(argv, options) {
+  const args = [...argv];
+  const out = consumeOption(args, "--out");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  if (out === null) {
+    process.stderr.write("--out requires a value\n");
+    return 2;
+  }
+  if (!out) {
+    process.stderr.write("usage: skillsforge evidence --out <dir>\n");
+    return 2;
+  }
+  if (args.some((item) => item.startsWith("--"))) {
+    process.stderr.write(`unknown evidence option: ${args.find((item) => item.startsWith("--"))}
+`);
+    return 2;
+  }
+  const { buildEvidenceBundleWithPackageMeta: buildEvidenceBundleWithPackageMeta2 } = await Promise.resolve().then(() => (init_evidence(), evidence_exports));
+  const root = await resolveRuntimeRoot(options);
+  let outDir;
+  try {
+    outDir = resolveUserPath(root, out, allowAbsolute);
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  const result = await buildEvidenceBundleWithPackageMeta2({
+    root,
+    outDir,
+    write: true
+  });
+  process.stdout.write(`${JSON.stringify({
+    ok: result.ok,
+    outDir: result.outDir,
+    bundleHash: result.bundleHash,
+    files: result.files
+  }, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runSkillShieldCommand(argv, options) {
+  const args = [...argv];
+  const all = consumeFlag(args, "--all");
+  const skill = consumeOption(args, "--skill");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  const root = await resolveRuntimeRoot(options);
+  if (all) {
+    const skills = await loadAllSkills(root);
+    const result = await runSkillShieldMany(skills.map((s) => s.directory), { root });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (!skill) {
+    process.stderr.write("usage: skillsforge skillshield --skill <dir> | --all\n");
+    return 2;
+  }
+  try {
+    const result = await runSkillShield(resolveUserPath(root, skill, allowAbsolute), { root });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+}
+async function runExportAgentsCommand(argv, options) {
+  const args = [...argv];
+  const out = consumeOption(args, "--out");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  const root = await resolveRuntimeRoot(options);
+  const result = await exportAgentsMd(root, {
+    out: out ?? void 0,
+    allowAbsolute
+  });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runCaptureCommand(argv, options) {
+  const args = [...argv];
+  const insight = consumeOption(args, "--insight");
+  const key = consumeOption(args, "--key");
+  if (!insight) {
+    process.stderr.write("usage: skillsforge capture --insight <text> [--key <slug>]\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  const result = await captureLearning(root, { insight, key: key ?? void 0 });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runForgeFromCaptureCommand(argv, options) {
+  const root = await resolveRuntimeRoot(options);
+  const result = await forgeFromCapture(root);
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runCompareCommand(argv, options) {
+  const args = [...argv];
+  const a = consumeOption(args, "--a");
+  const b = consumeOption(args, "--b");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  if (!a || !b) {
+    process.stderr.write("usage: skillsforge compare --a <dir> --b <dir>\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let leftDir;
+  let rightDir;
+  try {
+    leftDir = resolveUnderRoot(root, a, { allowAbsolute });
+    rightDir = resolveUnderRoot(root, b, { allowAbsolute });
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  const left = await loadSkill(leftDir, { root });
+  const right = await loadSkill(rightDir, { root });
+  const payload = {
+    a: { name: left.name, description: left.description, routing: left.sidecar?.routing },
+    b: { name: right.name, description: right.description, routing: right.sidecar?.routing },
+    sameDescription: left.description === right.description,
+    sameTriggers: JSON.stringify(left.sidecar?.routing?.triggers) === JSON.stringify(right.sidecar?.routing?.triggers)
+  };
+  process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  return 0;
+}
+async function runCompareSkillCommand(argv, options) {
+  const args = [...argv];
+  const a = consumeOption(args, "--a");
+  const b = consumeOption(args, "--b");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  if (!a || !b) {
+    process.stderr.write("usage: skillsforge compare-skill --a <dir> --b <dir>\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let leftDir;
+  let rightDir;
+  try {
+    leftDir = resolveUnderRoot(root, a, { allowAbsolute });
+    rightDir = resolveUnderRoot(root, b, { allowAbsolute });
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  const payload = await compareSkillTrust(root, leftDir, rightDir);
+  process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  return 0;
+}
+async function runDemoCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const root = await resolveRuntimeRoot(options);
+  const result = await runJudgeDemo(root, { color: !json });
+  if (result.scoreboard && !json) {
+    process.stdout.write(`${result.scoreboard}
+
+`);
+  }
+  process.stdout.write(`${JSON.stringify({
+    ok: result.ok,
+    elapsedMs: result.elapsedMs,
+    underBudget: result.underBudget,
+    falseAllow: result.falseAllow,
+    receiptHash: result.receiptHash,
+    evidencePath: result.evidencePath,
+    urls: result.urls,
+    steps: result.steps,
+    error: result.error
+  }, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runWatchCommand(argv, options) {
+  const args = [...argv];
+  const skill = consumeOption(args, "--skill");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  if (!skill) {
+    process.stderr.write("usage: skillsforge watch --skill <dir> (single quality pass)\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let skillDir;
+  try {
+    skillDir = resolveUserPath(root, skill, allowAbsolute);
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  const result = await scoreSkillQuality(skillDir, { root });
+  process.stdout.write(`${JSON.stringify({ watch: "single-pass", ...result }, null, 2)}
+`);
+  return result.pass ? 0 : 1;
+}
+
+// scripts/cli/commands/catalog.mjs
+init_catalog();
+import { join as join20 } from "node:path";
+
 // lib/capabilities/vibe.mjs
+init_catalog();
+import { mkdir as mkdir8, writeFile as writeFile8, access as access10 } from "node:fs/promises";
+import { join as join17 } from "node:path";
 init_skill_loader();
 var ARTIFACTS = [
   "brief.md",
@@ -19247,15 +20286,15 @@ var ARTIFACTS = [
   "learning.md"
 ];
 async function runVibe(root, options = {}) {
-  const workRoot = join12(root, "docs", "work");
-  await mkdir4(workRoot, { recursive: true });
+  const workRoot = join17(root, "docs", "work");
+  await mkdir8(workRoot, { recursive: true });
   const created = [];
   for (const name of ARTIFACTS) {
-    const path = join12(workRoot, name);
+    const path = join17(workRoot, name);
     try {
-      await access8(path);
+      await access10(path);
     } catch {
-      await writeFile4(path, `# ${name.replace(".md", "")}
+      await writeFile8(path, `# ${name.replace(".md", "")}
 
 _Stub created by \`skillsforge vibe\`. Fill this in as you work._
 `);
@@ -19305,48 +20344,9 @@ _Stub created by \`skillsforge vibe\`. Fill this in as you work._
 }
 
 // lib/capabilities/scaffold.mjs
-import { mkdir as mkdir5, writeFile as writeFile5, access as access9 } from "node:fs/promises";
-import { join as join13, resolve as resolve12 } from "node:path";
-
-// lib/capabilities/paths.mjs
-import { isAbsolute as isAbsolute6, relative as relative8, resolve as resolve11, sep as sep10 } from "node:path";
-var SKILL_ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-function assertSkillId(name) {
-  if (typeof name !== "string" || !SKILL_ID_RE.test(name)) {
-    throw new Error(`invalid skill id "${name}": must match ${SKILL_ID_RE}`);
-  }
-  return name;
-}
-function isInside6(root, candidate) {
-  const parent = resolve11(root);
-  const child = resolve11(candidate);
-  if (parent === child) return true;
-  const rel = relative8(parent, child);
-  return rel !== "" && !rel.startsWith(`..${sep10}`) && rel !== ".." && !isAbsolute6(rel);
-}
-function resolveUnderRoot(root, userPath, options = {}) {
-  if (userPath == null || userPath === "") {
-    throw new Error("path is required");
-  }
-  const raw = String(userPath);
-  if (raw.includes("\0")) {
-    throw new Error("path contains NUL");
-  }
-  const base = resolve11(root);
-  const target = isAbsolute6(raw) ? resolve11(raw) : resolve11(base, raw);
-  const inside = isInside6(base, target) || target === base;
-  if (!inside) {
-    if (isAbsolute6(raw) && !options.allowAbsolute) {
-      throw new Error(`absolute path rejected (pass --allow-absolute to override): ${raw}`);
-    }
-    if (!options.allowAbsolute) {
-      throw new Error(`path escapes repository root: ${raw}`);
-    }
-  }
-  return target;
-}
-
-// lib/capabilities/scaffold.mjs
+init_paths();
+import { mkdir as mkdir9, writeFile as writeFile9, access as access11 } from "node:fs/promises";
+import { join as join18, resolve as resolve18 } from "node:path";
 function titleCase2(id) {
   return id.split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ");
 }
@@ -19471,19 +20471,19 @@ async function scaffoldSkill(root, spec, options = {}) {
   } catch (error) {
     return { ok: false, error: error.message, target: null };
   }
-  const repoRoot = resolve12(root);
-  const defaultOut = join13(repoRoot, "plugins", "skillsforge", "skills");
-  const outRoot = resolve12(options.outRoot ?? defaultOut);
-  if (!isInside6(repoRoot, outRoot) && outRoot !== repoRoot) {
+  const repoRoot = resolve18(root);
+  const defaultOut = join18(repoRoot, "plugins", "skillsforge", "skills");
+  const outRoot = resolve18(options.outRoot ?? defaultOut);
+  if (!isInside(repoRoot, outRoot) && outRoot !== repoRoot) {
     return { ok: false, error: `outRoot escapes repository root: ${outRoot}`, target: null };
   }
-  const target = join13(outRoot, name);
-  if (!isInside6(repoRoot, target)) {
+  const target = join18(outRoot, name);
+  if (!isInside(repoRoot, target)) {
     return { ok: false, error: `refusing to write outside repository root: ${target}`, target };
   }
   if (!options.force) {
     try {
-      await access9(target);
+      await access11(target);
       return { ok: false, error: `refusing to overwrite existing skill without force: ${target}`, target };
     } catch {
     }
@@ -19492,15 +20492,15 @@ async function scaffoldSkill(root, spec, options = {}) {
   if (options.dryRun) {
     return { ok: true, dryRun: true, target, files };
   }
-  await mkdir5(join13(target, "agents"), { recursive: true });
+  await mkdir9(join18(target, "agents"), { recursive: true });
   for (const [rel, content] of Object.entries(files)) {
-    const abs = join13(target, rel);
-    if (!isInside6(target, abs) && abs !== join13(target, "")) {
-      if (!isInside6(target, abs)) {
+    const abs = join18(target, rel);
+    if (!isInside(target, abs) && abs !== join18(target, "")) {
+      if (!isInside(target, abs)) {
         return { ok: false, error: `refusing nested escape: ${rel}`, target };
       }
     }
-    await writeFile5(abs, content);
+    await writeFile9(abs, content);
   }
   return { ok: true, dryRun: false, target, files: Object.keys(files) };
 }
@@ -19509,8 +20509,8 @@ async function scaffoldSkill(root, spec, options = {}) {
 init_skill_loader();
 init_router();
 init_validate_skill_lib();
-import { mkdir as mkdir6, readFile as readFile12, readdir as readdir6, writeFile as writeFile6 } from "node:fs/promises";
-import { join as join14 } from "node:path";
+import { mkdir as mkdir10, readFile as readFile16, readdir as readdir9, writeFile as writeFile10 } from "node:fs/promises";
+import { join as join19 } from "node:path";
 import { performance as performance2 } from "node:perf_hooks";
 async function runBench(root, options = {}) {
   const skills = await loadAllSkills(root);
@@ -19541,10 +20541,10 @@ async function runBench(root, options = {}) {
     totalMs: Math.round(performance2.now() - t0),
     ts: (/* @__PURE__ */ new Date()).toISOString()
   };
-  const outDir = join14(root, "artifacts", "bench");
-  await mkdir6(outDir, { recursive: true });
-  const outPath = join14(outDir, "latest.json");
-  await writeFile6(outPath, `${JSON.stringify(summary, null, 2)}
+  const outDir = join19(root, "artifacts", "bench");
+  await mkdir10(outDir, { recursive: true });
+  const outPath = join19(outDir, "latest.json");
+  await writeFile10(outPath, `${JSON.stringify(summary, null, 2)}
 `);
   return { ok: true, path: outPath, summary };
 }
@@ -19578,7 +20578,7 @@ async function runScorecard(root) {
   }
   let bench = null;
   try {
-    bench = JSON.parse(await readFile12(join14(root, "artifacts", "bench", "latest.json"), "utf8"));
+    bench = JSON.parse(await readFile16(join19(root, "artifacts", "bench", "latest.json"), "utf8"));
   } catch {
     bench = null;
   }
@@ -19590,7 +20590,7 @@ async function runScorecard(root) {
   };
 }
 async function runCompose(root, workflowPath) {
-  const workflow = JSON.parse(await readFile12(workflowPath, "utf8"));
+  const workflow = JSON.parse(await readFile16(workflowPath, "utf8"));
   const skills = await loadAllSkills(root);
   const byName = new Map(skills.map((s) => [s.name, s]));
   const steps = workflow.steps ?? [];
@@ -19634,10 +20634,10 @@ async function runStocktake(root) {
   };
 }
 async function listPressureFixtures(skillDir) {
-  const dir = join14(skillDir, "pressure");
+  const dir = join19(skillDir, "pressure");
   try {
-    const entries = await readdir6(dir);
-    return entries.filter((name) => name.endsWith(".json")).map((name) => join14(dir, name));
+    const entries = await readdir9(dir);
+    return entries.filter((name) => name.endsWith(".json")).map((name) => join19(dir, name));
   } catch {
     return [];
   }
@@ -19649,7 +20649,7 @@ async function runPressure(skillDir, options = {}) {
   }
   const results = [];
   for (const fixturePath of fixtures) {
-    const fixture = JSON.parse(await readFile12(fixturePath, "utf8"));
+    const fixture = JSON.parse(await readFile16(fixturePath, "utf8"));
     const baselineViolations = fixture.baselineViolations ?? [];
     const expectedCompliance = fixture.expectedCompliance ?? [];
     const withSkillOk = expectedCompliance.length > 0;
@@ -19669,504 +20669,658 @@ async function runPressure(skillDir, options = {}) {
   };
 }
 
-// lib/capabilities/skillshield.mjs
+// scripts/cli/commands/catalog.mjs
 init_skill_loader();
-import { readFile as readFile13 } from "node:fs/promises";
-var SECRET_RE = /(api[_-]?key|secret[_-]?key|password\s*=\s*['\"][^'\"]+|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36})/i;
-var UNBOUNDED_SHELL_RE = /\b(rm\s+-rf\s+\/|curl\s+[^\n]*\|\s*(ba)?sh|eval\s*\(|sudo\s+rm)\b/i;
-var INJECTION_RE = /\b(ignore previous instructions|disregard system prompt|jailbreak)\b/i;
-var COPY_MARKERS = [
-  "obra/superpowers",
-  "everything-claude-code",
-  "garrytan/gstack",
-  "mattpocock/skills",
-  "ruvnet/ruflo",
-  "addyosmani/agent-skills"
-];
-async function runSkillShield(skillDir, options = {}) {
-  const loaded = await loadSkill(skillDir, options);
-  const findings = [];
-  const body = loaded.body ?? "";
-  const sidecarRaw = loaded.sidecarFile ? await readFile13(loaded.sidecarFile, "utf8") : "";
-  const blob = `${body}
-${sidecarRaw}
-${loaded.description ?? ""}`;
-  if (SECRET_RE.test(blob)) {
-    findings.push({ severity: "high", rule: "secret-pattern", message: "Possible secret or credential pattern in skill files" });
-  }
-  if (UNBOUNDED_SHELL_RE.test(blob)) {
-    findings.push({ severity: "high", rule: "unbounded-shell", message: "Dangerous shell pattern detected" });
-  }
-  if (INJECTION_RE.test(blob)) {
-    findings.push({ severity: "medium", rule: "prompt-injection", message: "Prompt-injection style language detected" });
-  }
-  for (const marker of COPY_MARKERS) {
-    if (blob.toLowerCase().includes(marker.toLowerCase()) && !blob.includes("inspiration") && !blob.includes("complement")) {
-      findings.push({
-        severity: "medium",
-        rule: "third-party-marker",
-        message: `References ${marker} outside an inspiration/complement context`
-      });
-    }
-  }
-  const caps = loaded.sidecar?.capabilities;
-  if (caps?.exec?.allowed === true && (!caps.exec.commands || caps.exec.commands.length === 0)) {
-    findings.push({ severity: "high", rule: "exec-without-allowlist", message: "exec.allowed true without command allowlist" });
-  }
-  if (caps?.network?.allowed === true && (!caps.network.hosts || caps.network.hosts.length === 0) && !caps.network.searchAllowed) {
-    findings.push({ severity: "medium", rule: "network-without-hosts", message: "network.allowed true without hosts or searchAllowed" });
-  }
-  if (!loaded.sidecar?.routing?.pack) {
-    findings.push({ severity: "low", rule: "missing-pack", message: "routing.pack not set" });
-  }
-  const blocking = findings.filter((f) => f.severity === "high");
-  return {
-    name: loaded.name,
-    ok: blocking.length === 0,
-    findings,
-    note: "SkillShield is a skill-body scanner (best-effort); not a full security audit."
-  };
-}
-async function runSkillShieldMany(skillDirs, options = {}) {
-  const reports = [];
-  for (const dir of skillDirs) {
-    reports.push(await runSkillShield(dir, options));
-  }
-  return {
-    ok: reports.every((r) => r.ok),
-    reports
-  };
-}
-
-// lib/capabilities/export-agents.mjs
-init_catalog();
-init_skill_loader();
-import { mkdir as mkdir7, readdir as readdir7, readFile as readFile14, writeFile as writeFile7 } from "node:fs/promises";
-import { join as join15, resolve as resolve13 } from "node:path";
-var SECRET_PATTERNS = [
-  /\bsk-[A-Za-z0-9_-]{8,}\b/g,
-  /\bghp_[A-Za-z0-9]{20,}\b/g,
-  /\bgithub_pat_[A-Za-z0-9_]{20,}\b/g,
-  /\bAKIA[0-9A-Z]{16}\b/g,
-  /\bxox[baprs]-[A-Za-z0-9-]{10,}\b/g,
-  /\bAIza[0-9A-Za-z_-]{20,}\b/g
-];
-function redactSecrets(text) {
-  let out = String(text ?? "");
-  for (const pattern of SECRET_PATTERNS) {
-    out = out.replace(pattern, "[REDACTED]");
-  }
-  return out;
-}
-async function exportAgentsMd(root, options = {}) {
-  const repoRoot = resolve13(root);
-  let outPath;
-  try {
-    outPath = options.out ? resolveUnderRoot(repoRoot, options.out, { allowAbsolute: options.allowAbsolute === true }) : join15(repoRoot, "AGENTS.md");
-  } catch (error) {
-    return { ok: false, error: error.message, path: null };
-  }
-  if (!isInside6(repoRoot, outPath) && outPath !== join15(repoRoot, "AGENTS.md")) {
-    if (!options.allowAbsolute) {
-      return { ok: false, error: `out path escapes repository root: ${outPath}`, path: null };
-    }
-  }
-  let catalogSection = "";
-  try {
-    const { catalog } = await loadCatalog(root);
-    const stats2 = catalogStats(catalog);
-    const packs = listPacks(catalog);
-    const profiles = listProfiles(catalog);
-    catalogSection = [
-      `SkillsForge catalog: **${stats2.skills}** catalog entries, **${stats2.packs}** packs, **${stats2.profiles}** profiles.`,
-      "",
-      "Hero depth: trust spine + lifecycle + methodology skills are production-depth; domain packs are lean scaffolds.",
-      "",
-      "### Profiles",
-      ...profiles.map((p) => `- \`${p.id}\`: ${p.description} (packs: ${p.packs.join(", ")})`),
-      "",
-      "### Packs",
-      ...packs.map((p) => `- \`${p.id}\` (${p.skillCount}): ${p.description}`)
-    ].join("\n");
-  } catch (error) {
-    catalogSection = `Catalog unavailable: ${error.message}`;
-  }
-  const skills = await loadAllSkills(root);
-  const agentsDir = join15(root, "plugins", "skillsforge", "agents");
-  let agents = [];
-  try {
-    agents = (await readdir7(agentsDir)).filter((name) => name.endsWith(".md"));
-  } catch {
-    agents = [];
-  }
-  const content = `# AGENTS.md
-
-Generated by \`skillsforge export-agents\`. Cross-harness context for Claude Code, Cursor, Codex, and OpenCode.
-
-## SkillsForge
-
-Use SkillsForge as the trust and routing layer for Agent Skills.
-
-- Magical moment: \`node plugins/skillsforge/bin/skillsforge.mjs vibe\`
-- Judge demo: \`node plugins/skillsforge/bin/skillsforge.mjs demo\`
-- Validate: \`skillsforge validate --all\`
-- Route: \`skillsforge route --query "..."\` or \`--pack <id>\`
-- Quality: \`skillsforge quality --skill <dir>\`
-- Evidence: \`skillsforge evidence --out artifacts/evidence\`
-
-## Catalog
-
-${catalogSection}
-
-## Installed skills (sample)
-
-${skills.slice(0, 40).map((s) => `- \`${s.name}\` \u2014 ${(s.description ?? "").slice(0, 120)}`).join("\n")}
-${skills.length > 40 ? `
-\u2026 and ${skills.length - 40} more.
-` : "\n"}
-
-## Agents
-
-${agents.length ? agents.map((name) => `- \`plugins/skillsforge/agents/${name}\``).join("\n") : "_No agent defs yet._"}
-
-## Complementary tools
-
-- Use Ruflo for multi-agent swarm orchestration if needed; SkillsForge does not clone swarm/MCP consensus.
-- Use SkillsForge for validate, forge, route, policy, package, and evidence.
-
-## Skill routing (short)
-
-When the request matches a SkillsForge skill, invoke it. Prefer pack-scoped routing for domain skills (\`routing.mode: explicit\`).
-`;
-  if (!options.dryRun) {
-    await writeFile7(outPath, content);
-  }
-  return { ok: true, path: outPath, skills: skills.length, agents: agents.length, dryRun: Boolean(options.dryRun) };
-}
-async function captureLearning(root, entry) {
-  const repoRoot = resolve13(root);
-  const outDir = join15(repoRoot, "artifacts", "capture");
-  if (!isInside6(repoRoot, outDir)) {
-    return { ok: false, error: "capture directory escapes repository root" };
-  }
-  await mkdir7(outDir, { recursive: true });
-  const redacted = {
-    ts: (/* @__PURE__ */ new Date()).toISOString(),
-    ...entry,
-    insight: entry.insight != null ? redactSecrets(entry.insight) : void 0,
-    summary: entry.summary != null ? redactSecrets(entry.summary) : void 0,
-    key: entry.key != null ? redactSecrets(String(entry.key)) : void 0
-  };
-  const line = JSON.stringify(redacted);
-  const path = join15(outDir, "learnings.jsonl");
-  let existing = "";
-  try {
-    existing = await readFile14(path, "utf8");
-  } catch {
-    existing = "";
-  }
-  await writeFile7(path, `${existing}${line}
+init_paths();
+async function runVibeCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const root = await resolveRuntimeRoot(options);
+  const result = await runVibe(root, { json });
+  if (json) process.stdout.write(`${JSON.stringify(result.data, null, 2)}
 `);
-  const learningMd = join15(repoRoot, "docs", "work", "learning.md");
-  if (!isInside6(repoRoot, learningMd)) {
-    return { ok: false, error: "learning.md path escapes repository root" };
-  }
-  await mkdir7(join15(repoRoot, "docs", "work"), { recursive: true });
-  let md = "";
-  try {
-    md = await readFile14(learningMd, "utf8");
-  } catch {
-    md = "# learning\n\n";
-  }
-  md += `
-- ${redacted.insight ?? redacted.summary ?? JSON.stringify(redacted)}
-`;
-  await writeFile7(learningMd, md);
-  return { ok: true, path, learningMd };
+  else process.stdout.write(result.text);
+  return result.ok ? 0 : 1;
 }
-async function forgeFromCapture(root, options = {}) {
-  const path = join15(resolve13(root), "artifacts", "capture", "learnings.jsonl");
-  let raw = "";
+async function runCatalogCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const pack = consumeOption(args, "--pack");
+  const profile = consumeOption(args, "--profile");
+  const search = consumeOption(args, "--search");
+  if (pack === null || profile === null || search === null) {
+    process.stderr.write("option requires a value\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  const { catalog } = await loadCatalog(root);
+  let payload;
+  if (search) payload = { search, hits: searchCatalog(catalog, search) };
+  else if (pack) payload = { pack, skills: skillsForPack(catalog, pack) };
+  else if (profile) payload = { profile, skills: skillsForProfile(catalog, profile) };
+  else {
+    payload = {
+      stats: catalogStats(catalog),
+      packs: listPacks(catalog),
+      profiles: listProfiles(catalog)
+    };
+  }
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  else {
+    process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  }
+  return 0;
+}
+async function runQualityCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const skill = consumeOption(args, "--skill");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  if (!skill) {
+    process.stderr.write("usage: skillsforge quality --skill <dir>\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let skillDir;
   try {
-    raw = await readFile14(path, "utf8");
-  } catch {
-    return { ok: false, error: "no capture file" };
+    skillDir = resolveUserPath(root, skill, allowAbsolute);
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
   }
-  const lines = raw.trim().split("\n").filter(Boolean).map((line) => JSON.parse(line));
-  const counts = /* @__PURE__ */ new Map();
-  for (const row of lines) {
-    const key = (row.key ?? row.insight ?? row.summary ?? "").toString().slice(0, 80);
-    if (!key) continue;
-    counts.set(key, (counts.get(key) ?? 0) + 1);
+  const result = await scoreSkillQuality(skillDir, { root });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.pass ? 0 : 1;
+}
+async function runLintSkillCommand(argv, options) {
+  const args = [...argv];
+  const skill = consumeOption(args, "--skill");
+  const thresholdRaw = consumeOption(args, "--threshold");
+  const hero = consumeFlag(args, "--hero");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  if (!skill) {
+    process.stderr.write("usage: skillsforge lint-skill --skill <dir> [--threshold n] [--hero]\n");
+    return 2;
   }
-  const candidates = [...counts.entries()].filter(([, n]) => n >= (options.minCount ?? 2)).sort((a, b) => b[1] - a[1]).slice(0, options.limit ?? 5).map(([key, count]) => ({
-    key,
-    count,
-    suggestedName: key.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 48) || "captured-skill",
-    note: "Human must approve before forge --write"
-  }));
-  return { ok: true, candidates };
+  const root = await resolveRuntimeRoot(options);
+  let skillDir;
+  try {
+    skillDir = resolveUserPath(root, skill, allowAbsolute);
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  const result = await lintSkill(skillDir, {
+    root,
+    threshold: thresholdRaw ? Number(thresholdRaw) : 70,
+    hero
+  });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runScaffoldCommand(argv, options) {
+  const args = [...argv];
+  const name = consumeOption(args, "--name");
+  const pack = consumeOption(args, "--pack") ?? "eng";
+  const mode = consumeOption(args, "--mode") ?? "explicit";
+  const write = consumeFlag(args, "--write");
+  const force = consumeFlag(args, "--force");
+  if (!name) {
+    process.stderr.write("usage: skillsforge scaffold --name <id> [--pack <id>] [--mode auto|explicit] [--write] [--force]\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  const result = await scaffoldSkill(root, { name, pack, mode }, { write, force, dryRun: !write });
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runBenchCommand(argv, options) {
+  const root = await resolveRuntimeRoot(options);
+  const result = await runBench(root);
+  process.stdout.write(`${JSON.stringify(result.summary, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runScorecardCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const root = await resolveRuntimeRoot(options);
+  const result = await runScorecard(root);
+  if (json) {
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  } else {
+    process.stdout.write(`${formatPackScorecard(result, { color: true })}
+`);
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  }
+  return 0;
+}
+async function runComposeCommand(argv, options) {
+  const args = [...argv];
+  const workflow = consumeOption(args, "--workflow");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  if (!workflow) {
+    process.stderr.write("usage: skillsforge compose --workflow <file>\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let workflowPath;
+  try {
+    workflowPath = resolveUnderRoot(root, workflow, { allowAbsolute });
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  const result = await runCompose(root, workflowPath);
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runStocktakeCommand(argv, options) {
+  const root = await resolveRuntimeRoot(options);
+  const result = await runStocktake(root);
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.missing.length === 0 ? 0 : 1;
+}
+async function runBatchCommand(argv, options) {
+  const args = [...argv];
+  const pack = consumeOption(args, "--pack");
+  const action = consumeOption(args, "--action") ?? "quality";
+  if (!pack) {
+    process.stderr.write("usage: skillsforge batch --pack <id> --action quality|validate|skillshield\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  const { catalog } = await loadCatalog(root);
+  const ids = skillsForPack(catalog, pack) ?? [];
+  const reports = [];
+  for (const id of ids) {
+    const dir = join20(root, "plugins", "skillsforge", "skills", id);
+    if (!await pathExists4(dir)) {
+      reports.push({ id, ok: false, error: "missing" });
+      continue;
+    }
+    if (action === "quality") reports.push({ id, ...await scoreSkillQuality(dir, { root }) });
+    else if (action === "skillshield") reports.push({ id, ...await runSkillShield(dir, { root }) });
+    else {
+      const { verifySkillPaths: verifySkillPaths2 } = await Promise.resolve().then(() => (init_verify(), verify_exports));
+      const v = await verifySkillPaths2([dir], { root, profile: "claude-code" });
+      reports.push({ id, ok: v.ok });
+    }
+  }
+  const ok = reports.every((r) => r.ok || r.pass);
+  process.stdout.write(`${JSON.stringify({ pack, action, ok, reports }, null, 2)}
+`);
+  return ok ? 0 : 1;
+}
+async function runPressureCommand(argv, options) {
+  const args = [...argv];
+  const skill = consumeOption(args, "--skill");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  if (!skill) {
+    process.stderr.write("usage: skillsforge pressure --skill <dir>\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let skillDir;
+  try {
+    skillDir = resolveUserPath(root, skill, allowAbsolute);
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  const result = await runPressure(skillDir);
+  process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.ok ? 0 : 1;
 }
 
-// scripts/skillsforge-cli.mjs
+// scripts/cli/commands/hosts.mjs
+import { resolve as resolve19 } from "node:path";
+
+// lib/capabilities/install.mjs
+import { access as access12, mkdir as mkdir11, readFile as readFile17, writeFile as writeFile11 } from "node:fs/promises";
+import { dirname as dirname9, join as join21, relative as relative10, sep as sep8 } from "node:path";
+init_hosts();
 init_skill_loader();
-
-// lib/capabilities/demo.mjs
 init_verify();
-import { access as access10, cp as cp2, mkdir as mkdir8, mkdtemp, writeFile as writeFile8 } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join as join16, resolve as resolve14 } from "node:path";
-init_receipt();
-init_skill_loader();
-async function pathExists5(path) {
+async function pathExists7(path) {
   try {
-    await access10(path);
+    await access12(path);
     return true;
   } catch {
     return false;
   }
 }
-async function runJudgeDemo(root, options = {}) {
-  const repo = resolve14(root);
-  const started = Date.now();
-  const steps = [];
-  const unsafeSrc = join16(repo, "examples", "codex-unsafe-release");
-  const safeSrc = join16(repo, "examples", "codex-safe-release");
-  if (!await pathExists5(unsafeSrc) || !await pathExists5(safeSrc)) {
-    return {
-      ok: false,
-      error: "missing examples/codex-unsafe-release or examples/codex-safe-release",
-      elapsedMs: Date.now() - started,
-      steps
-    };
-  }
-  const work = await mkdtemp(join16(tmpdir(), "sf-judge-"));
-  try {
-    const unsafeDir = join16(work, "codex-unsafe-release");
-    await cp2(unsafeSrc, unsafeDir, { recursive: true });
-    const unsafe = await verifySkillPaths([unsafeDir], {
-      root: work,
-      profile: "claude-code"
-    });
-    const unsafeDenied = unsafe.ok === false;
-    steps.push({
-      id: "unsafe-validate",
-      ok: unsafeDenied,
-      detail: unsafeDenied ? "denied as expected" : "unexpected pass"
-    });
-    if (!unsafeDenied) {
-      const elapsedMs2 = Date.now() - started;
+async function installSkills(options = {}) {
+  const home = options.home;
+  const root = options.root ?? process.cwd();
+  const dryRun = Boolean(options.dryRun);
+  const force = Boolean(options.force);
+  let hosts = options.hosts;
+  if (!hosts) {
+    if (!options.hostIds?.length) {
       return {
         ok: false,
-        error: "unsafe skill unexpectedly validated",
-        elapsedMs: elapsedMs2,
-        underBudget: elapsedMs2 < 9e4,
-        falseAllow: 1,
-        steps,
-        scoreboard: formatScoreboard({
-          unsafeDeny: false,
-          safePass: false,
-          packaged: false,
-          falseAllow: 1,
-          receiptHash: null,
-          elapsedMs: elapsedMs2
-        }, { color: options.color !== false })
+        error: "no hosts selected",
+        installs: [],
+        validation: null
       };
     }
-    const safeDir = join16(work, "codex-safe-release");
-    await cp2(safeSrc, safeDir, { recursive: true });
-    const safe = await verifySkillPaths([safeDir], {
-      root: work,
-      profile: "claude-code"
-    });
-    steps.push({
-      id: "safe-validate",
-      ok: safe.ok === true,
-      detail: safe.ok ? "pass" : "safe skill failed validation"
-    });
-    if (!safe.ok) {
-      return fail2(steps, started, "safe skill failed validation", options);
+    const selection = await resolveHostSelection(options.hostIds, { home });
+    if (selection.unknown.length) {
+      return {
+        ok: false,
+        error: `unknown hosts: ${selection.unknown.join(", ")}`,
+        installs: [],
+        validation: null,
+        hosts: selection.all
+      };
     }
-    const outDir = join16(work, "packaged");
-    const packaged = await packageCodexPlugin({
-      skillDir: safeDir,
-      outDir,
-      write: true,
-      force: true
-    });
-    const packageOk = packaged.ok === true;
-    steps.push({
-      id: "safe-package",
-      ok: packageOk,
-      detail: packageOk ? outDir : (packaged.errors ?? []).join("; ")
-    });
-    if (!packageOk) {
-      return fail2(steps, started, (packaged.errors ?? ["package failed"]).join("; "), options);
+    hosts = selection.selected;
+  }
+  if (!hosts.length) {
+    return { ok: false, error: "no hosts selected", installs: [], validation: null };
+  }
+  let skills = options.skills;
+  if (!skills) {
+    if (options.skillPaths?.length) {
+      skills = [];
+      for (const path of options.skillPaths) {
+        skills.push(await loadSkill(path, { root }));
+      }
+    } else {
+      skills = await loadAllSkills(root);
     }
-    const tree = await hashPackageTree(outDir);
-    const digest = tree.packageHash;
-    const evidenceDir = join16(repo, "artifacts", "demo-evidence");
-    await mkdir8(evidenceDir, { recursive: true });
-    const evidencePath = join16(evidenceDir, "trust-receipt.json");
-    let skillMeta = null;
-    try {
-      skillMeta = await loadSkill(safeDir);
-    } catch {
-      skillMeta = { name: "codex-safe-release" };
-    }
-    await writeFile8(evidencePath, `${JSON.stringify({
-      schemaVersion: 1,
-      kind: "skillsforge-judge-demo",
-      skill: skillMeta.name,
-      packageSha256: digest,
-      files: tree.files.length,
-      falseAllow: 0,
-      ts: (/* @__PURE__ */ new Date()).toISOString()
-    }, null, 2)}
-`);
-    steps.push({
-      id: "evidence-receipt",
-      ok: true,
-      detail: digest,
-      path: evidencePath
-    });
-    const elapsedMs = Date.now() - started;
-    const underBudget = elapsedMs < 9e4;
-    const board = {
-      unsafeDeny: true,
-      safePass: true,
-      packaged: true,
-      falseAllow: 0,
-      receiptHash: digest,
-      elapsedMs
-    };
+  }
+  if (!skills.length) {
+    return { ok: false, error: "no skills to install", installs: [], validation: null };
+  }
+  const paths = skills.map((skill) => skill.directory);
+  const validation = await verifySkillPaths(paths, {
+    root,
+    profile: "claude-code",
+    all: false,
+    dependencies: false
+  });
+  if (!validation.ok) {
     return {
-      ok: underBudget,
-      error: underBudget ? void 0 : `demo exceeded 90s budget (${elapsedMs}ms)`,
-      elapsedMs,
-      underBudget,
-      falseAllow: 0,
-      receiptHash: digest,
-      evidencePath,
-      steps,
-      urls: {
-        unsafeExample: "examples/codex-unsafe-release",
-        safeExample: "examples/codex-safe-release",
-        evidence: "artifacts/demo-evidence/trust-receipt.json",
-        demoDoc: "docs/hackathon-demo.md"
-      },
-      scoreboard: formatScoreboard(board, { color: options.color !== false })
+      ok: false,
+      error: "validation failed",
+      installs: [],
+      validation,
+      planned: []
     };
-  } finally {
-    if (!options.keepWork) {
-      const { rm: rm4 } = await import("node:fs/promises");
-      await rm4(work, { recursive: true, force: true });
+  }
+  const installs = [];
+  const planned = [];
+  for (const host of hosts) {
+    for (const skill of skills) {
+      const targetDir = join21(host.skillsDir, skill.name);
+      const exists = await pathExists7(targetDir);
+      const entry = {
+        host: host.id,
+        skill: skill.name,
+        dir: targetDir,
+        fidelity: host.fidelity,
+        status: "pending"
+      };
+      if (exists && !force) {
+        entry.status = "skipped";
+        entry.reason = "target exists (pass --force to overwrite)";
+        installs.push(entry);
+        continue;
+      }
+      const materialization = host.fidelity === "full" ? await exportFullClaudePackage(skill, host) : await exportHostPackage(skill, host);
+      entry.interop = materialization.interop;
+      for (const file of materialization.files) {
+        planned.push({ host: host.id, skill: skill.name, path: join21(targetDir, file.path) });
+      }
+      if (!dryRun) {
+        await mkdir11(targetDir, { recursive: true });
+        for (const file of materialization.files) {
+          const dest = join21(targetDir, file.path);
+          await mkdir11(dirname9(dest), { recursive: true });
+          await writeFile11(dest, file.contents);
+        }
+      }
+      entry.status = dryRun ? "planned" : "installed";
+      entry.files = materialization.files.map((file) => file.path);
+      installs.push(entry);
     }
   }
-}
-function fail2(steps, started, error, options = {}) {
-  const elapsedMs = Date.now() - started;
+  const blocked = installs.some((item) => item.status === "pending");
   return {
-    ok: false,
-    error,
-    elapsedMs,
-    underBudget: elapsedMs < 9e4,
-    falseAllow: 0,
-    steps,
-    scoreboard: formatScoreboard({
-      unsafeDeny: steps.some((s) => s.id === "unsafe-validate" && s.ok),
-      safePass: steps.some((s) => s.id === "safe-validate" && s.ok),
-      packaged: steps.some((s) => s.id === "safe-package" && s.ok),
-      falseAllow: 0,
-      receiptHash: null,
-      elapsedMs
-    }, { color: options.color !== false })
+    ok: !blocked,
+    dryRun,
+    installs,
+    planned,
+    validation,
+    hosts: await detectHosts({ home })
   };
 }
-function formatScoreboard(board, options = {}) {
-  const color = options.color !== false && process.stdout.isTTY;
-  const g = (s) => color ? `\x1B[32m${s}\x1B[0m` : s;
-  const r = (s) => color ? `\x1B[31m${s}\x1B[0m` : s;
-  const b = (s) => color ? `\x1B[1m${s}\x1B[0m` : s;
-  const lines = [
-    b("SkillsForge trust scoreboard"),
-    `  unsafe deny:     ${board.unsafeDeny ? g("PASS") : r("FAIL")}`,
-    `  safe validate:   ${board.safePass ? g("PASS") : r("FAIL")}`,
-    `  packaged:        ${board.packaged ? g("PASS") : r("FAIL")}`,
-    `  false-allow:     ${board.falseAllow === 0 ? g("0") : r(String(board.falseAllow))}`,
-    `  receipt hash:    ${board.receiptHash ? `${board.receiptHash.slice(0, 16)}\u2026` : "n/a"}`,
-    `  elapsed:         ${board.elapsedMs}ms`
-  ];
-  return lines.join("\n");
-}
-function formatPackScorecard(card, options = {}) {
-  const color = options.color !== false && process.stdout.isTTY;
-  const b = (s) => color ? `\x1B[1m${s}\x1B[0m` : s;
-  const g = (s) => color ? `\x1B[32m${s}\x1B[0m` : s;
-  const lines = [
-    b("SkillsForge pack scorecard"),
-    `  catalog entries: ${card.skills}`,
-    `  packs:           ${Object.keys(card.byPack ?? {}).length}`,
-    ...Object.entries(card.byPack ?? {}).sort((a, b2) => b2[1] - a[1] || a[0].localeCompare(b2[0])).slice(0, 12).map(([pack, n]) => `    ${pack.padEnd(18)} ${g(String(n))}`),
-    card.bench ? `  route p50/p95:   ${card.bench.route?.p50 ?? "?"} / ${card.bench.route?.p95 ?? "?"} ms` : "  bench:           (run skillsforge bench)"
-  ];
-  return lines.join("\n");
-}
-async function compareSkillTrust(root, leftDir, rightDir) {
-  const left = await loadSkill(leftDir, { root });
-  const right = await loadSkill(rightDir, { root });
-  const leftHas = Boolean(left.sidecar);
-  const rightHas = Boolean(right.sidecar);
-  let leftPolicy = null;
-  let rightPolicy = null;
-  try {
-    leftPolicy = await verifySkillPaths([left.directory], { root, profile: "claude-code" });
-  } catch (error) {
-    leftPolicy = { ok: false, error: error.message };
-  }
-  try {
-    rightPolicy = await verifySkillPaths([right.directory], { root, profile: "claude-code" });
-  } catch (error) {
-    rightPolicy = { ok: false, error: error.message };
+async function exportFullClaudePackage(skill, host) {
+  const files = [];
+  for (const abs of skill.files ?? []) {
+    const rel = relative10(skill.directory, abs).split(sep8).join("/");
+    if (!rel || rel.startsWith("..")) continue;
+    files.push({ path: rel, contents: await readFile17(abs) });
   }
   return {
-    left: {
-      name: left.name,
-      hasSidecar: leftHas,
-      capabilities: left.sidecar?.capabilities ?? null,
-      routing: left.sidecar?.routing ?? null,
-      policyOk: leftPolicy?.ok ?? false,
-      policyFindings: (leftPolicy?.findings ?? []).filter((f) => f.blocking).map((f) => f.rule)
-    },
-    right: {
-      name: right.name,
-      hasSidecar: rightHas,
-      capabilities: right.sidecar?.capabilities ?? null,
-      routing: right.sidecar?.routing ?? null,
-      policyOk: rightPolicy?.ok ?? false,
-      policyFindings: (rightPolicy?.findings ?? []).filter((f) => f.blocking).map((f) => f.rule)
-    },
-    delta: {
-      sidecarAdvantage: leftHas !== rightHas ? rightHas ? "right has SkillsForge sidecar" : "left has SkillsForge sidecar" : "both same sidecar presence",
-      policyDelta: leftPolicy?.ok === true !== (rightPolicy?.ok === true) ? `left.ok=${leftPolicy?.ok} right.ok=${rightPolicy?.ok}` : "same policy outcome"
+    files,
+    interop: {
+      accepted: files.map((file) => file.path),
+      transformed: [],
+      ignored: [],
+      runtimeEnforced: Boolean(host.runtimeEnforced),
+      losses: [],
+      usesSidecar: Boolean(host.usesSidecar)
     }
   };
 }
+
+// lib/capabilities/install-tui.mjs
+import readline from "node:readline";
+async function pickHosts(hosts, options = {}) {
+  const input = options.input ?? process.stdin;
+  const output = options.output ?? process.stdout;
+  if (!input.isTTY || typeof input.setRawMode !== "function") {
+    throw new Error("interactive picker requires a TTY; pass --hosts <ids> --yes");
+  }
+  const selected = new Set(hosts.filter((host) => host.detected).map((host) => host.id));
+  let cursor = 0;
+  let done = false;
+  let aborted = false;
+  function render() {
+    output.write("\x1B[?25l");
+    output.write("\x1B[H\x1B[J");
+    output.write("Which agents should SkillsForge configure?\n\n");
+    hosts.forEach((host, index) => {
+      const pointer = index === cursor ? ">" : " ";
+      const mark = selected.has(host.id) ? "[x]" : "[ ]";
+      const note = host.detected ? "" : " (not detected)";
+      const fidelity = host.fidelity === "full" ? "full" : "package";
+      const dimStart = host.detected ? "" : "\x1B[2m";
+      const dimEnd = host.detected ? "" : "\x1B[0m";
+      output.write(`${dimStart}${pointer} ${mark} ${host.label} \u2014 ${fidelity}${note}${dimEnd}
+`);
+    });
+    output.write("\n\u2191/\u2193 move \xB7 space toggle \xB7 enter confirm \xB7 q abort\n");
+  }
+  return await new Promise((resolvePromise) => {
+    const rl = readline.createInterface({ input, output, terminal: true });
+    readline.emitKeypressEvents(input, rl);
+    input.setRawMode(true);
+    render();
+    function cleanup(result) {
+      if (done) return;
+      done = true;
+      input.setRawMode(false);
+      input.removeListener("keypress", onKeypress);
+      rl.close();
+      output.write("\x1B[?25h");
+      resolvePromise(result);
+    }
+    function onKeypress(_str, key) {
+      if (!key) return;
+      if (key.ctrl && key.name === "c") {
+        aborted = true;
+        cleanup(null);
+        return;
+      }
+      switch (key.name) {
+        case "up":
+          cursor = (cursor - 1 + hosts.length) % hosts.length;
+          render();
+          break;
+        case "down":
+          cursor = (cursor + 1) % hosts.length;
+          render();
+          break;
+        case "space": {
+          const id = hosts[cursor].id;
+          if (selected.has(id)) selected.delete(id);
+          else selected.add(id);
+          render();
+          break;
+        }
+        case "return":
+        case "enter":
+          cleanup([...selected]);
+          break;
+        case "q":
+        case "escape":
+          aborted = true;
+          cleanup(null);
+          break;
+        default:
+          break;
+      }
+      if (aborted) {
+      }
+    }
+    input.on("keypress", onKeypress);
+  });
+}
+
+// scripts/cli/commands/hosts.mjs
+init_hosts();
+async function runHostsCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const homeOption = consumeOption(args, "--home");
+  if (homeOption === null) {
+    process.stderr.write("--home requires a value\n");
+    return 2;
+  }
+  if (args.some((item) => item.startsWith("--"))) {
+    process.stderr.write(`unknown hosts option: ${args.find((item) => item.startsWith("--"))}
+`);
+    return 2;
+  }
+  if (args.length) {
+    process.stderr.write(`unknown hosts argument: ${args[0]}
+`);
+    return 2;
+  }
+  const home = homeOption ? resolve19(homeOption) : options.home;
+  const hosts = await detectHosts({ home });
+  const registry = HOST_REGISTRY.map((host) => ({
+    id: host.id,
+    label: host.label,
+    fidelity: host.fidelity,
+    runtimeEnforced: host.runtimeEnforced,
+    usesSidecar: host.usesSidecar,
+    installHint: host.installHint
+  }));
+  const examples = [
+    "skillsforge install --hosts codex,claude-code --yes --dry-run",
+    "skillsforge install --hosts all --yes --dry-run",
+    "skillsforge install --custom-host my-agent:.my-agent/skills --yes --dry-run"
+  ];
+  const payload = { ok: true, registry, hosts, examples };
+  if (json) {
+    process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+    return 0;
+  }
+  process.stdout.write("Universal AI CLI hosts\n");
+  for (const host of hosts) {
+    const mark = host.detected ? "detected" : "missing";
+    const policy = host.runtimeEnforced ? "runtime-policy" : "package-only";
+    process.stdout.write(`${host.id}	${mark}	${host.fidelity}	${policy}	${host.skillsDir}
+`);
+    process.stdout.write(`  ${host.installHint}
+`);
+  }
+  process.stdout.write("Examples:\n");
+  for (const example of examples) process.stdout.write(`  ${example}
+`);
+  return 0;
+}
+async function runInstall(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const list = consumeFlag(args, "--list");
+  const yes = consumeFlag(args, "--yes");
+  const dryRun = consumeFlag(args, "--dry-run");
+  const force = consumeFlag(args, "--force");
+  const customSpecs = consumeOptions(args, "--custom-host");
+  if (customSpecs === null) {
+    process.stderr.write("--custom-host requires <id>:<skills-dir>\n");
+    return 2;
+  }
+  const hostsOption = consumeOption(args, "--hosts");
+  if (hostsOption === null) {
+    process.stderr.write("--hosts requires a value\n");
+    return 2;
+  }
+  const homeOption = consumeOption(args, "--home");
+  if (homeOption === null) {
+    process.stderr.write("--home requires a value\n");
+    return 2;
+  }
+  const home = homeOption ? resolve19(homeOption) : options.home;
+  const skillPaths = args.filter((item) => !item.startsWith("--"));
+  const root = await resolveRuntimeRoot(options, { explicitPaths: skillPaths.length > 0 });
+  const detected = await detectHosts({ home });
+  if (list) {
+    const payload = {
+      ok: true,
+      registry: HOST_REGISTRY.map((host) => ({
+        id: host.id,
+        label: host.label,
+        fidelity: host.fidelity,
+        runtimeEnforced: host.runtimeEnforced,
+        usesSidecar: host.usesSidecar,
+        installHint: host.installHint
+      })),
+      hosts: detected
+    };
+    if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+    else {
+      for (const host of detected) {
+        const mark = host.detected ? "detected" : "missing";
+        process.stdout.write(`${host.id}	${mark}	${host.fidelity}	${host.skillsDir}
+`);
+      }
+    }
+    return 0;
+  }
+  let hostIds = hostsOption ? hostsOption.split(",").map((item) => item.trim()).filter(Boolean) : null;
+  if (hostIds?.length === 1 && hostIds[0] === "all") {
+    hostIds = HOST_REGISTRY.map((host) => host.id);
+  } else if (hostIds?.length === 1 && hostIds[0] === "detected") {
+    hostIds = detected.filter((host) => host.detected).map((host) => host.id);
+  } else if (hostIds?.includes("all") || hostIds?.includes("detected")) {
+    process.stderr.write("--hosts all|detected cannot be combined with other ids\n");
+    return 2;
+  }
+  let customHosts;
+  try {
+    customHosts = customSpecs.map((spec) => buildCustomHost(spec, { home }));
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 2;
+  }
+  if (!hostIds) {
+    if (customHosts.length) {
+      hostIds = [];
+    } else if (yes) {
+      process.stderr.write("install --yes requires --hosts <ids> or --custom-host <id>:<skills-dir>\n");
+      return 2;
+    } else {
+      const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+      if (!interactive) {
+        process.stderr.write("usage: skillsforge install --hosts <ids> --yes [skill-paths...]\n");
+        process.stderr.write("       (interactive picker requires a TTY; use --list to see hosts)\n");
+        return 2;
+      }
+      try {
+        const picked = await pickHosts(detected);
+        if (picked == null) {
+          process.stderr.write("install aborted\n");
+          return 1;
+        }
+        hostIds = picked;
+      } catch (error) {
+        process.stderr.write(`${error.message}
+`);
+        return 2;
+      }
+    }
+  }
+  if (!hostIds.length && !customHosts.length) {
+    process.stderr.write("no hosts selected\n");
+    return 1;
+  }
+  const selection = hostIds.length ? await resolveHostSelection(hostIds, { home }) : { selected: [], unknown: [], all: detected };
+  if (selection.unknown.length) {
+    process.stderr.write(`unknown hosts: ${selection.unknown.join(", ")}
+`);
+    process.stderr.write(`known: ${HOST_REGISTRY.map((host) => host.id).join(", ")} or --custom-host <id>:<skills-dir>
+`);
+    return 2;
+  }
+  const selectedHosts = [...selection.selected, ...customHosts];
+  const result = await installSkills({
+    hosts: selectedHosts,
+    home,
+    root,
+    skillPaths: skillPaths.length ? skillPaths : void 0,
+    dryRun,
+    force
+  });
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else {
+    if (!result.ok) {
+      process.stdout.write(`FAIL install: ${result.error ?? "unknown"}
+`);
+      if (result.validation?.text) process.stdout.write(result.validation.text);
+    } else {
+      for (const item of result.installs) {
+        process.stdout.write(`${item.status.toUpperCase()} ${item.host}/${item.skill} -> ${item.dir}
+`);
+      }
+      process.stdout.write(`OK install (${result.dryRun ? "dry-run" : "wrote"} ${result.installs.length} target(s))
+`);
+    }
+  }
+  return result.ok ? 0 : 1;
+}
+
+// scripts/cli/commands/library.mjs
+import { resolve as resolve22 } from "node:path";
 
 // lib/capabilities/library.mjs
 init_skill_loader();
 init_hosts();
 init_catalog();
-import { access as access12, mkdir as mkdir9, readFile as readFile16, rm as rm3, writeFile as writeFile9 } from "node:fs/promises";
+import { access as access14, mkdir as mkdir12, readFile as readFile19, rm as rm3, writeFile as writeFile12 } from "node:fs/promises";
 import { createServer } from "node:http";
-import { basename as basename5, join as join18, relative as relative10, resolve as resolve16, sep as sep12 } from "node:path";
+import { basename as basename6, join as join23, relative as relative12, resolve as resolve21, sep as sep10 } from "node:path";
 
 // lib/capabilities/workflows.mjs
 init_skill_loader();
 init_router();
-import { access as access11, readFile as readFile15, readdir as readdir8 } from "node:fs/promises";
-import { basename as basename4, dirname as dirname6, join as join17, relative as relative9, resolve as resolve15, sep as sep11 } from "node:path";
-var WORKFLOW_ROOT_REL = join17("plugins", "skillsforge", "workflows");
+import { access as access13, readFile as readFile18, readdir as readdir10 } from "node:fs/promises";
+import { basename as basename5, dirname as dirname10, join as join22, relative as relative11, resolve as resolve20, sep as sep9 } from "node:path";
+var WORKFLOW_ROOT_REL = join22("plugins", "skillsforge", "workflows");
 var WORKFLOW_CATEGORIES = Object.freeze([
   "coding",
   "testing",
@@ -20222,13 +21376,13 @@ var STOP_WORDS = /* @__PURE__ */ new Set([
 ]);
 var tokenize2 = (text) => (String(text ?? "").toLowerCase().match(/[a-z0-9]+/g) ?? []).filter((token) => !STOP_WORDS.has(token));
 async function loadWorkflows(root, options = {}) {
-  const workflowRoot = resolve15(root, options.workflowRoot ?? WORKFLOW_ROOT_REL);
+  const workflowRoot = resolve20(root, options.workflowRoot ?? WORKFLOW_ROOT_REL);
   const files = await listJsonFiles(workflowRoot);
   const workflows = [];
   const errors = [];
   for (const file of files) {
     try {
-      const workflow = JSON.parse(await readFile15(file, "utf8"));
+      const workflow = JSON.parse(await readFile18(file, "utf8"));
       const validation = validateWorkflow(workflow, { file, workflowRoot });
       if (!validation.ok) {
         errors.push(...validation.errors.map((error) => ({ file, error })));
@@ -20236,7 +21390,7 @@ async function loadWorkflows(root, options = {}) {
         workflows.push({
           ...workflow,
           file,
-          relativePath: relative9(workflowRoot, file).replaceAll("\\", "/")
+          relativePath: relative11(workflowRoot, file).replaceAll("\\", "/")
         });
       }
     } catch (error) {
@@ -20271,7 +21425,7 @@ function validateWorkflow(workflow, options = {}) {
   }
   if (Array.isArray(workflow.steps) && workflow.steps.length === 0) errors.push("steps must not be empty");
   if (!["low", "medium", "high"].includes(workflow.risk)) errors.push("risk must be low, medium, or high");
-  if (options.file && options.workflowRoot && !isInside7(options.workflowRoot, options.file)) {
+  if (options.file && options.workflowRoot && !isInside5(options.workflowRoot, options.file)) {
     errors.push("workflow file must stay inside workflow root");
   }
   return { ok: errors.length === 0, errors };
@@ -20322,13 +21476,13 @@ async function runWorkflowDryRun(root, id) {
   };
 }
 async function planAuto(root, query, options = {}) {
-  const skills = await loadAllSkills(root, {
+  const skillsLoaded = await loadAllSkills(root, {
     includeInstalled: true,
     home: options.home,
     noCache: options.noCache === true,
-    tolerateErrors: true
+    collectErrors: true
   });
-  const skillRoute = routeQuery(query, skills, {
+  const skillRoute = routeQuery(query, skillsLoaded.skills, {
     includeExplicit: true,
     pack: options.pack ?? void 0
   });
@@ -20336,8 +21490,17 @@ async function planAuto(root, query, options = {}) {
     limit: options.limit ?? 5,
     category: options.category
   });
+  const errors = [
+    ...skillsLoaded.errors.map((error) => ({
+      source: "skills",
+      file: error.directory,
+      error: error.message,
+      optional: error.optional === true
+    })),
+    ...workflowRoute.errors
+  ];
   return {
-    ok: workflowRoute.ok,
+    ok: skillsLoaded.ok && workflowRoute.ok,
     mode: "plan",
     query,
     skill: {
@@ -20347,7 +21510,7 @@ async function planAuto(root, query, options = {}) {
     },
     workflows: workflowRoute.candidates,
     nextCommands: buildNextCommands(query, skillRoute, workflowRoute.candidates),
-    errors: workflowRoute.errors
+    errors
   };
 }
 async function runAutoReadOnly(root, query, options = {}) {
@@ -20428,15 +21591,15 @@ function buildNextCommands(query, skillRoute, workflows) {
 }
 async function listJsonFiles(root) {
   try {
-    await access11(root);
+    await access13(root);
   } catch {
     return [];
   }
   const out = [];
   async function walk(current) {
-    const entries = await readdir8(current, { withFileTypes: true });
+    const entries = await readdir10(current, { withFileTypes: true });
     for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
-      const path = join17(current, entry.name);
+      const path = join22(current, entry.name);
       if (entry.isDirectory()) await walk(path);
       else if (entry.isFile() && entry.name.endsWith(".json")) out.push(path);
     }
@@ -20447,34 +21610,44 @@ async function listJsonFiles(root) {
 function clampLimit(value, fallback) {
   return Math.max(1, Math.min(100, Number(value) || fallback));
 }
-function isInside7(parent, candidate) {
-  const path = relative9(resolve15(parent), resolve15(candidate));
-  return path === "" || !path.startsWith(`..${sep11}`) && path !== "..";
+function isInside5(parent, candidate) {
+  const path = relative11(resolve20(parent), resolve20(candidate));
+  return path === "" || !path.startsWith(`..${sep9}`) && path !== "..";
 }
 
 // lib/capabilities/library.mjs
-var LIBRARY_OUT_REL = join18("artifacts", "skillsforge-library");
+var LIBRARY_OUT_REL = join23("artifacts", "skillsforge-library");
 async function buildLibraryIndex(root, options = {}) {
-  const absRoot = resolve16(root);
+  const absRoot = resolve21(root);
   const home = options.home;
-  const [skills, hosts, workflowsLoaded, catalogLoaded] = await Promise.all([
+  const [skillsLoaded, hosts, workflowsLoaded, catalogLoaded] = await Promise.all([
     loadAllSkills(absRoot, {
       includeInstalled: true,
       home,
       noCache: options.noCache === true,
-      tolerateErrors: true
+      collectErrors: true
     }),
     detectHosts({ home }),
     loadWorkflows(absRoot),
     loadCatalog(absRoot).catch(() => null)
   ]);
+  const skills = skillsLoaded.skills;
+  const loadErrors = [
+    ...skillsLoaded.errors.map((error) => ({
+      source: "skills",
+      file: error.directory,
+      error: error.message,
+      optional: error.optional === true
+    })),
+    ...workflowsLoaded.errors
+  ];
   const catalog = catalogLoaded?.catalog ?? null;
   const packBySkill = buildPackMap(catalog);
   const session = detectSession(hosts, options);
   const hostInstallChecks = /* @__PURE__ */ new Map();
   for (const host of hosts) {
     for (const skill of skills) {
-      hostInstallChecks.set(`${host.id}:${skill.name}`, await pathExists6(join18(host.skillsDir, skill.name)));
+      hostInstallChecks.set(`${host.id}:${skill.name}`, await pathExists8(join23(host.skillsDir, skill.name)));
     }
   }
   const records = skills.map((skill) => summarizeSkill(absRoot, skill, {
@@ -20486,8 +21659,9 @@ async function buildLibraryIndex(root, options = {}) {
   })).map(assignRecordKey()).sort((left, right) => left.key.localeCompare(right.key));
   const categories = [...new Set(records.map((skill) => skill.category).filter(Boolean))].sort();
   const sources = [...new Set(records.map((skill) => skill.sourcePlugin))].sort();
+  const ok = skillsLoaded.ok && workflowsLoaded.ok;
   return {
-    ok: workflowsLoaded.ok,
+    ok,
     generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
     root: absRoot,
     stats: {
@@ -20527,23 +21701,23 @@ async function buildLibraryIndex(root, options = {}) {
       risk: workflow.risk,
       relativePath: workflow.relativePath
     })),
-    errors: workflowsLoaded.errors
+    errors: loadErrors
   };
 }
 async function writeLibraryArtifacts(root, options = {}) {
-  const outDir = resolve16(root, options.outDir ?? LIBRARY_OUT_REL);
-  if (!options.allowAbsolute && !isInside8(root, outDir)) {
+  const outDir = resolve21(root, options.outDir ?? LIBRARY_OUT_REL);
+  if (!options.allowAbsolute && !isInside6(root, outDir)) {
     throw new Error(`library output path escapes root: ${outDir}`);
   }
   const index = await buildLibraryIndex(root, options);
-  await mkdir9(outDir, { recursive: true });
-  const jsonPath = join18(outDir, "skillsforge-library.json");
-  const htmlPath = join18(outDir, "skillsforge-library.html");
-  const aiPath = join18(outDir, "skillsforge-ai-index.html");
-  await writeFile9(jsonPath, `${JSON.stringify(index, null, 2)}
+  await mkdir12(outDir, { recursive: true });
+  const jsonPath = join23(outDir, "skillsforge-library.json");
+  const htmlPath = join23(outDir, "skillsforge-library.html");
+  const aiPath = join23(outDir, "skillsforge-ai-index.html");
+  await writeFile12(jsonPath, `${JSON.stringify(index, null, 2)}
 `);
-  await writeFile9(htmlPath, buildLibraryHtml(index, { apiEnabled: false, allowMutations: false }));
-  await writeFile9(aiPath, buildAiIndexHtml(index));
+  await writeFile12(htmlPath, buildLibraryHtml(index, { apiEnabled: false, allowMutations: false }));
+  await writeFile12(aiPath, buildAiIndexHtml(index));
   return {
     ok: index.ok,
     outDir,
@@ -20766,13 +21940,13 @@ async function resolveInstalledSkillTarget(options = {}) {
   const hosts = await detectHosts({ home: options.home });
   const host = hosts.find((item) => item.id === options.host);
   if (!host) throw new Error(`unknown host: ${options.host}`);
-  const skill = basename5(String(options.skill));
+  const skill = basename6(String(options.skill));
   if (skill !== options.skill || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(skill)) {
     throw new Error("skill must be a skill id");
   }
-  const target = resolve16(host.skillsDir, skill);
-  if (!isInside8(host.skillsDir, target)) throw new Error("resolved skill path escaped host skills directory");
-  return { host, skill, path: target, exists: await pathExists6(target) };
+  const target = resolve21(host.skillsDir, skill);
+  if (!isInside6(host.skillsDir, target)) throw new Error("resolved skill path escaped host skills directory");
+  return { host, skill, path: target, exists: await pathExists8(target) };
 }
 function summarizeSkill(root, skill, context) {
   const sourcePlugin = detectSourcePlugin(root, skill.directory, context.home);
@@ -20826,14 +22000,14 @@ function buildPackMap(catalog) {
   return map;
 }
 function detectSourcePlugin(root, directory, homeOption) {
-  if (isInside8(root, directory)) {
-    const rel = relative10(root, directory).replaceAll("\\", "/");
+  if (isInside6(root, directory)) {
+    const rel = relative12(root, directory).replaceAll("\\", "/");
     const parts = rel.split("/");
     const pluginsIndex = parts.indexOf("plugins");
     if (pluginsIndex >= 0 && parts[pluginsIndex + 1]) return parts[pluginsIndex + 1];
   }
-  const normalized = resolve16(directory).replaceAll("\\", "/");
-  const home = homeOption ? resolve16(homeOption) : process.env.USERPROFILE ? resolve16(process.env.USERPROFILE) : null;
+  const normalized = resolve21(directory).replaceAll("\\", "/");
+  const home = homeOption ? resolve21(homeOption) : process.env.USERPROFILE ? resolve21(process.env.USERPROFILE) : null;
   const homeRel = home ? relativeDisplayPath(home, directory) ?? normalized : normalized;
   const cacheParts = homeRel.split("/");
   const cacheIndex = cacheParts.findIndex((part, index) => part === "cache" && cacheParts[index - 1] === "plugins");
@@ -20852,7 +22026,7 @@ function detectSourcePlugin(root, directory, homeOption) {
   return "local";
 }
 function displayPath(root, directory, home) {
-  const resolved = resolve16(directory);
+  const resolved = resolve21(directory);
   const rootRel = relativeDisplayPath(root, resolved);
   if (rootRel !== null) return rootRel;
   const homeRel = home ? relativeDisplayPath(home, resolved) : null;
@@ -20860,8 +22034,8 @@ function displayPath(root, directory, home) {
   return resolved.replaceAll("\\", "/");
 }
 function relativeDisplayPath(parent, child) {
-  const parentPath = resolve16(parent).replaceAll("\\", "/").replace(/\/+$/, "");
-  const childPath = resolve16(child).replaceAll("\\", "/");
+  const parentPath = resolve21(parent).replaceAll("\\", "/").replace(/\/+$/, "");
+  const childPath = resolve21(child).replaceAll("\\", "/");
   const parentKey = process.platform === "win32" ? parentPath.toLowerCase() : parentPath;
   const childKey = process.platform === "win32" ? childPath.toLowerCase() : childPath;
   if (childKey === parentKey) return "";
@@ -21025,17 +22199,17 @@ var STOP_WORDS2 = /* @__PURE__ */ new Set([
 function safeScriptJson(value) {
   return JSON.stringify(value).replaceAll("</script", "<\\/script");
 }
-async function pathExists6(path) {
+async function pathExists8(path) {
   try {
-    await access12(path);
+    await access14(path);
     return true;
   } catch {
     return false;
   }
 }
-function isInside8(parent, candidate) {
-  const path = relative10(resolve16(parent), resolve16(candidate));
-  return path === "" || !path.startsWith(`..${sep12}`) && path !== "..";
+function isInside6(parent, candidate) {
+  const path = relative12(resolve21(parent), resolve21(candidate));
+  return path === "" || !path.startsWith(`..${sep10}`) && path !== "..";
 }
 function sendJson(response, payload) {
   response.setHeader("content-type", "application/json; charset=utf-8");
@@ -21053,1660 +22227,7 @@ async function readRequestJson(request) {
   return text ? JSON.parse(text) : {};
 }
 
-// lib/capabilities/powershell.mjs
-import { mkdir as mkdir10, writeFile as writeFile10 } from "node:fs/promises";
-import { join as join19, resolve as resolve17 } from "node:path";
-var POWERSHELL_HELPERS = Object.freeze([
-  {
-    name: "sf-status",
-    description: "Compact repo and SkillsForge status",
-    args: ["wb", "status", "--json"]
-  },
-  {
-    name: "sf-tree",
-    description: "Compact file tree",
-    args: ["wb", "tree"]
-  },
-  {
-    name: "sf-find",
-    description: "Token-friendly file finder",
-    args: ["wb", "find"]
-  },
-  {
-    name: "sf-grep",
-    description: "Token-friendly ripgrep wrapper",
-    args: ["wb", "grep"]
-  },
-  {
-    name: "sf-diff",
-    description: "Compact git diff summary",
-    args: ["wb", "diff"]
-  },
-  {
-    name: "sf-errors",
-    description: "Find likely error and TODO markers",
-    args: ["wb", "errors"]
-  },
-  {
-    name: "sf-bigfiles",
-    description: "List largest repo files",
-    args: ["wb", "bigfiles"]
-  },
-  {
-    name: "sf-recent",
-    description: "Recent git commits",
-    args: ["wb", "recent"]
-  },
-  {
-    name: "sf-ports",
-    description: "Listening port snapshot",
-    args: ["os-ports"]
-  },
-  {
-    name: "sf-proof",
-    description: "Trust proof command hints",
-    args: ["wb", "proof", "--json"]
-  },
-  {
-    name: "sf-lib",
-    description: "Build local skill library artifacts",
-    args: ["lib", "build", "--json"]
-  },
-  {
-    name: "sf-lib-update",
-    description: "Refresh local skill library after installing skills",
-    args: ["lib", "update", "--json"]
-  },
-  {
-    name: "sf-recommend",
-    description: "Session-aware skill and workflow recommendation",
-    args: ["lib", "recommend", "--json"]
-  },
-  {
-    name: "sf-workflow",
-    description: "Workflow catalog browser",
-    args: ["workflows", "recommend", "--json"]
-  },
-  {
-    name: "sf-auto",
-    description: "Read-only auto plan for a task",
-    args: ["auto", "plan", "--json"]
-  }
-]);
-async function exportPowerShellHelpers(root, options = {}) {
-  const outDir = resolve17(root, options.outDir ?? join19("artifacts", "powershell"));
-  const cliPath = resolve17(root, "plugins", "skillsforge", "bin", "skillsforge.mjs");
-  await mkdir10(outDir, { recursive: true });
-  const files = [];
-  for (const helper of POWERSHELL_HELPERS) {
-    const path = join19(outDir, `${helper.name}.ps1`);
-    await writeFile10(path, renderHelper(helper, cliPath));
-    files.push({ name: helper.name, path, description: helper.description });
-  }
-  const manifest = {
-    ok: true,
-    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
-    cli: cliPath,
-    helpers: files
-  };
-  await writeFile10(join19(outDir, "skillsforge-powershell.json"), `${JSON.stringify(manifest, null, 2)}
-`);
-  return { ok: true, outDir, files, manifest: join19(outDir, "skillsforge-powershell.json") };
-}
-function renderHelper(helper, cliPath) {
-  const baseArgs = helper.args.map((arg) => `'${escapeSingle(arg)}'`).join(", ");
-  return `# ${helper.description}
-# Generated by skillsforge ps export.
-param(
-  [Parameter(ValueFromRemainingArguments = $true)]
-  [string[]] $Args
-)
-
-$SfCli = '${escapeSingle(cliPath)}'
-$BaseArgs = @(${baseArgs})
-& node $SfCli @BaseArgs @Args
-exit $LASTEXITCODE
-`;
-}
-function escapeSingle(value) {
-  return String(value).replaceAll("'", "''");
-}
-
-// lib/capabilities/workbench.mjs
-init_skill_loader();
-import { access as access13, readdir as readdir9, stat as stat3 } from "node:fs/promises";
-import { spawn } from "node:child_process";
-import { join as join20, relative as relative11, resolve as resolve18 } from "node:path";
-var SKIP = /* @__PURE__ */ new Set([".git", ".codegraph", "node_modules", "dist", "artifacts", ".next", ".turbo"]);
-async function runWorkbench(root, task, options = {}) {
-  const full = options.full === true;
-  const limit = clampLimit3(options.limit, full ? 5e3 : 80, full ? 5e3 : 1e3);
-  switch (task) {
-    case "status":
-      return workbenchStatus(root);
-    case "tree":
-      return { ok: true, task, files: await listFiles(root, limit), limit };
-    case "find":
-      return workbenchFind(root, options.query ?? options.name ?? "", limit);
-    case "grep":
-      return workbenchGrep(root, options.query ?? "", limit, { full });
-    case "diff":
-      return workbenchDiff(root);
-    case "errors":
-      return workbenchGrep(root, options.query ?? "TODO|FIXME|ERROR|FAIL|throw new Error", limit, { regex: true, full });
-    case "bigfiles":
-      return workbenchBigFiles(root, limit);
-    case "recent":
-      return workbenchRecent(root, limit);
-    case "proof":
-      return workbenchProof(root);
-    default:
-      return { ok: false, task, error: `unknown wb task: ${task}` };
-  }
-}
-function formatWorkbenchText(payload) {
-  if (!payload.ok) return `${payload.error}
-`;
-  if (payload.task === "status") {
-    return [
-      `branch	${payload.branch}`,
-      `dirty	${payload.dirty}`,
-      `skills	${payload.skills}`,
-      `workflows	${payload.workflows}`,
-      ...payload.status.map((line) => `git	${line}`)
-    ].join("\n") + "\n";
-  }
-  if (payload.files) return payload.files.join("\n") + (payload.files.length ? "\n" : "");
-  if (payload.matches) return payload.matches.map((item) => `${item.file}:${item.line}:${item.text}`).join("\n") + (payload.matches.length ? "\n" : "");
-  if (payload.bigFiles) return payload.bigFiles.map((item) => `${item.bytes}	${item.path}`).join("\n") + (payload.bigFiles.length ? "\n" : "");
-  if (payload.lines) return payload.lines.join("\n") + (payload.lines.length ? "\n" : "");
-  if (payload.commands) return payload.commands.join("\n") + "\n";
-  return `${JSON.stringify(payload, null, 2)}
-`;
-}
-async function workbenchStatus(root) {
-  const [git, skillsResult, workflowsResult] = await Promise.all([
-    runProcess("git", ["status", "--short", "--branch"], { cwd: root }),
-    loadAllSkills(root).then((skills) => skills.length).catch(() => 0),
-    loadWorkflows(root).then((result) => result.workflows.length).catch(() => 0)
-  ]);
-  const lines = git.stdout.trim().split(/\r?\n/).filter(Boolean);
-  const branch = lines[0]?.replace(/^##\s*/, "") ?? "unknown";
-  return {
-    ok: git.status === 0,
-    task: "status",
-    branch,
-    dirty: lines.length > 1,
-    status: lines.slice(1),
-    skills: skillsResult,
-    workflows: workflowsResult
-  };
-}
-async function workbenchFind(root, query, limit) {
-  if (!query) return { ok: false, task: "find", error: "find requires --query or text" };
-  const needle = String(query).toLowerCase();
-  const matches = (await listFiles(root, 5e3)).filter((file) => file.toLowerCase().includes(needle));
-  const files = matches.slice(0, limit);
-  return { ok: true, task: "find", query, files, limit, truncated: matches.length > files.length };
-}
-async function workbenchGrep(root, query, limit, options = {}) {
-  if (!query) return { ok: false, task: "grep", error: "grep requires --query or text" };
-  const args = ["-n", "--glob", "!node_modules/**", "--glob", "!dist/**", "--glob", "!artifacts/**"];
-  if (!options.regex) args.push("-F");
-  args.push(String(query), ".");
-  const result = await runProcess("rg", args, { cwd: root, timeoutMs: 1e4 });
-  if (result.status > 1) return { ok: false, task: "grep", error: result.stderr || result.stdout };
-  const lines = result.stdout.split(/\r?\n/).filter(Boolean);
-  const matches = lines.slice(0, limit).map((line) => {
-    const [file, lineNo, ...rest] = line.split(":");
-    return { file, line: Number(lineNo), text: rest.join(":").slice(0, options.full ? 2e3 : 300) };
-  });
-  return { ok: true, task: "grep", query, matches, limit, truncated: lines.length > matches.length };
-}
-async function workbenchDiff(root) {
-  const [statResult, namesResult] = await Promise.all([
-    runProcess("git", ["diff", "--stat"], { cwd: root }),
-    runProcess("git", ["diff", "--name-only"], { cwd: root })
-  ]);
-  return {
-    ok: statResult.status === 0 && namesResult.status === 0,
-    task: "diff",
-    lines: [
-      ...namesResult.stdout.trim().split(/\r?\n/).filter(Boolean).map((line) => `file	${line}`),
-      ...statResult.stdout.trim().split(/\r?\n/).filter(Boolean).map((line) => `stat	${line}`)
-    ]
-  };
-}
-async function workbenchBigFiles(root, limit) {
-  const files = [];
-  await walkFiles(root, async (path) => {
-    const info = await stat3(path);
-    files.push({ path: relative11(root, path).replaceAll("\\", "/"), bytes: info.size });
-  });
-  files.sort((left, right) => right.bytes - left.bytes || left.path.localeCompare(right.path));
-  return { ok: true, task: "bigfiles", bigFiles: files.slice(0, limit), limit };
-}
-async function workbenchRecent(root, limit) {
-  const result = await runProcess("git", ["log", `-${limit}`, "--oneline", "--decorate"], { cwd: root });
-  return { ok: result.status === 0, task: "recent", lines: result.stdout.trim().split(/\r?\n/).filter(Boolean) };
-}
-async function workbenchProof(root) {
-  const commands = [
-    "node plugins/skillsforge/bin/skillsforge.mjs demo",
-    "node plugins/skillsforge/bin/skillsforge.mjs validate --all",
-    "node plugins/skillsforge/bin/skillsforge.mjs evidence --out artifacts/evidence",
-    "node plugins/skillsforge/bin/skillsforge.mjs lib build",
-    "node plugins/skillsforge/bin/skillsforge.mjs workflows list --json"
-  ];
-  return { ok: true, task: "proof", commands };
-}
-async function listFiles(root, limit) {
-  const files = [];
-  await walkFiles(root, (path) => {
-    if (files.length < limit) files.push(relative11(root, path).replaceAll("\\", "/"));
-  });
-  return files;
-}
-async function walkFiles(root, onFile) {
-  async function walk(dir) {
-    let entries;
-    try {
-      entries = await readdir9(dir, { withFileTypes: true });
-    } catch {
-      return;
-    }
-    for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
-      if (SKIP.has(entry.name)) continue;
-      const path = join20(dir, entry.name);
-      if (entry.isDirectory()) await walk(path);
-      else if (entry.isFile()) await onFile(path);
-    }
-  }
-  await walk(resolve18(root));
-}
-function runProcess(command, args, options = {}) {
-  return new Promise((resolveProcess) => {
-    const child = spawn(command, args, {
-      cwd: options.cwd ?? process.cwd(),
-      shell: false,
-      windowsHide: true
-    });
-    let stdout = "";
-    let stderr = "";
-    const timer = setTimeout(() => child.kill("SIGTERM"), options.timeoutMs ?? 3e4);
-    child.stdout?.on("data", (chunk) => {
-      stdout = (stdout + chunk.toString()).slice(-2e5);
-    });
-    child.stderr?.on("data", (chunk) => {
-      stderr = (stderr + chunk.toString()).slice(-2e5);
-    });
-    child.on("error", (error) => {
-      clearTimeout(timer);
-      resolveProcess({ status: 127, stdout, stderr: error.message });
-    });
-    child.on("close", (status) => {
-      clearTimeout(timer);
-      resolveProcess({ status: status ?? 1, stdout, stderr });
-    });
-  });
-}
-function clampLimit3(value, fallback, max = 1e3) {
-  return Math.max(1, Math.min(max, Number(value) || fallback));
-}
-
-// scripts/skillsforge-cli.mjs
-var modulePath2 = fileURLToPath5(import.meta.url);
-var modulePluginRoot = resolve21(dirname9(modulePath2), "..");
-async function pathExists8(path) {
-  try {
-    await access15(path);
-    return true;
-  } catch {
-    return false;
-  }
-}
-async function isPluginRoot(root) {
-  return await pathExists8(join23(root, ".claude-plugin", "plugin.json")) && await pathExists8(join23(root, "skills"));
-}
-async function isRepositoryRoot(root) {
-  return pathExists8(join23(root, "plugins", "skillsforge", ".claude-plugin", "plugin.json"));
-}
-async function resolveRuntimeRoot(options, { explicitPaths = false } = {}) {
-  if (options.root) return options.root;
-  if (explicitPaths) return process.cwd();
-  const cwd = process.cwd();
-  if (await isRepositoryRoot(cwd)) return cwd;
-  if (await isPluginRoot(modulePluginRoot)) return modulePluginRoot;
-  if (await isPluginRoot(cwd)) return cwd;
-  return cwd;
-}
-async function main(argv = process.argv.slice(2), options = {}) {
-  const command = argv[0];
-  if (!command || command === "help" || command === "--help") {
-    process.stdout.write(`usage: skillsforge <command> [options]
-
-Commands:
-  help                              Show this help
-  validate [paths...]               Validate skills (structure + capability policy when sidecar present)
-    --json                          Machine-readable diagnostics
-    --all                           Scan every production skill under plugins/*/skills
-    --allow-empty                   Allow empty production skill libraries
-    --profile <canonical|claude-code>
-                                    Validation profile (default: canonical)
-  doctor                            Plugin and installed-skill health checks
-    --json                          Machine-readable diagnostics
-  route --query <text>              Explainable skill routing for a query
-  forge --spec <file>               Deterministic skill generation from forge-spec
-    --dry-run                       Plan only (default when --write omitted)
-    --write                         Write SKILL.md + skillsforge.json
-    --force                         Overwrite an existing skill directory
-    --out <dir>                     Output skills root (default: plugin skills/)
-  receipt                           Build a trust receipt for packaged bytes
-    --out <file>                    Receipt path (default: dist/trust-receipt.json)
-    --package <dir>                 Package root to hash
-    --evaluation <file>             Routing evaluation report to embed
-    --require-evaluation            Fail if evaluation evidence is missing
-  verify-receipt <file>             Verify a trust receipt
-    --package <dir>                 Package root to re-hash
-    --evaluation <file>             External routing-report.json to check
-    --package-only                  Skip evaluation authenticity checks
-  enforce --policy <sidecar.json>   Decide PreToolUse allow/deny from stdin event JSON
-  eval                              Run holdout routing evaluation (P/R gate)
-  hosts [--json] [--home <dir>]     List universal AI CLI host targets and trust boundaries
-  install [skill-paths...]          Install skills into detected agent hosts
-    --hosts <ids>                   Comma list or all|detected: claude-code,cursor,codex,opencode,zcode,hermes,gemini
-    --custom-host <id>:<skills-dir> Add package-fidelity target under --home
-    --yes                           Non-interactive (requires --hosts or --custom-host)
-    --list                          Print detected hosts and exit
-    --dry-run                       Plan installs without writing
-    --force                         Overwrite existing skill directories
-    --json                          Machine-readable output
-    --home <dir>                    Override home directory (tests / custom roots)
-  package --host codex              Package one skill as a guarded Codex plugin
-    --skill <dir>                   Single skill directory (multi-skill inputs are rejected)
-    --out <dir>                     Output plugin directory
-    --dry-run                       Plan only (default when --write omitted)
-    --write                         Write the Codex plugin tree
-    --force                         Overwrite a non-empty --out directory
-  evidence --out <dir>              Emit deterministic trust/eval evidence bundle
-                                    (writes when --out is set; default CI path: artifacts/evidence)
-  vibe                              Magical moment: work stubs + catalog summary + quality sample
-    --json                          Machine-readable output
-  catalog                           List packs/profiles/skills
-    --pack <id>                     Filter by pack
-    --profile <id>                  List skills for profile
-    --search <text>                 Search skill ids
-    --json                          Machine-readable output
-  quality --skill <dir>             Score skill quality 0-100
-    --json
-  lint-skill --skill <dir>          Fail if quality below threshold
-    --threshold <n>                 Default 70
-    --hero                          Require \u226585
-  scaffold --name <id>              Scaffold original skill + sidecar + openai.yaml
-    --pack <id>                     Pack id (default eng)
-    --mode auto|explicit
-    --write                         Persist (default dry-run)
-    --force                         Overwrite
-  bench                             Measure route/validate latency \u2192 artifacts/bench/latest.json
-  scorecard                         Pack coverage + last bench
-  compose --workflow <file>         Run skill DAG from JSON workflow
-  stocktake                         Diff installed skills vs catalog
-  batch --pack <id> --action quality|validate|skillshield
-  pressure --skill <dir>            Run skill pressure fixtures
-  skillshield [--skill <dir>|--all] Scan skills for unsafe patterns
-  export-agents [--out <file>]      Write AGENTS.md from catalog/agents
-  capture --insight <text>          Append learning to artifacts/capture + docs/work/learning.md
-  forge-from-capture                Propose skill candidates from repeated learnings
-  compare --a <dir> --b <dir>       Diff two skill sidecars/descriptions
-  compare-skill --a <dir> --b <dir> Side-by-side sidecar vs policy (trust delta)
-  demo                              Judge path: unsafe deny \u2192 safe package \u2192 receipt
-  watch --skill <dir>               Re-quality on interval (single pass in CI)
-  wb <task>                         Token-friendly workbench: status/tree/find/grep/diff/errors/bigfiles/recent/proof
-    --json --limit <n> --full       Compact by default; --full raises safe output caps
-  lib <build|update|serve|check|recommend|remove>
-                                    Local skill library index, UI, recommendation, and removal preview
-  workflows <list|show|recommend|run|export-html>
-                                    Curated workflow catalog (dry-run execution only)
-  auto <plan|run>                    Recommend skill + workflow; run requires --read-only
-  ps export                         Export PowerShell sf-*.ps1 helper commands
-  os-env [--name <VAR>] [--json]     Inspect safe environment facts without dumping secrets
-  os-find --name <glob> [--root <dir>] [--json]
-                                    Cross-platform file finder with repo-safe defaults
-  os-ports [--json]                 Best-effort listening port snapshot
-  os-open <path-or-url> [--dry-run] [--json]
-                                    Open target via platform launcher
-  os-run [--yes|--dry-run] -- <cmd> [args...]
-                                    Agent-safe command runner; dry-run unless --yes
-  os-copy-path <path> [--json]      Resolve and print canonical path
-  os-clean --root <dir> [--json]    Dry-run cleanup candidate inventory only
-
-Exit codes: 0 success, 1 command failure, 2 invalid usage
-`);
-    return 0;
-  }
-  switch (command) {
-    case "validate":
-      return runValidate(argv.slice(1), options);
-    case "doctor":
-      return runDoctorCommand(argv.slice(1), options);
-    case "route":
-      return runRoute(argv.slice(1), options);
-    case "forge":
-      return runForge(argv.slice(1), options);
-    case "receipt":
-      return runReceipt(argv.slice(1), options);
-    case "verify-receipt":
-      return runVerifyReceipt(argv.slice(1), options);
-    case "enforce":
-      return runEnforce(argv.slice(1), options);
-    case "eval":
-      return runEvalCommand(argv.slice(1), options);
-    case "hosts":
-      return runHostsCommand(argv.slice(1), options);
-    case "install":
-      return runInstall(argv.slice(1), options);
-    case "package":
-      return runPackage(argv.slice(1), options);
-    case "evidence":
-      return runEvidence(argv.slice(1), options);
-    case "vibe":
-      return runVibeCommand(argv.slice(1), options);
-    case "catalog":
-      return runCatalogCommand(argv.slice(1), options);
-    case "quality":
-      return runQualityCommand(argv.slice(1), options);
-    case "lint-skill":
-      return runLintSkillCommand(argv.slice(1), options);
-    case "scaffold":
-      return runScaffoldCommand(argv.slice(1), options);
-    case "bench":
-      return runBenchCommand(argv.slice(1), options);
-    case "scorecard":
-      return runScorecardCommand(argv.slice(1), options);
-    case "compose":
-      return runComposeCommand(argv.slice(1), options);
-    case "stocktake":
-      return runStocktakeCommand(argv.slice(1), options);
-    case "batch":
-      return runBatchCommand(argv.slice(1), options);
-    case "pressure":
-      return runPressureCommand(argv.slice(1), options);
-    case "skillshield":
-      return runSkillShieldCommand(argv.slice(1), options);
-    case "export-agents":
-      return runExportAgentsCommand(argv.slice(1), options);
-    case "capture":
-      return runCaptureCommand(argv.slice(1), options);
-    case "forge-from-capture":
-      return runForgeFromCaptureCommand(argv.slice(1), options);
-    case "compare":
-      return runCompareCommand(argv.slice(1), options);
-    case "compare-skill":
-      return runCompareSkillCommand(argv.slice(1), options);
-    case "demo":
-      return runDemoCommand(argv.slice(1), options);
-    case "watch":
-      return runWatchCommand(argv.slice(1), options);
-    case "wb":
-      return runWorkbenchCommand(argv.slice(1), options);
-    case "lib":
-      return runLibCommand(argv.slice(1), options);
-    case "workflows":
-      return runWorkflowsCommand(argv.slice(1), options);
-    case "auto":
-      return runAutoCommand(argv.slice(1), options);
-    case "ps":
-      return runPsCommand(argv.slice(1), options);
-    case "os-env":
-      return runOsEnvCommand(argv.slice(1), options);
-    case "os-find":
-      return runOsFindCommand(argv.slice(1), options);
-    case "os-ports":
-      return runOsPortsCommand(argv.slice(1), options);
-    case "os-open":
-      return runOsOpenCommand(argv.slice(1), options);
-    case "os-run":
-      return runOsRunCommand(argv.slice(1), options);
-    case "os-copy-path":
-      return runOsCopyPathCommand(argv.slice(1), options);
-    case "os-clean":
-      return runOsCleanCommand(argv.slice(1), options);
-    default:
-      process.stderr.write(`unknown command: ${command}
-`);
-      return 2;
-  }
-}
-async function runValidate(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const all = consumeFlag(args, "--all");
-  const allowEmpty = consumeFlag(args, "--allow-empty");
-  const profile = consumeOption(args, "--profile");
-  if (profile === null) {
-    process.stderr.write("--profile requires a value\n");
-    return 2;
-  }
-  const resolvedProfile = profile ?? "canonical";
-  if (!["canonical", "claude-code"].includes(resolvedProfile)) {
-    process.stderr.write(`Unknown profile: ${resolvedProfile}
-`);
-    return 2;
-  }
-  const paths = args.filter((item) => !item.startsWith("--"));
-  const root = await resolveRuntimeRoot(options, { explicitPaths: paths.length > 0 });
-  const scanAll = paths.length === 0 || all;
-  const result = await verifySkillPaths(paths, {
-    root,
-    all: scanAll,
-    allowEmpty,
-    profile: resolvedProfile,
-    // Full install validate includes dependency graph; path-targeted validate stays local.
-    dependencies: scanAll
-  });
-  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  else process.stdout.write(result.text);
-  return result.ok ? 0 : 1;
-}
-function consumeFlag(values, flag) {
-  const index = values.indexOf(flag);
-  if (index === -1) return false;
-  values.splice(index, 1);
-  return true;
-}
-function consumeOption(values, flag) {
-  const index = values.indexOf(flag);
-  if (index === -1) return void 0;
-  const value = values[index + 1];
-  if (!value || value.startsWith("--")) {
-    values.splice(index, 1);
-    return null;
-  }
-  values.splice(index, 2);
-  return value;
-}
-function consumeOptions(values, flag) {
-  const picked = [];
-  for (; ; ) {
-    const index = values.indexOf(flag);
-    if (index === -1) return picked;
-    const value = values[index + 1];
-    if (!value || value.startsWith("--")) {
-      values.splice(index, 1);
-      return null;
-    }
-    picked.push(value);
-    values.splice(index, 2);
-  }
-}
-function resolveUserPath(root, value, allowAbsolute = false) {
-  return resolveUnderRoot(root, value, { allowAbsolute });
-}
-async function runDoctorCommand(argv, options) {
-  const json = argv.includes("--json");
-  const result = await runDoctor(await resolveRuntimeRoot(options));
-  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  else {
-    for (const check of result.checks) {
-      process.stdout.write(`${check.ok ? "PASS" : "FAIL"} ${check.name}: ${check.detail}
-`);
-    }
-  }
-  return result.ok ? 0 : 1;
-}
-async function runRoute(argv, options) {
-  const args = [...argv];
-  const pack = consumeOption(args, "--pack");
-  if (pack === null) {
-    process.stderr.write("--pack requires a value\n");
-    return 2;
-  }
-  const includeExplicit = consumeFlag(args, "--include-explicit");
-  const queryIndex = args.indexOf("--query");
-  const query = queryIndex >= 0 ? args[queryIndex + 1] : args.filter((item) => !item.startsWith("--")).join(" ");
-  if (!query) {
-    process.stderr.write("usage: skillsforge route --query <text> [--pack <id>] [--include-explicit]\n");
-    return 2;
-  }
-  const skills = await loadAllSkills(await resolveRuntimeRoot(options));
-  const result = routeQuery(query, skills, {
-    pack: pack ?? void 0,
-    includeExplicit: includeExplicit || Boolean(pack)
-  });
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return 0;
-}
-async function runForge(argv, options) {
-  const specIndex = argv.indexOf("--spec");
-  if (specIndex < 0 || !argv[specIndex + 1]) {
-    process.stderr.write("usage: skillsforge forge --spec <file> [--dry-run|--write] [--force] [--out <dir>]\n");
-    return 2;
-  }
-  const outIndex = argv.indexOf("--out");
-  const spec = JSON.parse(await readFile19(argv[specIndex + 1], "utf8"));
-  const root = await resolveRuntimeRoot(options);
-  const result = await forgeSkill(spec, {
-    write: argv.includes("--write"),
-    dryRun: !argv.includes("--write"),
-    force: argv.includes("--force"),
-    outRoot: outIndex >= 0 ? argv[outIndex + 1] : join23(root, ...await isPluginRoot(root) ? ["skills"] : ["plugins", "skillsforge", "skills"])
-  });
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function resolvePackageRoot(root, packageOption) {
-  if (packageOption) return resolve21(packageOption);
-  if (await isPluginRoot(root)) return root;
-  const distPackage = join23(root, "dist", "claude-code");
-  if (await pathExists8(join23(distPackage, ".claude-plugin", "plugin.json"))) return distPackage;
-  if (await isRepositoryRoot(root)) return join23(root, "plugins", "skillsforge");
-  return root;
-}
-async function runReceipt(argv, options) {
-  const args = [...argv];
-  const out = consumeOption(args, "--out");
-  if (out === null) {
-    process.stderr.write("--out requires a value\n");
-    return 2;
-  }
-  const packageOption = consumeOption(args, "--package");
-  if (packageOption === null) {
-    process.stderr.write("--package requires a value\n");
-    return 2;
-  }
-  const evaluationOption = consumeOption(args, "--evaluation");
-  if (evaluationOption === null) {
-    process.stderr.write("--evaluation requires a value\n");
-    return 2;
-  }
-  const requireEvaluation = consumeFlag(args, "--require-evaluation");
-  const root = await resolveRuntimeRoot(options);
-  const packageRoot = await resolvePackageRoot(root, packageOption);
-  const receiptOut = out ?? join23(root, "dist", "trust-receipt.json");
-  const skills = await loadAllSkills(packageRoot);
-  const graph = analyzeDependencies(skills);
-  if (graph.cycles.length || graph.missing.length || graph.duplicates.length) {
-    process.stderr.write(`${JSON.stringify(graph, null, 2)}
-`);
-    return 1;
-  }
-  let evaluation = null;
-  let reportBytes = null;
-  const evaluationPath = evaluationOption ?? join23(root, "artifacts", "evaluation", "routing-report.json");
-  try {
-    reportBytes = await readFile19(evaluationPath);
-    evaluation = normalizeEvaluation(JSON.parse(reportBytes.toString("utf8")), { reportBytes });
-  } catch {
-  }
-  const result = await buildReceipt(skills, {
-    evaluation,
-    packageRoot,
-    reportBytes,
-    requireEvaluation
-  });
-  if (!result.ok) {
-    process.stderr.write(`${JSON.stringify(result, null, 2)}
-`);
-    return 1;
-  }
-  await mkdir13(dirname9(receiptOut), { recursive: true });
-  await writeFile13(receiptOut, result.text);
-  process.stdout.write(`${JSON.stringify({
-    ok: true,
-    out: receiptOut,
-    receiptHash: result.receiptHash,
-    packageHash: result.receipt.package?.packageHash ?? null
-  }, null, 2)}
-`);
-  return 0;
-}
-async function runVerifyReceipt(argv, options) {
-  const args = [...argv];
-  const packageOnly = consumeFlag(args, "--package-only");
-  const packageOption = consumeOption(args, "--package");
-  if (packageOption === null) {
-    process.stderr.write("--package requires a value\n");
-    return 2;
-  }
-  const evaluationOption = consumeOption(args, "--evaluation");
-  if (evaluationOption === null) {
-    process.stderr.write("--evaluation requires a value\n");
-    return 2;
-  }
-  const receiptSha256 = consumeOption(args, "--receipt-sha256");
-  if (receiptSha256 === null) {
-    process.stderr.write("--receipt-sha256 requires a value\n");
-    return 2;
-  }
-  const path = args.find((item) => !item.startsWith("--"));
-  if (!path) {
-    process.stderr.write("usage: skillsforge verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only] [--receipt-sha256 <hash>]\n");
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  const packageRoot = await resolvePackageRoot(root, packageOption);
-  const skills = await loadAllSkills(packageRoot);
-  const verifyOptions = {
-    packageRoot,
-    packageOnly,
-    requireEvaluation: !packageOnly,
-    expectedReceiptHash: receiptSha256 || void 0
-  };
-  if (!packageOnly && evaluationOption) {
-    verifyOptions.evaluationPath = resolve21(evaluationOption);
-  } else if (!packageOnly) {
-    const defaultEval = join23(root, "artifacts", "evaluation", "routing-report.json");
-    if (await pathExists8(defaultEval)) verifyOptions.evaluationPath = defaultEval;
-  }
-  const result = await verifyReceipt(path, skills, verifyOptions);
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function runEnforce(argv) {
-  const policyIndex = argv.indexOf("--policy");
-  if (policyIndex < 0 || !argv[policyIndex + 1]) {
-    process.stderr.write("usage: skillsforge enforce --policy <sidecar.json>\n");
-    return 2;
-  }
-  const chunks = [];
-  for await (const chunk of process.stdin) chunks.push(chunk);
-  const event = JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
-  const policyPath = resolve21(argv[policyIndex + 1]);
-  const policy = JSON.parse(await readFile19(policyPath, "utf8"));
-  policy.__skillRoot = dirname9(policyPath);
-  policy.__projectRoot = event?.cwd || process.env.CLAUDE_PROJECT_DIR || process.env.CLAUDE_CWD || process.cwd();
-  const decision = enforcePolicy(event, policy);
-  if (decision) process.stdout.write(`${JSON.stringify(decision)}
-`);
-  return 0;
-}
-async function runEvalCommand(argv, options) {
-  const { runEvaluation: runEvaluation2, HOLDOUT_PRECISION_MIN: HOLDOUT_PRECISION_MIN2, HOLDOUT_RECALL_MIN: HOLDOUT_RECALL_MIN2 } = await init_eval().then(() => eval_exports);
-  const report = await runEvaluation2({ root: await resolveRuntimeRoot(options) });
-  process.stdout.write(`${JSON.stringify(report, null, 2)}
-`);
-  return report.precision >= HOLDOUT_PRECISION_MIN2 && report.recall >= HOLDOUT_RECALL_MIN2 ? 0 : 1;
-}
-async function runHostsCommand(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const homeOption = consumeOption(args, "--home");
-  if (homeOption === null) {
-    process.stderr.write("--home requires a value\n");
-    return 2;
-  }
-  if (args.some((item) => item.startsWith("--"))) {
-    process.stderr.write(`unknown hosts option: ${args.find((item) => item.startsWith("--"))}
-`);
-    return 2;
-  }
-  if (args.length) {
-    process.stderr.write(`unknown hosts argument: ${args[0]}
-`);
-    return 2;
-  }
-  const home = homeOption ? resolve21(homeOption) : options.home;
-  const hosts = await detectHosts({ home });
-  const registry = HOST_REGISTRY.map((host) => ({
-    id: host.id,
-    label: host.label,
-    fidelity: host.fidelity,
-    runtimeEnforced: host.runtimeEnforced,
-    usesSidecar: host.usesSidecar,
-    installHint: host.installHint
-  }));
-  const examples = [
-    "skillsforge install --hosts codex,claude-code --yes --dry-run",
-    "skillsforge install --hosts all --yes --dry-run",
-    "skillsforge install --custom-host my-agent:.my-agent/skills --yes --dry-run"
-  ];
-  const payload = { ok: true, registry, hosts, examples };
-  if (json) {
-    process.stdout.write(`${JSON.stringify(payload, null, 2)}
-`);
-    return 0;
-  }
-  process.stdout.write("Universal AI CLI hosts\n");
-  for (const host of hosts) {
-    const mark = host.detected ? "detected" : "missing";
-    const policy = host.runtimeEnforced ? "runtime-policy" : "package-only";
-    process.stdout.write(`${host.id}	${mark}	${host.fidelity}	${policy}	${host.skillsDir}
-`);
-    process.stdout.write(`  ${host.installHint}
-`);
-  }
-  process.stdout.write("Examples:\n");
-  for (const example of examples) process.stdout.write(`  ${example}
-`);
-  return 0;
-}
-async function runInstall(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const list = consumeFlag(args, "--list");
-  const yes = consumeFlag(args, "--yes");
-  const dryRun = consumeFlag(args, "--dry-run");
-  const force = consumeFlag(args, "--force");
-  const customSpecs = consumeOptions(args, "--custom-host");
-  if (customSpecs === null) {
-    process.stderr.write("--custom-host requires <id>:<skills-dir>\n");
-    return 2;
-  }
-  const hostsOption = consumeOption(args, "--hosts");
-  if (hostsOption === null) {
-    process.stderr.write("--hosts requires a value\n");
-    return 2;
-  }
-  const homeOption = consumeOption(args, "--home");
-  if (homeOption === null) {
-    process.stderr.write("--home requires a value\n");
-    return 2;
-  }
-  const home = homeOption ? resolve21(homeOption) : options.home;
-  const skillPaths = args.filter((item) => !item.startsWith("--"));
-  const root = await resolveRuntimeRoot(options, { explicitPaths: skillPaths.length > 0 });
-  const detected = await detectHosts({ home });
-  if (list) {
-    const payload = {
-      ok: true,
-      registry: HOST_REGISTRY.map((host) => ({
-        id: host.id,
-        label: host.label,
-        fidelity: host.fidelity,
-        runtimeEnforced: host.runtimeEnforced,
-        usesSidecar: host.usesSidecar,
-        installHint: host.installHint
-      })),
-      hosts: detected
-    };
-    if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
-`);
-    else {
-      for (const host of detected) {
-        const mark = host.detected ? "detected" : "missing";
-        process.stdout.write(`${host.id}	${mark}	${host.fidelity}	${host.skillsDir}
-`);
-      }
-    }
-    return 0;
-  }
-  let hostIds = hostsOption ? hostsOption.split(",").map((item) => item.trim()).filter(Boolean) : null;
-  if (hostIds?.length === 1 && hostIds[0] === "all") {
-    hostIds = HOST_REGISTRY.map((host) => host.id);
-  } else if (hostIds?.length === 1 && hostIds[0] === "detected") {
-    hostIds = detected.filter((host) => host.detected).map((host) => host.id);
-  } else if (hostIds?.includes("all") || hostIds?.includes("detected")) {
-    process.stderr.write("--hosts all|detected cannot be combined with other ids\n");
-    return 2;
-  }
-  let customHosts;
-  try {
-    customHosts = customSpecs.map((spec) => buildCustomHost(spec, { home }));
-  } catch (error) {
-    process.stderr.write(`${error.message}
-`);
-    return 2;
-  }
-  if (!hostIds) {
-    if (customHosts.length) {
-      hostIds = [];
-    } else if (yes) {
-      process.stderr.write("install --yes requires --hosts <ids> or --custom-host <id>:<skills-dir>\n");
-      return 2;
-    } else {
-      const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
-      if (!interactive) {
-        process.stderr.write("usage: skillsforge install --hosts <ids> --yes [skill-paths...]\n");
-        process.stderr.write("       (interactive picker requires a TTY; use --list to see hosts)\n");
-        return 2;
-      }
-      try {
-        const picked = await pickHosts(detected);
-        if (picked == null) {
-          process.stderr.write("install aborted\n");
-          return 1;
-        }
-        hostIds = picked;
-      } catch (error) {
-        process.stderr.write(`${error.message}
-`);
-        return 2;
-      }
-    }
-  }
-  if (!hostIds.length && !customHosts.length) {
-    process.stderr.write("no hosts selected\n");
-    return 1;
-  }
-  const selection = hostIds.length ? await resolveHostSelection(hostIds, { home }) : { selected: [], unknown: [], all: detected };
-  if (selection.unknown.length) {
-    process.stderr.write(`unknown hosts: ${selection.unknown.join(", ")}
-`);
-    process.stderr.write(`known: ${HOST_REGISTRY.map((host) => host.id).join(", ")} or --custom-host <id>:<skills-dir>
-`);
-    return 2;
-  }
-  const selectedHosts = [...selection.selected, ...customHosts];
-  const result = await installSkills({
-    hosts: selectedHosts,
-    home,
-    root,
-    skillPaths: skillPaths.length ? skillPaths : void 0,
-    dryRun,
-    force
-  });
-  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  else {
-    if (!result.ok) {
-      process.stdout.write(`FAIL install: ${result.error ?? "unknown"}
-`);
-      if (result.validation?.text) process.stdout.write(result.validation.text);
-    } else {
-      for (const item of result.installs) {
-        process.stdout.write(`${item.status.toUpperCase()} ${item.host}/${item.skill} -> ${item.dir}
-`);
-      }
-      process.stdout.write(`OK install (${result.dryRun ? "dry-run" : "wrote"} ${result.installs.length} target(s))
-`);
-    }
-  }
-  return result.ok ? 0 : 1;
-}
-async function runPackage(argv, options) {
-  const args = [...argv];
-  const host = consumeOption(args, "--host");
-  if (host === null) {
-    process.stderr.write("--host requires a value\n");
-    return 2;
-  }
-  const skill = consumeOption(args, "--skill");
-  if (skill === null) {
-    process.stderr.write("--skill requires a value\n");
-    return 2;
-  }
-  const out = consumeOption(args, "--out");
-  if (out === null) {
-    process.stderr.write("--out requires a value\n");
-    return 2;
-  }
-  const write = consumeFlag(args, "--write");
-  consumeFlag(args, "--dry-run");
-  const force = consumeFlag(args, "--force");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  if (!host || !skill || !out) {
-    process.stderr.write("usage: skillsforge package --host codex --skill <dir> --out <dir> [--force] [--dry-run|--write]\n");
-    return 2;
-  }
-  if (host !== "codex") {
-    process.stderr.write(`unsupported package host: ${host} (supported: codex)
-`);
-    return 2;
-  }
-  if (args.some((item) => item.startsWith("--"))) {
-    process.stderr.write(`unknown package option: ${args.find((item) => item.startsWith("--"))}
-`);
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  let skillDir;
-  let outDir;
-  try {
-    skillDir = resolveUnderRoot(root, skill, { allowAbsolute });
-    outDir = resolveUnderRoot(root, out, { allowAbsolute });
-  } catch (error) {
-    process.stderr.write(`${error.message}
-`);
-    return 1;
-  }
-  const result = await packageCodexPlugin({
-    skillDir,
-    outDir,
-    write,
-    dryRun: !write,
-    force
-  });
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function runEvidence(argv, options) {
-  const args = [...argv];
-  const out = consumeOption(args, "--out");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  if (out === null) {
-    process.stderr.write("--out requires a value\n");
-    return 2;
-  }
-  if (!out) {
-    process.stderr.write("usage: skillsforge evidence --out <dir>\n");
-    return 2;
-  }
-  if (args.some((item) => item.startsWith("--"))) {
-    process.stderr.write(`unknown evidence option: ${args.find((item) => item.startsWith("--"))}
-`);
-    return 2;
-  }
-  const { buildEvidenceBundleWithPackageMeta: buildEvidenceBundleWithPackageMeta2 } = await Promise.resolve().then(() => (init_evidence(), evidence_exports));
-  const root = await resolveRuntimeRoot(options);
-  let outDir;
-  try {
-    outDir = resolveUserPath(root, out, allowAbsolute);
-  } catch (error) {
-    process.stderr.write(`${error.message}
-`);
-    return 1;
-  }
-  const result = await buildEvidenceBundleWithPackageMeta2({
-    root,
-    outDir,
-    write: true
-  });
-  process.stdout.write(`${JSON.stringify({
-    ok: result.ok,
-    outDir: result.outDir,
-    bundleHash: result.bundleHash,
-    files: result.files
-  }, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function runVibeCommand(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const root = await resolveRuntimeRoot(options);
-  const result = await runVibe(root, { json });
-  if (json) process.stdout.write(`${JSON.stringify(result.data, null, 2)}
-`);
-  else process.stdout.write(result.text);
-  return result.ok ? 0 : 1;
-}
-async function runCatalogCommand(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const pack = consumeOption(args, "--pack");
-  const profile = consumeOption(args, "--profile");
-  const search = consumeOption(args, "--search");
-  if (pack === null || profile === null || search === null) {
-    process.stderr.write("option requires a value\n");
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  const { catalog } = await loadCatalog(root);
-  let payload;
-  if (search) payload = { search, hits: searchCatalog(catalog, search) };
-  else if (pack) payload = { pack, skills: skillsForPack(catalog, pack) };
-  else if (profile) payload = { profile, skills: skillsForProfile(catalog, profile) };
-  else {
-    payload = {
-      stats: catalogStats(catalog),
-      packs: listPacks(catalog),
-      profiles: listProfiles(catalog)
-    };
-  }
-  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
-`);
-  else {
-    process.stdout.write(`${JSON.stringify(payload, null, 2)}
-`);
-  }
-  return 0;
-}
-async function runQualityCommand(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const skill = consumeOption(args, "--skill");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  if (!skill) {
-    process.stderr.write("usage: skillsforge quality --skill <dir>\n");
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  let skillDir;
-  try {
-    skillDir = resolveUserPath(root, skill, allowAbsolute);
-  } catch (error) {
-    process.stderr.write(`${error.message}
-`);
-    return 1;
-  }
-  const result = await scoreSkillQuality(skillDir, { root });
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return result.pass ? 0 : 1;
-}
-async function runLintSkillCommand(argv, options) {
-  const args = [...argv];
-  const skill = consumeOption(args, "--skill");
-  const thresholdRaw = consumeOption(args, "--threshold");
-  const hero = consumeFlag(args, "--hero");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  if (!skill) {
-    process.stderr.write("usage: skillsforge lint-skill --skill <dir> [--threshold n] [--hero]\n");
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  let skillDir;
-  try {
-    skillDir = resolveUserPath(root, skill, allowAbsolute);
-  } catch (error) {
-    process.stderr.write(`${error.message}
-`);
-    return 1;
-  }
-  const result = await lintSkill(skillDir, {
-    root,
-    threshold: thresholdRaw ? Number(thresholdRaw) : 70,
-    hero
-  });
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function runScaffoldCommand(argv, options) {
-  const args = [...argv];
-  const name = consumeOption(args, "--name");
-  const pack = consumeOption(args, "--pack") ?? "eng";
-  const mode = consumeOption(args, "--mode") ?? "explicit";
-  const write = consumeFlag(args, "--write");
-  const force = consumeFlag(args, "--force");
-  if (!name) {
-    process.stderr.write("usage: skillsforge scaffold --name <id> [--pack <id>] [--mode auto|explicit] [--write] [--force]\n");
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  const result = await scaffoldSkill(root, { name, pack, mode }, { write, force, dryRun: !write });
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function runBenchCommand(argv, options) {
-  const root = await resolveRuntimeRoot(options);
-  const result = await runBench(root);
-  process.stdout.write(`${JSON.stringify(result.summary, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function runScorecardCommand(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const root = await resolveRuntimeRoot(options);
-  const result = await runScorecard(root);
-  if (json) {
-    process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  } else {
-    process.stdout.write(`${formatPackScorecard(result, { color: true })}
-`);
-    process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  }
-  return 0;
-}
-async function runComposeCommand(argv, options) {
-  const args = [...argv];
-  const workflow = consumeOption(args, "--workflow");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  if (!workflow) {
-    process.stderr.write("usage: skillsforge compose --workflow <file>\n");
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  let workflowPath;
-  try {
-    workflowPath = resolveUnderRoot(root, workflow, { allowAbsolute });
-  } catch (error) {
-    process.stderr.write(`${error.message}
-`);
-    return 1;
-  }
-  const result = await runCompose(root, workflowPath);
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function runStocktakeCommand(argv, options) {
-  const root = await resolveRuntimeRoot(options);
-  const result = await runStocktake(root);
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return result.missing.length === 0 ? 0 : 1;
-}
-async function runBatchCommand(argv, options) {
-  const args = [...argv];
-  const pack = consumeOption(args, "--pack");
-  const action = consumeOption(args, "--action") ?? "quality";
-  if (!pack) {
-    process.stderr.write("usage: skillsforge batch --pack <id> --action quality|validate|skillshield\n");
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  const { catalog } = await loadCatalog(root);
-  const ids = skillsForPack(catalog, pack) ?? [];
-  const reports = [];
-  for (const id of ids) {
-    const dir = join23(root, "plugins", "skillsforge", "skills", id);
-    if (!await pathExists8(dir)) {
-      reports.push({ id, ok: false, error: "missing" });
-      continue;
-    }
-    if (action === "quality") reports.push({ id, ...await scoreSkillQuality(dir, { root }) });
-    else if (action === "skillshield") reports.push({ id, ...await runSkillShield(dir, { root }) });
-    else {
-      const { verifySkillPaths: verifySkillPaths2 } = await Promise.resolve().then(() => (init_verify(), verify_exports));
-      const v = await verifySkillPaths2([dir], { root, profile: "claude-code" });
-      reports.push({ id, ok: v.ok });
-    }
-  }
-  const ok = reports.every((r) => r.ok || r.pass);
-  process.stdout.write(`${JSON.stringify({ pack, action, ok, reports }, null, 2)}
-`);
-  return ok ? 0 : 1;
-}
-async function runPressureCommand(argv, options) {
-  const args = [...argv];
-  const skill = consumeOption(args, "--skill");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  if (!skill) {
-    process.stderr.write("usage: skillsforge pressure --skill <dir>\n");
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  let skillDir;
-  try {
-    skillDir = resolveUserPath(root, skill, allowAbsolute);
-  } catch (error) {
-    process.stderr.write(`${error.message}
-`);
-    return 1;
-  }
-  const result = await runPressure(skillDir);
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function runSkillShieldCommand(argv, options) {
-  const args = [...argv];
-  const all = consumeFlag(args, "--all");
-  const skill = consumeOption(args, "--skill");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  const root = await resolveRuntimeRoot(options);
-  if (all) {
-    const skills = await loadAllSkills(root);
-    const result = await runSkillShieldMany(skills.map((s) => s.directory), { root });
-    process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-    return result.ok ? 0 : 1;
-  }
-  if (!skill) {
-    process.stderr.write("usage: skillsforge skillshield --skill <dir> | --all\n");
-    return 2;
-  }
-  try {
-    const result = await runSkillShield(resolveUserPath(root, skill, allowAbsolute), { root });
-    process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-    return result.ok ? 0 : 1;
-  } catch (error) {
-    process.stderr.write(`${error.message}
-`);
-    return 1;
-  }
-}
-async function runExportAgentsCommand(argv, options) {
-  const args = [...argv];
-  const out = consumeOption(args, "--out");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  const root = await resolveRuntimeRoot(options);
-  const result = await exportAgentsMd(root, {
-    out: out ?? void 0,
-    allowAbsolute
-  });
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function runCaptureCommand(argv, options) {
-  const args = [...argv];
-  const insight = consumeOption(args, "--insight");
-  const key = consumeOption(args, "--key");
-  if (!insight) {
-    process.stderr.write("usage: skillsforge capture --insight <text> [--key <slug>]\n");
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  const result = await captureLearning(root, { insight, key: key ?? void 0 });
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function runForgeFromCaptureCommand(argv, options) {
-  const root = await resolveRuntimeRoot(options);
-  const result = await forgeFromCapture(root);
-  process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function runCompareCommand(argv, options) {
-  const args = [...argv];
-  const a = consumeOption(args, "--a");
-  const b = consumeOption(args, "--b");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  if (!a || !b) {
-    process.stderr.write("usage: skillsforge compare --a <dir> --b <dir>\n");
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  let leftDir;
-  let rightDir;
-  try {
-    leftDir = resolveUnderRoot(root, a, { allowAbsolute });
-    rightDir = resolveUnderRoot(root, b, { allowAbsolute });
-  } catch (error) {
-    process.stderr.write(`${error.message}
-`);
-    return 1;
-  }
-  const left = await loadSkill(leftDir, { root });
-  const right = await loadSkill(rightDir, { root });
-  const payload = {
-    a: { name: left.name, description: left.description, routing: left.sidecar?.routing },
-    b: { name: right.name, description: right.description, routing: right.sidecar?.routing },
-    sameDescription: left.description === right.description,
-    sameTriggers: JSON.stringify(left.sidecar?.routing?.triggers) === JSON.stringify(right.sidecar?.routing?.triggers)
-  };
-  process.stdout.write(`${JSON.stringify(payload, null, 2)}
-`);
-  return 0;
-}
-async function runCompareSkillCommand(argv, options) {
-  const args = [...argv];
-  const a = consumeOption(args, "--a");
-  const b = consumeOption(args, "--b");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  if (!a || !b) {
-    process.stderr.write("usage: skillsforge compare-skill --a <dir> --b <dir>\n");
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  let leftDir;
-  let rightDir;
-  try {
-    leftDir = resolveUnderRoot(root, a, { allowAbsolute });
-    rightDir = resolveUnderRoot(root, b, { allowAbsolute });
-  } catch (error) {
-    process.stderr.write(`${error.message}
-`);
-    return 1;
-  }
-  const payload = await compareSkillTrust(root, leftDir, rightDir);
-  process.stdout.write(`${JSON.stringify(payload, null, 2)}
-`);
-  return 0;
-}
-async function runDemoCommand(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const root = await resolveRuntimeRoot(options);
-  const result = await runJudgeDemo(root, { color: !json });
-  if (result.scoreboard && !json) {
-    process.stdout.write(`${result.scoreboard}
-
-`);
-  }
-  process.stdout.write(`${JSON.stringify({
-    ok: result.ok,
-    elapsedMs: result.elapsedMs,
-    underBudget: result.underBudget,
-    falseAllow: result.falseAllow,
-    receiptHash: result.receiptHash,
-    evidencePath: result.evidencePath,
-    urls: result.urls,
-    steps: result.steps,
-    error: result.error
-  }, null, 2)}
-`);
-  return result.ok ? 0 : 1;
-}
-async function runOsEnvCommand(argv) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const name = consumeOption(args, "--name");
-  if (name === null) return usage("--name requires a value");
-  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
-  if (name) {
-    const exists = Object.hasOwn(process.env, name);
-    return writeOsResult({
-      ok: exists,
-      command: "os-env",
-      name,
-      exists,
-      value: exists ? process.env[name] : null
-    }, json, ({ value }) => `${value ?? ""}
-`, exists ? 0 : 1);
-  }
-  const pathEntries = String(process.env.PATH ?? process.env.Path ?? "").split(process.platform === "win32" ? ";" : ":").filter(Boolean);
-  return writeOsResult({
-    ok: true,
-    command: "os-env",
-    platform: process.platform,
-    arch: process.arch,
-    node: process.version,
-    cwd: process.cwd(),
-    shell: process.env.SHELL ?? process.env.ComSpec ?? null,
-    home: process.env.HOME ?? process.env.USERPROFILE ?? null,
-    pathEntries,
-    envKeys: Object.keys(process.env).sort()
-  }, json, (payload) => [
-    `platform=${payload.platform}`,
-    `arch=${payload.arch}`,
-    `node=${payload.node}`,
-    `cwd=${payload.cwd}`,
-    `shell=${payload.shell ?? ""}`,
-    `pathEntries=${payload.pathEntries.length}`,
-    `envKeys=${payload.envKeys.length}`
-  ].join("\n") + "\n");
-}
-async function runOsFindCommand(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  const name = consumeOption(args, "--name");
-  const rootOption = consumeOption(args, "--root") ?? ".";
-  const limitValue = consumeOption(args, "--limit") ?? "200";
-  if (name === null) return usage("--name requires a value");
-  if (rootOption === null) return usage("--root requires a value");
-  if (limitValue === null) return usage("--limit requires a value");
-  if (!name) return usage("usage: skillsforge os-find --name <glob> [--root <dir>] [--json]");
-  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
-  const repoRoot = await resolveRuntimeRoot(options);
-  let root;
-  try {
-    root = resolveUserPath(repoRoot, rootOption, allowAbsolute);
-  } catch (error) {
-    return failOsResult("os-find", error.message, json);
-  }
-  const limit = Math.max(1, Math.min(1e3, Number(limitValue) || 200));
-  const regex = globToRegExp(name);
-  const matches = [];
-  await walkFind(root, root, regex, matches, limit);
-  return writeOsResult({
-    ok: true,
-    command: "os-find",
-    root,
-    pattern: name,
-    limit,
-    truncated: matches.length >= limit,
-    matches
-  }, json, (payload) => payload.matches.map((item) => `${item.type}	${item.path}`).join("\n") + (payload.matches.length ? "\n" : ""));
-}
-async function runOsPortsCommand(argv) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
-  const attempts = process.platform === "win32" ? [["netstat", ["-ano", "-p", "tcp"]]] : [["lsof", ["-nP", "-iTCP", "-sTCP:LISTEN"]], ["netstat", ["-an"]]];
-  for (const [command, commandArgs] of attempts) {
-    const result = await runProcess2(command, commandArgs, { timeoutMs: 5e3 });
-    if (result.status === 0 && result.stdout.trim()) {
-      const lines = result.stdout.split(/\r?\n/).filter(Boolean).slice(0, 200);
-      return writeOsResult({
-        ok: true,
-        command: "os-ports",
-        probe: [command, ...commandArgs].join(" "),
-        lines
-      }, json, (payload) => payload.lines.join("\n") + "\n");
-    }
-  }
-  return failOsResult("os-ports", "no port probe command succeeded", json);
-}
-async function runOsOpenCommand(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const dryRun = consumeFlag(args, "--dry-run");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  const target = args.shift();
-  if (!target) return usage("usage: skillsforge os-open <path-or-url> [--dry-run] [--json]");
-  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
-  const repoRoot = await resolveRuntimeRoot(options);
-  let resolved = target;
-  if (!isUrlLike(target)) {
-    try {
-      resolved = resolveUserPath(repoRoot, target, allowAbsolute);
-    } catch (error) {
-      return failOsResult("os-open", error.message, json);
-    }
-  }
-  const launcher = platformOpenCommand(resolved);
-  const payload = {
-    ok: true,
-    command: "os-open",
-    dryRun,
-    target: resolved,
-    launcher: [launcher.command, ...launcher.args]
-  };
-  if (dryRun) {
-    return writeOsResult(payload, json, (item) => `${item.launcher.join(" ")}
-`);
-  }
-  const result = await runProcess2(launcher.command, launcher.args, { timeoutMs: 1e4 });
-  return writeOsResult({ ...payload, result }, json, () => result.stderr || result.stdout || "", result.status === 0 ? 0 : 1);
-}
-async function runOsRunCommand(argv, options) {
-  const split = splitCommandArgs(argv);
-  const args = [...split.options];
-  const json = consumeFlag(args, "--json");
-  const dryRunFlag = consumeFlag(args, "--dry-run");
-  const yes = consumeFlag(args, "--yes");
-  const cwdOption = consumeOption(args, "--cwd") ?? ".";
-  const timeoutValue = consumeOption(args, "--timeout-ms") ?? "30000";
-  if (cwdOption === null) return usage("--cwd requires a value");
-  if (timeoutValue === null) return usage("--timeout-ms requires a value");
-  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
-  if (split.command.length === 0) return usage("usage: skillsforge os-run [--yes|--dry-run] -- <cmd> [args...]");
-  const root = await resolveRuntimeRoot(options);
-  let cwd;
-  try {
-    cwd = resolveUserPath(root, cwdOption, true);
-  } catch (error) {
-    return failOsResult("os-run", error.message, json);
-  }
-  const [command, ...commandArgs] = split.command;
-  const timeoutMs = Math.max(1e3, Math.min(3e5, Number(timeoutValue) || 3e4));
-  const dryRun = dryRunFlag || !yes;
-  const payload = {
-    ok: true,
-    command: "os-run",
-    dryRun,
-    cwd,
-    timeoutMs,
-    argv: [command, ...commandArgs]
-  };
-  if (dryRun) {
-    return writeOsResult(payload, json, (item) => `${item.argv.join(" ")}
-`);
-  }
-  const result = await runProcess2(command, commandArgs, { cwd, timeoutMs });
-  return writeOsResult({ ...payload, result, ok: result.status === 0 }, json, () => result.stdout + result.stderr, result.status === 0 ? 0 : 1);
-}
-async function runOsCopyPathCommand(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  const target = args.shift();
-  if (!target) return usage("usage: skillsforge os-copy-path <path> [--json]");
-  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
-  const root = await resolveRuntimeRoot(options);
-  try {
-    const resolved = resolveUserPath(root, target, allowAbsolute);
-    return writeOsResult({ ok: true, command: "os-copy-path", path: resolved }, json, (payload) => `${payload.path}
-`);
-  } catch (error) {
-    return failOsResult("os-copy-path", error.message, json);
-  }
-}
-async function runOsCleanCommand(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  const rootOption = consumeOption(args, "--root") ?? ".";
-  if (rootOption === null) return usage("--root requires a value");
-  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
-  const repoRoot = await resolveRuntimeRoot(options);
-  let root;
-  try {
-    root = resolveUserPath(repoRoot, rootOption, allowAbsolute);
-  } catch (error) {
-    return failOsResult("os-clean", error.message, json);
-  }
-  const names = ["node_modules", "dist", "artifacts", "coverage", ".next", ".turbo", "tests/.tmp-runner"];
-  const candidates = [];
-  for (const name of names) {
-    const path = resolve21(root, name);
-    if (await pathExists8(path)) {
-      candidates.push({
-        path,
-        relativePath: relative13(root, path).replaceAll("\\", "/"),
-        bytes: await directorySize(path)
-      });
-    }
-  }
-  return writeOsResult({
-    ok: true,
-    command: "os-clean",
-    dryRun: true,
-    root,
-    candidates,
-    note: "phase 1 inventory only; no files deleted"
-  }, json, (payload) => payload.candidates.map((item) => `${item.bytes}	${item.relativePath}`).join("\n") + (payload.candidates.length ? "\n" : ""));
-}
-async function runWorkbenchCommand(argv, options) {
-  const args = [...argv];
-  const json = consumeFlag(args, "--json");
-  const full = consumeFlag(args, "--full");
-  const limitOption = consumeOption(args, "--limit");
-  const limitValue = limitOption ?? (full ? "5000" : "80");
-  const queryOption = consumeOption(args, "--query");
-  if (limitOption === null) return usage("--limit requires a value");
-  if (queryOption === null) return usage("--query requires a value");
-  const task = args.shift() ?? "status";
-  const query = queryOption ?? args.join(" ");
-  if (hasUnknownOption(args)) return usage(`unknown wb option: ${hasUnknownOption(args)}`);
-  const root = await resolveRuntimeRoot(options);
-  const payload = await runWorkbench(root, task, {
-    query,
-    limit: Number(limitValue) || (full ? 5e3 : 80),
-    full
-  });
-  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
-`);
-  else process.stdout.write(formatWorkbenchText(payload));
-  return payload.ok ? 0 : 1;
-}
+// scripts/cli/commands/library.mjs
 async function runLibCommand(argv, options) {
   const args = [...argv];
   const subcommand = args.shift();
@@ -22719,7 +22240,7 @@ async function runLibCommand(argv, options) {
   if (homeOption === null) return usage("--home requires a value");
   if (sessionHost === null) return usage("--session-host requires a value");
   const root = await resolveRuntimeRoot(options);
-  const home = homeOption ? resolve21(homeOption) : options.home;
+  const home = homeOption ? resolve22(homeOption) : options.home;
   if (subcommand === "build" || subcommand === "update") {
     if (hasUnknownOption(args)) return usage(`unknown lib ${subcommand} option: ${hasUnknownOption(args)}`);
     let result;
@@ -22875,7 +22396,7 @@ async function runAutoCommand(argv, options) {
   if (!query) return usage("usage: skillsforge auto <plan|run> --query <text>");
   if (hasUnknownOption(args)) return usage(`unknown auto option: ${hasUnknownOption(args)}`);
   const root = await resolveRuntimeRoot(options);
-  const home = homeOption ? resolve21(homeOption) : options.home;
+  const home = homeOption ? resolve22(homeOption) : options.home;
   let result;
   if (subcommand === "plan") {
     result = await planAuto(root, query, {
@@ -22899,107 +22420,388 @@ async function runAutoCommand(argv, options) {
 `);
   return result.ok ? 0 : 1;
 }
-async function runPsCommand(argv, options) {
+
+// scripts/cli/commands/os.mjs
+import { join as join24, relative as relative13, resolve as resolve23 } from "node:path";
+async function runOsEnvCommand(argv) {
   const args = [...argv];
-  const subcommand = args.shift();
   const json = consumeFlag(args, "--json");
-  const out = consumeOption(args, "--out");
-  if (out === null) return usage("--out requires a value");
-  if (subcommand !== "export") return usage("usage: skillsforge ps export [--out <dir>] [--json]");
-  if (hasUnknownOption(args)) return usage(`unknown ps option: ${hasUnknownOption(args)}`);
-  const root = await resolveRuntimeRoot(options);
-  const result = await exportPowerShellHelpers(root, { outDir: out ?? void 0 });
-  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
-`);
-  else {
-    for (const file of result.files) process.stdout.write(`${file.name}	${file.path}
-`);
+  const name = consumeOption(args, "--name");
+  if (name === null) return usage("--name requires a value");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  if (name) {
+    const exists = Object.hasOwn(process.env, name);
+    return writeOsResult({
+      ok: exists,
+      command: "os-env",
+      name,
+      exists,
+      value: exists ? process.env[name] : null
+    }, json, ({ value }) => `${value ?? ""}
+`, exists ? 0 : 1);
   }
-  return result.ok ? 0 : 1;
+  const pathEntries = String(process.env.PATH ?? process.env.Path ?? "").split(process.platform === "win32" ? ";" : ":").filter(Boolean);
+  return writeOsResult({
+    ok: true,
+    command: "os-env",
+    platform: process.platform,
+    arch: process.arch,
+    node: process.version,
+    cwd: process.cwd(),
+    shell: process.env.SHELL ?? process.env.ComSpec ?? null,
+    home: process.env.HOME ?? process.env.USERPROFILE ?? null,
+    pathEntries,
+    envKeys: Object.keys(process.env).sort()
+  }, json, (payload) => [
+    `platform=${payload.platform}`,
+    `arch=${payload.arch}`,
+    `node=${payload.node}`,
+    `cwd=${payload.cwd}`,
+    `shell=${payload.shell ?? ""}`,
+    `pathEntries=${payload.pathEntries.length}`,
+    `envKeys=${payload.envKeys.length}`
+  ].join("\n") + "\n");
 }
-async function runWatchCommand(argv, options) {
+async function runOsFindCommand(argv, options) {
   const args = [...argv];
-  const skill = consumeOption(args, "--skill");
+  const json = consumeFlag(args, "--json");
   const allowAbsolute = consumeFlag(args, "--allow-absolute");
-  if (!skill) {
-    process.stderr.write("usage: skillsforge watch --skill <dir> (single quality pass)\n");
-    return 2;
-  }
-  const root = await resolveRuntimeRoot(options);
-  let skillDir;
+  const name = consumeOption(args, "--name");
+  const rootOption = consumeOption(args, "--root") ?? ".";
+  const limitValue = consumeOption(args, "--limit") ?? "200";
+  if (name === null) return usage("--name requires a value");
+  if (rootOption === null) return usage("--root requires a value");
+  if (limitValue === null) return usage("--limit requires a value");
+  if (!name) return usage("usage: skillsforge os-find --name <glob> [--root <dir>] [--json]");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const repoRoot = await resolveRuntimeRoot(options);
+  let root;
   try {
-    skillDir = resolveUserPath(root, skill, allowAbsolute);
+    root = resolveUserPath(repoRoot, rootOption, allowAbsolute);
   } catch (error) {
-    process.stderr.write(`${error.message}
-`);
-    return 1;
+    return failOsResult("os-find", error.message, json);
   }
-  const result = await scoreSkillQuality(skillDir, { root });
-  process.stdout.write(`${JSON.stringify({ watch: "single-pass", ...result }, null, 2)}
+  const limit = Math.max(1, Math.min(1e3, Number(limitValue) || 200));
+  const regex = globToRegExp(name);
+  const matches = [];
+  await walkFind(root, root, regex, matches, limit);
+  return writeOsResult({
+    ok: true,
+    command: "os-find",
+    root,
+    pattern: name,
+    limit,
+    truncated: matches.length >= limit,
+    matches
+  }, json, (payload) => payload.matches.map((item) => `${item.type}	${item.path}`).join("\n") + (payload.matches.length ? "\n" : ""));
+}
+async function runOsPortsCommand(argv) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const attempts = process.platform === "win32" ? [["netstat", ["-ano", "-p", "tcp"]]] : [["lsof", ["-nP", "-iTCP", "-sTCP:LISTEN"]], ["netstat", ["-an"]]];
+  for (const [command, commandArgs] of attempts) {
+    const result = await runProcess(command, commandArgs, { timeoutMs: 5e3 });
+    if (result.status === 0 && result.stdout.trim()) {
+      const lines = result.stdout.split(/\r?\n/).filter(Boolean).slice(0, 200);
+      return writeOsResult({
+        ok: true,
+        command: "os-ports",
+        probe: [command, ...commandArgs].join(" "),
+        lines
+      }, json, (payload) => payload.lines.join("\n") + "\n");
+    }
+  }
+  return failOsResult("os-ports", "no port probe command succeeded", json);
+}
+async function runOsOpenCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const dryRun = consumeFlag(args, "--dry-run");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  const target = args.shift();
+  if (!target) return usage("usage: skillsforge os-open <path-or-url> [--dry-run] [--json]");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const repoRoot = await resolveRuntimeRoot(options);
+  let resolved = target;
+  if (!isUrlLike(target)) {
+    try {
+      resolved = resolveUserPath(repoRoot, target, allowAbsolute);
+    } catch (error) {
+      return failOsResult("os-open", error.message, json);
+    }
+  }
+  const launcher = platformOpenCommand(resolved);
+  const payload = {
+    ok: true,
+    command: "os-open",
+    dryRun,
+    target: resolved,
+    launcher: [launcher.command, ...launcher.args]
+  };
+  if (dryRun) {
+    return writeOsResult(payload, json, (item) => `${item.launcher.join(" ")}
 `);
-  return result.pass ? 0 : 1;
+  }
+  const result = await runProcess(launcher.command, launcher.args, { timeoutMs: 1e4 });
+  return writeOsResult({ ...payload, result }, json, () => result.stderr || result.stdout || "", result.status === 0 ? 0 : 1);
 }
-function usage(message) {
-  process.stderr.write(`${message}
+async function runOsRunCommand(argv, options) {
+  const split = splitCommandArgs(argv);
+  const args = [...split.options];
+  const json = consumeFlag(args, "--json");
+  const dryRunFlag = consumeFlag(args, "--dry-run");
+  const yes = consumeFlag(args, "--yes");
+  const cwdOption = consumeOption(args, "--cwd") ?? ".";
+  const timeoutValue = consumeOption(args, "--timeout-ms") ?? "30000";
+  if (cwdOption === null) return usage("--cwd requires a value");
+  if (timeoutValue === null) return usage("--timeout-ms requires a value");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  if (split.command.length === 0) return usage("usage: skillsforge os-run [--yes|--dry-run] -- <cmd> [args...]");
+  const root = await resolveRuntimeRoot(options);
+  let cwd;
+  try {
+    cwd = resolveUserPath(root, cwdOption, true);
+  } catch (error) {
+    return failOsResult("os-run", error.message, json);
+  }
+  const [command, ...commandArgs] = split.command;
+  const timeoutMs = Math.max(1e3, Math.min(3e5, Number(timeoutValue) || 3e4));
+  const dryRun = dryRunFlag || !yes;
+  const payload = {
+    ok: true,
+    command: "os-run",
+    dryRun,
+    cwd,
+    timeoutMs,
+    argv: [command, ...commandArgs]
+  };
+  if (dryRun) {
+    return writeOsResult(payload, json, (item) => `${item.argv.join(" ")}
 `);
-  return 2;
+  }
+  const result = await runProcess(command, commandArgs, { cwd, timeoutMs });
+  return writeOsResult({ ...payload, result, ok: result.status === 0 }, json, () => result.stdout + result.stderr, result.status === 0 ? 0 : 1);
 }
-function hasUnknownOption(args) {
-  return args.find((item) => item.startsWith("--"));
-}
-function writeOsResult(payload, json, textFormatter, status = 0) {
-  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+async function runOsCopyPathCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  const target = args.shift();
+  if (!target) return usage("usage: skillsforge os-copy-path <path> [--json]");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  try {
+    const resolved = resolveUserPath(root, target, allowAbsolute);
+    return writeOsResult({ ok: true, command: "os-copy-path", path: resolved }, json, (payload) => `${payload.path}
 `);
-  else process.stdout.write(textFormatter(payload));
-  return status;
+  } catch (error) {
+    return failOsResult("os-copy-path", error.message, json);
+  }
 }
-function failOsResult(command, error, json) {
-  return writeOsResult({ ok: false, command, error }, json, (payload) => `${payload.error}
-`, 1);
+async function runOsCleanCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  const rootOption = consumeOption(args, "--root") ?? ".";
+  if (rootOption === null) return usage("--root requires a value");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const repoRoot = await resolveRuntimeRoot(options);
+  let root;
+  try {
+    root = resolveUserPath(repoRoot, rootOption, allowAbsolute);
+  } catch (error) {
+    return failOsResult("os-clean", error.message, json);
+  }
+  const names = ["node_modules", "dist", "artifacts", "coverage", ".next", ".turbo", "tests/.tmp-runner"];
+  const candidates = [];
+  for (const name of names) {
+    const path = resolve23(root, name);
+    if (await pathExists4(path)) {
+      candidates.push({
+        path,
+        relativePath: relative13(root, path).replaceAll("\\", "/"),
+        bytes: await directorySize(path)
+      });
+    }
+  }
+  return writeOsResult({
+    ok: true,
+    command: "os-clean",
+    dryRun: true,
+    root,
+    candidates,
+    note: "phase 1 inventory only; no files deleted"
+  }, json, (payload) => payload.candidates.map((item) => `${item.bytes}	${item.relativePath}`).join("\n") + (payload.candidates.length ? "\n" : ""));
 }
-function splitCommandArgs(argv) {
-  const marker = argv.indexOf("--");
-  if (marker === -1) return { options: argv, command: [] };
+
+// lib/capabilities/workbench.mjs
+init_skill_loader();
+import { access as access15, readdir as readdir11, stat as stat4 } from "node:fs/promises";
+import { spawn as spawn2 } from "node:child_process";
+import { join as join25, relative as relative14, resolve as resolve24 } from "node:path";
+var SKIP = /* @__PURE__ */ new Set([".git", ".codegraph", "node_modules", "dist", "artifacts", ".next", ".turbo"]);
+async function runWorkbench(root, task, options = {}) {
+  const full = options.full === true;
+  const limit = clampLimit3(options.limit, full ? 5e3 : 80, full ? 5e3 : 1e3);
+  switch (task) {
+    case "status":
+      return workbenchStatus(root);
+    case "tree":
+      return { ok: true, task, files: await listFiles(root, limit), limit };
+    case "find":
+      return workbenchFind(root, options.query ?? options.name ?? "", limit);
+    case "grep":
+      return workbenchGrep(root, options.query ?? "", limit, { full });
+    case "diff":
+      return workbenchDiff(root);
+    case "errors":
+      return workbenchGrep(root, options.query ?? "TODO|FIXME|ERROR|FAIL|throw new Error", limit, { regex: true, full });
+    case "bigfiles":
+      return workbenchBigFiles(root, limit);
+    case "recent":
+      return workbenchRecent(root, limit);
+    case "proof":
+      return workbenchProof(root);
+    default:
+      return { ok: false, task, error: `unknown wb task: ${task}` };
+  }
+}
+function formatWorkbenchText(payload) {
+  if (!payload.ok) {
+    if (payload.error) return `${payload.error}
+`;
+    if (Array.isArray(payload.errors) && payload.errors.length > 0) {
+      return payload.errors.map((item) => item.error ?? item.message ?? JSON.stringify(item)).join("\n") + "\n";
+    }
+  }
+  if (payload.task === "status") {
+    return [
+      `branch	${payload.branch}`,
+      `dirty	${payload.dirty}`,
+      `skills	${payload.skills}`,
+      `workflows	${payload.workflows}`,
+      ...payload.status.map((line) => `git	${line}`)
+    ].join("\n") + "\n";
+  }
+  if (payload.files) return payload.files.join("\n") + (payload.files.length ? "\n" : "");
+  if (payload.matches) return payload.matches.map((item) => `${item.file}:${item.line}:${item.text}`).join("\n") + (payload.matches.length ? "\n" : "");
+  if (payload.bigFiles) return payload.bigFiles.map((item) => `${item.bytes}	${item.path}`).join("\n") + (payload.bigFiles.length ? "\n" : "");
+  if (payload.lines) return payload.lines.join("\n") + (payload.lines.length ? "\n" : "");
+  if (payload.commands) return payload.commands.join("\n") + "\n";
+  return `${JSON.stringify(payload, null, 2)}
+`;
+}
+async function workbenchStatus(root) {
+  const [git, skillsLoaded, workflowsLoaded] = await Promise.all([
+    runProcess2("git", ["status", "--short", "--branch"], { cwd: root }),
+    loadAllSkills(root, { collectErrors: true }),
+    loadWorkflows(root)
+  ]);
+  const lines = git.stdout.trim().split(/\r?\n/).filter(Boolean);
+  const branch = lines[0]?.replace(/^##\s*/, "") ?? "unknown";
+  const errors = [
+    ...skillsLoaded.errors.map((error) => ({
+      source: "skills",
+      file: error.directory,
+      error: error.message,
+      optional: error.optional === true
+    })),
+    ...workflowsLoaded.errors
+  ];
+  const ok = git.status === 0 && skillsLoaded.ok && workflowsLoaded.ok;
   return {
-    options: argv.slice(0, marker),
-    command: argv.slice(marker + 1)
+    ok,
+    task: "status",
+    branch,
+    dirty: lines.length > 1,
+    status: lines.slice(1),
+    skills: skillsLoaded.skills.length,
+    workflows: workflowsLoaded.workflows.length,
+    errors
   };
 }
-function globToRegExp(glob) {
-  const escaped = String(glob).replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*").replace(/\?/g, ".");
-  return new RegExp(`^${escaped}$`, "i");
+async function workbenchFind(root, query, limit) {
+  if (!query) return { ok: false, task: "find", error: "find requires --query or text" };
+  const needle = String(query).toLowerCase();
+  const matches = (await listFiles(root, 5e3)).filter((file) => file.toLowerCase().includes(needle));
+  const files = matches.slice(0, limit);
+  return { ok: true, task: "find", query, files, limit, truncated: matches.length > files.length };
 }
-async function walkFind(root, dir, regex, matches, limit) {
-  if (matches.length >= limit) return;
-  let entries;
-  try {
-    entries = await readdir11(dir, { withFileTypes: true });
-  } catch {
-    return;
+async function workbenchGrep(root, query, limit, options = {}) {
+  if (!query) return { ok: false, task: "grep", error: "grep requires --query or text" };
+  const args = ["-n", "--glob", "!node_modules/**", "--glob", "!dist/**", "--glob", "!artifacts/**"];
+  if (!options.regex) args.push("-F");
+  args.push(String(query), ".");
+  const result = await runProcess2("rg", args, { cwd: root, timeoutMs: 1e4 });
+  if (result.status > 1) return { ok: false, task: "grep", error: result.stderr || result.stdout };
+  const lines = result.stdout.split(/\r?\n/).filter(Boolean);
+  const matches = lines.slice(0, limit).map((line) => {
+    const [file, lineNo, ...rest] = line.split(":");
+    return { file, line: Number(lineNo), text: rest.join(":").slice(0, options.full ? 2e3 : 300) };
+  });
+  return { ok: true, task: "grep", query, matches, limit, truncated: lines.length > matches.length };
+}
+async function workbenchDiff(root) {
+  const [statResult, namesResult] = await Promise.all([
+    runProcess2("git", ["diff", "--stat"], { cwd: root }),
+    runProcess2("git", ["diff", "--name-only"], { cwd: root })
+  ]);
+  return {
+    ok: statResult.status === 0 && namesResult.status === 0,
+    task: "diff",
+    lines: [
+      ...namesResult.stdout.trim().split(/\r?\n/).filter(Boolean).map((line) => `file	${line}`),
+      ...statResult.stdout.trim().split(/\r?\n/).filter(Boolean).map((line) => `stat	${line}`)
+    ]
+  };
+}
+async function workbenchBigFiles(root, limit) {
+  const files = [];
+  await walkFiles(root, async (path) => {
+    const info = await stat4(path);
+    files.push({ path: relative14(root, path).replaceAll("\\", "/"), bytes: info.size });
+  });
+  files.sort((left, right) => right.bytes - left.bytes || left.path.localeCompare(right.path));
+  return { ok: true, task: "bigfiles", bigFiles: files.slice(0, limit), limit };
+}
+async function workbenchRecent(root, limit) {
+  const result = await runProcess2("git", ["log", `-${limit}`, "--oneline", "--decorate"], { cwd: root });
+  return { ok: result.status === 0, task: "recent", lines: result.stdout.trim().split(/\r?\n/).filter(Boolean) };
+}
+async function workbenchProof(root) {
+  const commands = [
+    "node plugins/skillsforge/bin/skillsforge.mjs demo",
+    "node plugins/skillsforge/bin/skillsforge.mjs validate --all",
+    "node plugins/skillsforge/bin/skillsforge.mjs evidence --out artifacts/evidence",
+    "node plugins/skillsforge/bin/skillsforge.mjs lib build",
+    "node plugins/skillsforge/bin/skillsforge.mjs workflows list --json"
+  ];
+  return { ok: true, task: "proof", commands };
+}
+async function listFiles(root, limit) {
+  const files = [];
+  await walkFiles(root, (path) => {
+    if (files.length < limit) files.push(relative14(root, path).replaceAll("\\", "/"));
+  });
+  return files;
+}
+async function walkFiles(root, onFile) {
+  async function walk(dir) {
+    let entries;
+    try {
+      entries = await readdir11(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+      if (SKIP.has(entry.name)) continue;
+      const path = join25(dir, entry.name);
+      if (entry.isDirectory()) await walk(path);
+      else if (entry.isFile()) await onFile(path);
+    }
   }
-  entries.sort((a, b) => a.name.localeCompare(b.name));
-  for (const entry of entries) {
-    if (matches.length >= limit) return;
-    if (shouldSkipFindEntry(entry.name)) continue;
-    const full = join23(dir, entry.name);
-    const rel = relative13(root, full).replaceAll("\\", "/");
-    const type = entry.isDirectory() ? "dir" : entry.isFile() ? "file" : "other";
-    if (regex.test(entry.name) || regex.test(rel)) matches.push({ path: rel, type });
-    if (entry.isDirectory()) await walkFind(root, full, regex, matches, limit);
-  }
-}
-function shouldSkipFindEntry(name) {
-  return (/* @__PURE__ */ new Set([".git", ".codegraph", "node_modules", ".worktrees", "dist", "artifacts"])).has(name);
-}
-function isUrlLike(value) {
-  return /^[a-z][a-z0-9+.-]*:\/\//i.test(value) || /^mailto:/i.test(value);
-}
-function platformOpenCommand(target) {
-  if (process.platform === "win32") {
-    return { command: "powershell.exe", args: ["-NoProfile", "-Command", "Start-Process", "-FilePath", target] };
-  }
-  if (process.platform === "darwin") return { command: "open", args: [target] };
-  return { command: "xdg-open", args: [target] };
+  await walk(resolve24(root));
 }
 function runProcess2(command, args, options = {}) {
   return new Promise((resolveProcess) => {
@@ -23010,54 +22812,406 @@ function runProcess2(command, args, options = {}) {
     });
     let stdout = "";
     let stderr = "";
-    let timedOut = false;
-    const limit = 2e5;
-    const timer = setTimeout(() => {
-      timedOut = true;
-      child.kill("SIGTERM");
-    }, options.timeoutMs ?? 3e4);
+    const timer = setTimeout(() => child.kill("SIGTERM"), options.timeoutMs ?? 3e4);
     child.stdout?.on("data", (chunk) => {
-      stdout = (stdout + chunk.toString()).slice(-limit);
+      stdout = (stdout + chunk.toString()).slice(-2e5);
     });
     child.stderr?.on("data", (chunk) => {
-      stderr = (stderr + chunk.toString()).slice(-limit);
+      stderr = (stderr + chunk.toString()).slice(-2e5);
     });
     child.on("error", (error) => {
       clearTimeout(timer);
-      resolveProcess({ status: 127, stdout, stderr: error.message, timedOut });
+      resolveProcess({ status: 127, stdout, stderr: error.message });
     });
-    child.on("close", (status, signal) => {
+    child.on("close", (status) => {
       clearTimeout(timer);
-      resolveProcess({ status: status ?? 1, signal, stdout, stderr, timedOut });
+      resolveProcess({ status: status ?? 1, stdout, stderr });
     });
   });
 }
-async function directorySize(path) {
-  let info;
+function clampLimit3(value, fallback, max = 1e3) {
+  return Math.max(1, Math.min(max, Number(value) || fallback));
+}
+
+// lib/capabilities/powershell.mjs
+init_paths();
+import { mkdir as mkdir13, writeFile as writeFile13 } from "node:fs/promises";
+import { join as join26, resolve as resolve25 } from "node:path";
+var POWERSHELL_HELPERS = Object.freeze([
+  {
+    name: "sf-status",
+    description: "Compact repo and SkillsForge status",
+    args: ["wb", "status", "--json"]
+  },
+  {
+    name: "sf-tree",
+    description: "Compact file tree",
+    args: ["wb", "tree"]
+  },
+  {
+    name: "sf-find",
+    description: "Token-friendly file finder",
+    args: ["wb", "find"]
+  },
+  {
+    name: "sf-grep",
+    description: "Token-friendly ripgrep wrapper",
+    args: ["wb", "grep"]
+  },
+  {
+    name: "sf-diff",
+    description: "Compact git diff summary",
+    args: ["wb", "diff"]
+  },
+  {
+    name: "sf-errors",
+    description: "Find likely error and TODO markers",
+    args: ["wb", "errors"]
+  },
+  {
+    name: "sf-bigfiles",
+    description: "List largest repo files",
+    args: ["wb", "bigfiles"]
+  },
+  {
+    name: "sf-recent",
+    description: "Recent git commits",
+    args: ["wb", "recent"]
+  },
+  {
+    name: "sf-ports",
+    description: "Listening port snapshot",
+    args: ["os-ports"]
+  },
+  {
+    name: "sf-proof",
+    description: "Trust proof command hints",
+    args: ["wb", "proof", "--json"]
+  },
+  {
+    name: "sf-lib",
+    description: "Build local skill library artifacts",
+    args: ["lib", "build", "--json"]
+  },
+  {
+    name: "sf-lib-update",
+    description: "Refresh local skill library after installing skills",
+    args: ["lib", "update", "--json"]
+  },
+  {
+    name: "sf-recommend",
+    description: "Session-aware skill and workflow recommendation",
+    args: ["lib", "recommend", "--json"]
+  },
+  {
+    name: "sf-workflow",
+    description: "Workflow catalog browser",
+    args: ["workflows", "recommend", "--json"]
+  },
+  {
+    name: "sf-auto",
+    description: "Read-only auto plan for a task",
+    args: ["auto", "plan", "--json"]
+  }
+]);
+async function exportPowerShellHelpers(root, options = {}) {
+  const outDir = resolve25(root, options.outDir ?? join26("artifacts", "powershell"));
+  if (!options.allowAbsolute && !isInside(root, outDir)) {
+    throw new Error(`powershell export path escapes root: ${outDir}`);
+  }
+  const cliPath = resolve25(root, "plugins", "skillsforge", "bin", "skillsforge.mjs");
+  await mkdir13(outDir, { recursive: true });
+  const files = [];
+  for (const helper of POWERSHELL_HELPERS) {
+    const path = join26(outDir, `${helper.name}.ps1`);
+    await writeFile13(path, renderHelper(helper, cliPath));
+    files.push({ name: helper.name, path, description: helper.description });
+  }
+  const manifest = {
+    ok: true,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    cli: cliPath,
+    helpers: files
+  };
+  await writeFile13(join26(outDir, "skillsforge-powershell.json"), `${JSON.stringify(manifest, null, 2)}
+`);
+  return { ok: true, outDir, files, manifest: join26(outDir, "skillsforge-powershell.json") };
+}
+function renderHelper(helper, cliPath) {
+  const baseArgs = helper.args.map((arg) => `'${escapeSingle(arg)}'`).join(", ");
+  return `# ${helper.description}
+# Generated by skillsforge ps export.
+param(
+  [Parameter(ValueFromRemainingArguments = $true)]
+  [string[]] $Args
+)
+
+$SfCli = '${escapeSingle(cliPath)}'
+$BaseArgs = @(${baseArgs})
+& node $SfCli @BaseArgs @Args
+exit $LASTEXITCODE
+`;
+}
+function escapeSingle(value) {
+  return String(value).replaceAll("'", "''");
+}
+
+// scripts/cli/commands/wb.mjs
+async function runWorkbenchCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const full = consumeFlag(args, "--full");
+  const limitOption = consumeOption(args, "--limit");
+  const limitValue = limitOption ?? (full ? "5000" : "80");
+  const queryOption = consumeOption(args, "--query");
+  if (limitOption === null) return usage("--limit requires a value");
+  if (queryOption === null) return usage("--query requires a value");
+  const task = args.shift() ?? "status";
+  const query = queryOption ?? args.join(" ");
+  if (hasUnknownOption(args)) return usage(`unknown wb option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const payload = await runWorkbench(root, task, {
+    query,
+    limit: Number(limitValue) || (full ? 5e3 : 80),
+    full
+  });
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  else process.stdout.write(formatWorkbenchText(payload));
+  return payload.ok ? 0 : 1;
+}
+async function runPsCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, "--json");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  const out = consumeOption(args, "--out");
+  if (out === null) return usage("--out requires a value");
+  if (subcommand !== "export") return usage("usage: skillsforge ps export [--out <dir>] [--json] [--allow-absolute]");
+  if (hasUnknownOption(args)) return usage(`unknown ps option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  let result;
   try {
-    info = await stat4(path);
-  } catch {
+    result = await exportPowerShellHelpers(root, { outDir: out ?? void 0, allowAbsolute });
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else {
+    for (const file of result.files) process.stdout.write(`${file.name}	${file.path}
+`);
+  }
+  return result.ok ? 0 : 1;
+}
+
+// scripts/skillsforge-cli.mjs
+var modulePath2 = fileURLToPath6(import.meta.url);
+async function main(argv = process.argv.slice(2), options = {}) {
+  const command = argv[0];
+  if (!command || command === "help" || command === "--help") {
+    process.stdout.write(`usage: skillsforge <command> [options]
+
+Commands:
+  help                              Show this help
+  validate [paths...]               Validate skills (structure + capability policy when sidecar present)
+    --json                          Machine-readable diagnostics
+    --all                           Scan every production skill under plugins/*/skills
+    --allow-empty                   Allow empty production skill libraries
+    --profile <canonical|claude-code>
+                                    Validation profile (default: canonical)
+  doctor                            Plugin and installed-skill health checks
+    --json                          Machine-readable diagnostics
+  route --query <text>              Explainable skill routing for a query
+  forge --spec <file>               Deterministic skill generation from forge-spec
+    --dry-run                       Plan only (default when --write omitted)
+    --write                         Write SKILL.md + skillsforge.json
+    --force                         Overwrite an existing skill directory
+    --out <dir>                     Output skills root (default: plugin skills/)
+  receipt                           Build a trust receipt for packaged bytes
+    --out <file>                    Receipt path (default: dist/trust-receipt.json)
+    --package <dir>                 Package root to hash
+    --evaluation <file>             Routing evaluation report to embed
+    --require-evaluation            Fail if evaluation evidence is missing
+  verify-receipt <file>             Verify a trust receipt
+    --package <dir>                 Package root to re-hash
+    --evaluation <file>             External routing-report.json to check
+    --package-only                  Skip evaluation authenticity checks
+  enforce --policy <sidecar.json>   Decide PreToolUse allow/deny from stdin event JSON
+  eval                              Run holdout routing evaluation (P/R gate)
+  hosts [--json] [--home <dir>]     List universal AI CLI host targets and trust boundaries
+  install [skill-paths...]          Install skills into detected agent hosts
+    --hosts <ids>                   Comma list or all|detected: claude-code,cursor,codex,opencode,zcode,hermes,gemini
+    --custom-host <id>:<skills-dir> Add package-fidelity target under --home
+    --yes                           Non-interactive (requires --hosts or --custom-host)
+    --list                          Print detected hosts and exit
+    --dry-run                       Plan installs without writing
+    --force                         Overwrite existing skill directories
+    --json                          Machine-readable output
+    --home <dir>                    Override home directory (tests / custom roots)
+  package --host codex              Package one skill as a guarded Codex plugin
+    --skill <dir>                   Single skill directory (multi-skill inputs are rejected)
+    --out <dir>                     Output plugin directory
+    --dry-run                       Plan only (default when --write omitted)
+    --write                         Write the Codex plugin tree
+    --force                         Overwrite a non-empty --out directory
+  evidence --out <dir>              Emit deterministic trust/eval evidence bundle
+                                    (writes when --out is set; default CI path: artifacts/evidence)
+  vibe                              Magical moment: work stubs + catalog summary + quality sample
+    --json                          Machine-readable output
+  catalog                           List packs/profiles/skills
+    --pack <id>                     Filter by pack
+    --profile <id>                  List skills for profile
+    --search <text>                 Search skill ids
+    --json                          Machine-readable output
+  quality --skill <dir>             Score skill quality 0-100
+    --json
+  lint-skill --skill <dir>          Fail if quality below threshold
+    --threshold <n>                 Default 70
+    --hero                          Require \u0393\xEB\xD185
+  scaffold --name <id>              Scaffold original skill + sidecar + openai.yaml
+    --pack <id>                     Pack id (default eng)
+    --mode auto|explicit
+    --write                         Persist (default dry-run)
+    --force                         Overwrite
+  bench                             Measure route/validate latency \u0393\xE5\xC6 artifacts/bench/latest.json
+  scorecard                         Pack coverage + last bench
+  compose --workflow <file>         Run skill DAG from JSON workflow
+  stocktake                         Diff installed skills vs catalog
+  batch --pack <id> --action quality|validate|skillshield
+  pressure --skill <dir>            Run skill pressure fixtures
+  skillshield [--skill <dir>|--all] Scan skills for unsafe patterns
+  export-agents [--out <file>]      Write AGENTS.md from catalog/agents
+  capture --insight <text>          Append learning to artifacts/capture + docs/work/learning.md
+  forge-from-capture                Propose skill candidates from repeated learnings
+  compare --a <dir> --b <dir>       Diff two skill sidecars/descriptions
+  compare-skill --a <dir> --b <dir> Side-by-side sidecar vs policy (trust delta)
+  demo                              Judge path: unsafe deny \u0393\xE5\xC6 safe package \u0393\xE5\xC6 receipt
+  watch --skill <dir>               Re-quality on interval (single pass in CI)
+  wb <task>                         Token-friendly workbench: status/tree/find/grep/diff/errors/bigfiles/recent/proof
+    --json --limit <n> --full       Compact by default; --full raises safe output caps
+  lib <build|update|serve|check|recommend|remove>
+                                    Local skill library index, UI, recommendation, and removal preview
+  workflows <list|show|recommend|run|export-html>
+                                    Curated workflow catalog (dry-run execution only)
+  auto <plan|run>                    Recommend skill + workflow; run requires --read-only
+  ps export                         Export PowerShell sf-*.ps1 helper commands
+  os-env [--name <VAR>] [--json]     Inspect safe environment facts without dumping secrets
+  os-find --name <glob> [--root <dir>] [--json]
+                                    Cross-platform file finder with repo-safe defaults
+  os-ports [--json]                 Best-effort listening port snapshot
+  os-open <path-or-url> [--dry-run] [--json]
+                                    Open target via platform launcher
+  os-run [--yes|--dry-run] -- <cmd> [args...]
+                                    Agent-safe command runner; dry-run unless --yes
+  os-copy-path <path> [--json]      Resolve and print canonical path
+  os-clean --root <dir> [--json]    Dry-run cleanup candidate inventory only
+
+Exit codes: 0 success, 1 command failure, 2 invalid usage
+`);
     return 0;
   }
-  if (!info.isDirectory()) return info.size;
-  let total = 0;
-  let entries;
-  try {
-    entries = await readdir11(path, { withFileTypes: true });
-  } catch {
-    return 0;
+  switch (command) {
+    case "validate":
+      return runValidate(argv.slice(1), options);
+    case "doctor":
+      return runDoctorCommand(argv.slice(1), options);
+    case "route":
+      return runRoute(argv.slice(1), options);
+    case "forge":
+      return runForge(argv.slice(1), options);
+    case "receipt":
+      return runReceipt(argv.slice(1), options);
+    case "verify-receipt":
+      return runVerifyReceipt(argv.slice(1), options);
+    case "enforce":
+      return runEnforce(argv.slice(1), options);
+    case "eval":
+      return runEvalCommand(argv.slice(1), options);
+    case "hosts":
+      return runHostsCommand(argv.slice(1), options);
+    case "install":
+      return runInstall(argv.slice(1), options);
+    case "package":
+      return runPackage(argv.slice(1), options);
+    case "evidence":
+      return runEvidence(argv.slice(1), options);
+    case "vibe":
+      return runVibeCommand(argv.slice(1), options);
+    case "catalog":
+      return runCatalogCommand(argv.slice(1), options);
+    case "quality":
+      return runQualityCommand(argv.slice(1), options);
+    case "lint-skill":
+      return runLintSkillCommand(argv.slice(1), options);
+    case "scaffold":
+      return runScaffoldCommand(argv.slice(1), options);
+    case "bench":
+      return runBenchCommand(argv.slice(1), options);
+    case "scorecard":
+      return runScorecardCommand(argv.slice(1), options);
+    case "compose":
+      return runComposeCommand(argv.slice(1), options);
+    case "stocktake":
+      return runStocktakeCommand(argv.slice(1), options);
+    case "batch":
+      return runBatchCommand(argv.slice(1), options);
+    case "pressure":
+      return runPressureCommand(argv.slice(1), options);
+    case "skillshield":
+      return runSkillShieldCommand(argv.slice(1), options);
+    case "export-agents":
+      return runExportAgentsCommand(argv.slice(1), options);
+    case "capture":
+      return runCaptureCommand(argv.slice(1), options);
+    case "forge-from-capture":
+      return runForgeFromCaptureCommand(argv.slice(1), options);
+    case "compare":
+      return runCompareCommand(argv.slice(1), options);
+    case "compare-skill":
+      return runCompareSkillCommand(argv.slice(1), options);
+    case "demo":
+      return runDemoCommand(argv.slice(1), options);
+    case "watch":
+      return runWatchCommand(argv.slice(1), options);
+    case "wb":
+      return runWorkbenchCommand(argv.slice(1), options);
+    case "lib":
+      return runLibCommand(argv.slice(1), options);
+    case "workflows":
+      return runWorkflowsCommand(argv.slice(1), options);
+    case "auto":
+      return runAutoCommand(argv.slice(1), options);
+    case "ps":
+      return runPsCommand(argv.slice(1), options);
+    case "os-env":
+      return runOsEnvCommand(argv.slice(1), options);
+    case "os-find":
+      return runOsFindCommand(argv.slice(1), options);
+    case "os-ports":
+      return runOsPortsCommand(argv.slice(1), options);
+    case "os-open":
+      return runOsOpenCommand(argv.slice(1), options);
+    case "os-run":
+      return runOsRunCommand(argv.slice(1), options);
+    case "os-copy-path":
+      return runOsCopyPathCommand(argv.slice(1), options);
+    case "os-clean":
+      return runOsCleanCommand(argv.slice(1), options);
+    default:
+      process.stderr.write(`unknown command: ${command}
+`);
+      return 2;
   }
-  for (const entry of entries) {
-    total += await directorySize(join23(path, entry.name));
-  }
-  return total;
 }
 if (process.argv[1]) {
   let sameEntry = false;
   try {
-    sameEntry = realpathSync(process.argv[1]) === realpathSync(modulePath2);
+    sameEntry = realpathSync2(process.argv[1]) === realpathSync2(modulePath2);
   } catch {
-    sameEntry = resolve21(process.argv[1]) === modulePath2;
+    sameEntry = resolve26(process.argv[1]) === modulePath2;
   }
   if (sameEntry) {
     process.exitCode = await main();

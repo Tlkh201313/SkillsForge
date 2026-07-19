@@ -12,6 +12,7 @@ packs:
     description: "Discover SkillsForge packs and profiles"
     skills:
     - browse-catalog
+    - update-skill-library
   methodology:
     description: "Discipline iron laws — brainstorm, plan, TDD, verify (original)"
     skills:

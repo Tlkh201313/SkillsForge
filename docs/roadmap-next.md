@@ -40,6 +40,6 @@ Post-hackathon hardening. Trust pipeline stays the product. Scale is supporting 
 |--------|--------|
 | Local demo | `node plugins/skillsforge/bin/skillsforge.mjs demo` completes under 90s |
 | Holdout P/R | ≥0.95 / ≥0.90 |
-| Auto-route set | ≤7 |
+| Auto-route set | ≤8 |
 | Hero depth | Stable skills clearly marked; lean scaffolds not claimed as production depth |
 | Video | README poster is visible; MP4 is committed at `assets/video/skillsforge-demo.mp4`; final attachment URL added before judging |

@@ -27,7 +27,10 @@ export const PACKS = {
   },
   'browse-catalog': {
     description: 'Discover SkillsForge packs and profiles',
-    skills: expand([{ id: 'browse-catalog', mode: 'auto' }], { write: 'none' })
+    skills: expand([
+      { id: 'browse-catalog', mode: 'auto', write: 'none' },
+      { id: 'update-skill-library', mode: 'auto', write: 'project' }
+    ])
   },
   methodology: {
     description: 'Discipline iron laws — brainstorm, plan, TDD, verify (original)',

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, rm, writeFile, symlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawn } from 'node:child_process';
@@ -11,6 +11,7 @@ import {
   isMcpTool,
   parseApplyPatchPaths
 } from '../lib/capabilities/codex-policy-compiler.mjs';
+import { confineWriteCandidate } from '../lib/capabilities/paths.mjs';
 import { runCodexPreToolPolicy } from '../plugins/skillsforge/hooks/codex-pre-tool-policy.mjs';
 
 const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
@@ -27,8 +28,8 @@ function policy(overrides = {}, roots = {}) {
       mcp: { allowed: false, tools: [] },
       ...overrides
     },
-    __skillRoot: roots.__skillRoot ?? skillRoot,
-    __projectRoot: roots.__projectRoot ?? projectRoot
+    __skillRoot: Object.hasOwn(roots, '__skillRoot') ? roots.__skillRoot : skillRoot,
+    __projectRoot: Object.hasOwn(roots, '__projectRoot') ? roots.__projectRoot : projectRoot
   };
 }
 
@@ -207,6 +208,23 @@ test('missing or invalid policy and unsupported tools deny', () => {
   assert.match(denyReason(unsupported), /unsupported tool/);
 });
 
+test('apply_patch denies when skill or project root is missing', () => {
+  const patch = {
+    tool_name: 'apply_patch',
+    tool_input: {
+      patch: '*** Begin Patch\n*** Update File: output.txt\n@@\n+ok\n*** End Patch\n'
+    }
+  };
+  const missingSkill = enforceCodexPolicy(patch, policy({ write: { scope: 'skill' } }, { __skillRoot: null }));
+  assert.match(denyReason(missingSkill), /skill root unavailable/);
+
+  const missingProject = enforceCodexPolicy(
+    patch,
+    policy({ write: { scope: 'project' } }, { __projectRoot: null })
+  );
+  assert.match(denyReason(missingProject), /project root unavailable/);
+});
+
 test('hook fail-closed on missing policy malformed stdin and exits 0', async (context) => {
   const dir = await mkdtemp(join(tmpdir(), 'sf-codex-hook-'));
   context.after(() => rm(dir, { recursive: true, force: true }));
@@ -239,6 +257,7 @@ test('runCodexPreToolPolicy allows declared bash and uses PLUGIN_ROOT fallback',
   const dir = await mkdtemp(join(tmpdir(), 'sf-codex-hook-ok-'));
   context.after(() => rm(dir, { recursive: true, force: true }));
   await mkdir(join(dir, 'policy'), { recursive: true });
+  await mkdir(join(dir, 'skills', 'demo'), { recursive: true });
   const policyPath = join(dir, 'policy', 'skillsforge.json');
   await writeFile(policyPath, JSON.stringify({
     schemaVersion: 1,
@@ -263,4 +282,34 @@ test('runCodexPreToolPolicy allows declared bash and uses PLUGIN_ROOT fallback',
     hookFile: join(repoRoot, 'plugins', 'skillsforge', 'hooks', 'codex-pre-tool-policy.mjs')
   });
   assert.equal(decision, null);
+});
+
+test('apply_patch realpath denies symlink escape when candidate exists', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'sf-codex-realpath-'));
+  context.after(() => rm(root, { recursive: true, force: true }));
+  const skill = join(root, 'skill');
+  const outside = join(root, 'outside');
+  await mkdir(skill, { recursive: true });
+  await mkdir(outside, { recursive: true });
+  const secret = join(outside, 'secret.txt');
+  await writeFile(secret, 'nope');
+  const link = join(skill, 'escape.txt');
+  let symlinkOk = true;
+  try {
+    await symlink(secret, link);
+  } catch (error) {
+    symlinkOk = false;
+    context.diagnostic?.(`symlink unavailable: ${error.code ?? error.message}`);
+  }
+  if (!symlinkOk) {
+    assert.equal(confineWriteCandidate(skill, join(skill, 'new.txt')).mode, 'lexical-create');
+    return;
+  }
+  const denied = enforceCodexPolicy({
+    tool_name: 'apply_patch',
+    tool_input: {
+      patch: `*** Begin Patch\n*** Update File: ${link}\n@@\n+x\n*** End Patch\n`
+    }
+  }, policy({ write: { scope: 'skill' } }, { __skillRoot: skill }));
+  assert.match(denyReason(denied), /write escapes skill scope/i);
 });

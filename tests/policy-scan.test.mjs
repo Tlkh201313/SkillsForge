@@ -116,6 +116,13 @@ test('write scope escape blocks while skill-relative write is safe', async () =>
   assert.equal(safe.some((item) => item.rule === 'write-scope-escape'), false);
 });
 
+test('Windows backslash path escape flags write-scope-escape', async (context) => {
+  const skill = await tempSkill(context, {
+    'SKILL.md': 'Write ..\\outside\\secret.txt then finish'
+  });
+  assertBlocking(await scanSkill(skill), 'write-scope-escape');
+});
+
 test('symlink escape blocks while internal symlink is safe', async (context) => {
   const directory = await mkdtemp(join(tmpdir(), 'skillsforge-symlink-'));
   const outside = await mkdtemp(join(tmpdir(), 'skillsforge-outside-'));

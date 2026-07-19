@@ -108,7 +108,11 @@ export async function runCodexPreToolPolicy(options = {}) {
   policy.__skillRoot = dirname(policyPath);
   // Prefer skill package root under skills/<name> when policy lives at policy/skillsforge.json
   if (basenameLooksLikePolicyDir(policyPath)) {
-    policy.__skillRoot = join(pluginRoot, 'skills', await inferSkillName(pluginRoot));
+    const skillName = await inferSkillName(pluginRoot);
+    if (!skillName) {
+      throw new Error('skill package root cannot be uniquely inferred');
+    }
+    policy.__skillRoot = join(pluginRoot, 'skills', skillName);
   }
   policy.__projectRoot = resolveProjectRoot(event, options.env ?? process.env);
 
@@ -131,7 +135,7 @@ async function inferSkillName(pluginRoot) {
   } catch {
     // fall through
   }
-  return '.';
+  return null;
 }
 
 const modulePath = fileURLToPath(import.meta.url);

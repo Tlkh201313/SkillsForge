@@ -208,3 +208,47 @@ test('live evidence run writes expected files and detects policy false-allow den
   assert.equal(receipt.verify.ok, true);
   assert.equal(receipt.tamper.ok, false);
 });
+
+test('evidence ok fails closed on empty policy corpus', async (context) => {
+  const dir = await mkdtemp(join(tmpdir(), 'sf-evidence-empty-'));
+  context.after(() => rm(dir, { recursive: true, force: true }));
+  const result = await buildEvidenceBundle({
+    root: repoRoot,
+    outDir: dir,
+    write: true,
+    ...fixedReports,
+    policyCorpus: { name: 'empty', sha256: 'x', cases: [] }
+  });
+  assert.equal(result.ok, false);
+  assert.equal(result.reports['policy-adversarial.json'].total, 0);
+});
+
+test('evidence ok fails closed on synthetic receipt mode', async (context) => {
+  const dir = await mkdtemp(join(tmpdir(), 'sf-evidence-synth-'));
+  context.after(() => rm(dir, { recursive: true, force: true }));
+  const result = await buildEvidenceBundle({
+    root: repoRoot,
+    outDir: dir,
+    write: true,
+    ...fixedReports,
+    receiptReport: {
+      mode: 'synthetic',
+      receiptPath: null,
+      packageRoot: 'plugins/skillsforge',
+      verify: {
+        ok: true,
+        packageVerified: true,
+        evaluationVerified: true,
+        mismatches: [],
+        receiptHash: 'synthetic'
+      },
+      tamper: {
+        ok: false,
+        prepared: true,
+        mismatches: ['x'],
+        note: 'synthetic'
+      }
+    }
+  });
+  assert.equal(result.ok, false);
+});

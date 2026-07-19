@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { readdir, readFile, access } from 'node:fs/promises';
+import { readdir, readFile, access, mkdir, mkdtemp, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import {
@@ -8,6 +8,7 @@ import {
   enforcePolicy,
   hasShellControlSyntax
 } from '../lib/capabilities/claude-policy-compiler.mjs';
+import { confineWriteCandidate } from '../lib/capabilities/paths.mjs';
 
 const baseCaps = {
   exec: { allowed: false, commands: [] },
@@ -28,8 +29,8 @@ function policy(overrides = {}, roots = {}) {
       ...baseCaps,
       ...overrides
     },
-    __skillRoot: roots.__skillRoot ?? skillRoot,
-    __projectRoot: roots.__projectRoot ?? projectRoot
+    __skillRoot: Object.hasOwn(roots, '__skillRoot') ? roots.__skillRoot : skillRoot,
+    __projectRoot: Object.hasOwn(roots, '__projectRoot') ? roots.__projectRoot : projectRoot
   };
 }
 
@@ -304,10 +305,78 @@ test('write scope none denies Write tools', () => {
   assert.match(denyReason(decision), /write capability scope is none/);
 });
 
-test('no decision returns null without auto-approve payload', () => {
+test('Write denies when write capability is omitted', () => {
+  const incomplete = {
+    schemaVersion: 1,
+    capabilities: {
+      exec: { allowed: false, commands: [] },
+      network: { allowed: false, hosts: [] }
+    },
+    __skillRoot: skillRoot,
+    __projectRoot: projectRoot
+  };
   const decision = enforcePolicy(
+    { tool_name: 'Write', tool_input: { file_path: insideSkillFile, content: 'x' } },
+    incomplete
+  );
+  assert.match(denyReason(decision), /write capability is not declared/);
+});
+
+test('Write denies when skill root is missing under skill scope', () => {
+  const decision = enforcePolicy(
+    { tool_name: 'Write', tool_input: { file_path: insideSkillFile, content: 'x' } },
+    policy({ write: { scope: 'skill' } }, { __skillRoot: null })
+  );
+  assert.match(denyReason(decision), /skill root unavailable/);
+});
+
+test('Write denies when project root is missing under project scope', () => {
+  const decision = enforcePolicy(
+    { tool_name: 'Write', tool_input: { file_path: insideProjectFile, content: 'x' } },
+    policy({ write: { scope: 'project' } }, { __projectRoot: null })
+  );
+  assert.match(denyReason(decision), /project root unavailable/);
+});
+
+test('unknown or missing tools deny fail-closed', () => {
+  const missing = enforcePolicy({ tool_input: { file_path: 'README.md' } }, policy());
+  assert.match(denyReason(missing), /unsupported tool.*\(missing\)/);
+
+  const unknown = enforcePolicy(
     { tool_name: 'Read', tool_input: { file_path: 'README.md' } },
     policy()
   );
-  assert.equal(decision, null);
+  assert.match(denyReason(unknown), /unsupported tool for Claude policy: Read/);
+});
+
+test('Write realpath denies symlink escape when candidate exists', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'sf-claude-realpath-'));
+  context.after(() => rm(root, { recursive: true, force: true }));
+  const skill = join(root, 'skill');
+  const outside = join(root, 'outside');
+  await mkdir(skill, { recursive: true });
+  await mkdir(outside, { recursive: true });
+  const secret = join(outside, 'secret.txt');
+  await writeFile(secret, 'nope');
+  const link = join(skill, 'escape.txt');
+  let symlinkOk = true;
+  try {
+    await symlink(secret, link);
+  } catch (error) {
+    symlinkOk = false;
+    context.diagnostic?.(`symlink unavailable: ${error.code ?? error.message}`);
+  }
+  if (!symlinkOk) {
+    assert.equal(confineWriteCandidate(skill, join(skill, 'new.txt')).mode, 'lexical-create');
+    return;
+  }
+  const denied = enforcePolicy(
+    { tool_name: 'Write', tool_input: { file_path: link, content: 'x' } },
+    policy({ write: { scope: 'skill' } }, { __skillRoot: skill })
+  );
+  assert.match(denyReason(denied), /write escapes skill scope/);
+
+  const create = confineWriteCandidate(skill, join(skill, 'brand-new.txt'));
+  assert.equal(create.ok, true);
+  assert.equal(create.mode, 'lexical-create');
 });

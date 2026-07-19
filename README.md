@@ -7,7 +7,7 @@
 
 **Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, tamper-evident, and installable across AI CLIs with honest trust boundaries.**
 
-SkillsForge is a Developer Tools **trust engine** for portable [Agent Skills](https://agentskills.io/specification): validate, deny unsafe inputs, package safe skills, enforce host hooks where supported, install package-fidelity skills across AI CLIs, and verify tamper-evident receipts. Current cataloged inventory: 366 skill entries, 26 packs, 10 profiles, and 100 reusable workflows.
+SkillsForge is a Developer Tools **trust engine** for portable [Agent Skills](https://agentskills.io/specification): validate, deny unsafe inputs, package safe skills, enforce host hooks where supported, install package-fidelity skills across AI CLIs, and verify tamper-evident receipts. Current cataloged inventory: 367 skill entries, 26 packs, 10 profiles, and 100 reusable workflows.
 
 ---
 
@@ -27,7 +27,7 @@ The packaged MP4 is committed at [`assets/video/skillsforge-demo.mp4`](assets/vi
 | **Unsafe deny** | `examples/codex-unsafe-release` fails validation — undeclared exec/network blocked **without executing** the skill |
 | **Safe package** | `examples/codex-safe-release` passes → compiles to a guarded Codex plugin tree |
 | **Receipt** | Tamper-evident receipt hash for packaged bytes |
-| Scale punchline | 366 catalog entries / 26 packs / 98 agents / 124 commands / 100 workflows, verified locally |
+| Scale punchline | 367 catalog entries / 26 packs / 98 agents / 124 commands / 100 workflows, verified locally |
 | CTA | Clone + `node plugins/skillsforge/bin/skillsforge.mjs demo` |
 
 ---
@@ -78,7 +78,7 @@ We built SkillsForge **because** Everything Claude Code (ECC) and Superpowers al
 | Dimension | SkillsForge local evidence |
 |---|---|
 | Core pitch | Trust engine for Agent Skills |
-| Trust sidecars | 366/366 catalog skills ship `skillsforge.json` |
+| Trust sidecars | 367/367 catalog skills ship `skillsforge.json` |
 | Trust pipeline | validate -> package -> PreToolUse -> receipt |
 | Operator CLI | `demo`, `vibe`, `quality`, `bench`, `compare-skill`, `evidence` |
 | SkillShield | Skill-body scanner, best-effort static gate |
@@ -119,7 +119,7 @@ Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/r
 |---|---|
 | One plugin | `skillsforge` (Claude + Codex manifests) |
 | Trust demo | `skillsforge demo` -- unsafe deny -> safe package -> receipt |
-| Catalog | **366** skills, **26** packs, **10** profiles -- `catalog/skillsforge.catalog.yaml` |
+| Catalog | **367** skills, **26** packs, **10** profiles -- `catalog/skillsforge.catalog.yaml` |
 | Sidecars | **100%** (`skillsforge.json` beside every production skill) |
 | Depth honesty | Stable trust skills are deeper; domain packs are lean scaffolds until individually expanded |
 | Agents | **98** agents (depth varies -- fuller leads vs thinner task specialists) |
@@ -267,6 +267,24 @@ Exit codes: `0` success · `1` failure · `2` invalid usage.
 | `auto` | Recommend the smallest matching skill and workflow without writes |
 | `ps export` | Generate PowerShell `sf-*.ps1` helpers |
 
+### Terminal helpers
+
+Token-friendly operator commands for repo status, OS facts, and PowerShell wrappers:
+
+| Surface | What it does |
+|---|---|
+| `wb <task>` | Workbench: `status`, `tree`, `find`, `grep`, `diff`, `errors`, `bigfiles`, `recent`, `proof` |
+| `ps export [--out <dir>]` | Writes confined `sf-*.ps1` helpers under the repo (default `artifacts/powershell/`) |
+| `os-env` / `os-find` / `os-ports` / `os-open` / `os-run` / `os-copy-path` / `os-clean` | Cross-platform OS helpers (`os-run` is dry-run unless `--yes`) |
+
+Expected PowerShell helper names from `ps export`: `sf-status`, `sf-tree`, `sf-find`, `sf-grep`, `sf-diff`, `sf-errors`, `sf-bigfiles`, `sf-recent`, `sf-ports`, `sf-proof`, `sf-lib`, `sf-lib-update`, `sf-recommend`, `sf-workflow`, `sf-auto`.
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs wb status --json
+node ./plugins/skillsforge/bin/skillsforge.mjs os-ports --json
+node ./plugins/skillsforge/bin/skillsforge.mjs ps export --out artifacts/powershell
+```
+
 Full flag list: `skillsforge help`. Architecture: [docs/architecture.md](docs/architecture.md).
 
 ### Quick examples
@@ -323,7 +341,7 @@ This release does **not** ship or claim: Ruflo swarms, AgentDB, consensus, OS sa
 - **Pressure = fixture gate + expanding.** Fixtures check expected violation/compliance shape today; behavioral agent pressure is expanding.
 - **Receipts are unsigned tamper evidence.** Reproducible hashes prove bytes changed; they are not third-party certification.
 - **No copied third-party skill bodies.** Inspiration is attributed; bodies are original SkillsForge text.
-- **Honest depth:** 366 catalog entries; stable trust skills are deeper, and domain packs stay lean until expanded with examples/evals.
+- **Honest depth:** 367 catalog entries; stable trust skills are deeper, and domain packs stay lean until expanded with examples/evals.
 - **No invented Session IDs or stats.** If provenance is missing, omit the claim.
 
 ### Security boundary
