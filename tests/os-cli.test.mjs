@@ -62,3 +62,19 @@ test('os-clean is inventory-only in phase 1', () => {
   assert.equal(payload.dryRun, true);
   assert.ok(Array.isArray(payload.candidates));
 });
+
+test('wb supports full output cap without treating it as a query option', () => {
+  const result = run(['wb', 'tree', '--full', '--limit', '3', '--json']);
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.ok, true);
+  assert.equal(payload.task, 'tree');
+  assert.equal(payload.limit, 3);
+  assert.ok(Array.isArray(payload.files));
+});
+
+test('auto run requires explicit read-only mode', () => {
+  const result = run(['auto', 'run', '--query', 'safe refactor code']);
+  assert.equal(result.status, 2);
+  assert.match(result.stderr, /requires --read-only/);
+});

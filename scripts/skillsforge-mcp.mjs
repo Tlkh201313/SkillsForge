@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Thin SkillsForge MCP server (stdio JSON-RPC subset).
- * Tools only: validate, route, skillshield — no swarm/AgentDB.
+ * Tools: validate, route, skillshield, and read-only library/workflow recommendation.
+ * No swarm, AgentDB, consensus, or default write tools.
  *
  * Protocol: newline-delimited JSON requests:
  *   {"id":1,"method":"tools/list"}
@@ -18,7 +19,7 @@ import { routeQuery } from '../lib/capabilities/router.mjs';
 import { verifySkillPaths } from '../lib/capabilities/verify.mjs';
 import { runSkillShield } from '../lib/capabilities/skillshield.mjs';
 import { resolveUnderRoot } from '../lib/capabilities/paths.mjs';
-import { buildLibraryIndex } from '../lib/capabilities/library.mjs';
+import { buildLibraryIndex, recommendFromLibrary } from '../lib/capabilities/library.mjs';
 import { recommendWorkflows, showWorkflow } from '../lib/capabilities/workflows.mjs';
 
 const moduleDir = dirname(fileURLToPath(import.meta.url));
@@ -67,18 +68,21 @@ const TOOLS = [
     inputSchema: {
       type: 'object',
       properties: {
-        home: { type: 'string', description: 'Optional home directory override for tests' }
+        home: { type: 'string', description: 'Optional home directory override for tests' },
+        sessionHost: { type: 'string', description: 'Optional host id override for the current session' }
       }
     }
   },
   {
     name: 'recommend_skill',
-    description: 'Read-only skill recommendation for a natural-language task',
+    description: 'Read-only session-aware skill recommendation for a natural-language task',
     inputSchema: {
       type: 'object',
       properties: {
         query: { type: 'string' },
-        pack: { type: 'string' }
+        home: { type: 'string', description: 'Optional home directory override for tests' },
+        sessionHost: { type: 'string', description: 'Optional host id override for the current session' },
+        limit: { type: 'number', default: 5 }
       },
       required: ['query']
     }
@@ -134,13 +138,16 @@ async function callTool(name, args = {}) {
     return runSkillShield(skillDir, { root });
   }
   if (name === 'library_index') {
-    return buildLibraryIndex(root, { home: args.home });
+    return buildLibraryIndex(root, { home: args.home, sessionHost: args.sessionHost });
   }
   if (name === 'recommend_skill') {
-    const skills = await loadAllSkills(root);
-    return routeQuery(args.query, skills, {
-      pack: args.pack ?? null,
-      includeExplicit: true
+    const index = await buildLibraryIndex(root, {
+      home: args.home,
+      sessionHost: args.sessionHost
+    });
+    return recommendFromLibrary(index, args.query, {
+      limit: args.limit ?? 5,
+      sessionHost: args.sessionHost
     });
   }
   if (name === 'recommend_workflow') {

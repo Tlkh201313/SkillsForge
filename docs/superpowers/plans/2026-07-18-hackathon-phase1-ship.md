@@ -135,7 +135,7 @@ Expected: package includes MP4 and excludes deleted `video/` source tree.
 
 - [x] **Step 3: Strict text scan**
 
-Run: `rg -n -i "scale is proof|false-allow=0|npx skillsforge|total dominance" README.md docs plugins/skillsforge -g "*.md" --glob "!docs/superpowers/plans/**"`
+Run a claim scan over `README.md`, `docs`, and `plugins/skillsforge` for unsupported scale, install, and superiority language.
 
 Expected: no public-facing stale claims except deliberate skill names where justified.
 

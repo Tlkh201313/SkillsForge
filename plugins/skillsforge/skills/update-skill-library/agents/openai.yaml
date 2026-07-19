@@ -1,0 +1,6 @@
+interface:
+  display_name: Update Skill Library
+  short_description: Refresh the local SkillsForge library HTML and AI index after installed skills change.
+  default_prompt: Use this skill to refresh SkillsForge library artifacts and report only real counts from the command output.
+policy:
+  allow_implicit_invocation: true

@@ -12,7 +12,7 @@ const requiredCommands = ['validate', 'route', 'forge', 'doctor', 'verify-receip
 test('plugin ships required slash commands plus dominance entrypoints', async () => {
   const entries = await readdir(commandsRoot);
   const names = entries.filter((name) => name.endsWith('.md')).map((name) => name.replace(/\.md$/, '')).sort();
-  assert.ok(names.length >= 100, `expected ≥100 commands, got ${names.length}`);
+  assert.ok(names.length >= 100, `expected >=100 commands, got ${names.length}`);
   for (const name of requiredCommands) {
     assert.ok(names.includes(name), `missing required command ${name}`);
   }

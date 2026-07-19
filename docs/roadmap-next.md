@@ -25,12 +25,12 @@ Post-hackathon hardening. Trust pipeline stays the product. Scale is supporting 
 2. Pack profiles install UX: `skillsforge install --profile vibe`.
 3. Capture → forge approval TUI (still require human approve before write).
 4. Windows path/docs polish for absolute `--allow-absolute` examples.
-5. Native OS helper CLI depth: expand `os-find`, `os-env`, `os-ports`, and safe dry-run commands.
+5. Deeper workbench probes: dependency graphs, test failure summarization, and CI log compression.
 
 ## Explicitly out of scope
 
 - Ruflo swarm / AgentDB / Raft consensus
-- Desktop dashboard
+- Cloud dashboard or always-on service
 - Rewriting every generated body in one batch
 - Claiming OS sandbox or third-party attestation
 
@@ -42,4 +42,4 @@ Post-hackathon hardening. Trust pipeline stays the product. Scale is supporting 
 | Holdout P/R | ≥0.95 / ≥0.90 |
 | Auto-route set | ≤7 |
 | Hero depth | Stable skills clearly marked; lean scaffolds not claimed as production depth |
-| Video | README inline MP4 renders from `assets/video/skillsforge-demo.mp4` |
+| Video | README poster is visible; MP4 is committed at `assets/video/skillsforge-demo.mp4`; final attachment URL added before judging |

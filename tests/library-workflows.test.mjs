@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-import { access, mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
+import { access, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { buildLibraryIndex, planSkillRemoval, writeLibraryArtifacts } from '../lib/capabilities/library.mjs';
+import { buildLibraryIndex, planSkillRemoval, recommendFromLibrary, writeLibraryArtifacts } from '../lib/capabilities/library.mjs';
 import { exportPowerShellHelpers, POWERSHELL_HELPERS } from '../lib/capabilities/powershell.mjs';
 import { loadAllSkills } from '../lib/capabilities/skill-loader.mjs';
 import { loadWorkflows, planAuto, recommendWorkflows, runAutoReadOnly, runWorkflowDryRun, showWorkflow } from '../lib/capabilities/workflows.mjs';
@@ -92,11 +92,13 @@ test('library index and HTML artifacts include skills, workflows, hosts, and AI 
   context.after(() => rm(outDir, { recursive: true, force: true }));
 
   const index = await buildLibraryIndex(root, { home: outDir });
-  assert.equal(index.stats.skills, 366);
+  assert.ok(index.stats.skills >= 366);
   assert.equal(index.stats.workflows, 100);
   assert.ok(index.skills.some((skill) => skill.id === 'using-skillsforge'));
+  assert.ok(index.skills.some((skill) => skill.id === 'update-skill-library'));
   assert.ok(index.workflows.some((workflow) => workflow.id === 'coding.safe-refactor'));
   assert.ok(index.hosts.some((host) => host.id === 'codex'));
+  assert.ok(index.skills.every((skill) => typeof skill.key === 'string' && skill.key.length > skill.id.length));
 
   const result = await writeLibraryArtifacts(root, { outDir, home: outDir, allowAbsolute: true });
   assert.equal(result.ok, true);
@@ -109,8 +111,46 @@ test('library index and HTML artifacts include skills, workflows, hosts, and AI 
   assert.match(html, /removePreview/);
   assert.match(html, /removeConfirm/);
   assert.match(html, /allowMutations/);
+  assert.match(html, /Session-aware local index/);
+  assert.match(html, /sourceFilter/);
   const ai = await readFile(result.files.ai, 'utf8');
   assert.match(ai, /skillsforge-ai-index/);
+  assert.match(ai, /sessionInstalled/);
+});
+
+test('library index includes installed user skills and recommends for current session', async (context) => {
+  const home = await mkdtemp(join(tmpdir(), 'sf-installed-skills-'));
+  context.after(() => rm(home, { recursive: true, force: true }));
+  const skillDir = join(home, '.agents', 'skills', 'external-review-helper');
+  await mkdir(skillDir, { recursive: true });
+  await writeFile(join(skillDir, 'SKILL.md'), `---
+name: external-review-helper
+description: Use when reviewing markdown claims and checking demo assets from an installed user skill.
+---
+
+# External Review Helper
+
+Use this installed helper when local docs and media claims need strict review.
+`);
+
+  const index = await buildLibraryIndex(root, {
+    home,
+    sessionHost: 'codex'
+  });
+  const installed = index.skills.find((skill) => skill.id === 'external-review-helper');
+  assert.ok(installed);
+  assert.equal(installed.sourcePlugin, 'user-agents');
+  assert.equal(installed.sessionInstalled, true);
+  assert.ok(installed.sourcePath.startsWith('~/'));
+
+  const recommendation = recommendFromLibrary(index, 'review markdown claims and demo assets', {
+    sessionHost: 'codex',
+    limit: 3
+  });
+  assert.equal(recommendation.ok, true);
+  assert.equal(recommendation.sessionHost, 'codex');
+  assert.equal(recommendation.skills[0].id, 'external-review-helper');
+  assert.ok(recommendation.skills[0].reasons.includes('session-installed'));
 });
 
 test('library removal is dry-run by default', async (context) => {

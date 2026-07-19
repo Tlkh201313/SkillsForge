@@ -16,6 +16,12 @@ SkillsForge is a capability / trust engine for portable Agent Skills. Canonical 
 | Codex compiler | `codex-package.mjs` + `codex-policy-compiler.mjs` — one skill → guarded plugin |
 | Host inventory | `skillsforge hosts` lists known AI CLI targets, detection paths, fidelity, and install hints |
 | Host installer | `skillsforge install` — full (Claude), package-fidelity (Codex/Cursor/OpenCode/ZCode/Hermes/Gemini), or custom package target |
+| Workbench | `skillsforge wb` gives compact repo status, search, diff, recent commits, large files, and proof hints |
+| Skill library | `skillsforge lib build|update|recommend` indexes repo and installed user skills; HTML/AI index are single-file; `lib serve` is localhost and read-only by default |
+| Workflow catalog | `plugins/skillsforge/workflows/` contains 100 dry-run workflow definitions; `skillsforge workflows` lists, recommends, and previews them |
+| Auto router | `skillsforge auto plan|run --read-only` combines installed-skill routing with workflow recommendations without writes |
+| PowerShell helpers | `skillsforge ps export` writes local `sf-*.ps1` wrappers around token-friendly repo, library, workflow, and auto commands |
+| Thin MCP | `scripts/skillsforge-mcp.mjs` exposes validate/route/skillshield plus read-only library/workflow recommendation |
 | Distribution | `npm run build:dist` → `dist/claude-code`, `dist/codex`, `dist/cursor`, receipts |
 
 ## Canonical skill → Codex plugin compilation
@@ -184,8 +190,8 @@ Cache-copy smoke tests copy **only** `plugins/skillsforge` and exercise doctor /
 
 Not in scope for this product track:
 
-- MCP servers, LSP integrations, or always-on monitors
-- Token / usage ledgers or cost accounting
+- Swarms, AgentDB, Raft-style consensus, LSP integrations, or always-on monitors
+- Token usage billing ledgers or cost accounting
 - Domain expertise skill packs or multi-plugin “family” installs
 - Multi-host runtime policy parity (package install ≠ Codex/Claude hooks)
 - OS sandboxing or third-party attestation of safety

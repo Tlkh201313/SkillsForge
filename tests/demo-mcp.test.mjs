@@ -51,8 +51,10 @@ test('MCP read-only library and workflow tools return structured data', async ()
   assert.equal(library.stats.workflows, 100);
   assert.ok(library.skills.some((skill) => skill.id === 'using-skillsforge'));
 
-  const skill = await callTool('recommend_skill', { query: 'validate agent skill' });
-  assert.ok(Array.isArray(skill.candidates));
+  const skill = await callTool('recommend_skill', { query: 'validate agent skill', home: root });
+  assert.equal(skill.ok, true);
+  assert.ok(Array.isArray(skill.skills));
+  assert.ok(skill.skills.some((item) => item.id === 'validate-agent-skill'));
 
   const workflow = await callTool('recommend_workflow', { query: 'safe refactor code' });
   assert.equal(workflow.ok, true);

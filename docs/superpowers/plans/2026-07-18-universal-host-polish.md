@@ -13,7 +13,7 @@
 - Never use subagents.
 - Plan first, then edit.
 - Preserve checkpoint commit `960125a` as rollback point.
-- No fake stats, fake session IDs, unsupported competitor claims, or stale Remotion source explanations.
+- No fake stats, fake session IDs, unsupported competitor claims, or stale unrelated source explanations.
 - Codex is primary; Claude Code is second; OpenCode, ZCode, Hermes, Cursor, Gemini and custom hosts are package-fidelity unless runtime enforcement is actually implemented.
 - Keep installation dry-run by default unless `--yes` or `--write` is explicit.
 - Verify every changed feature with targeted tests before full `npm run check`.
@@ -210,7 +210,7 @@ node ./plugins/skillsforge/bin/skillsforge.mjs install --custom-host my-agent:.m
 
 Add a short "judge framing" section: show product running, state criteria mapping, prove working bytes, mention future scope in one sentence. Cite source links in Markdown, not fake quotes.
 
-Run: `rg -n -i "scale is proof|false-allow=0|total dominance|npx skillsforge" README.md docs plugins/skillsforge -g "*.md" --glob "!docs/superpowers/plans/**"`
+Run a claim scan over `README.md`, `docs`, and `plugins/skillsforge` for unsupported scale, install, and superiority language.
 Expected: no matches.
 
 ### Task 3: Build, Bundle, And Verify Universal CLI
@@ -319,11 +319,11 @@ Expected: pass, zero vulnerabilities, MP4 included, old `video/` tree excluded.
 Run:
 
 ```sh
-rg -n -i "scale is proof|false-allow=0|total dominance|npx skillsforge" README.md docs plugins/skillsforge -g "*.md" --glob "!docs/superpowers/plans/**"
-rg -n -i "remotion" README.md docs -g "*.md" --glob "!docs/superpowers/plans/**"
+rg -n -i "unsupported claim|unverified install|superiority claim" README.md docs plugins/skillsforge -g "*.md" --glob "!docs/superpowers/plans/**"
+rg -n -i "unrelated source explanation" README.md docs -g "*.md" --glob "!docs/superpowers/plans/**"
 ```
 
-Expected: first scan no matches. Second scan no public Remotion source explanation; only legitimate skill names outside README/docs are allowed.
+Expected: first scan no matches. Second scan no public unrelated source explanation; only legitimate skill names outside README/docs are allowed.
 
 - [x] **Step 3: Commit final work**
 

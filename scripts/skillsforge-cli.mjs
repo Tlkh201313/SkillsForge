@@ -26,7 +26,7 @@ import { exportAgentsMd, captureLearning, forgeFromCapture } from '../lib/capabi
 import { loadSkill } from '../lib/capabilities/skill-loader.mjs';
 import { resolveUnderRoot } from '../lib/capabilities/paths.mjs';
 import { runJudgeDemo, compareSkillTrust, formatPackScorecard } from '../lib/capabilities/demo.mjs';
-import { buildLibraryIndex, planSkillRemoval, removeInstalledSkill, serveLibrary, writeLibraryArtifacts } from '../lib/capabilities/library.mjs';
+import { buildLibraryIndex, planSkillRemoval, recommendFromLibrary, removeInstalledSkill, serveLibrary, writeLibraryArtifacts } from '../lib/capabilities/library.mjs';
 import { exportPowerShellHelpers } from '../lib/capabilities/powershell.mjs';
 import { loadWorkflows, planAuto, recommendWorkflows, runAutoReadOnly, runWorkflowDryRun, showWorkflow } from '../lib/capabilities/workflows.mjs';
 import { formatWorkbenchText, runWorkbench } from '../lib/capabilities/workbench.mjs';
@@ -146,7 +146,9 @@ Commands:
   demo                              Judge path: unsafe deny → safe package → receipt
   watch --skill <dir>               Re-quality on interval (single pass in CI)
   wb <task>                         Token-friendly workbench: status/tree/find/grep/diff/errors/bigfiles/recent/proof
-  lib <build|serve|check|remove>     Local skill library index, UI, and removal preview
+    --json --limit <n> --full       Compact by default; --full raises safe output caps
+  lib <build|update|serve|check|recommend|remove>
+                                    Local skill library index, UI, recommendation, and removal preview
   workflows <list|show|recommend|run|export-html>
                                     Curated workflow catalog (dry-run execution only)
   auto <plan|run>                    Recommend skill + workflow; run requires --read-only
@@ -1377,9 +1379,11 @@ async function runOsCleanCommand(argv, options) {
 async function runWorkbenchCommand(argv, options) {
   const args = [...argv];
   const json = consumeFlag(args, '--json');
-  const limitValue = consumeOption(args, '--limit') ?? '80';
+  const full = consumeFlag(args, '--full');
+  const limitOption = consumeOption(args, '--limit');
+  const limitValue = limitOption ?? (full ? '5000' : '80');
   const queryOption = consumeOption(args, '--query');
-  if (limitValue === null) return usage('--limit requires a value');
+  if (limitOption === null) return usage('--limit requires a value');
   if (queryOption === null) return usage('--query requires a value');
   const task = args.shift() ?? 'status';
   const query = queryOption ?? args.join(' ');
@@ -1387,7 +1391,8 @@ async function runWorkbenchCommand(argv, options) {
   const root = await resolveRuntimeRoot(options);
   const payload = await runWorkbench(root, task, {
     query,
-    limit: Number(limitValue) || 80
+    limit: Number(limitValue) || (full ? 5000 : 80),
+    full
   });
   if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
   else process.stdout.write(formatWorkbenchText(payload));
@@ -1401,16 +1406,24 @@ async function runLibCommand(argv, options) {
   const allowAbsolute = consumeFlag(args, '--allow-absolute');
   const out = consumeOption(args, '--out');
   const homeOption = consumeOption(args, '--home');
+  const sessionHost = consumeOption(args, '--session-host');
   if (out === null) return usage('--out requires a value');
   if (homeOption === null) return usage('--home requires a value');
+  if (sessionHost === null) return usage('--session-host requires a value');
   const root = await resolveRuntimeRoot(options);
   const home = homeOption ? resolve(homeOption) : options.home;
 
-  if (subcommand === 'build') {
-    if (hasUnknownOption(args)) return usage(`unknown lib build option: ${hasUnknownOption(args)}`);
+  if (subcommand === 'build' || subcommand === 'update') {
+    if (hasUnknownOption(args)) return usage(`unknown lib ${subcommand} option: ${hasUnknownOption(args)}`);
     let result;
     try {
-      result = await writeLibraryArtifacts(root, { outDir: out ?? undefined, home, allowAbsolute });
+      result = await writeLibraryArtifacts(root, {
+        outDir: out ?? undefined,
+        home,
+        allowAbsolute,
+        sessionHost: sessionHost ?? undefined,
+        noCache: subcommand === 'update'
+      });
     } catch (error) {
       process.stderr.write(`${error.message}\n`);
       return 1;
@@ -1423,9 +1436,29 @@ async function runLibCommand(argv, options) {
     const skill = consumeOption(args, '--skill') ?? args.shift();
     if (skill === null) return usage('--skill requires a value');
     if (hasUnknownOption(args)) return usage(`unknown lib check option: ${hasUnknownOption(args)}`);
-    const index = await buildLibraryIndex(root, { home });
-    const record = skill ? index.skills.find((item) => item.id === skill) : null;
+    const index = await buildLibraryIndex(root, { home, sessionHost: sessionHost ?? undefined });
+    const record = skill ? index.skills.find((item) => item.id === skill || item.key === skill) : null;
     const result = record ? { ok: true, skill: record } : { ok: false, error: `unknown skill: ${skill}` };
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    return result.ok ? 0 : 1;
+  }
+
+  if (subcommand === 'recommend') {
+    const queryOption = consumeOption(args, '--query');
+    const limitValue = consumeOption(args, '--limit') ?? '5';
+    if (queryOption === null) return usage('--query requires a value');
+    if (limitValue === null) return usage('--limit requires a value');
+    if (hasUnknownOption(args)) return usage(`unknown lib recommend option: ${hasUnknownOption(args)}`);
+    const query = queryOption ?? args.join(' ');
+    if (!query) return usage('usage: skillsforge lib recommend --query <text>');
+    const index = await buildLibraryIndex(root, {
+      home,
+      sessionHost: sessionHost ?? undefined
+    });
+    const result = recommendFromLibrary(index, query, {
+      limit: Number(limitValue) || 5,
+      sessionHost: sessionHost ?? undefined
+    });
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
     return result.ok ? 0 : 1;
   }
@@ -1458,13 +1491,14 @@ async function runLibCommand(argv, options) {
       host,
       port: Number(portValue) || 4763,
       allowMutations,
-      home
+      home,
+      sessionHost: sessionHost ?? undefined
     });
     process.stdout.write(`${JSON.stringify({ ok: result.ok, url: result.url, readOnly: result.readOnly }, null, 2)}\n`);
     return 0;
   }
 
-  if (!subcommand) return usage('usage: skillsforge lib <build|serve|check|remove>');
+  if (!subcommand) return usage('usage: skillsforge lib <build|update|serve|check|recommend|remove>');
   return usage(`unknown lib command: ${subcommand}`);
 }
 
@@ -1528,18 +1562,31 @@ async function runAutoCommand(argv, options) {
   const readOnly = consumeFlag(args, '--read-only');
   const queryOption = consumeOption(args, '--query');
   const limitValue = consumeOption(args, '--limit') ?? '5';
+  const homeOption = consumeOption(args, '--home');
+  const sessionHost = consumeOption(args, '--session-host');
   if (queryOption === null) return usage('--query requires a value');
   if (limitValue === null) return usage('--limit requires a value');
+  if (homeOption === null) return usage('--home requires a value');
+  if (sessionHost === null) return usage('--session-host requires a value');
   const query = queryOption ?? args.join(' ');
   if (!query) return usage('usage: skillsforge auto <plan|run> --query <text>');
   if (hasUnknownOption(args)) return usage(`unknown auto option: ${hasUnknownOption(args)}`);
   const root = await resolveRuntimeRoot(options);
+  const home = homeOption ? resolve(homeOption) : options.home;
   let result;
   if (subcommand === 'plan') {
-    result = await planAuto(root, query, { limit: Number(limitValue) || 5 });
+    result = await planAuto(root, query, {
+      limit: Number(limitValue) || 5,
+      home,
+      sessionHost: sessionHost ?? undefined
+    });
   } else if (subcommand === 'run') {
     if (!readOnly) return usage('skillsforge auto run requires --read-only');
-    result = await runAutoReadOnly(root, query, { limit: Number(limitValue) || 5 });
+    result = await runAutoReadOnly(root, query, {
+      limit: Number(limitValue) || 5,
+      home,
+      sessionHost: sessionHost ?? undefined
+    });
   } else {
     return usage('usage: skillsforge auto <plan|run> --query <text>');
   }
