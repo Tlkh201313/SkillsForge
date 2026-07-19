@@ -1,4 +1,4 @@
-# Evaluation method (v0.3)
+# Evaluation method (v0.4)
 
 SkillsForge routing quality is measured against frozen corpora under `evaluation/`.
 

@@ -16877,8 +16877,8 @@ var init_receipt = __esm({
   "lib/capabilities/receipt.mjs"() {
     init_dependency_graph();
     init_policy();
-    SCANNER_VERSION = "0.4.0";
-    RECEIPT_VERSION = "0.4.0";
+    SCANNER_VERSION = "0.4.1";
+    RECEIPT_VERSION = "0.4.1";
   }
 });
 
@@ -17160,7 +17160,7 @@ function enforceMcp(tool, caps) {
 }
 function isMcpTool(toolName) {
   const tool = String(toolName ?? "");
-  return /^mcp__/i.test(tool) || /MCP/i.test(tool);
+  return /^mcp__/i.test(tool);
 }
 function deny2(reason) {
   return {
@@ -18146,7 +18146,7 @@ var init_evidence = __esm({
     init_skill_loader();
     init_receipt();
     init_verify();
-    EVIDENCE_VERSION = "0.4.0";
+    EVIDENCE_VERSION = "0.4.1";
     moduleRoot = resolve16(dirname7(fileURLToPath5(import.meta.url)), "../..");
   }
 });
@@ -19385,7 +19385,7 @@ async function runJudgeDemo(root, options = {}) {
     const digest = tree.packageHash;
     const evidenceDir = join10(repo, "artifacts", "demo-evidence");
     await mkdir4(evidenceDir, { recursive: true });
-    const evidencePath = join10(evidenceDir, "trust-receipt.json");
+    const evidencePath = join10(evidenceDir, "demo-scoreboard.json");
     let skillMeta = null;
     try {
       skillMeta = await loadSkill(safeDir);
@@ -19431,7 +19431,7 @@ async function runJudgeDemo(root, options = {}) {
       urls: {
         unsafeExample: "examples/codex-unsafe-release",
         safeExample: "examples/codex-safe-release",
-        evidence: "artifacts/demo-evidence/trust-receipt.json",
+        evidence: "artifacts/demo-evidence/demo-scoreboard.json",
         demoDoc: "docs/hackathon-demo.md"
       },
       scoreboard: formatScoreboard(board, { color: options.color !== false })

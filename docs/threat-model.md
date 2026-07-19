@@ -1,10 +1,10 @@
-# SkillsForge threat model (v0.3)
+# SkillsForge threat model (v0.4)
 
 ## Scope
 
 SkillsForge validates, forges, routes, policy-scans, and packages Agent Skills for **Codex** (native plugin + guarded package) and **Claude Code** (full), with package-fidelity installs for Cursor / OpenCode / ZCode / Hermes / Gemini and custom local AI CLI targets. This document covers trust boundaries for static capability scanning and host PreToolUse policy hooks.
 
-One plugin: `skillsforge`. Thin read-only MCP only (`scripts/skillsforge-mcp.mjs`: validate/route/skillshield plus library/workflow recommendation). No LSP, monitors, token ledgers, or domain packs are in scope.
+One plugin: `skillsforge`. Thin read-only MCP only (`scripts/skillsforge-mcp.mjs`: validate/route/skillshield plus library/workflow recommendation). No LSP, monitors, or token ledgers. Domain packs ship as lean scaffolds — productivity surface is in scope; OS sandboxing and third-party attestation are not.
 
 ## Assets
 

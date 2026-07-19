@@ -1,9 +1,9 @@
 # OpenAI Build Week — SkillsForge provenance
 
 **Track:** Developer Tools  
-**Project:** SkillsForge — Agent Skills trust pipeline for Codex  
+**Project:** SkillsForge — Work OS for productive Agent Skills (trust safety layer included)  
 **Build window:** 2026-07-13 09:00 PT → 2026-07-21 17:00 PT  
-**Branch:** `fix/trust-hardening-from-review`
+**Branch:** `main`
 
 ## Codex / GPT-5.6 Session ID (required)
 

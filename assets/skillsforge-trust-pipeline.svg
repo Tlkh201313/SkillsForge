@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="140" viewBox="0 0 1200 140" role="img" aria-labelledby="title description">
-  <title id="title">SkillsForge trust pipeline</title>
-  <desc id="description">Five-step trust pipeline: validate, deny unsafe, package safe, PreToolUse guard, tamper-evident receipt.</desc>
+  <title id="title">SkillsForge trust safety layer</title>
+  <desc id="description">Safety layer under the Work OS: validate, deny unsafe, package safe, PreToolUse guard, tamper-evident receipt.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#080b18"/>

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
   <title id="title">SkillsForge star map</title>
-  <desc id="desc">A factual map of SkillsForge skills, workflows, hosts, CLI surfaces, MCP tools, and trust gates.</desc>
+  <desc id="desc">A factual map of SkillsForge as a productivity Work OS: skills, workflows, library, hosts, CLI, MCP, with trust as a safety layer.</desc>
   <rect width="1400" height="760" fill="#0d1117"/>
   <defs>
     <style>
@@ -25,11 +25,11 @@
 
   <rect class="core" x="548" y="298" width="304" height="128"/>
   <text class="label" x="700" y="344" text-anchor="middle" font-size="34" font-weight="800">SkillsForge</text>
-  <text class="muted" x="700" y="378" text-anchor="middle" font-size="18">Trust router for Agent Skills</text>
-  <text class="mono" x="700" y="406" text-anchor="middle" font-size="15">validate -> route -> package -> verify</text>
+  <text class="muted" x="700" y="378" text-anchor="middle" font-size="18">Productivity Work OS</text>
+  <text class="mono" x="700" y="406" text-anchor="middle" font-size="15">route · workflows · library · ship</text>
 
   <rect class="node" x="82" y="82" width="250" height="116"/>
-  <text class="label" x="207" y="126" text-anchor="middle" font-size="26" font-weight="700">366 skills</text>
+  <text class="label" x="207" y="126" text-anchor="middle" font-size="26" font-weight="700">367 skills</text>
   <text class="muted" x="207" y="158" text-anchor="middle" font-size="16">26 packs, 10 profiles</text>
   <text class="mono" x="207" y="184" text-anchor="middle" font-size="13">skillsforge.json sidecars</text>
 
@@ -66,8 +66,8 @@
   <path class="ok" d="M852 396 C930 470 986 566 1068 620"/>
 
   <rect class="node" x="470" y="56" width="460" height="98"/>
-  <text class="label" x="700" y="96" text-anchor="middle" font-size="24" font-weight="700">Trust gates</text>
-  <text class="mono" x="700" y="128" text-anchor="middle" font-size="14">validate | skillshield | package | receipt | evidence</text>
+  <text class="label" x="700" y="96" text-anchor="middle" font-size="24" font-weight="700">Operator surfaces</text>
+  <text class="mono" x="700" y="128" text-anchor="middle" font-size="14">lib | wb | auto | workflows | vibe | ps export</text>
   <path class="line" d="M700 154 V298"/>
 
   <rect class="node" x="470" y="606" width="460" height="98"/>
