@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need pressure test skill in a SkillsForge methodology workflow.
   default_prompt: Use the pressure-test-skill skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

@@ -1,0 +1,65 @@
+{
+  "id": "ops.cost-sanity",
+  "category": "ops",
+  "goal": "Review cloud or tooling cost drivers before launch.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "ops-cost",
+      "agent": "cost-optimizer",
+      "command": "skillsforge route --query \"Review cloud or tooling cost drivers before launch.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "cloud-cost-tags",
+      "agent": "finance-lite"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "fin-budget",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "ops-cost",
+    "cloud-cost-tags",
+    "fin-budget"
+  ],
+  "recommendedAgents": [
+    "cost-optimizer",
+    "finance-lite"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Review cloud or tooling cost drivers before launch.\"",
+    "skillsforge workflows run --id ops.cost-sanity --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "medium"
+}

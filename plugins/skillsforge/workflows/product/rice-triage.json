@@ -1,0 +1,65 @@
+{
+  "id": "product.rice-triage",
+  "category": "product",
+  "goal": "Rank competing work by evidence and delivery risk.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "product-rice",
+      "agent": "pm",
+      "command": "skillsforge route --query \"Rank competing work by evidence and delivery risk.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "research-evidence-grade",
+      "agent": "founder"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "product-roadmap",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "product-rice",
+    "research-evidence-grade",
+    "product-roadmap"
+  ],
+  "recommendedAgents": [
+    "pm",
+    "founder"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Rank competing work by evidence and delivery risk.\"",
+    "skillsforge workflows run --id product.rice-triage --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "low"
+}

@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need legal tos outline in a SkillsForge legal-lite workflow.
   default_prompt: Use the legal-tos-outline skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

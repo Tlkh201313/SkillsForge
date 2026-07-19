@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need run build in a SkillsForge lifecycle workflow.
   default_prompt: Use the run-build skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

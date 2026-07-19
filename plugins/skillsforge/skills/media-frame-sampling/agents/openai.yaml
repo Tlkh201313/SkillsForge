@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Frame Sampling
+  short_description: Use when you need media frame sampling in a SkillsForge media workflow.
+  default_prompt: Use the media-frame-sampling skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need ops canary in a SkillsForge ops workflow.
   default_prompt: Use the ops-canary skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

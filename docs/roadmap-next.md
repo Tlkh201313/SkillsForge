@@ -1,14 +1,13 @@
 # SkillsForge next-wave roadmap
 
-Post–hackathon hardening. Trust pipeline stays the product. Scale is supporting evidence.
+Post-hackathon hardening. Trust pipeline stays the product. Scale is supporting context, not proof by itself.
 
 ## P0 — Human Stage One (blocking submit)
 
 | Item | Owner | Notes |
 |------|-------|-------|
-| Codex `/feedback` Session ID | Human | Paste into `BUILD_WEEK.md` |
-| YouTube &lt;3min | Human | Render `video/` → upload; script in `docs/hackathon-demo.md` |
-| Push PR + CI green | Human | Branch `feat/skillsforge-total-dominance` |
+| Video check | Human | Verify README inline MP4 and script in `docs/hackathon-demo.md` |
+| Push PR + CI green | Human | Use the current hardening branch |
 | Devpost | Human | Developer Tools + limitations + free access |
 | Tag after merge | Human | Suggested `v0.4.0-buildweek` |
 
@@ -26,20 +25,21 @@ Post–hackathon hardening. Trust pipeline stays the product. Scale is supportin
 2. Pack profiles install UX: `skillsforge install --profile vibe`.
 3. Capture → forge approval TUI (still require human approve before write).
 4. Windows path/docs polish for absolute `--allow-absolute` examples.
+5. Deeper workbench probes: dependency graphs, test failure summarization, and CI log compression.
 
 ## Explicitly out of scope
 
 - Ruflo swarm / AgentDB / Raft consensus
-- Desktop dashboard
-- Rewriting all 354 bodies
+- Cloud dashboard or always-on service
+- Rewriting every generated body in one batch
 - Claiming OS sandbox or third-party attestation
 
 ## Success metrics
 
 | Metric | Target |
 |--------|--------|
-| `npx skillsforge demo` | &lt;90s, false-allow=0 |
+| Local demo | `node plugins/skillsforge/bin/skillsforge.mjs demo` completes under 90s |
 | Holdout P/R | ≥0.95 / ≥0.90 |
 | Auto-route set | ≤7 |
-| Hero depth | ≥25 unique bodies |
-| Video | Remotion Studio + renderable MP4 |
+| Hero depth | Stable skills clearly marked; lean scaffolds not claimed as production depth |
+| Video | README poster is visible; MP4 is committed at `assets/video/skillsforge-demo.mp4`; final attachment URL added before judging |

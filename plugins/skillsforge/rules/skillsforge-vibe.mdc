@@ -6,4 +6,4 @@ alwaysApply: false
 
 # SkillsForge vibe
 
-Start with `npx skillsforge vibe` then `skillsforge catalog`.
+Start with `node plugins/skillsforge/bin/skillsforge.mjs vibe` in a clone, or `skillsforge vibe` after install.

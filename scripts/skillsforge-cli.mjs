@@ -1,6 +1,7 @@
-import { access, readFile, writeFile, mkdir } from 'node:fs/promises';
+import { access, readFile, writeFile, mkdir, readdir, stat } from 'node:fs/promises';
 import { realpathSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { spawn } from 'node:child_process';
+import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadAllSkills } from '../lib/capabilities/skill-loader.mjs';
 import { routeQuery } from '../lib/capabilities/router.mjs';
@@ -12,7 +13,7 @@ import { analyzeDependencies } from '../lib/capabilities/dependency-graph.mjs';
 import { verifySkillPaths } from '../lib/capabilities/verify.mjs';
 import { detectHosts, installSkills, resolveHostSelection } from '../lib/capabilities/install.mjs';
 import { pickHosts } from '../lib/capabilities/install-tui.mjs';
-import { HOST_REGISTRY } from '../lib/capabilities/hosts.mjs';
+import { buildCustomHost, HOST_REGISTRY } from '../lib/capabilities/hosts.mjs';
 import { exportPortableSkill } from '../lib/capabilities/export.mjs';
 import { packageCodexPlugin } from '../lib/capabilities/codex-package.mjs';
 import { loadCatalog, listPacks, listProfiles, searchCatalog, catalogStats, skillsForPack, skillsForProfile } from '../lib/capabilities/catalog.mjs';
@@ -25,6 +26,10 @@ import { exportAgentsMd, captureLearning, forgeFromCapture } from '../lib/capabi
 import { loadSkill } from '../lib/capabilities/skill-loader.mjs';
 import { resolveUnderRoot } from '../lib/capabilities/paths.mjs';
 import { runJudgeDemo, compareSkillTrust, formatPackScorecard } from '../lib/capabilities/demo.mjs';
+import { buildLibraryIndex, planSkillRemoval, recommendFromLibrary, removeInstalledSkill, serveLibrary, writeLibraryArtifacts } from '../lib/capabilities/library.mjs';
+import { exportPowerShellHelpers } from '../lib/capabilities/powershell.mjs';
+import { loadWorkflows, planAuto, recommendWorkflows, runAutoReadOnly, runWorkflowDryRun, showWorkflow } from '../lib/capabilities/workflows.mjs';
+import { formatWorkbenchText, runWorkbench } from '../lib/capabilities/workbench.mjs';
 
 export { enforcePolicy, exportPortableSkill };
 
@@ -91,9 +96,11 @@ Commands:
     --package-only                  Skip evaluation authenticity checks
   enforce --policy <sidecar.json>   Decide PreToolUse allow/deny from stdin event JSON
   eval                              Run holdout routing evaluation (P/R gate)
+  hosts [--json] [--home <dir>]     List universal AI CLI host targets and trust boundaries
   install [skill-paths...]          Install skills into detected agent hosts
-    --hosts <ids>                   Comma list: claude-code,cursor,codex,opencode,gemini
-    --yes                           Non-interactive (requires --hosts)
+    --hosts <ids>                   Comma list or all|detected: claude-code,cursor,codex,opencode,zcode,hermes,gemini
+    --custom-host <id>:<skills-dir> Add package-fidelity target under --home
+    --yes                           Non-interactive (requires --hosts or --custom-host)
     --list                          Print detected hosts and exit
     --dry-run                       Plan installs without writing
     --force                         Overwrite existing skill directories
@@ -138,6 +145,24 @@ Commands:
   compare-skill --a <dir> --b <dir> Side-by-side sidecar vs policy (trust delta)
   demo                              Judge path: unsafe deny → safe package → receipt
   watch --skill <dir>               Re-quality on interval (single pass in CI)
+  wb <task>                         Token-friendly workbench: status/tree/find/grep/diff/errors/bigfiles/recent/proof
+    --json --limit <n> --full       Compact by default; --full raises safe output caps
+  lib <build|update|serve|check|recommend|remove>
+                                    Local skill library index, UI, recommendation, and removal preview
+  workflows <list|show|recommend|run|export-html>
+                                    Curated workflow catalog (dry-run execution only)
+  auto <plan|run>                    Recommend skill + workflow; run requires --read-only
+  ps export                         Export PowerShell sf-*.ps1 helper commands
+  os-env [--name <VAR>] [--json]     Inspect safe environment facts without dumping secrets
+  os-find --name <glob> [--root <dir>] [--json]
+                                    Cross-platform file finder with repo-safe defaults
+  os-ports [--json]                 Best-effort listening port snapshot
+  os-open <path-or-url> [--dry-run] [--json]
+                                    Open target via platform launcher
+  os-run [--yes|--dry-run] -- <cmd> [args...]
+                                    Agent-safe command runner; dry-run unless --yes
+  os-copy-path <path> [--json]      Resolve and print canonical path
+  os-clean --root <dir> [--json]    Dry-run cleanup candidate inventory only
 
 Exit codes: 0 success, 1 command failure, 2 invalid usage
 `);
@@ -161,6 +186,8 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runEnforce(argv.slice(1), options);
     case 'eval':
       return runEvalCommand(argv.slice(1), options);
+    case 'hosts':
+      return runHostsCommand(argv.slice(1), options);
     case 'install':
       return runInstall(argv.slice(1), options);
     case 'package':
@@ -205,6 +232,30 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runDemoCommand(argv.slice(1), options);
     case 'watch':
       return runWatchCommand(argv.slice(1), options);
+    case 'wb':
+      return runWorkbenchCommand(argv.slice(1), options);
+    case 'lib':
+      return runLibCommand(argv.slice(1), options);
+    case 'workflows':
+      return runWorkflowsCommand(argv.slice(1), options);
+    case 'auto':
+      return runAutoCommand(argv.slice(1), options);
+    case 'ps':
+      return runPsCommand(argv.slice(1), options);
+    case 'os-env':
+      return runOsEnvCommand(argv.slice(1), options);
+    case 'os-find':
+      return runOsFindCommand(argv.slice(1), options);
+    case 'os-ports':
+      return runOsPortsCommand(argv.slice(1), options);
+    case 'os-open':
+      return runOsOpenCommand(argv.slice(1), options);
+    case 'os-run':
+      return runOsRunCommand(argv.slice(1), options);
+    case 'os-copy-path':
+      return runOsCopyPathCommand(argv.slice(1), options);
+    case 'os-clean':
+      return runOsCleanCommand(argv.slice(1), options);
     default:
       process.stderr.write(`unknown command: ${command}\n`);
       return 2;
@@ -259,6 +310,21 @@ function consumeOption(values, flag) {
   }
   values.splice(index, 2);
   return value;
+}
+
+function consumeOptions(values, flag) {
+  const picked = [];
+  for (;;) {
+    const index = values.indexOf(flag);
+    if (index === -1) return picked;
+    const value = values[index + 1];
+    if (!value || value.startsWith('--')) {
+      values.splice(index, 1);
+      return null;
+    }
+    picked.push(value);
+    values.splice(index, 2);
+  }
 }
 
 function resolveUserPath(root, value, allowAbsolute = false) {
@@ -400,9 +466,14 @@ async function runVerifyReceipt(argv, options) {
     process.stderr.write('--evaluation requires a value\n');
     return 2;
   }
+  const receiptSha256 = consumeOption(args, '--receipt-sha256');
+  if (receiptSha256 === null) {
+    process.stderr.write('--receipt-sha256 requires a value\n');
+    return 2;
+  }
   const path = args.find((item) => !item.startsWith('--'));
   if (!path) {
-    process.stderr.write('usage: skillsforge verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only]\n');
+    process.stderr.write('usage: skillsforge verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only] [--receipt-sha256 <hash>]\n');
     return 2;
   }
   const root = await resolveRuntimeRoot(options);
@@ -411,7 +482,8 @@ async function runVerifyReceipt(argv, options) {
   const verifyOptions = {
     packageRoot,
     packageOnly,
-    requireEvaluation: !packageOnly
+    requireEvaluation: !packageOnly,
+    expectedReceiptHash: receiptSha256 || undefined
   };
   if (!packageOnly && evaluationOption) {
     verifyOptions.evaluationPath = resolve(evaluationOption);
@@ -452,6 +524,57 @@ async function runEvalCommand(argv, options) {
   return report.precision >= HOLDOUT_PRECISION_MIN && report.recall >= HOLDOUT_RECALL_MIN ? 0 : 1;
 }
 
+async function runHostsCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const homeOption = consumeOption(args, '--home');
+  if (homeOption === null) {
+    process.stderr.write('--home requires a value\n');
+    return 2;
+  }
+  if (args.some((item) => item.startsWith('--'))) {
+    process.stderr.write(`unknown hosts option: ${args.find((item) => item.startsWith('--'))}\n`);
+    return 2;
+  }
+  if (args.length) {
+    process.stderr.write(`unknown hosts argument: ${args[0]}\n`);
+    return 2;
+  }
+
+  const home = homeOption ? resolve(homeOption) : options.home;
+  const hosts = await detectHosts({ home });
+  const registry = HOST_REGISTRY.map((host) => ({
+    id: host.id,
+    label: host.label,
+    fidelity: host.fidelity,
+    runtimeEnforced: host.runtimeEnforced,
+    usesSidecar: host.usesSidecar,
+    installHint: host.installHint
+  }));
+  const examples = [
+    'skillsforge install --hosts codex,claude-code --yes --dry-run',
+    'skillsforge install --hosts all --yes --dry-run',
+    'skillsforge install --custom-host my-agent:.my-agent/skills --yes --dry-run'
+  ];
+  const payload = { ok: true, registry, hosts, examples };
+
+  if (json) {
+    process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+    return 0;
+  }
+
+  process.stdout.write('Universal AI CLI hosts\n');
+  for (const host of hosts) {
+    const mark = host.detected ? 'detected' : 'missing';
+    const policy = host.runtimeEnforced ? 'runtime-policy' : 'package-only';
+    process.stdout.write(`${host.id}\t${mark}\t${host.fidelity}\t${policy}\t${host.skillsDir}\n`);
+    process.stdout.write(`  ${host.installHint}\n`);
+  }
+  process.stdout.write('Examples:\n');
+  for (const example of examples) process.stdout.write(`  ${example}\n`);
+  return 0;
+}
+
 async function runInstall(argv, options) {
   const args = [...argv];
   const json = consumeFlag(args, '--json');
@@ -459,6 +582,11 @@ async function runInstall(argv, options) {
   const yes = consumeFlag(args, '--yes');
   const dryRun = consumeFlag(args, '--dry-run');
   const force = consumeFlag(args, '--force');
+  const customSpecs = consumeOptions(args, '--custom-host');
+  if (customSpecs === null) {
+    process.stderr.write('--custom-host requires <id>:<skills-dir>\n');
+    return 2;
+  }
   const hostsOption = consumeOption(args, '--hosts');
   if (hostsOption === null) {
     process.stderr.write('--hosts requires a value\n');
@@ -477,7 +605,14 @@ async function runInstall(argv, options) {
   if (list) {
     const payload = {
       ok: true,
-      registry: HOST_REGISTRY.map((host) => ({ id: host.id, label: host.label, fidelity: host.fidelity })),
+      registry: HOST_REGISTRY.map((host) => ({
+        id: host.id,
+        label: host.label,
+        fidelity: host.fidelity,
+        runtimeEnforced: host.runtimeEnforced,
+        usesSidecar: host.usesSidecar,
+        installHint: host.installHint
+      })),
       hosts: detected
     };
     if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
@@ -494,44 +629,67 @@ async function runInstall(argv, options) {
     ? hostsOption.split(',').map((item) => item.trim()).filter(Boolean)
     : null;
 
+  if (hostIds?.length === 1 && hostIds[0] === 'all') {
+    hostIds = HOST_REGISTRY.map((host) => host.id);
+  } else if (hostIds?.length === 1 && hostIds[0] === 'detected') {
+    hostIds = detected.filter((host) => host.detected).map((host) => host.id);
+  } else if (hostIds?.includes('all') || hostIds?.includes('detected')) {
+    process.stderr.write('--hosts all|detected cannot be combined with other ids\n');
+    return 2;
+  }
+
+  let customHosts;
+  try {
+    customHosts = customSpecs.map((spec) => buildCustomHost(spec, { home }));
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`);
+    return 2;
+  }
+
   if (!hostIds) {
-    if (yes) {
-      process.stderr.write('install --yes requires --hosts <ids>\n');
+    if (customHosts.length) {
+      hostIds = [];
+    } else if (yes) {
+      process.stderr.write('install --yes requires --hosts <ids> or --custom-host <id>:<skills-dir>\n');
       return 2;
-    }
-    const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
-    if (!interactive) {
-      process.stderr.write('usage: skillsforge install --hosts <ids> --yes [skill-paths...]\n');
-      process.stderr.write('       (interactive picker requires a TTY; use --list to see hosts)\n');
-      return 2;
-    }
-    try {
-      const picked = await pickHosts(detected);
-      if (picked == null) {
-        process.stderr.write('install aborted\n');
-        return 1;
+    } else {
+      const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+      if (!interactive) {
+        process.stderr.write('usage: skillsforge install --hosts <ids> --yes [skill-paths...]\n');
+        process.stderr.write('       (interactive picker requires a TTY; use --list to see hosts)\n');
+        return 2;
       }
-      hostIds = picked;
-    } catch (error) {
-      process.stderr.write(`${error.message}\n`);
-      return 2;
+      try {
+        const picked = await pickHosts(detected);
+        if (picked == null) {
+          process.stderr.write('install aborted\n');
+          return 1;
+        }
+        hostIds = picked;
+      } catch (error) {
+        process.stderr.write(`${error.message}\n`);
+        return 2;
+      }
     }
   }
 
-  if (!hostIds.length) {
+  if (!hostIds.length && !customHosts.length) {
     process.stderr.write('no hosts selected\n');
     return 1;
   }
 
-  const selection = await resolveHostSelection(hostIds, { home });
+  const selection = hostIds.length
+    ? await resolveHostSelection(hostIds, { home })
+    : { selected: [], unknown: [], all: detected };
   if (selection.unknown.length) {
     process.stderr.write(`unknown hosts: ${selection.unknown.join(', ')}\n`);
-    process.stderr.write(`known: ${HOST_REGISTRY.map((host) => host.id).join(', ')}\n`);
+    process.stderr.write(`known: ${HOST_REGISTRY.map((host) => host.id).join(', ')} or --custom-host <id>:<skills-dir>\n`);
     return 2;
   }
+  const selectedHosts = [...selection.selected, ...customHosts];
 
   const result = await installSkills({
-    hostIds,
+    hosts: selectedHosts,
     home,
     root,
     skillPaths: skillPaths.length ? skillPaths : undefined,
@@ -994,6 +1152,466 @@ async function runDemoCommand(argv, options) {
   return result.ok ? 0 : 1;
 }
 
+async function runOsEnvCommand(argv) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const name = consumeOption(args, '--name');
+  if (name === null) return usage('--name requires a value');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+
+  if (name) {
+    const exists = Object.hasOwn(process.env, name);
+    return writeOsResult({
+      ok: exists,
+      command: 'os-env',
+      name,
+      exists,
+      value: exists ? process.env[name] : null
+    }, json, ({ value }) => `${value ?? ''}\n`, exists ? 0 : 1);
+  }
+
+  const pathEntries = String(process.env.PATH ?? process.env.Path ?? '')
+    .split(process.platform === 'win32' ? ';' : ':')
+    .filter(Boolean);
+  return writeOsResult({
+    ok: true,
+    command: 'os-env',
+    platform: process.platform,
+    arch: process.arch,
+    node: process.version,
+    cwd: process.cwd(),
+    shell: process.env.SHELL ?? process.env.ComSpec ?? null,
+    home: process.env.HOME ?? process.env.USERPROFILE ?? null,
+    pathEntries,
+    envKeys: Object.keys(process.env).sort()
+  }, json, (payload) => [
+    `platform=${payload.platform}`,
+    `arch=${payload.arch}`,
+    `node=${payload.node}`,
+    `cwd=${payload.cwd}`,
+    `shell=${payload.shell ?? ''}`,
+    `pathEntries=${payload.pathEntries.length}`,
+    `envKeys=${payload.envKeys.length}`
+  ].join('\n') + '\n');
+}
+
+async function runOsFindCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  const name = consumeOption(args, '--name');
+  const rootOption = consumeOption(args, '--root') ?? '.';
+  const limitValue = consumeOption(args, '--limit') ?? '200';
+  if (name === null) return usage('--name requires a value');
+  if (rootOption === null) return usage('--root requires a value');
+  if (limitValue === null) return usage('--limit requires a value');
+  if (!name) return usage('usage: skillsforge os-find --name <glob> [--root <dir>] [--json]');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+
+  const repoRoot = await resolveRuntimeRoot(options);
+  let root;
+  try {
+    root = resolveUserPath(repoRoot, rootOption, allowAbsolute);
+  } catch (error) {
+    return failOsResult('os-find', error.message, json);
+  }
+  const limit = Math.max(1, Math.min(1000, Number(limitValue) || 200));
+  const regex = globToRegExp(name);
+  const matches = [];
+  await walkFind(root, root, regex, matches, limit);
+  return writeOsResult({
+    ok: true,
+    command: 'os-find',
+    root,
+    pattern: name,
+    limit,
+    truncated: matches.length >= limit,
+    matches
+  }, json, (payload) => payload.matches.map((item) => `${item.type}\t${item.path}`).join('\n') + (payload.matches.length ? '\n' : ''));
+}
+
+async function runOsPortsCommand(argv) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const attempts = process.platform === 'win32'
+    ? [['netstat', ['-ano', '-p', 'tcp']]]
+    : [['lsof', ['-nP', '-iTCP', '-sTCP:LISTEN']], ['netstat', ['-an']]];
+  for (const [command, commandArgs] of attempts) {
+    const result = await runProcess(command, commandArgs, { timeoutMs: 5000 });
+    if (result.status === 0 && result.stdout.trim()) {
+      const lines = result.stdout.split(/\r?\n/).filter(Boolean).slice(0, 200);
+      return writeOsResult({
+        ok: true,
+        command: 'os-ports',
+        probe: [command, ...commandArgs].join(' '),
+        lines
+      }, json, (payload) => payload.lines.join('\n') + '\n');
+    }
+  }
+  return failOsResult('os-ports', 'no port probe command succeeded', json);
+}
+
+async function runOsOpenCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const dryRun = consumeFlag(args, '--dry-run');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  const target = args.shift();
+  if (!target) return usage('usage: skillsforge os-open <path-or-url> [--dry-run] [--json]');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+
+  const repoRoot = await resolveRuntimeRoot(options);
+  let resolved = target;
+  if (!isUrlLike(target)) {
+    try {
+      resolved = resolveUserPath(repoRoot, target, allowAbsolute);
+    } catch (error) {
+      return failOsResult('os-open', error.message, json);
+    }
+  }
+  const launcher = platformOpenCommand(resolved);
+  const payload = {
+    ok: true,
+    command: 'os-open',
+    dryRun,
+    target: resolved,
+    launcher: [launcher.command, ...launcher.args]
+  };
+  if (dryRun) {
+    return writeOsResult(payload, json, (item) => `${item.launcher.join(' ')}\n`);
+  }
+  const result = await runProcess(launcher.command, launcher.args, { timeoutMs: 10000 });
+  return writeOsResult({ ...payload, result }, json, () => result.stderr || result.stdout || '', result.status === 0 ? 0 : 1);
+}
+
+async function runOsRunCommand(argv, options) {
+  const split = splitCommandArgs(argv);
+  const args = [...split.options];
+  const json = consumeFlag(args, '--json');
+  const dryRunFlag = consumeFlag(args, '--dry-run');
+  const yes = consumeFlag(args, '--yes');
+  const cwdOption = consumeOption(args, '--cwd') ?? '.';
+  const timeoutValue = consumeOption(args, '--timeout-ms') ?? '30000';
+  if (cwdOption === null) return usage('--cwd requires a value');
+  if (timeoutValue === null) return usage('--timeout-ms requires a value');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  if (split.command.length === 0) return usage('usage: skillsforge os-run [--yes|--dry-run] -- <cmd> [args...]');
+
+  const root = await resolveRuntimeRoot(options);
+  let cwd;
+  try {
+    cwd = resolveUserPath(root, cwdOption, true);
+  } catch (error) {
+    return failOsResult('os-run', error.message, json);
+  }
+  const [command, ...commandArgs] = split.command;
+  const timeoutMs = Math.max(1000, Math.min(300000, Number(timeoutValue) || 30000));
+  const dryRun = dryRunFlag || !yes;
+  const payload = {
+    ok: true,
+    command: 'os-run',
+    dryRun,
+    cwd,
+    timeoutMs,
+    argv: [command, ...commandArgs]
+  };
+  if (dryRun) {
+    return writeOsResult(payload, json, (item) => `${item.argv.join(' ')}\n`);
+  }
+  const result = await runProcess(command, commandArgs, { cwd, timeoutMs });
+  return writeOsResult({ ...payload, result, ok: result.status === 0 }, json, () => result.stdout + result.stderr, result.status === 0 ? 0 : 1);
+}
+
+async function runOsCopyPathCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  const target = args.shift();
+  if (!target) return usage('usage: skillsforge os-copy-path <path> [--json]');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  try {
+    const resolved = resolveUserPath(root, target, allowAbsolute);
+    return writeOsResult({ ok: true, command: 'os-copy-path', path: resolved }, json, (payload) => `${payload.path}\n`);
+  } catch (error) {
+    return failOsResult('os-copy-path', error.message, json);
+  }
+}
+
+async function runOsCleanCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  const rootOption = consumeOption(args, '--root') ?? '.';
+  if (rootOption === null) return usage('--root requires a value');
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+
+  const repoRoot = await resolveRuntimeRoot(options);
+  let root;
+  try {
+    root = resolveUserPath(repoRoot, rootOption, allowAbsolute);
+  } catch (error) {
+    return failOsResult('os-clean', error.message, json);
+  }
+  const names = ['node_modules', 'dist', 'artifacts', 'coverage', '.next', '.turbo', 'tests/.tmp-runner'];
+  const candidates = [];
+  for (const name of names) {
+    const path = resolve(root, name);
+    if (await pathExists(path)) {
+      candidates.push({
+        path,
+        relativePath: relative(root, path).replaceAll('\\', '/'),
+        bytes: await directorySize(path)
+      });
+    }
+  }
+  return writeOsResult({
+    ok: true,
+    command: 'os-clean',
+    dryRun: true,
+    root,
+    candidates,
+    note: 'phase 1 inventory only; no files deleted'
+  }, json, (payload) => payload.candidates.map((item) => `${item.bytes}\t${item.relativePath}`).join('\n') + (payload.candidates.length ? '\n' : ''));
+}
+
+async function runWorkbenchCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, '--json');
+  const full = consumeFlag(args, '--full');
+  const limitOption = consumeOption(args, '--limit');
+  const limitValue = limitOption ?? (full ? '5000' : '80');
+  const queryOption = consumeOption(args, '--query');
+  if (limitOption === null) return usage('--limit requires a value');
+  if (queryOption === null) return usage('--query requires a value');
+  const task = args.shift() ?? 'status';
+  const query = queryOption ?? args.join(' ');
+  if (hasUnknownOption(args)) return usage(`unknown wb option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const payload = await runWorkbench(root, task, {
+    query,
+    limit: Number(limitValue) || (full ? 5000 : 80),
+    full
+  });
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+  else process.stdout.write(formatWorkbenchText(payload));
+  return payload.ok ? 0 : 1;
+}
+
+async function runLibCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, '--json');
+  const allowAbsolute = consumeFlag(args, '--allow-absolute');
+  const out = consumeOption(args, '--out');
+  const homeOption = consumeOption(args, '--home');
+  const sessionHost = consumeOption(args, '--session-host');
+  if (out === null) return usage('--out requires a value');
+  if (homeOption === null) return usage('--home requires a value');
+  if (sessionHost === null) return usage('--session-host requires a value');
+  const root = await resolveRuntimeRoot(options);
+  const home = homeOption ? resolve(homeOption) : options.home;
+
+  if (subcommand === 'build' || subcommand === 'update') {
+    if (hasUnknownOption(args)) return usage(`unknown lib ${subcommand} option: ${hasUnknownOption(args)}`);
+    let result;
+    try {
+      result = await writeLibraryArtifacts(root, {
+        outDir: out ?? undefined,
+        home,
+        allowAbsolute,
+        sessionHost: sessionHost ?? undefined,
+        noCache: subcommand === 'update'
+      });
+    } catch (error) {
+      process.stderr.write(`${error.message}\n`);
+      return 1;
+    }
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    return result.ok ? 0 : 1;
+  }
+
+  if (subcommand === 'check') {
+    const skill = consumeOption(args, '--skill') ?? args.shift();
+    if (skill === null) return usage('--skill requires a value');
+    if (hasUnknownOption(args)) return usage(`unknown lib check option: ${hasUnknownOption(args)}`);
+    const index = await buildLibraryIndex(root, { home, sessionHost: sessionHost ?? undefined });
+    const record = skill ? index.skills.find((item) => item.id === skill || item.key === skill) : null;
+    const result = record ? { ok: true, skill: record } : { ok: false, error: `unknown skill: ${skill}` };
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    return result.ok ? 0 : 1;
+  }
+
+  if (subcommand === 'recommend') {
+    const queryOption = consumeOption(args, '--query');
+    const limitValue = consumeOption(args, '--limit') ?? '5';
+    if (queryOption === null) return usage('--query requires a value');
+    if (limitValue === null) return usage('--limit requires a value');
+    if (hasUnknownOption(args)) return usage(`unknown lib recommend option: ${hasUnknownOption(args)}`);
+    const query = queryOption ?? args.join(' ');
+    if (!query) return usage('usage: skillsforge lib recommend --query <text>');
+    const index = await buildLibraryIndex(root, {
+      home,
+      sessionHost: sessionHost ?? undefined
+    });
+    const result = recommendFromLibrary(index, query, {
+      limit: Number(limitValue) || 5,
+      sessionHost: sessionHost ?? undefined
+    });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    return result.ok ? 0 : 1;
+  }
+
+  if (subcommand === 'remove') {
+    const dryRun = consumeFlag(args, '--dry-run');
+    const allowMutations = consumeFlag(args, '--allow-mutations');
+    const yes = consumeFlag(args, '--yes');
+    const host = consumeOption(args, '--host');
+    const skill = consumeOption(args, '--skill');
+    if (host === null) return usage('--host requires a value');
+    if (skill === null) return usage('--skill requires a value');
+    if (hasUnknownOption(args)) return usage(`unknown lib remove option: ${hasUnknownOption(args)}`);
+    if (!host || !skill) return usage('usage: skillsforge lib remove --host <id> --skill <id> [--dry-run|--allow-mutations --yes]');
+    const result = dryRun || !allowMutations || !yes
+      ? await planSkillRemoval(root, { host, skill, home })
+      : await removeInstalledSkill(root, { host, skill, home, allowMutations, yes });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    return result.ok ? 0 : 1;
+  }
+
+  if (subcommand === 'serve') {
+    const allowMutations = consumeFlag(args, '--allow-mutations');
+    const host = consumeOption(args, '--host') ?? '127.0.0.1';
+    const portValue = consumeOption(args, '--port') ?? '4763';
+    if (host === null) return usage('--host requires a value');
+    if (portValue === null) return usage('--port requires a value');
+    if (hasUnknownOption(args)) return usage(`unknown lib serve option: ${hasUnknownOption(args)}`);
+    const result = await serveLibrary(root, {
+      host,
+      port: Number(portValue) || 4763,
+      allowMutations,
+      home,
+      sessionHost: sessionHost ?? undefined
+    });
+    process.stdout.write(`${JSON.stringify({ ok: result.ok, url: result.url, readOnly: result.readOnly }, null, 2)}\n`);
+    return 0;
+  }
+
+  if (!subcommand) return usage('usage: skillsforge lib <build|update|serve|check|recommend|remove>');
+  return usage(`unknown lib command: ${subcommand}`);
+}
+
+async function runWorkflowsCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift() ?? 'list';
+  const json = consumeFlag(args, '--json');
+  const limitValue = consumeOption(args, '--limit') ?? '20';
+  const category = consumeOption(args, '--category');
+  const queryOption = consumeOption(args, '--query');
+  const idOption = consumeOption(args, '--id');
+  const dryRun = consumeFlag(args, '--dry-run');
+  if (limitValue === null) return usage('--limit requires a value');
+  if (category === null) return usage('--category requires a value');
+  if (queryOption === null) return usage('--query requires a value');
+  if (idOption === null) return usage('--id requires a value');
+  const root = await resolveRuntimeRoot(options);
+
+  let result;
+  if (subcommand === 'list') {
+    const loaded = await loadWorkflows(root);
+    const workflows = loaded.workflows
+      .filter((workflow) => !category || workflow.category === category)
+      .slice(0, Math.max(1, Number(limitValue) || 20));
+    result = { ok: loaded.ok, workflows, count: loaded.workflows.length, errors: loaded.errors };
+  } else if (subcommand === 'show') {
+    const id = idOption ?? args.shift();
+    if (!id) return usage('usage: skillsforge workflows show --id <workflow-id>');
+    result = await showWorkflow(root, id);
+  } else if (subcommand === 'recommend') {
+    const query = queryOption ?? args.join(' ');
+    if (!query) return usage('usage: skillsforge workflows recommend --query <text>');
+    result = await recommendWorkflows(root, query, {
+      category: category ?? undefined,
+      limit: Number(limitValue) || 20
+    });
+  } else if (subcommand === 'run') {
+    const id = idOption ?? args.shift();
+    if (!dryRun) return usage('skillsforge workflows run requires --dry-run');
+    if (!id) return usage('usage: skillsforge workflows run --id <workflow-id> --dry-run');
+    result = await runWorkflowDryRun(root, id);
+  } else if (subcommand === 'export-html') {
+    const out = consumeOption(args, '--out');
+    if (out === null) return usage('--out requires a value');
+    result = await writeLibraryArtifacts(root, { outDir: out ?? undefined });
+  } else {
+    return usage(`unknown workflows command: ${subcommand}`);
+  }
+  if (hasUnknownOption(args)) return usage(`unknown workflows option: ${hasUnknownOption(args)}`);
+  if (json || subcommand !== 'list') process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  else {
+    for (const workflow of result.workflows) process.stdout.write(`${workflow.id}\t${workflow.category}\t${workflow.goal}\n`);
+  }
+  return result.ok ? 0 : 1;
+}
+
+async function runAutoCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, '--json');
+  const readOnly = consumeFlag(args, '--read-only');
+  const queryOption = consumeOption(args, '--query');
+  const limitValue = consumeOption(args, '--limit') ?? '5';
+  const homeOption = consumeOption(args, '--home');
+  const sessionHost = consumeOption(args, '--session-host');
+  if (queryOption === null) return usage('--query requires a value');
+  if (limitValue === null) return usage('--limit requires a value');
+  if (homeOption === null) return usage('--home requires a value');
+  if (sessionHost === null) return usage('--session-host requires a value');
+  const query = queryOption ?? args.join(' ');
+  if (!query) return usage('usage: skillsforge auto <plan|run> --query <text>');
+  if (hasUnknownOption(args)) return usage(`unknown auto option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const home = homeOption ? resolve(homeOption) : options.home;
+  let result;
+  if (subcommand === 'plan') {
+    result = await planAuto(root, query, {
+      limit: Number(limitValue) || 5,
+      home,
+      sessionHost: sessionHost ?? undefined
+    });
+  } else if (subcommand === 'run') {
+    if (!readOnly) return usage('skillsforge auto run requires --read-only');
+    result = await runAutoReadOnly(root, query, {
+      limit: Number(limitValue) || 5,
+      home,
+      sessionHost: sessionHost ?? undefined
+    });
+  } else {
+    return usage('usage: skillsforge auto <plan|run> --query <text>');
+  }
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  else process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  return result.ok ? 0 : 1;
+}
+
+async function runPsCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, '--json');
+  const out = consumeOption(args, '--out');
+  if (out === null) return usage('--out requires a value');
+  if (subcommand !== 'export') return usage('usage: skillsforge ps export [--out <dir>] [--json]');
+  if (hasUnknownOption(args)) return usage(`unknown ps option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const result = await exportPowerShellHelpers(root, { outDir: out ?? undefined });
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  else {
+    for (const file of result.files) process.stdout.write(`${file.name}\t${file.path}\n`);
+  }
+  return result.ok ? 0 : 1;
+}
+
 async function runWatchCommand(argv, options) {
   const args = [...argv];
   const skill = consumeOption(args, '--skill');
@@ -1013,6 +1631,131 @@ async function runWatchCommand(argv, options) {
   const result = await scoreSkillQuality(skillDir, { root });
   process.stdout.write(`${JSON.stringify({ watch: 'single-pass', ...result }, null, 2)}\n`);
   return result.pass ? 0 : 1;
+}
+
+function usage(message) {
+  process.stderr.write(`${message}\n`);
+  return 2;
+}
+
+function hasUnknownOption(args) {
+  return args.find((item) => item.startsWith('--'));
+}
+
+function writeOsResult(payload, json, textFormatter, status = 0) {
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+  else process.stdout.write(textFormatter(payload));
+  return status;
+}
+
+function failOsResult(command, error, json) {
+  return writeOsResult({ ok: false, command, error }, json, (payload) => `${payload.error}\n`, 1);
+}
+
+function splitCommandArgs(argv) {
+  const marker = argv.indexOf('--');
+  if (marker === -1) return { options: argv, command: [] };
+  return {
+    options: argv.slice(0, marker),
+    command: argv.slice(marker + 1)
+  };
+}
+
+function globToRegExp(glob) {
+  const escaped = String(glob)
+    .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+    .replace(/\*/g, '.*')
+    .replace(/\?/g, '.');
+  return new RegExp(`^${escaped}$`, 'i');
+}
+
+async function walkFind(root, dir, regex, matches, limit) {
+  if (matches.length >= limit) return;
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  entries.sort((a, b) => a.name.localeCompare(b.name));
+  for (const entry of entries) {
+    if (matches.length >= limit) return;
+    if (shouldSkipFindEntry(entry.name)) continue;
+    const full = join(dir, entry.name);
+    const rel = relative(root, full).replaceAll('\\', '/');
+    const type = entry.isDirectory() ? 'dir' : entry.isFile() ? 'file' : 'other';
+    if (regex.test(entry.name) || regex.test(rel)) matches.push({ path: rel, type });
+    if (entry.isDirectory()) await walkFind(root, full, regex, matches, limit);
+  }
+}
+
+function shouldSkipFindEntry(name) {
+  return new Set(['.git', '.codegraph', 'node_modules', '.worktrees', 'dist', 'artifacts']).has(name);
+}
+
+function isUrlLike(value) {
+  return /^[a-z][a-z0-9+.-]*:\/\//i.test(value) || /^mailto:/i.test(value);
+}
+
+function platformOpenCommand(target) {
+  if (process.platform === 'win32') {
+    return { command: 'powershell.exe', args: ['-NoProfile', '-Command', 'Start-Process', '-FilePath', target] };
+  }
+  if (process.platform === 'darwin') return { command: 'open', args: [target] };
+  return { command: 'xdg-open', args: [target] };
+}
+
+function runProcess(command, args, options = {}) {
+  return new Promise((resolveProcess) => {
+    const child = spawn(command, args, {
+      cwd: options.cwd ?? process.cwd(),
+      shell: false,
+      windowsHide: true
+    });
+    let stdout = '';
+    let stderr = '';
+    let timedOut = false;
+    const limit = 200_000;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      child.kill('SIGTERM');
+    }, options.timeoutMs ?? 30000);
+    child.stdout?.on('data', (chunk) => {
+      stdout = (stdout + chunk.toString()).slice(-limit);
+    });
+    child.stderr?.on('data', (chunk) => {
+      stderr = (stderr + chunk.toString()).slice(-limit);
+    });
+    child.on('error', (error) => {
+      clearTimeout(timer);
+      resolveProcess({ status: 127, stdout, stderr: error.message, timedOut });
+    });
+    child.on('close', (status, signal) => {
+      clearTimeout(timer);
+      resolveProcess({ status: status ?? 1, signal, stdout, stderr, timedOut });
+    });
+  });
+}
+
+async function directorySize(path) {
+  let info;
+  try {
+    info = await stat(path);
+  } catch {
+    return 0;
+  }
+  if (!info.isDirectory()) return info.size;
+  let total = 0;
+  let entries;
+  try {
+    entries = await readdir(path, { withFileTypes: true });
+  } catch {
+    return 0;
+  }
+  for (const entry of entries) {
+    total += await directorySize(join(path, entry.name));
+  }
+  return total;
 }
 
 if (process.argv[1]) {

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">SkillsForge star map</title>
+  <desc id="desc">A factual map of SkillsForge skills, workflows, hosts, CLI surfaces, MCP tools, and trust gates.</desc>
+  <rect width="1400" height="760" fill="#0d1117"/>
+  <defs>
+    <style>
+      .label{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#e6edf3}
+      .muted{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#8b949e}
+      .mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;fill:#e6edf3}
+      .line{stroke:#30363d;stroke-width:2}
+      .accent{stroke:#2f81f7;stroke-width:3}
+      .ok{stroke:#3fb950;stroke-width:3}
+      .node{fill:#161b22;stroke:#30363d;stroke-width:2;rx:14}
+      .core{fill:#0969da;stroke:#58a6ff;stroke-width:3;rx:18}
+    </style>
+  </defs>
+  <g opacity=".7">
+    <circle cx="120" cy="90" r="2" fill="#58a6ff"/>
+    <circle cx="240" cy="160" r="2" fill="#3fb950"/>
+    <circle cx="1180" cy="120" r="2" fill="#f0f6fc"/>
+    <circle cx="1020" cy="650" r="2" fill="#58a6ff"/>
+    <circle cx="1290" cy="580" r="2" fill="#3fb950"/>
+    <circle cx="370" cy="670" r="2" fill="#f0f6fc"/>
+  </g>
+
+  <rect class="core" x="548" y="298" width="304" height="128"/>
+  <text class="label" x="700" y="344" text-anchor="middle" font-size="34" font-weight="800">SkillsForge</text>
+  <text class="muted" x="700" y="378" text-anchor="middle" font-size="18">Trust router for Agent Skills</text>
+  <text class="mono" x="700" y="406" text-anchor="middle" font-size="15">validate -> route -> package -> verify</text>
+
+  <rect class="node" x="82" y="82" width="250" height="116"/>
+  <text class="label" x="207" y="126" text-anchor="middle" font-size="26" font-weight="700">366 skills</text>
+  <text class="muted" x="207" y="158" text-anchor="middle" font-size="16">26 packs, 10 profiles</text>
+  <text class="mono" x="207" y="184" text-anchor="middle" font-size="13">skillsforge.json sidecars</text>
+
+  <rect class="node" x="82" y="322" width="250" height="116"/>
+  <text class="label" x="207" y="366" text-anchor="middle" font-size="26" font-weight="700">100 workflows</text>
+  <text class="muted" x="207" y="398" text-anchor="middle" font-size="16">dry-run catalog</text>
+  <text class="mono" x="207" y="424" text-anchor="middle" font-size="13">skillsforge workflows</text>
+
+  <rect class="node" x="82" y="562" width="250" height="116"/>
+  <text class="label" x="207" y="606" text-anchor="middle" font-size="26" font-weight="700">98 agents</text>
+  <text class="muted" x="207" y="638" text-anchor="middle" font-size="16">task specialists</text>
+  <text class="mono" x="207" y="664" text-anchor="middle" font-size="13">no auto-spawn required</text>
+
+  <rect class="node" x="1068" y="82" width="250" height="116"/>
+  <text class="label" x="1193" y="126" text-anchor="middle" font-size="26" font-weight="700">7 hosts</text>
+  <text class="muted" x="1193" y="158" text-anchor="middle" font-size="16">Codex, Claude, more</text>
+  <text class="mono" x="1193" y="184" text-anchor="middle" font-size="13">custom host supported</text>
+
+  <rect class="node" x="1068" y="322" width="250" height="116"/>
+  <text class="label" x="1193" y="366" text-anchor="middle" font-size="26" font-weight="700">124 commands</text>
+  <text class="muted" x="1193" y="398" text-anchor="middle" font-size="16">CLI + slash shims</text>
+  <text class="mono" x="1193" y="424" text-anchor="middle" font-size="13">wb, lib, auto, ps</text>
+
+  <rect class="node" x="1068" y="562" width="250" height="116"/>
+  <text class="label" x="1193" y="606" text-anchor="middle" font-size="26" font-weight="700">7 MCP tools</text>
+  <text class="muted" x="1193" y="638" text-anchor="middle" font-size="16">trust + read-only index</text>
+  <text class="mono" x="1193" y="664" text-anchor="middle" font-size="13">no default writes</text>
+
+  <path class="accent" d="M332 140 C440 180 480 260 548 330"/>
+  <path class="accent" d="M332 380 C430 380 475 368 548 362"/>
+  <path class="accent" d="M332 620 C438 565 486 474 548 396"/>
+  <path class="ok" d="M852 330 C938 250 972 172 1068 140"/>
+  <path class="ok" d="M852 362 C930 370 980 380 1068 380"/>
+  <path class="ok" d="M852 396 C930 470 986 566 1068 620"/>
+
+  <rect class="node" x="470" y="56" width="460" height="98"/>
+  <text class="label" x="700" y="96" text-anchor="middle" font-size="24" font-weight="700">Trust gates</text>
+  <text class="mono" x="700" y="128" text-anchor="middle" font-size="14">validate | skillshield | package | receipt | evidence</text>
+  <path class="line" d="M700 154 V298"/>
+
+  <rect class="node" x="470" y="606" width="460" height="98"/>
+  <text class="label" x="700" y="646" text-anchor="middle" font-size="24" font-weight="700">Local library</text>
+  <text class="mono" x="700" y="678" text-anchor="middle" font-size="14">skillsforge-library.html | skillsforge-ai-index.html</text>
+  <path class="line" d="M700 606 V426"/>
+</svg>

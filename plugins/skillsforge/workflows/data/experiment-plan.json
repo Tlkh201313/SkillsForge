@@ -1,0 +1,65 @@
+{
+  "id": "data.experiment-plan",
+  "category": "data",
+  "goal": "Design an experiment with decision rules.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "data-experiment-design",
+      "agent": "growth-experimenter",
+      "command": "skillsforge route --query \"Design an experiment with decision rules.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "product-experiment",
+      "agent": "data-analyst"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "research-assumptions",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "data-experiment-design",
+    "product-experiment",
+    "research-assumptions"
+  ],
+  "recommendedAgents": [
+    "growth-experimenter",
+    "data-analyst"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Design an experiment with decision rules.\"",
+    "skillsforge workflows run --id data.experiment-plan --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "medium"
+}

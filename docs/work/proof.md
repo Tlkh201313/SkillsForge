@@ -1,3 +1,3 @@
 # proof
 
-_Work Artifact Contract stub._
+_Stub created by `skillsforge vibe`. Fill this in as you work._

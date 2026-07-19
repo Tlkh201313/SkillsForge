@@ -1,0 +1,65 @@
+{
+  "id": "coding.feature-flag-rollout",
+  "category": "coding",
+  "goal": "Add or verify a feature flag with rollback behavior.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "eng-feature-flags",
+      "agent": "release-manager",
+      "command": "skillsforge route --query \"Add or verify a feature flag with rollback behavior.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "eng-rollback",
+      "agent": "sre"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "test-regression",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "eng-feature-flags",
+    "eng-rollback",
+    "test-regression"
+  ],
+  "recommendedAgents": [
+    "release-manager",
+    "sre"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Add or verify a feature flag with rollback behavior.\"",
+    "skillsforge workflows run --id coding.feature-flag-rollout --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "medium"
+}

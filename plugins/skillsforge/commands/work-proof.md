@@ -1,14 +1,16 @@
 ---
 name: work-proof
 description: Use when invoking SkillsForge work-proof from a slash command or host shim.
+argument-hint: "[args]"
+allowed-tools: "Bash(node *),Read"
 ---
 
-<!-- alias of /skillsforge:prove — prefer the upgraded entry command for CLAUDE_PLUGIN_ROOT contracts -->
-
 # /work-proof
+
+<!-- generated thin command: prefer upgraded entry commands for trust-critical flows -->
 
 Run the SkillsForge `work-proof` workflow.
 
 ```bash
-npx skillsforge route --query "work-proof"
+node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" evidence --out artifacts/evidence
 ```

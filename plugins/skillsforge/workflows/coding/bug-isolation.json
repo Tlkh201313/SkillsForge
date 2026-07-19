@@ -1,0 +1,65 @@
+{
+  "id": "coding.bug-isolation",
+  "category": "coding",
+  "goal": "Isolate a reported bug before changing implementation.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "debug-issue",
+      "agent": "debugger",
+      "command": "skillsforge route --query \"Isolate a reported bug before changing implementation.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "spike-explore",
+      "agent": "test-automator"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "test-regression",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "debug-issue",
+    "spike-explore",
+    "test-regression"
+  ],
+  "recommendedAgents": [
+    "debugger",
+    "test-automator"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Isolate a reported bug before changing implementation.\"",
+    "skillsforge workflows run --id coding.bug-isolation --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "medium"
+}

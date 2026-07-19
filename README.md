@@ -5,34 +5,38 @@
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 
-**Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, and tamper-evident.**
+**Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, tamper-evident, and installable across AI CLIs with honest trust boundaries.**
 
-SkillsForge is a Developer Tools **trust engine** for portable [Agent Skills](https://agentskills.io/specification): validate → deny unsafe → package safe → PreToolUse → tamper-evident receipt. Catalog scale (354 entries, ~25 production-depth heroes) is supporting evidence — the product is the trust pipeline.
+SkillsForge is a Developer Tools **trust engine** for portable [Agent Skills](https://agentskills.io/specification): validate, deny unsafe inputs, package safe skills, enforce host hooks where supported, install package-fidelity skills across AI CLIs, and verify tamper-evident receipts. Current cataloged inventory: 366 skill entries, 26 packs, 10 profiles, and 100 reusable workflows.
 
 ---
 
 ## Demo video
 
-[![SkillsForge demo — click to play MP4](assets/skillsforge-demo-poster.png)](assets/video/skillsforge-demo.mp4)
+![SkillsForge demo poster](assets/skillsforge-demo-poster.png)
 
-**[▶ Watch the demo (MP4)](assets/video/skillsforge-demo.mp4)** — ~90s Remotion presentation that mirrors `npx skillsforge demo`. Click the poster or the link; GitHub plays the committed file in-browser (no YouTube required).
+The packaged MP4 is committed at [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-demo.mp4). GitHub repository README playback for committed MP4 files is not reliable across views, so the poster stays visible and the video file remains directly available. For final judging, upload the same H.264 MP4 to a GitHub issue or PR comment and paste the generated `github.com/user-attachments/assets/...` URL here; GitHub documents `.mp4`, `.mov`, and `.webm` as supported media attachments and recommends H.264 for compatibility: [GitHub attaching files](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files).
+
+![SkillsForge universal host fanout](assets/skillsforge-universal-fanout.svg)
+
+![SkillsForge star map](assets/skillsforge-star-map.svg)
 
 | Beat | What you’ll see |
 |---|---|
 | Thesis | Why untrusted Agent Skills are a real operator risk |
 | **Unsafe deny** | `examples/codex-unsafe-release` fails validation — undeclared exec/network blocked **without executing** the skill |
 | **Safe package** | `examples/codex-safe-release` passes → compiles to a guarded Codex plugin tree |
-| **Receipt** | Scoreboard: false-allow = 0, tamper-evident receipt hash |
-| Scale punchline | 354 catalog entries / ~25 heroes — proof of inventory, not the pitch |
-| CTA | Clone + `npx skillsforge demo` |
-
-Regenerate locally: `npm run video:render` (MP4) / `npm run video:still` (poster). Details: [docs/video.md](docs/video.md). Source: [`video/`](video/).
+| **Receipt** | Tamper-evident receipt hash for packaged bytes |
+| Scale punchline | 366 catalog entries / 26 packs / 98 agents / 124 commands / 100 workflows, verified locally |
+| CTA | Clone + `node plugins/skillsforge/bin/skillsforge.mjs demo` |
 
 ---
 
 ## Why SkillsForge
 
 Agent Skills travel across hosts. A “release helper” can ship undeclared shell, network, or write paths — and most catalogs optimize for **surface**, not **trust**.
+
+Most skill packs solve discovery. SkillsForge solves trust: what can this skill do, can it be packaged safely, and can the bytes be verified later?
 
 SkillsForge closes that gap:
 
@@ -71,17 +75,17 @@ We built SkillsForge **because** Everything Claude Code (ECC) and Superpowers al
 
 **Honest differentiation** ([docs/competitive-matrix.md](docs/competitive-matrix.md), [docs/inspiration.md](docs/inspiration.md)):
 
-| Dimension | ECC | Superpowers | SkillsForge |
-|---|---|---|---|
-| Core pitch | Pack / surface completeness | Process discipline | **Trust engine for Agent Skills** |
-| Trust sidecars | Rare | No | **100%** (354/354) |
-| Trust pipeline | Rare | No | validate → package → PreToolUse → receipt |
-| Operator CLI | Weak | No | `demo`, `vibe`, `quality`, `bench`, `compare-skill`, … |
-| SkillShield | AgentShield (code) | No | Skill-body scanner (**best-effort**) |
-| Pressure | No | Process | Fixture gate + expanding |
-| Swarm / MCP | Varies | No | Thin trust MCP only (`validate` / `route` / `skillshield`); complement Ruflo — **not** a swarm clone |
+| Dimension | SkillsForge local evidence |
+|---|---|
+| Core pitch | Trust engine for Agent Skills |
+| Trust sidecars | 366/366 catalog skills ship `skillsforge.json` |
+| Trust pipeline | validate -> package -> PreToolUse -> receipt |
+| Operator CLI | `demo`, `vibe`, `quality`, `bench`, `compare-skill`, `evidence` |
+| SkillShield | Skill-body scanner, best-effort static gate |
+| Pressure | Fixture gate now; broader behavioral pressure is future work |
+| MCP | Thin trust MCP: `validate`, `route`, `skillshield`, plus read-only library/workflow recommendation |
 
-Inspiration is attributed; skill bodies are original SkillsForge text (no-copy rule). Catalog count is scale proof — judges should hit the trust demo first.
+Inspiration is attributed; skill bodies are original SkillsForge text. Judges should hit the trust demo first.
 
 ---
 
@@ -91,17 +95,18 @@ Inspiration is attributed; skill bodies are original SkillsForge text (no-copy r
 git clone https://github.com/Tlkh201313/SkillsForge.git
 cd SkillsForge
 npm ci
-npx skillsforge demo
+node plugins/skillsforge/bin/skillsforge.mjs demo
 ```
 
-You should see: **unsafe deny → safe package → receipt hash** (false-allow = 0).
+You should see: **unsafe deny -> safe package -> receipt hash**.
 
 Optional follow-ups:
 
 ```sh
-npx skillsforge compare-skill --a examples/codex-unsafe-release --b examples/codex-safe-release
-npx skillsforge vibe
-npx skillsforge catalog --pack trust
+node plugins/skillsforge/bin/skillsforge.mjs compare-skill --a examples/codex-unsafe-release --b examples/codex-safe-release
+node plugins/skillsforge/bin/skillsforge.mjs hosts
+node plugins/skillsforge/bin/skillsforge.mjs vibe
+node plugins/skillsforge/bin/skillsforge.mjs catalog --pack trust
 ```
 
 Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/roadmap-next.md](docs/roadmap-next.md).
@@ -113,16 +118,23 @@ Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/r
 | Surface | Actual implementation |
 |---|---|
 | One plugin | `skillsforge` (Claude + Codex manifests) |
-| Trust demo | `skillsforge demo` — unsafe deny → safe package → receipt |
-| Catalog | **354** skills, **25** packs, **10** profiles — `catalog/skillsforge.catalog.yaml` |
+| Trust demo | `skillsforge demo` -- unsafe deny -> safe package -> receipt |
+| Catalog | **366** skills, **26** packs, **10** profiles -- `catalog/skillsforge.catalog.yaml` |
 | Sidecars | **100%** (`skillsforge.json` beside every production skill) |
-| Depth honesty | **~25** production-depth heroes; domain packs are lean scaffolds on purpose |
-| Agents | **70** agents (depth varies — fuller leads vs thinner stubs) |
-| Commands | **107** shims (fuller contracts on trust/lifecycle; long-tail thinner) |
+| Depth honesty | Stable trust skills are deeper; domain packs are lean scaffolds until individually expanded |
+| Agents | **98** agents (depth varies -- fuller leads vs thinner task specialists) |
+| Commands | **124** shims (bundled CLI first; long-tail routes by pack/query) |
+| Workflow catalog | **100** dry-run workflow definitions under `plugins/skillsforge/workflows/` |
 | Operator CLI | `vibe`, `catalog`, `quality`, `bench`, `scorecard`, `scaffold`, `pressure`, `skillshield`, `compare-skill`, … |
 | Trust CLI | `validate`, `doctor`, `route`, `forge`, `receipt`, `package`, `evidence`, `demo`, `enforce` |
-| Thin MCP | `scripts/skillsforge-mcp.mjs` — **only** `validate` / `route` / `skillshield` |
+| Workbench CLI | `wb status|tree|find|grep|diff|errors|bigfiles|recent|proof` |
+| Library UI | `lib build` / `lib update` create single-file HTML + AI index across repo and installed user skills; `lib serve` is localhost and read-only by default |
+| Library recommendation | `lib recommend --query "..." --session-host codex` scores skills/workflows from the current library index, not a hardcoded list |
+| Auto router | `auto plan`, `auto run --read-only` recommend skills/workflows without writes |
+| PowerShell helpers | `ps export` emits `sf-*.ps1` wrappers, including `sf-lib-update`, `sf-recommend`, `sf-workflow`, and `sf-auto` |
+| Thin MCP | `scripts/skillsforge-mcp.mjs` exposes trust tools plus read-only library/workflow recommendation |
 | Evidence | Deterministic trust/eval bundle (`skillsforge evidence`) |
+| Universal hosts | `hosts`, `install --hosts all|detected`, `install --custom-host <id>:<skills-dir>` |
 
 ### Host support
 
@@ -132,7 +144,10 @@ Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/r
 | Claude Code | Full | Marketplace, SessionStart, skill-scoped PreToolUse, bundled CLI, receipts, eval |
 | Cursor | Package fidelity | Complete skill dirs + thin `rules/` — **not** runtime policy parity |
 | OpenCode | Package fidelity | Complete skill package install — no runtime policy parity |
+| ZCode-compatible local agent | Package fidelity | Complete skill package install — verify the configured local skills directory |
+| Hermes Agent | Package fidelity | Complete skill package install — no runtime policy parity |
 | Gemini CLI | Package fidelity | Complete skill package install — no runtime policy parity |
+| Custom AI CLI | Package fidelity | `install --custom-host my-agent:.my-agent/skills` copies validated skills under your home directory |
 
 ---
 
@@ -177,18 +192,37 @@ Codex **runtime** policy for an external skill requires `skillsforge package --h
 
 ### Multi-host skill install
 
-Detects agent config dirs under your home folder, then copies validated skills:
+Inspect every known AI CLI target and its trust boundary:
 
 ```sh
-node ./plugins/skillsforge/bin/skillsforge.mjs install
+node ./plugins/skillsforge/bin/skillsforge.mjs hosts
+node ./plugins/skillsforge/bin/skillsforge.mjs hosts --json
 ```
 
 | Host | What gets installed |
 |---|---|
 | Claude Code (`full`) | Entire skill package → `~/.claude/skills/<name>/` with runtime policy |
-| Codex / Cursor / OpenCode / Gemini (`package`) | Complete skill package; Claude-only frontmatter may be stripped |
+| Codex / Cursor / OpenCode / ZCode / Hermes / Gemini (`package`) | Complete skill package; Claude-only frontmatter may be stripped |
+| Custom host (`package`) | Complete skill package under a user-declared skills directory inside `--home` |
 
-Non-interactive: `--hosts claude-code,cursor --yes` (host ids: `claude-code`, `cursor`, `codex`, `opencode`, `gemini`).
+Dry-run selected hosts:
+
+```sh
+node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts codex,claude-code --yes --dry-run plugins/skillsforge/skills/using-skillsforge
+
+# Token-friendly workbench, workflow routing, and local library
+node ./plugins/skillsforge/bin/skillsforge.mjs wb status --json
+node ./plugins/skillsforge/bin/skillsforge.mjs workflows recommend --query "safe refactor code"
+node ./plugins/skillsforge/bin/skillsforge.mjs auto run --read-only --query "audit README claims"
+node ./plugins/skillsforge/bin/skillsforge.mjs lib update --session-host codex
+node ./plugins/skillsforge/bin/skillsforge.mjs lib recommend --query "audit README claims" --session-host codex
+node ./plugins/skillsforge/bin/skillsforge.mjs ps export
+node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts all --yes --dry-run plugins/skillsforge/skills/using-skillsforge
+node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts detected --yes --dry-run plugins/skillsforge/skills/using-skillsforge
+node ./plugins/skillsforge/bin/skillsforge.mjs install --custom-host my-agent:.my-agent/skills --yes --dry-run plugins/skillsforge/skills/using-skillsforge
+```
+
+Known host ids: `claude-code`, `cursor`, `codex`, `opencode`, `zcode`, `hermes`, `gemini`. Details: [docs/universal-hosts.md](docs/universal-hosts.md).
 
 ---
 
@@ -213,6 +247,7 @@ Exit codes: `0` success · `1` failure · `2` invalid usage.
 | Command | Purpose |
 |---|---|
 | `demo` | Judge path: unsafe deny → safe package → receipt |
+| `hosts` | List detected AI CLI targets, fidelity, and trust boundary |
 | `validate [paths…]` | Structure + capability policy (when sidecar present) |
 | `package --host codex` | One skill → guarded Codex plugin (`--dry-run` default; `--write` to materialize) |
 | `receipt` / `verify-receipt` | Build / verify tamper-evident package receipt |
@@ -226,6 +261,11 @@ Exit codes: `0` success · `1` failure · `2` invalid usage.
 | `skillshield` / `pressure` | Best-effort body scan / fixture pressure gate |
 | `compare-skill --a … --b …` | Side-by-side trust delta |
 | `eval` | Holdout routing evaluation (P/R gate) |
+| `wb` | Token-friendly repo status, search, diff, large-file, and proof helpers |
+| `lib` | Build/update/serve/check/recommend from the local skill library HTML and AI index |
+| `workflows` | List, show, recommend, or dry-run one of 100 workflows |
+| `auto` | Recommend the smallest matching skill and workflow without writes |
+| `ps export` | Generate PowerShell `sf-*.ps1` helpers |
 
 Full flag list: `skillsforge help`. Architecture: [docs/architecture.md](docs/architecture.md).
 
@@ -235,6 +275,10 @@ Full flag list: `skillsforge help`. Architecture: [docs/architecture.md](docs/ar
 # Validate
 node ./plugins/skillsforge/bin/skillsforge.mjs validate examples/codex-safe-release
 node ./plugins/skillsforge/bin/skillsforge.mjs validate --all
+
+# Universal host inventory and dry-run install
+node ./plugins/skillsforge/bin/skillsforge.mjs hosts
+node ./plugins/skillsforge/bin/skillsforge.mjs install --hosts codex,claude-code --yes --dry-run plugins/skillsforge/skills/using-skillsforge
 
 # Package (POSIX) — dry-run first
 node ./plugins/skillsforge/bin/skillsforge.mjs package --host codex \
@@ -270,7 +314,7 @@ node .\plugins\skillsforge\bin\skillsforge.mjs package --host codex `
 
 ### Anti-goals (not claimed)
 
-This release does **not** ship or claim: Ruflo-style MCP swarms / AgentDB / consensus, desktop operator dashboards, OS sandboxing, or third-party attestation. Domain packs are **lean curated scaffolds**, not unvalidated dumps from skills.sh.
+This release does **not** ship or claim: Ruflo swarms, AgentDB, consensus, OS sandboxing, or third-party attestation. The local library UI is a generated developer tool, not a cloud dashboard. Domain packs are **lean curated scaffolds**, not unvalidated dumps from skills.sh.
 
 ### Say aloud
 
@@ -279,8 +323,8 @@ This release does **not** ship or claim: Ruflo-style MCP swarms / AgentDB / cons
 - **Pressure = fixture gate + expanding.** Fixtures check expected violation/compliance shape today; behavioral agent pressure is expanding.
 - **Receipts are unsigned tamper evidence.** Reproducible hashes prove bytes changed; they are not third-party certification.
 - **No copied third-party skill bodies.** Inspiration is attributed; bodies are original SkillsForge text.
-- **Honest depth:** 354 catalog entries; ~25 heroes carry production-depth Purpose/Phases. Domain packs stay lean on purpose.
-- **No invented Session IDs.** Build Week provenance lives in [BUILD_WEEK.md](BUILD_WEEK.md) when filled — never fabricate one for demos or docs.
+- **Honest depth:** 366 catalog entries; stable trust skills are deeper, and domain packs stay lean until expanded with examples/evals.
+- **No invented Session IDs or stats.** If provenance is missing, omit the claim.
 
 ### Security boundary
 
@@ -320,14 +364,12 @@ npm run check
 | Doc | Use |
 |---|---|
 | [docs/architecture.md](docs/architecture.md) | Surfaces, Codex compile, hook flow |
+| [docs/universal-hosts.md](docs/universal-hosts.md) | AI CLI host modes, custom install, and policy boundaries |
 | [docs/threat-model.md](docs/threat-model.md) | Trust boundaries and limitations |
 | [docs/hackathon-demo.md](docs/hackathon-demo.md) | Timed judge script |
-| [docs/video.md](docs/video.md) | Remotion render / poster |
-| [docs/competitive-matrix.md](docs/competitive-matrix.md) | ECC / Superpowers / gstack matrix |
+| [docs/competitive-matrix.md](docs/competitive-matrix.md) | Claim boundaries for external comparisons |
 | [docs/inspiration.md](docs/inspiration.md) | No-copy attribution |
-| [docs/submission.md](docs/submission.md) / [docs/submit-checklist.md](docs/submit-checklist.md) | Devpost / Stage One |
 | [docs/roadmap-next.md](docs/roadmap-next.md) | Post-0.4.0 priorities |
-| [BUILD_WEEK.md](BUILD_WEEK.md) | Build Week provenance |
 
 ---
 

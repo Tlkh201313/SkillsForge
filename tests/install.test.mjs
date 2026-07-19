@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
 import { exportHostPackage, exportPortableSkill } from '../lib/capabilities/export.mjs';
+import { buildCustomHost } from '../lib/capabilities/hosts.mjs';
 import { installSkills } from '../lib/capabilities/install.mjs';
 import { loadSkill } from '../lib/capabilities/skill-loader.mjs';
 
@@ -144,6 +145,28 @@ test('installSkills dry-run writes nothing', async (context) => {
   assert.equal(result.dryRun, true);
   assert.equal(result.installs[0].status, 'planned');
   await assert.rejects(() => access(join(home, '.cursor', 'skills', skill.name, 'SKILL.md')));
+});
+
+test('installSkills accepts custom package-fidelity hosts', async (context) => {
+  const home = await mkdtemp(join(tmpdir(), 'sf-install-custom-'));
+  context.after(() => rm(home, { recursive: true, force: true }));
+
+  const skill = await loadSkill(join(process.cwd(), 'tests', 'fixtures', 'skills', 'good-basic'));
+  const customHost = buildCustomHost('lab-agent:.lab-agent/skills', { home });
+  const result = await installSkills({
+    skills: [skill],
+    hosts: [customHost],
+    home,
+    dryRun: true
+  });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.dryRun, true);
+  assert.equal(result.installs[0].host, 'lab-agent');
+  assert.equal(result.installs[0].fidelity, 'package');
+  assert.equal(result.installs[0].dir, join(home, '.lab-agent', 'skills', 'good-basic'));
+  assert.equal(result.installs[0].interop.runtimeEnforced, false);
+  await assert.rejects(() => access(join(home, '.lab-agent', 'skills', 'good-basic', 'SKILL.md')));
 });
 
 test('installSkills aborts on invalid skill with no writes', async (context) => {

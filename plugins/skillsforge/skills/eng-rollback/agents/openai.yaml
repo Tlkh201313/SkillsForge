@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need eng rollback in a SkillsForge eng workflow.
   default_prompt: Use the eng-rollback skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

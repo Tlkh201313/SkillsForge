@@ -214,6 +214,42 @@ test('Bash denies shell network when network capability is undeclared', () => {
   assert.match(denyReason(decision), /network capability is not declared/);
 });
 
+test('Bash write:none denies declared commands with write-shaped arguments', () => {
+  const locked = policy({
+    exec: { allowed: true, commands: ['node scripts/ok.mjs'] },
+    write: { scope: 'none' }
+  });
+
+  for (const command of [
+    'node scripts/ok.mjs --write',
+    'node scripts/ok.mjs --out artifact.json',
+    'node scripts/ok.mjs --force'
+  ]) {
+    const decision = enforcePolicy({ tool_name: 'Bash', tool_input: { command } }, locked);
+    assert.match(denyReason(decision), /write scope forbids shell writes/i, command);
+  }
+
+  assert.equal(
+    enforcePolicy({ tool_name: 'Bash', tool_input: { command: 'node scripts/ok.mjs' } }, locked),
+    null
+  );
+});
+
+test('Bash write:none denies exact declared inline filesystem writes', () => {
+  for (const command of [
+    'node -e "require(\'fs\').writeFileSync(\'x\',\'y\')"',
+    'python -c "open(\'x\', \'w\').write(\'y\')"',
+    'pwsh -Command "Set-Content -Path x -Value y"'
+  ]) {
+    const locked = policy({
+      exec: { allowed: true, commands: [command] },
+      write: { scope: 'none' }
+    });
+    const decision = enforcePolicy({ tool_name: 'Bash', tool_input: { command } }, locked);
+    assert.match(denyReason(decision), /write scope forbids shell writes/i, command);
+  }
+});
+
 test('Write and Edit deny outside skill scope and allow inside', () => {
   const caps = policy({ write: { scope: 'skill' } });
   const denied = enforcePolicy(

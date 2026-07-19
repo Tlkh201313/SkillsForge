@@ -15,11 +15,11 @@ hooks:
 
 ## Overview
 
-Original SkillsForge skill for cloud k8s basics (cloud-devops pack).
+Lean SkillsForge scaffold for cloud k8s basics (cloud-devops pack). Add domain examples and verification before calling it production-depth.
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Cloud K8s Basics without copying third-party skill bodies.
+Deliver a trustworthy, repeatable outcome for Cloud K8s Basics without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 

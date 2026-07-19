@@ -15,11 +15,11 @@ hooks:
 
 ## Overview
 
-Original SkillsForge skill for ops canary (ops pack).
+Lean SkillsForge scaffold for ops canary (ops pack). Add domain examples and verification before calling it production-depth.
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Ops Canary without copying third-party skill bodies.
+Deliver a trustworthy, repeatable outcome for Ops Canary without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 

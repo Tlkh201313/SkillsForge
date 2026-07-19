@@ -64,7 +64,9 @@ test('each production skill ships agents/openai.yaml with required Codex interfa
     assert.ok(data.interface.short_description.length > 0);
     assert.equal(typeof data.interface?.default_prompt, 'string', `${entry.name} missing default_prompt`);
     assert.ok(data.interface.default_prompt.length > 0);
-    assert.equal(data.policy?.allow_implicit_invocation, true, `${entry.name} allow_implicit_invocation`);
+    const sidecar = JSON.parse(await readFile(join(skillsRoot, entry.name, 'skillsforge.json'), 'utf8'));
+    const expectedImplicit = sidecar.routing?.mode === 'auto';
+    assert.equal(data.policy?.allow_implicit_invocation, expectedImplicit, `${entry.name} allow_implicit_invocation`);
   }
 
   assert.ok(count >= 5, `expected at least 5 production skills, found ${count}`);

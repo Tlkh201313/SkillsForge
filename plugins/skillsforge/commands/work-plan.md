@@ -1,14 +1,16 @@
 ---
 name: work-plan
 description: Use when invoking SkillsForge work-plan from a slash command or host shim.
+argument-hint: "[args]"
+allowed-tools: "Bash(node *),Read"
 ---
 
-<!-- alias of /skillsforge:plan — prefer the upgraded entry command for CLAUDE_PLUGIN_ROOT contracts -->
-
 # /work-plan
+
+<!-- generated thin command: prefer upgraded entry commands for trust-critical flows -->
 
 Run the SkillsForge `work-plan` workflow.
 
 ```bash
-npx skillsforge route --query "work-plan"
+node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" route --query "work-plan $ARGUMENTS"
 ```

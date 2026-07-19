@@ -15,11 +15,11 @@ hooks:
 
 ## Overview
 
-Original SkillsForge skill for data metrics dict (data pack).
+Lean SkillsForge scaffold for data metrics dict (data pack). Add domain examples and verification before calling it production-depth.
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Data Metrics Dict without copying third-party skill bodies.
+Deliver a trustworthy, repeatable outcome for Data Metrics Dict without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 

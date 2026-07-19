@@ -1,0 +1,6 @@
+interface:
+  display_name: Os Process Port Doctor
+  short_description: Use when you need os process port doctor in a SkillsForge os workflow.
+  default_prompt: Use the os-process-port-doctor skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,65 @@
+{
+  "id": "data.schema-change",
+  "category": "data",
+  "goal": "Plan a data schema change with compatibility gates.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "data-schema",
+      "agent": "data-engineer",
+      "command": "skillsforge route --query \"Plan a data schema change with compatibility gates.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "data-contracts",
+      "agent": "backend-dev"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "eng-migrations",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "data-schema",
+    "data-contracts",
+    "eng-migrations"
+  ],
+  "recommendedAgents": [
+    "data-engineer",
+    "backend-dev"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Plan a data schema change with compatibility gates.\"",
+    "skillsforge workflows run --id data.schema-change --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "high"
+}

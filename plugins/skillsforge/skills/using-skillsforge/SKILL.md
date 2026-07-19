@@ -26,8 +26,9 @@ At session start, after a host install, or whenever the user asks which SkillsFo
 
 1. **Surface health** — Run `skillsforge doctor --json` (or `node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" doctor --json`) and report PASS/FAIL checks only.
 2. **Map the spine** — Point to validate → route → forge → package → evidence; do not invent commands outside `skillsforge --help`.
-3. **Name the Work OS paths** — `docs/work/brief.md`, `plan.md`, `design-lock.md`, `proof.md`, `ship-notes.md`, `learning.md`, `findings.md`.
-4. **Offer the magical moment** — Suggest `npx skillsforge vibe` or `skillsforge catalog --profile vibe` when the user wants a quick start.
+3. **Route before loading** — Use `skillsforge catalog --pack <id>` or `skillsforge route --query "<task>"`; load only the chosen `SKILL.md`, not the whole catalog.
+4. **Name the Work OS paths** — `docs/work/brief.md`, `plan.md`, `design-lock.md`, `proof.md`, `ship-notes.md`, `learning.md`, `findings.md`.
+5. **Offer the magical moment** — Suggest `node plugins/skillsforge/bin/skillsforge.mjs vibe` in a clone, or `skillsforge catalog --profile vibe` after install.
 
 ## Exit
 
@@ -37,13 +38,14 @@ At session start, after a host install, or whenever the user asks which SkillsFo
 
 ## Anti-patterns
 
+- Loading every skill body before routing
 - Reimplementing routing in prose instead of calling `skillsforge route`
 - Editing skills during an orientation session
 - Inventing Session IDs, credentials, or marketplace claims
 
 ## Handoff
 
-If the user has a concrete task, run `skillsforge route --query "<task>"`. If they want pack discovery, use `skillsforge catalog` / skill `browse-catalog`. Capture session learnings with `skillsforge capture --insight "..."`.
+If the user has a concrete task, run `skillsforge route --query "<task>"`, then read only the selected skill. If they want pack discovery, use `skillsforge catalog` / skill `browse-catalog`. Capture session learnings with `skillsforge capture --insight "..."`.
 
 ## Quick Reference
 

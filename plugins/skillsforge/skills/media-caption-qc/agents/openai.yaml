@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Caption Qc
+  short_description: Use when you need media caption qc in a SkillsForge media workflow.
+  default_prompt: Use the media-caption-qc skill for this task.
+policy:
+  allow_implicit_invocation: false

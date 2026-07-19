@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need eng caching in a SkillsForge eng workflow.
   default_prompt: Use the eng-caching skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need debug issue in a SkillsForge lifecycle workflow.
   default_prompt: Use the debug-issue skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

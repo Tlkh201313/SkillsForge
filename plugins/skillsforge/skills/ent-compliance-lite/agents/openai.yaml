@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need ent compliance lite in a SkillsForge enterprise workflow.
   default_prompt: Use the ent-compliance-lite skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

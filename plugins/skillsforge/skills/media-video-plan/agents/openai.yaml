@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Video Plan
+  short_description: Use when you need media video plan in a SkillsForge media workflow.
+  default_prompt: Use the media-video-plan skill for this task.
+policy:
+  allow_implicit_invocation: false

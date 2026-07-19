@@ -1,0 +1,65 @@
+{
+  "id": "media.brand-asset-pass",
+  "category": "media",
+  "goal": "Check README graphics for factual counts and readable text.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "media-brand-asset",
+      "agent": "designer",
+      "command": "skillsforge route --query \"Check README graphics for factual counts and readable text.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "docs-readme",
+      "agent": "docs-engineer"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "design-color",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "media-brand-asset",
+    "docs-readme",
+    "design-color"
+  ],
+  "recommendedAgents": [
+    "designer",
+    "docs-engineer"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Check README graphics for factual counts and readable text.\"",
+    "skillsforge workflows run --id media.brand-asset-pass --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "low"
+}

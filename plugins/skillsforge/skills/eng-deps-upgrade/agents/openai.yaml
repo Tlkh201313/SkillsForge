@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need eng deps upgrade in a SkillsForge eng workflow.
   default_prompt: Use the eng-deps-upgrade skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

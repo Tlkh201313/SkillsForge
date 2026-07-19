@@ -112,7 +112,7 @@ var require_visit = __commonJS({
     "use strict";
     var identity = require_identity();
     var BREAK = /* @__PURE__ */ Symbol("break visit");
-    var SKIP = /* @__PURE__ */ Symbol("skip children");
+    var SKIP2 = /* @__PURE__ */ Symbol("skip children");
     var REMOVE = /* @__PURE__ */ Symbol("remove node");
     function visit(node, visitor) {
       const visitor_ = initVisitor(visitor);
@@ -124,7 +124,7 @@ var require_visit = __commonJS({
         visit_(null, node, visitor_, Object.freeze([]));
     }
     visit.BREAK = BREAK;
-    visit.SKIP = SKIP;
+    visit.SKIP = SKIP2;
     visit.REMOVE = REMOVE;
     function visit_(key, node, visitor, path) {
       const ctrl = callVisitor(key, node, visitor, path);
@@ -172,7 +172,7 @@ var require_visit = __commonJS({
         await visitAsync_(null, node, visitor_, Object.freeze([]));
     }
     visitAsync.BREAK = BREAK;
-    visitAsync.SKIP = SKIP;
+    visitAsync.SKIP = SKIP2;
     visitAsync.REMOVE = REMOVE;
     async function visitAsync_(key, node, visitor, path) {
       const ctrl = await callVisitor(key, node, visitor, path);
@@ -4010,10 +4010,10 @@ var require_resolve_block_map = __commonJS({
       let offset = bm.offset;
       let commentEnd = null;
       for (const collItem of bm.items) {
-        const { start, key, sep: sep11, value } = collItem;
+        const { start, key, sep: sep13, value } = collItem;
         const keyProps = resolveProps.resolveProps(start, {
           indicator: "explicit-key-ind",
-          next: key ?? sep11?.[0],
+          next: key ?? sep13?.[0],
           offset,
           onError,
           parentIndent: bm.indent,
@@ -4027,7 +4027,7 @@ var require_resolve_block_map = __commonJS({
             else if ("indent" in key && key.indent !== bm.indent)
               onError(offset, "BAD_INDENT", startColMsg);
           }
-          if (!keyProps.anchor && !keyProps.tag && !sep11) {
+          if (!keyProps.anchor && !keyProps.tag && !sep13) {
             commentEnd = keyProps.end;
             if (keyProps.comment) {
               if (map.comment)
@@ -4051,7 +4051,7 @@ var require_resolve_block_map = __commonJS({
         ctx.atKey = false;
         if (utilMapIncludes.mapIncludes(ctx, map.items, keyNode))
           onError(keyStart, "DUPLICATE_KEY", "Map keys must be unique");
-        const valueProps = resolveProps.resolveProps(sep11 ?? [], {
+        const valueProps = resolveProps.resolveProps(sep13 ?? [], {
           indicator: "map-value-ind",
           next: value,
           offset: keyNode.range[2],
@@ -4067,7 +4067,7 @@ var require_resolve_block_map = __commonJS({
             if (ctx.options.strict && keyProps.start < valueProps.found.offset - 1024)
               onError(keyNode.range, "KEY_OVER_1024_CHARS", "The : indicator must be at most 1024 chars after the start of an implicit block mapping key");
           }
-          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep11, null, valueProps, onError);
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep13, null, valueProps, onError);
           if (ctx.schema.compat)
             utilFlowIndentCheck.flowIndentCheck(bm.indent, value, onError);
           offset = valueNode.range[2];
@@ -4158,7 +4158,7 @@ var require_resolve_end = __commonJS({
       let comment = "";
       if (end) {
         let hasSpace = false;
-        let sep11 = "";
+        let sep13 = "";
         for (const token of end) {
           const { source, type } = token;
           switch (type) {
@@ -4172,13 +4172,13 @@ var require_resolve_end = __commonJS({
               if (!comment)
                 comment = cb;
               else
-                comment += sep11 + cb;
-              sep11 = "";
+                comment += sep13 + cb;
+              sep13 = "";
               break;
             }
             case "newline":
               if (comment)
-                sep11 += source;
+                sep13 += source;
               hasSpace = true;
               break;
             default:
@@ -4221,18 +4221,18 @@ var require_resolve_flow_collection = __commonJS({
       let offset = fc.offset + fc.start.source.length;
       for (let i = 0; i < fc.items.length; ++i) {
         const collItem = fc.items[i];
-        const { start, key, sep: sep11, value } = collItem;
+        const { start, key, sep: sep13, value } = collItem;
         const props = resolveProps.resolveProps(start, {
           flow: fcName,
           indicator: "explicit-key-ind",
-          next: key ?? sep11?.[0],
+          next: key ?? sep13?.[0],
           offset,
           onError,
           parentIndent: fc.indent,
           startOnNewline: false
         });
         if (!props.found) {
-          if (!props.anchor && !props.tag && !sep11 && !value) {
+          if (!props.anchor && !props.tag && !sep13 && !value) {
             if (i === 0 && props.comma)
               onError(props.comma, "UNEXPECTED_TOKEN", `Unexpected , in ${fcName}`);
             else if (i < fc.items.length - 1)
@@ -4286,8 +4286,8 @@ var require_resolve_flow_collection = __commonJS({
             }
           }
         }
-        if (!isMap && !sep11 && !props.found) {
-          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep11, null, props, onError);
+        if (!isMap && !sep13 && !props.found) {
+          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep13, null, props, onError);
           coll.items.push(valueNode);
           offset = valueNode.range[2];
           if (isBlock(value))
@@ -4299,7 +4299,7 @@ var require_resolve_flow_collection = __commonJS({
           if (isBlock(key))
             onError(keyNode.range, "BLOCK_IN_FLOW", blockMsg);
           ctx.atKey = false;
-          const valueProps = resolveProps.resolveProps(sep11 ?? [], {
+          const valueProps = resolveProps.resolveProps(sep13 ?? [], {
             flow: fcName,
             indicator: "map-value-ind",
             next: value,
@@ -4310,8 +4310,8 @@ var require_resolve_flow_collection = __commonJS({
           });
           if (valueProps.found) {
             if (!isMap && !props.found && ctx.options.strict) {
-              if (sep11)
-                for (const st of sep11) {
+              if (sep13)
+                for (const st of sep13) {
                   if (st === valueProps.found)
                     break;
                   if (st.type === "newline") {
@@ -4328,7 +4328,7 @@ var require_resolve_flow_collection = __commonJS({
             else
               onError(valueProps.start, "MISSING_CHAR", `Missing , or : between ${fcName} items`);
           }
-          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep11, null, valueProps, onError) : null;
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep13, null, valueProps, onError) : null;
           if (valueNode) {
             if (isBlock(value))
               onError(valueNode.range, "BLOCK_IN_FLOW", blockMsg);
@@ -4508,7 +4508,7 @@ var require_resolve_block_scalar = __commonJS({
           chompStart = i + 1;
       }
       let value = "";
-      let sep11 = "";
+      let sep13 = "";
       let prevMoreIndented = false;
       for (let i = 0; i < contentStart; ++i)
         value += lines[i][0].slice(trimIndent) + "\n";
@@ -4525,24 +4525,24 @@ var require_resolve_block_scalar = __commonJS({
           indent = "";
         }
         if (type === Scalar.Scalar.BLOCK_LITERAL) {
-          value += sep11 + indent.slice(trimIndent) + content;
-          sep11 = "\n";
+          value += sep13 + indent.slice(trimIndent) + content;
+          sep13 = "\n";
         } else if (indent.length > trimIndent || content[0] === "	") {
-          if (sep11 === " ")
-            sep11 = "\n";
-          else if (!prevMoreIndented && sep11 === "\n")
-            sep11 = "\n\n";
-          value += sep11 + indent.slice(trimIndent) + content;
-          sep11 = "\n";
+          if (sep13 === " ")
+            sep13 = "\n";
+          else if (!prevMoreIndented && sep13 === "\n")
+            sep13 = "\n\n";
+          value += sep13 + indent.slice(trimIndent) + content;
+          sep13 = "\n";
           prevMoreIndented = true;
         } else if (content === "") {
-          if (sep11 === "\n")
+          if (sep13 === "\n")
             value += "\n";
           else
-            sep11 = "\n";
+            sep13 = "\n";
         } else {
-          value += sep11 + content;
-          sep11 = " ";
+          value += sep13 + content;
+          sep13 = " ";
           prevMoreIndented = false;
         }
       }
@@ -4724,25 +4724,25 @@ var require_resolve_flow_scalar = __commonJS({
       if (!match)
         return source;
       let res = match[1];
-      let sep11 = " ";
+      let sep13 = " ";
       let pos = first.lastIndex;
       line.lastIndex = pos;
       while (match = line.exec(source)) {
         if (match[1] === "") {
-          if (sep11 === "\n")
-            res += sep11;
+          if (sep13 === "\n")
+            res += sep13;
           else
-            sep11 = "\n";
+            sep13 = "\n";
         } else {
-          res += sep11 + match[1];
-          sep11 = " ";
+          res += sep13 + match[1];
+          sep13 = " ";
         }
         pos = line.lastIndex;
       }
       const last = /[ \t]*(.*)/sy;
       last.lastIndex = pos;
       match = last.exec(source);
-      return res + sep11 + (match?.[1] ?? "");
+      return res + sep13 + (match?.[1] ?? "");
     }
     function doubleQuotedValue(source, onError) {
       let res = "";
@@ -5552,14 +5552,14 @@ var require_cst_stringify = __commonJS({
         }
       }
     }
-    function stringifyItem({ start, key, sep: sep11, value }) {
+    function stringifyItem({ start, key, sep: sep13, value }) {
       let res = "";
       for (const st of start)
         res += st.source;
       if (key)
         res += stringifyToken(key);
-      if (sep11)
-        for (const st of sep11)
+      if (sep13)
+        for (const st of sep13)
           res += st.source;
       if (value)
         res += stringifyToken(value);
@@ -5574,7 +5574,7 @@ var require_cst_visit = __commonJS({
   "node_modules/yaml/dist/parse/cst-visit.js"(exports) {
     "use strict";
     var BREAK = /* @__PURE__ */ Symbol("break visit");
-    var SKIP = /* @__PURE__ */ Symbol("skip children");
+    var SKIP2 = /* @__PURE__ */ Symbol("skip children");
     var REMOVE = /* @__PURE__ */ Symbol("remove item");
     function visit(cst, visitor) {
       if ("type" in cst && cst.type === "document")
@@ -5582,7 +5582,7 @@ var require_cst_visit = __commonJS({
       _visit(Object.freeze([]), cst, visitor);
     }
     visit.BREAK = BREAK;
-    visit.SKIP = SKIP;
+    visit.SKIP = SKIP2;
     visit.REMOVE = REMOVE;
     visit.itemAtPath = (cst, path) => {
       let item = cst;
@@ -6726,18 +6726,18 @@ var require_parser = __commonJS({
         if (this.type === "map-value-ind") {
           const prev = getPrevProps(this.peek(2));
           const start = getFirstKeyStartProps(prev);
-          let sep11;
+          let sep13;
           if (scalar.end) {
-            sep11 = scalar.end;
-            sep11.push(this.sourceToken);
+            sep13 = scalar.end;
+            sep13.push(this.sourceToken);
             delete scalar.end;
           } else
-            sep11 = [this.sourceToken];
+            sep13 = [this.sourceToken];
           const map = {
             type: "block-map",
             offset: scalar.offset,
             indent: scalar.indent,
-            items: [{ start, key: scalar, sep: sep11 }]
+            items: [{ start, key: scalar, sep: sep13 }]
           };
           this.onKeyLine = true;
           this.stack[this.stack.length - 1] = map;
@@ -6890,15 +6890,15 @@ var require_parser = __commonJS({
                 } else if (isFlowToken(it.key) && !includesToken(it.sep, "newline")) {
                   const start2 = getFirstKeyStartProps(it.start);
                   const key = it.key;
-                  const sep11 = it.sep;
-                  sep11.push(this.sourceToken);
+                  const sep13 = it.sep;
+                  sep13.push(this.sourceToken);
                   delete it.key;
                   delete it.sep;
                   this.stack.push({
                     type: "block-map",
                     offset: this.offset,
                     indent: this.indent,
-                    items: [{ start: start2, key, sep: sep11 }]
+                    items: [{ start: start2, key, sep: sep13 }]
                   });
                 } else if (start.length > 0) {
                   it.sep = it.sep.concat(start, this.sourceToken);
@@ -7092,13 +7092,13 @@ var require_parser = __commonJS({
             const prev = getPrevProps(parent);
             const start = getFirstKeyStartProps(prev);
             fixFlowSeqItems(fc);
-            const sep11 = fc.end.splice(1, fc.end.length);
-            sep11.push(this.sourceToken);
+            const sep13 = fc.end.splice(1, fc.end.length);
+            sep13.push(this.sourceToken);
             const map = {
               type: "block-map",
               offset: fc.offset,
               indent: fc.indent,
-              items: [{ start, key: fc, sep: sep11 }]
+              items: [{ start, key: fc, sep: sep13 }]
             };
             this.onKeyLine = true;
             this.stack[this.stack.length - 1] = map;
@@ -9578,8 +9578,8 @@ var require_resolve = __commonJS({
       }
       return count;
     }
-    function getFullPath(resolver, id = "", normalize3) {
-      if (normalize3 !== false)
+    function getFullPath(resolver, id = "", normalize4) {
+      if (normalize4 !== false)
         id = normalizeId(id);
       const p = resolver.parse(id);
       return _getFullPath(resolver, p);
@@ -10327,7 +10327,7 @@ var require_compile = __commonJS({
       const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve18.call(this, root, ref);
+      let _sch = resolve22.call(this, root, ref);
       if (_sch === void 0) {
         const schema = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
         const { schemaId } = this.opts;
@@ -10354,7 +10354,7 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve18(root, ref) {
+    function resolve22(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
@@ -10975,7 +10975,7 @@ var require_fast_uri = __commonJS({
     "use strict";
     var { normalizeIPv6, removeDotSegments, recomposeAuthority, normalizePercentEncoding, normalizePathEncoding, escapePreservingEscapes, reescapeHostDelimiters, isIPv4, nonSimpleDomain } = require_utils();
     var { SCHEMES, getSchemeHandler } = require_schemes();
-    function normalize3(uri, options) {
+    function normalize4(uri, options) {
       if (typeof uri === "string") {
         uri = /** @type {T} */
         normalizeString(uri, options);
@@ -10985,55 +10985,55 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve18(baseURI, relativeURI, options) {
+    function resolve22(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const resolved = resolveComponent(parse(baseURI, schemelessOptions), parse(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
       return serialize(resolved, schemelessOptions);
     }
-    function resolveComponent(base, relative10, options, skipNormalization) {
+    function resolveComponent(base, relative14, options, skipNormalization) {
       const target = {};
       if (!skipNormalization) {
         base = parse(serialize(base, options), options);
-        relative10 = parse(serialize(relative10, options), options);
+        relative14 = parse(serialize(relative14, options), options);
       }
       options = options || {};
-      if (!options.tolerant && relative10.scheme) {
-        target.scheme = relative10.scheme;
-        target.userinfo = relative10.userinfo;
-        target.host = relative10.host;
-        target.port = relative10.port;
-        target.path = removeDotSegments(relative10.path || "");
-        target.query = relative10.query;
+      if (!options.tolerant && relative14.scheme) {
+        target.scheme = relative14.scheme;
+        target.userinfo = relative14.userinfo;
+        target.host = relative14.host;
+        target.port = relative14.port;
+        target.path = removeDotSegments(relative14.path || "");
+        target.query = relative14.query;
       } else {
-        if (relative10.userinfo !== void 0 || relative10.host !== void 0 || relative10.port !== void 0) {
-          target.userinfo = relative10.userinfo;
-          target.host = relative10.host;
-          target.port = relative10.port;
-          target.path = removeDotSegments(relative10.path || "");
-          target.query = relative10.query;
+        if (relative14.userinfo !== void 0 || relative14.host !== void 0 || relative14.port !== void 0) {
+          target.userinfo = relative14.userinfo;
+          target.host = relative14.host;
+          target.port = relative14.port;
+          target.path = removeDotSegments(relative14.path || "");
+          target.query = relative14.query;
         } else {
-          if (!relative10.path) {
+          if (!relative14.path) {
             target.path = base.path;
-            if (relative10.query !== void 0) {
-              target.query = relative10.query;
+            if (relative14.query !== void 0) {
+              target.query = relative14.query;
             } else {
               target.query = base.query;
             }
           } else {
-            if (relative10.path[0] === "/") {
-              target.path = removeDotSegments(relative10.path);
+            if (relative14.path[0] === "/") {
+              target.path = removeDotSegments(relative14.path);
             } else {
               if ((base.userinfo !== void 0 || base.host !== void 0 || base.port !== void 0) && !base.path) {
-                target.path = "/" + relative10.path;
+                target.path = "/" + relative14.path;
               } else if (!base.path) {
-                target.path = relative10.path;
+                target.path = relative14.path;
               } else {
-                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative10.path;
+                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative14.path;
               }
               target.path = removeDotSegments(target.path);
             }
-            target.query = relative10.query;
+            target.query = relative14.query;
           }
           target.userinfo = base.userinfo;
           target.host = base.host;
@@ -11041,7 +11041,7 @@ var require_fast_uri = __commonJS({
         }
         target.scheme = base.scheme;
       }
-      target.fragment = relative10.fragment;
+      target.fragment = relative14.fragment;
       return target;
     }
     function equal(uriA, uriB, options) {
@@ -11242,8 +11242,8 @@ var require_fast_uri = __commonJS({
     }
     var fastUri = {
       SCHEMES,
-      normalize: normalize3,
-      resolve: resolve18,
+      normalize: normalize4,
+      resolve: resolve22,
       resolveComponent,
       equal,
       serialize,
@@ -15699,6 +15699,7 @@ var init_validate_skill_lib = __esm({
 
 // lib/capabilities/skill-loader.mjs
 import { access as access2, readFile as readFile3, readdir as readdir2, realpath as realpath2, stat as stat2 } from "node:fs/promises";
+import { homedir } from "node:os";
 import { basename as basename2, dirname as dirname2, isAbsolute as isAbsolute2, join as join2, relative as relative2, resolve as resolve2, sep as sep2 } from "node:path";
 async function loadSkill(dir, options = {}) {
   const abs = resolve2(options.root ?? process.cwd(), dir);
@@ -15760,9 +15761,13 @@ async function skillsRootsFingerprint(skillsRoots) {
 }
 async function loadAllSkills(root, options = {}) {
   const absRoot = resolve2(root);
-  const skillsRoots = await discoverSkillsRoots(absRoot);
+  const skillsRoots = await discoverSkillsRoots(absRoot, options);
   const fingerprint = await skillsRootsFingerprint(skillsRoots);
-  const cacheKey = absRoot;
+  const cacheKey = [
+    absRoot,
+    options.includeInstalled === true ? "installed" : "repo",
+    resolve2(options.home ?? homedir())
+  ].join("|");
   if (!options.noCache) {
     const hit = skillIndexCache.get(cacheKey);
     if (hit && hit.fingerprint === fingerprint) {
@@ -15787,13 +15792,15 @@ async function loadAllSkills(root, options = {}) {
         continue;
       }
       try {
-        skills.push(await loadSkill(candidate));
+        const skill = await loadSkill(candidate);
+        skill.sourceRoot = skillsRoot;
+        skills.push(skill);
       } catch (error) {
         errors.push({ directory: candidate, message: error.message });
       }
     }
   }
-  if (errors.length > 0) {
+  if (errors.length > 0 && options.tolerateErrors !== true) {
     const details = errors.map((error) => `${error.directory}: ${error.message}`).join("\n");
     throw new Error(`failed to load skills:
 ${details}`);
@@ -15801,7 +15808,7 @@ ${details}`);
   skillIndexCache.set(cacheKey, { fingerprint, skills });
   return skills;
 }
-async function discoverSkillsRoots(root) {
+async function discoverSkillsRoots(root, options = {}) {
   const roots = [join2(root, "skills")];
   const pluginsRoot = join2(root, "plugins");
   try {
@@ -15811,7 +15818,74 @@ async function discoverSkillsRoots(root) {
     }
   } catch {
   }
+  if (options.includeInstalled === true) {
+    const home = resolve2(options.home ?? homedir());
+    roots.push(
+      join2(home, ".codex", "skills"),
+      join2(home, ".codex", "skills", ".system"),
+      join2(home, ".agents", "skills"),
+      join2(home, ".claude", "skills"),
+      join2(home, ".cursor", "skills"),
+      join2(home, ".config", "opencode", "skills"),
+      join2(home, ".zcode", "skills"),
+      join2(home, ".hermes", "skills"),
+      join2(home, ".gemini", "skills")
+    );
+    roots.push(...await discoverCachedSkillRoots(join2(home, ".codex", "plugins", "cache")));
+  }
+  return dedupePaths(roots);
+}
+async function discoverCachedSkillRoots(cacheRoot) {
+  const roots = [];
+  const maxDepth = 8;
+  async function walk(dir, depth) {
+    if (depth > maxDepth) return;
+    let entries;
+    try {
+      entries = await readdir2(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    if (basename2(dir) === "skills" && await hasSkillChildren(dir)) {
+      roots.push(dir);
+      return;
+    }
+    for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+      if (!entry.isDirectory()) continue;
+      if (entry.name === "node_modules" || entry.name === ".git") continue;
+      await walk(join2(dir, entry.name), depth + 1);
+    }
+  }
+  await walk(resolve2(cacheRoot), 0);
   return roots;
+}
+async function hasSkillChildren(dir) {
+  let entries;
+  try {
+    entries = await readdir2(dir, { withFileTypes: true });
+  } catch {
+    return false;
+  }
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    try {
+      await access2(join2(dir, entry.name, "SKILL.md"));
+      return true;
+    } catch {
+    }
+  }
+  return false;
+}
+function dedupePaths(paths) {
+  const seen = /* @__PURE__ */ new Set();
+  const out = [];
+  for (const path of paths.map((item) => resolve2(item))) {
+    const key = process.platform === "win32" ? path.toLowerCase() : path;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(path);
+  }
+  return out;
 }
 async function collectFiles(dir) {
   const out = [];
@@ -16394,17 +16468,22 @@ async function buildReceipt(skills, options = {}) {
   return { ok: true, receipt, receiptHash: sha256(text), text };
 }
 async function verifyReceipt(receiptPath, skills, options = {}) {
-  const expected = JSON.parse(await readFile5(receiptPath, "utf8"));
+  const expectedText = await readFile5(receiptPath, "utf8");
+  const expected = JSON.parse(expectedText);
+  const actualReceiptHash = sha256(expectedText);
   const packageOnly = Boolean(options.packageOnly);
   const requireEvaluation = options.requireEvaluation ?? !packageOnly;
   const mismatches = [];
   const unverified = [];
+  if (options.expectedReceiptHash && actualReceiptHash !== options.expectedReceiptHash) {
+    mismatches.push("receipt hash mismatch");
+  }
   const packageRoot = options.packageRoot ?? null;
   const rebuilt = await buildReceipt(skills, {
     version: expected.version,
     evaluation: expected.evaluation,
-    lossiness: expected.lossiness,
-    hostValidation: expected.hostValidation,
+    lossiness: Object.hasOwn(options, "lossiness") ? options.lossiness : expected.lossiness,
+    hostValidation: Object.hasOwn(options, "hostValidation") ? options.hostValidation : expected.hostValidation,
     packageRoot,
     requireEvaluation: false
   });
@@ -16412,7 +16491,12 @@ async function verifyReceipt(receiptPath, skills, options = {}) {
   for (const unit of expected.skills ?? []) {
     const actual = rebuilt.receipt.skills.find((item) => item.name === unit.name);
     if (!actual) mismatches.push(`missing skill ${unit.name}`);
-    else if (actual.unitHash !== unit.unitHash) mismatches.push(`unit hash mismatch ${unit.name}`);
+    else {
+      if (actual.unitHash !== unit.unitHash) mismatches.push(`unit hash mismatch ${unit.name}`);
+      if (stableJson(pickSkillMetadata(actual)) !== stableJson(pickSkillMetadata(unit))) {
+        mismatches.push(`skill metadata mismatch ${unit.name}`);
+      }
+    }
   }
   for (const unit of rebuilt.receipt.skills) {
     if (!(expected.skills ?? []).some((item) => item.name === unit.name)) {
@@ -16424,7 +16508,18 @@ async function verifyReceipt(receiptPath, skills, options = {}) {
       mismatches.push("missing package root for package hash verification");
     } else if (rebuilt.receipt.package?.packageHash !== expected.package.packageHash) {
       mismatches.push("package hash mismatch");
+    } else if (stableJson(rebuilt.receipt.package) !== stableJson(expected.package)) {
+      mismatches.push("package metadata mismatch");
     }
+  }
+  compareDeterministicField(mismatches, "dependencyOrder", rebuilt.receipt.dependencyOrder, expected.dependencyOrder);
+  compareDeterministicField(mismatches, "scanner", rebuilt.receipt.scanner, expected.scanner);
+  compareDeterministicField(mismatches, "unverified", rebuilt.receipt.unverified, expected.unverified);
+  if (Object.hasOwn(options, "lossiness")) {
+    compareDeterministicField(mismatches, "lossiness", rebuilt.receipt.lossiness, expected.lossiness);
+  }
+  if (Object.hasOwn(options, "hostValidation")) {
+    compareDeterministicField(mismatches, "hostValidation", rebuilt.receipt.hostValidation, expected.hostValidation);
   }
   const hasExternalEval = Boolean(options.evaluation || options.evaluationPath || options.reportBytes);
   if (packageOnly) {
@@ -16449,10 +16544,33 @@ async function verifyReceipt(receiptPath, skills, options = {}) {
     ok: mismatches.length === 0,
     mismatches,
     unverified,
-    receiptHash: rebuilt.receiptHash,
+    receiptHash: actualReceiptHash,
     packageVerified: !mismatches.some((item) => /unit hash|package hash|missing skill|unexpected skill|missing package root/i.test(item)),
     evaluationVerified: !packageOnly && hasExternalEval && !mismatches.some((item) => /evaluation|corpus|report sha/i.test(item))
   };
+}
+function pickSkillMetadata(unit) {
+  return {
+    files: unit.files ?? [],
+    capabilities: unit.capabilities ?? null,
+    requires: unit.requires ?? [],
+    findings: unit.findings ?? []
+  };
+}
+function compareDeterministicField(mismatches, label, actual, expected) {
+  if (stableJson(actual) !== stableJson(expected)) {
+    mismatches.push(`${label} mismatch`);
+  }
+}
+function stableJson(value) {
+  return JSON.stringify(sortStable(value));
+}
+function sortStable(value) {
+  if (Array.isArray(value)) return value.map(sortStable);
+  if (!value || typeof value !== "object") return value;
+  return Object.fromEntries(
+    Object.entries(value).sort(([left], [right]) => left.localeCompare(right)).map(([key, child]) => [key, sortStable(child)])
+  );
 }
 async function verifyEvaluationEvidence(embedded, options) {
   const mismatches = [];
@@ -16733,6 +16851,11 @@ function commandAllowed(command, declaredCommands = []) {
     return remaining.every((token) => !argHasMetacharacters(token));
   });
 }
+function commandExactlyAllowed(command, declaredCommands = []) {
+  const normalized = String(command ?? "").trim();
+  if (!normalized || hasShellControlSyntax(normalized)) return false;
+  return declaredCommands.some((declared) => normalized === String(declared).trim());
+}
 function shellImpliesNetwork(command) {
   if (SHELL_NETWORK_CLIENTS.test(command)) return true;
   if (/\bpython(?:3)?\b/i.test(command) && /\s-c\b/.test(command) && /\b(urllib|requests|http\.client|httpx|urlopen)\b/i.test(command)) {
@@ -16741,6 +16864,24 @@ function shellImpliesNetwork(command) {
   if (/\bnode\b/i.test(command) && /\s-e\b/.test(command) && /\b(fetch|https?:\/\/|https?\.|axios|got)\b/i.test(command)) {
     return true;
   }
+  return false;
+}
+function shellImpliesWrite(command) {
+  const text = String(command ?? "");
+  const tokens = tokenizeCommand(text);
+  if (!tokens || tokens.length === 0) return true;
+  const commandName = tokens[0].split(/[\\/]/).pop().toLowerCase();
+  if (SHELL_WRITE_COMMANDS.has(commandName)) {
+    if (commandName === "git") {
+      return /^(add|am|apply|checkout|clean|commit|merge|mv|pull|push|rebase|reset|restore|rm|stash|switch)\b/i.test(tokens[1] ?? "");
+    }
+    if (["npm", "pnpm", "yarn"].includes(commandName)) {
+      return /^(add|ci|install|link|pack|publish|remove|run|uninstall)\b/i.test(tokens[1] ?? "");
+    }
+    return true;
+  }
+  if (tokens.some((token) => SHELL_WRITE_FLAGS.has(token.toLowerCase()))) return true;
+  if (INLINE_WRITE_PATTERNS.some((pattern) => pattern.test(text))) return true;
   return false;
 }
 function hostFromUrl(value) {
@@ -16757,17 +16898,60 @@ function hostAllowed2(host, declaredHosts = []) {
     return normalized === allowed || allowed.startsWith("*.") && normalized.endsWith(allowed.slice(1));
   });
 }
-var SHELL_CONTROL_SYNTAX, SHELL_NETWORK_CLIENTS;
+var SHELL_CONTROL_SYNTAX, SHELL_NETWORK_CLIENTS, SHELL_WRITE_COMMANDS, SHELL_WRITE_FLAGS, INLINE_WRITE_PATTERNS;
 var init_policy_shell = __esm({
   "lib/capabilities/policy-shell.mjs"() {
     SHELL_CONTROL_SYNTAX = /[;&|`\n\r<>]|\$\(/;
     SHELL_NETWORK_CLIENTS = /\b(curl|wget|Invoke-WebRequest|Invoke-RestMethod|iwr|bitsadmin|certutil|fetch)\b/i;
+    SHELL_WRITE_COMMANDS = /* @__PURE__ */ new Set([
+      "add-content",
+      "copy",
+      "copy-item",
+      "cp",
+      "del",
+      "git",
+      "install",
+      "mkdir",
+      "move",
+      "move-item",
+      "mv",
+      "new-item",
+      "npm",
+      "out-file",
+      "pnpm",
+      "remove-item",
+      "rm",
+      "rmdir",
+      "set-content",
+      "tee",
+      "touch",
+      "yarn"
+    ]);
+    SHELL_WRITE_FLAGS = /* @__PURE__ */ new Set([
+      "-o",
+      "--dest",
+      "--destination",
+      "--force",
+      "--home",
+      "--out",
+      "--output",
+      "--save",
+      "--save-dev",
+      "--write"
+    ]);
+    INLINE_WRITE_PATTERNS = [
+      /\b(?:writeFile|writeFileSync|appendFile|appendFileSync|createWriteStream|rename|renameSync|rm|rmSync|unlink|unlinkSync|mkdir|mkdirSync|cp|cpSync)\s*\(/i,
+      /\b(?:Set-Content|Add-Content|Out-File|New-Item|Copy-Item|Move-Item|Remove-Item)\b/i,
+      /\bopen\s*\([^)]*,\s*['"](?:w|a|x|w\+|a\+)/i,
+      /\bPath\s*\([^)]*\)\.(?:write_text|write_bytes|unlink|rename|mkdir)\s*\(/i,
+      /\b(?:shutil\.(?:copy|copyfile|move|rmtree)|os\.(?:remove|unlink|rename|mkdir|makedirs|rmdir))\s*\(/i
+    ];
   }
 });
 
 // lib/capabilities/hosts.mjs
 import { access as access5 } from "node:fs/promises";
-import { homedir } from "node:os";
+import { homedir as homedir2 } from "node:os";
 import { join as join7, resolve as resolve7, sep as sep6 } from "node:path";
 function isInsideHome(home, candidate) {
   const root = resolve7(home);
@@ -16783,7 +16967,7 @@ async function pathExists2(path) {
   }
 }
 async function detectHosts(options = {}) {
-  const home = resolve7(options.home ?? homedir());
+  const home = resolve7(options.home ?? homedir2());
   const results = [];
   for (const host of HOST_REGISTRY) {
     const detectDirs = host.detectRels.map((rel) => resolve7(home, rel));
@@ -16814,10 +16998,43 @@ async function detectHosts(options = {}) {
       skillsDir,
       fidelity: host.fidelity,
       runtimeEnforced: host.runtimeEnforced,
-      usesSidecar: host.usesSidecar
+      usesSidecar: host.usesSidecar,
+      installHint: host.installHint
     });
   }
   return results;
+}
+function buildCustomHost(spec, options = {}) {
+  const home = resolve7(options.home ?? homedir2());
+  const source = String(spec ?? "");
+  const separator = source.indexOf(":");
+  const id = separator === -1 ? source : source.slice(0, separator);
+  const dir = separator === -1 ? "" : source.slice(separator + 1);
+  if (!id || !/^[a-z0-9][a-z0-9-]*$/i.test(id)) {
+    throw new Error("custom host id must be kebab-case");
+  }
+  if (!dir) {
+    throw new Error("custom host requires <id>:<skills-dir>");
+  }
+  const skillsDir = resolve7(home, dir);
+  if (!isInsideHome(home, skillsDir)) {
+    throw new Error(`custom host path escaped home: ${id}`);
+  }
+  return {
+    id,
+    label: `Custom host: ${id}`,
+    detected: true,
+    detectDir: skillsDir,
+    detectDirs: [skillsDir],
+    skillsDir,
+    fidelity: (
+      /** @type {HostFidelity} */
+      "package"
+    ),
+    runtimeEnforced: false,
+    usesSidecar: false,
+    installHint: "Custom package-fidelity target. SkillsForge copies validated skill packages only."
+  };
 }
 async function resolveHostSelection(ids, options = {}) {
   const detected = await detectHosts(options);
@@ -16845,7 +17062,8 @@ var init_hosts = __esm({
           "full"
         ),
         runtimeEnforced: true,
-        usesSidecar: true
+        usesSidecar: true,
+        installHint: "Full-fidelity install. Claude Code hooks and SkillsForge sidecar stay in place."
       }),
       Object.freeze({
         id: "cursor",
@@ -16857,7 +17075,8 @@ var init_hosts = __esm({
           "package"
         ),
         runtimeEnforced: false,
-        usesSidecar: false
+        usesSidecar: false,
+        installHint: "Package-fidelity install. Runtime policy enforcement is not claimed."
       }),
       Object.freeze({
         id: "codex",
@@ -16870,7 +17089,8 @@ var init_hosts = __esm({
           "package"
         ),
         runtimeEnforced: false,
-        usesSidecar: false
+        usesSidecar: false,
+        installHint: "Package-fidelity skill install; use package --host codex for a guarded Codex plugin bundle."
       }),
       Object.freeze({
         id: "opencode",
@@ -16882,7 +17102,34 @@ var init_hosts = __esm({
           "package"
         ),
         runtimeEnforced: false,
-        usesSidecar: false
+        usesSidecar: false,
+        installHint: "Package-fidelity install. Verify the configured OpenCode skill directory for your local build."
+      }),
+      Object.freeze({
+        id: "zcode",
+        label: "ZCode-compatible local agent",
+        detectRels: [".zcode", join7(".config", "zcode")],
+        skillsRel: join7(".zcode", "skills"),
+        fidelity: (
+          /** @type {HostFidelity} */
+          "package"
+        ),
+        runtimeEnforced: false,
+        usesSidecar: false,
+        installHint: "Package-fidelity install. Verify the configured ZCode skill directory for your local build."
+      }),
+      Object.freeze({
+        id: "hermes",
+        label: "Hermes Agent",
+        detectRels: [".hermes", join7(".config", "hermes")],
+        skillsRel: join7(".hermes", "skills"),
+        fidelity: (
+          /** @type {HostFidelity} */
+          "package"
+        ),
+        runtimeEnforced: false,
+        usesSidecar: false,
+        installHint: "Package-fidelity install. Runtime policy enforcement is not claimed."
       }),
       Object.freeze({
         id: "gemini",
@@ -16894,7 +17141,8 @@ var init_hosts = __esm({
           "package"
         ),
         runtimeEnforced: false,
-        usesSidecar: false
+        usesSidecar: false,
+        installHint: "Package-fidelity install. Runtime policy enforcement is not claimed."
       })
     ]);
   }
@@ -16908,7 +17156,7 @@ function compileCodexHooks({ policyRelativePath }) {
     hooks: {
       PreToolUse: [
         {
-          matcher: "Bash|apply_patch|mcp__*",
+          matcher: "^(Bash|apply_patch|mcp__.*)$",
           hooks: [
             {
               type: "command",
@@ -16960,6 +17208,9 @@ function enforceBash(command, caps) {
   if ((caps.write?.scope === "skill" || caps.write?.scope === "none") && /(?:^|\s)(?:rm|del|Remove-Item)\b/i.test(command)) {
     return deny2("write scope forbids destructive shell writes");
   }
+  if (caps.write?.scope === "none" && (!commandExactlyAllowed(command, caps.exec.commands) || shellImpliesWrite(command))) {
+    return deny2("write scope forbids shell writes");
+  }
   return null;
 }
 function enforceApplyPatch(patchText, caps, policy) {
@@ -16994,7 +17245,7 @@ function parseApplyPatchPaths(patchText) {
   const paths = [];
   const lines = String(patchText ?? "").split(/\r?\n/);
   for (const line of lines) {
-    const match = line.match(/^\*\*\*\s+(?:Update|Add)\s+File:\s+(.+?)\s*$/i);
+    const match = line.match(/^\*\*\*\s+(?:Update|Add|Delete)\s+File:\s+(.+?)\s*$/i) ?? line.match(/^\*\*\*\s+Move\s+to:\s+(.+?)\s*$/i);
     if (match) paths.push(match[1].trim());
   }
   return paths;
@@ -17135,8 +17386,8 @@ __export(eval_exports, {
   runEvaluation: () => runEvaluation
 });
 import { createHash as createHash2 } from "node:crypto";
-import { mkdir as mkdir9, readFile as readFile15, writeFile as writeFile9 } from "node:fs/promises";
-import { dirname as dirname6, join as join17, resolve as resolve15 } from "node:path";
+import { mkdir as mkdir11, readFile as readFile17, writeFile as writeFile11 } from "node:fs/promises";
+import { dirname as dirname7, join as join21, resolve as resolve19 } from "node:path";
 import { fileURLToPath as fileURLToPath3 } from "node:url";
 function percentile(values, p) {
   if (values.length === 0) return null;
@@ -17196,8 +17447,8 @@ function calculateMetrics(cases, select) {
 async function runEvaluation(options = {}) {
   const root = options.root ?? repositoryRoot;
   const corpusName = options.corpus ?? "routing-holdout.json";
-  const corpusPath = join17(root, "evaluation", corpusName);
-  const corpusSource = await readFile15(corpusPath);
+  const corpusPath = join21(root, "evaluation", corpusName);
+  const corpusSource = await readFile17(corpusPath);
   const corpus = JSON.parse(corpusSource.toString("utf8"));
   const skills = await loadAllSkills(root);
   const started = Date.now();
@@ -17224,8 +17475,8 @@ async function runEvaluation(options = {}) {
     durationMs: Date.now() - started
   };
   if (options.write !== false) {
-    await mkdir9(join17(root, "artifacts", "evaluation"), { recursive: true });
-    await writeFile9(join17(root, "artifacts", "evaluation", "routing-report.json"), `${JSON.stringify(report, null, 2)}
+    await mkdir11(join21(root, "artifacts", "evaluation"), { recursive: true });
+    await writeFile11(join21(root, "artifacts", "evaluation", "routing-report.json"), `${JSON.stringify(report, null, 2)}
 `);
   }
   return report;
@@ -17236,10 +17487,10 @@ var init_eval = __esm({
     init_skill_loader();
     init_router();
     modulePath = fileURLToPath3(import.meta.url);
-    repositoryRoot = resolve15(dirname6(modulePath), "..");
+    repositoryRoot = resolve19(dirname7(modulePath), "..");
     HOLDOUT_PRECISION_MIN = 0.95;
     HOLDOUT_RECALL_MIN = 0.9;
-    if (process.argv[1] && resolve15(process.argv[1]) === modulePath) {
+    if (process.argv[1] && resolve19(process.argv[1]) === modulePath) {
       const report = await runEvaluation();
       console.log(
         `routing: ${report.tp}+${report.tn}/${report.total} exact=${report.exactMatchAccuracy?.toFixed(2)} P=${report.precision?.toFixed(2)} R=${report.recall?.toFixed(2)} p50=${report.latencyMs?.p50?.toFixed(2)}ms p95=${report.latencyMs?.p95?.toFixed(2)}ms`
@@ -17263,12 +17514,12 @@ __export(evidence_exports, {
   stableStringify: () => stableStringify
 });
 import { createHash as createHash3 } from "node:crypto";
-import { access as access11, mkdir as mkdir10, readFile as readFile16, readdir as readdir8, writeFile as writeFile10 } from "node:fs/promises";
-import { dirname as dirname7, join as join18, relative as relative9, resolve as resolve16 } from "node:path";
+import { access as access14, mkdir as mkdir12, readFile as readFile18, readdir as readdir10, writeFile as writeFile12 } from "node:fs/promises";
+import { dirname as dirname8, join as join22, relative as relative12, resolve as resolve20 } from "node:path";
 import { fileURLToPath as fileURLToPath4 } from "node:url";
 async function buildEvidenceBundle(options = {}) {
-  const root = resolve16(options.root ?? moduleRoot);
-  const outDir = options.outDir ? resolve16(options.outDir) : null;
+  const root = resolve20(options.root ?? moduleRoot);
+  const outDir = options.outDir ? resolve20(options.outDir) : null;
   const write = outDir != null && options.write !== false;
   if (!outDir) {
     return { ok: false, errors: ["--out <dir> is required"], files: [], bundleHash: null };
@@ -17300,8 +17551,8 @@ async function buildEvidenceBundle(options = {}) {
     const sha2562 = sha256Text(text);
     fileEntries.push({ path: name, sha256: sha2562, bytes: Buffer.byteLength(text) });
     if (write) {
-      await mkdir10(outDir, { recursive: true });
-      await writeFile10(join18(outDir, name), text);
+      await mkdir12(outDir, { recursive: true });
+      await writeFile12(join22(outDir, name), text);
     }
   }
   const manifestBody = {
@@ -17313,7 +17564,7 @@ async function buildEvidenceBundle(options = {}) {
   const manifest = { ...manifestBody, bundleHash };
   const manifestWithHash = stableStringify(manifest);
   if (write) {
-    await writeFile10(join18(outDir, "manifest.json"), manifestWithHash);
+    await writeFile12(join22(outDir, "manifest.json"), manifestWithHash);
   }
   const ok = Boolean(validation.ok) && policyReport.falseAllow === 0 && receiptReport.verify?.ok === true && receiptReport.tamper?.ok === false;
   return {
@@ -17417,8 +17668,8 @@ async function collectPolicyAdversarial(root, injectedCorpus) {
   };
 }
 async function loadPolicyCorpus(root) {
-  const path = join18(root, "evaluation", "policy-adversarial.json");
-  const source = await readFile16(path);
+  const path = join22(root, "evaluation", "policy-adversarial.json");
+  const source = await readFile18(path);
   const parsed = JSON.parse(source.toString("utf8"));
   return {
     ...parsed,
@@ -17428,16 +17679,16 @@ async function loadPolicyCorpus(root) {
 }
 async function collectIndependentFixtures(root, fixtureRoots) {
   const roots = fixtureRoots ?? [
-    join18(root, "tests", "fixtures", "skills", "public-docs-helper"),
-    join18(root, "tests", "fixtures", "skills", "public-router-helper"),
-    join18(root, "tests", "fixtures", "skills", "public-security-scan")
+    join22(root, "tests", "fixtures", "skills", "public-docs-helper"),
+    join22(root, "tests", "fixtures", "skills", "public-router-helper"),
+    join22(root, "tests", "fixtures", "skills", "public-security-scan")
   ];
   const reports = [];
   for (const dir of roots) {
-    const abs = resolve16(dir);
+    const abs = resolve20(dir);
     let exists = true;
     try {
-      await access11(join18(abs, "SKILL.md"));
+      await access14(join22(abs, "SKILL.md"));
     } catch {
       exists = false;
     }
@@ -17468,41 +17719,41 @@ async function collectIndependentFixtures(root, fixtureRoots) {
   };
 }
 async function collectCodexPackageSummary(root) {
-  const pluginPath = join18(root, "plugins", "skillsforge", ".codex-plugin", "plugin.json");
+  const pluginPath = join22(root, "plugins", "skillsforge", ".codex-plugin", "plugin.json");
   let plugin = null;
   try {
-    plugin = JSON.parse(await readFile16(pluginPath, "utf8"));
+    plugin = JSON.parse(await readFile18(pluginPath, "utf8"));
   } catch {
     plugin = null;
   }
-  const skillsRoot = join18(root, "plugins", "skillsforge", "skills");
+  const skillsRoot = join22(root, "plugins", "skillsforge", "skills");
   const skillSummaries = [];
   let entries = [];
   try {
-    entries = await readdir8(skillsRoot, { withFileTypes: true });
+    entries = await readdir10(skillsRoot, { withFileTypes: true });
   } catch {
     entries = [];
   }
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    const skillDir = join18(skillsRoot, entry.name);
-    const hasSkill = await pathExists6(join18(skillDir, "SKILL.md"));
+    const skillDir = join22(skillsRoot, entry.name);
+    const hasSkill = await pathExists7(join22(skillDir, "SKILL.md"));
     if (!hasSkill) continue;
     skillSummaries.push({
       name: entry.name,
-      openaiYaml: await pathExists6(join18(skillDir, "agents", "openai.yaml")),
-      sidecar: await pathExists6(join18(skillDir, "skillsforge.json"))
+      openaiYaml: await pathExists7(join22(skillDir, "agents", "openai.yaml")),
+      sidecar: await pathExists7(join22(skillDir, "skillsforge.json"))
     });
   }
   skillSummaries.sort((left, right) => left.name.localeCompare(right.name));
   let distInterop = null;
   try {
-    distInterop = JSON.parse(await readFile16(join18(root, "dist", "codex-interop.json"), "utf8"));
+    distInterop = JSON.parse(await readFile18(join22(root, "dist", "codex-interop.json"), "utf8"));
   } catch {
     distInterop = null;
   }
   const distPresent = {
-    pluginJson: await pathExists6(join18(root, "dist", "codex", ".codex-plugin", "plugin.json")),
+    pluginJson: await pathExists7(join22(root, "dist", "codex", ".codex-plugin", "plugin.json")),
     openaiYamlCount: skillSummaries.filter((item) => item.openaiYaml).length
   };
   return {
@@ -17542,17 +17793,17 @@ async function collectCodexPackageSummary(root) {
   };
 }
 async function collectReceiptEvidence(root, options) {
-  const packageRoot = resolve16(
-    options.packageRoot ?? join18(root, "dist", "claude-code")
+  const packageRoot = resolve20(
+    options.packageRoot ?? join22(root, "dist", "claude-code")
   );
-  const receiptPath = resolve16(
-    options.receiptPath ?? join18(root, "dist", "trust-receipt.json")
+  const receiptPath = resolve20(
+    options.receiptPath ?? join22(root, "dist", "trust-receipt.json")
   );
-  const evaluationPath = resolve16(
-    options.evaluationPath ?? join18(root, "artifacts", "evaluation", "routing-report.json")
+  const evaluationPath = resolve20(
+    options.evaluationPath ?? join22(root, "artifacts", "evaluation", "routing-report.json")
   );
-  const packageReady = await pathExists6(join18(packageRoot, ".claude-plugin", "plugin.json"));
-  const receiptReady = await pathExists6(receiptPath);
+  const packageReady = await pathExists7(join22(packageRoot, ".claude-plugin", "plugin.json"));
+  const receiptReady = await pathExists7(receiptPath);
   if (!packageReady || !receiptReady) {
     return await synthesizeReceiptProof(root, options);
   }
@@ -17562,7 +17813,7 @@ async function collectReceiptEvidence(root, options) {
     packageOnly: false,
     requireEvaluation: true
   };
-  if (await pathExists6(evaluationPath)) {
+  if (await pathExists7(evaluationPath)) {
     verifyOptions.evaluationPath = evaluationPath;
   }
   const verify = await verifyReceipt(receiptPath, skills, verifyOptions);
@@ -17586,7 +17837,7 @@ async function collectReceiptEvidence(root, options) {
   };
 }
 async function synthesizeReceiptProof(root, options) {
-  const skills = options.skills ?? await loadAllSkills(join18(root, "plugins", "skillsforge"));
+  const skills = options.skills ?? await loadAllSkills(join22(root, "plugins", "skillsforge"));
   const evaluation = options.evaluationSummary ?? {
     corpusSha256: "synthetic-corpus",
     total: 2,
@@ -17600,12 +17851,12 @@ async function synthesizeReceiptProof(root, options) {
     evaluation,
     reportBytes,
     requireEvaluation: true,
-    packageRoot: join18(root, "plugins", "skillsforge")
+    packageRoot: join22(root, "plugins", "skillsforge")
   });
   if (!built.ok) {
     return {
       receiptPath: null,
-      packageRoot: toPosix(root, join18(root, "plugins", "skillsforge")),
+      packageRoot: toPosix(root, join22(root, "plugins", "skillsforge")),
       verify: { ok: false, mismatches: built.errors ?? ["receipt build failed"], packageVerified: false, evaluationVerified: false, receiptHash: null },
       tamper: { ok: false, prepared: false, mismatches: ["receipt unavailable"], note: "Could not prepare tamper proof." }
     };
@@ -17619,11 +17870,11 @@ async function synthesizeReceiptProof(root, options) {
   };
   const tamperedText = mutateReceiptForTamper(built.text);
   const tamper = await evaluateTamperedReceipt(tamperedText, skills, {
-    packageRoot: join18(root, "plugins", "skillsforge")
+    packageRoot: join22(root, "plugins", "skillsforge")
   });
   return {
     receiptPath: null,
-    packageRoot: toPosix(root, join18(root, "plugins", "skillsforge")),
+    packageRoot: toPosix(root, join22(root, "plugins", "skillsforge")),
     mode: "synthetic",
     verify,
     tamper: {
@@ -17634,7 +17885,7 @@ async function synthesizeReceiptProof(root, options) {
   };
 }
 async function verifyOneByteTamper(receiptPath, skills, verifyOptions) {
-  const original = await readFile16(receiptPath, "utf8");
+  const original = await readFile18(receiptPath, "utf8");
   const mutated = mutateReceiptForTamper(original);
   return evaluateTamperedReceipt(mutated, skills, verifyOptions);
 }
@@ -17695,12 +17946,12 @@ function defaultBuildMeta(root) {
       sha: process.env.GITHUB_SHA ?? null,
       runId: process.env.GITHUB_RUN_ID ?? null
     },
-    rootName: relative9(dirname7(root), root).replaceAll("\\", "/") || "."
+    rootName: relative12(dirname8(root), root).replaceAll("\\", "/") || "."
   };
 }
 async function readPackageVersion(root) {
   try {
-    const pkg = JSON.parse(await readFile16(join18(root, "package.json"), "utf8"));
+    const pkg = JSON.parse(await readFile18(join22(root, "package.json"), "utf8"));
     return pkg.version ?? null;
   } catch {
     return null;
@@ -17758,18 +18009,18 @@ function compareFinding(left, right) {
   return leftKey.localeCompare(rightKey);
 }
 function toPosix(root, abs) {
-  return relative9(root, abs).replaceAll("\\", "/");
+  return relative12(root, abs).replaceAll("\\", "/");
 }
-async function pathExists6(path) {
+async function pathExists7(path) {
   try {
-    await access11(path);
+    await access14(path);
     return true;
   } catch {
     return false;
   }
 }
 async function buildEvidenceBundleWithPackageMeta(options = {}) {
-  const root = resolve16(options.root ?? moduleRoot);
+  const root = resolve20(options.root ?? moduleRoot);
   const packageVersion = await readPackageVersion(root);
   return buildEvidenceBundle({
     ...options,
@@ -17790,16 +18041,17 @@ var init_evidence = __esm({
     init_receipt();
     init_verify();
     EVIDENCE_VERSION = "0.4.0";
-    moduleRoot = resolve16(dirname7(fileURLToPath4(import.meta.url)), "../..");
+    moduleRoot = resolve20(dirname8(fileURLToPath4(import.meta.url)), "../..");
   }
 });
 
 // scripts/skillsforge-cli.mjs
 init_skill_loader();
 init_router();
-import { access as access12, readFile as readFile17, writeFile as writeFile11, mkdir as mkdir11 } from "node:fs/promises";
+import { access as access15, readFile as readFile19, writeFile as writeFile13, mkdir as mkdir13, readdir as readdir11, stat as stat4 } from "node:fs/promises";
 import { realpathSync } from "node:fs";
-import { dirname as dirname8, join as join19, resolve as resolve17 } from "node:path";
+import { spawn as spawn2 } from "node:child_process";
+import { basename as basename6, dirname as dirname9, join as join23, relative as relative13, resolve as resolve21 } from "node:path";
 import { fileURLToPath as fileURLToPath5 } from "node:url";
 
 // lib/capabilities/forge.mjs
@@ -18057,6 +18309,9 @@ function enforcePolicy(event, policy) {
     }
     if ((caps.write?.scope === "skill" || caps.write?.scope === "none") && /(?:^|\s)(?:rm|del|Remove-Item)\b/i.test(command)) {
       return deny("write scope forbids destructive shell writes");
+    }
+    if (caps.write?.scope === "none" && (!commandExactlyAllowed(command, caps.exec.commands) || shellImpliesWrite(command))) {
+      return deny("write scope forbids shell writes");
     }
   }
   if ((tool === "Write" || tool === "Edit") && caps.write) {
@@ -18441,8 +18696,9 @@ init_schemas_generated();
 init_skill_loader();
 init_verify();
 init_codex_policy_compiler();
-import { access as access7, cp, mkdir as mkdir3, readFile as readFile9, readdir as readdir5, rm as rm2, writeFile as writeFile3 } from "node:fs/promises";
-import { basename as basename3, dirname as dirname5, join as join9, relative as relative7, resolve as resolve9, sep as sep9 } from "node:path";
+import { access as access7, cp, mkdir as mkdir3, readFile as readFile9, readdir as readdir5, realpath as realpath4, rename as rename2, rm as rm2, writeFile as writeFile3 } from "node:fs/promises";
+import { homedir as homedir3 } from "node:os";
+import { basename as basename3, dirname as dirname5, join as join9, normalize as normalize3, relative as relative7, resolve as resolve9, sep as sep9 } from "node:path";
 import { fileURLToPath as fileURLToPath2 } from "node:url";
 var MULTI_SKILL_MESSAGE = "Codex packaging rejects multi-skill inputs; package one skill at a time with --skill <skill-dir>";
 async function packageCodexPlugin(options = {}) {
@@ -18517,6 +18773,10 @@ async function packageCodexPlugin(options = {}) {
     return fail(skill.name, outDir, dryRun, schemaResult.errors.map((error) => `codex-package ${error}`));
   }
   if (dryRun) return receipt;
+  const outputSafety = await validateCodexOutputDir(outDir, skillRoot);
+  if (!outputSafety.ok) {
+    return fail(skill.name, outDir, false, outputSafety.errors);
+  }
   if (!force) {
     try {
       await access7(outDir);
@@ -18527,9 +18787,13 @@ async function packageCodexPlugin(options = {}) {
     } catch {
     }
   }
-  const stagingRoot = `${outDir}.staging-${process.pid}`;
+  const token = `${process.pid}-${Date.now()}`;
+  const stagingRoot = `${outDir}.staging-${token}`;
+  const backupRoot = `${outDir}.backup-${token}`;
+  let backedUp = false;
   try {
     await rm2(stagingRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
+    await rm2(backupRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
     await mkdir3(stagingRoot, { recursive: true });
     for (const file of planned.files) {
       const absolute = join9(stagingRoot, file.path);
@@ -18547,17 +18811,30 @@ async function packageCodexPlugin(options = {}) {
       `${JSON.stringify({ ...receipt, dryRun: false }, null, 2)}
 `
     );
-    await rm2(outDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
     await mkdir3(dirname5(outDir), { recursive: true });
-    await cp(stagingRoot, outDir, { recursive: true });
+    if (await pathExists4(outDir)) {
+      await rename2(outDir, backupRoot);
+      backedUp = true;
+    }
+    await rename2(stagingRoot, outDir);
+    if (backedUp) {
+      await rm2(backupRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
+      backedUp = false;
+    }
   } catch (error) {
     await rm2(stagingRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 }).catch(() => {
     });
-    await rm2(outDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 }).catch(() => {
-    });
+    if (backedUp) {
+      await rm2(outDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 }).catch(() => {
+      });
+      await rename2(backupRoot, outDir).catch(() => {
+      });
+    }
     return fail(skill.name, outDir, false, [`package write failed: ${error.message}`]);
   } finally {
     await rm2(stagingRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 }).catch(() => {
+    });
+    await rm2(backupRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 }).catch(() => {
     });
   }
   return {
@@ -18568,6 +18845,51 @@ async function packageCodexPlugin(options = {}) {
       { path: "package-receipt.json", action: "write" }
     ]
   };
+}
+async function validateCodexOutputDir(outDir, skillRoot) {
+  const candidate = await resolveRealCandidate(outDir);
+  const repoRoot = await resolveRealCandidate(await findPackageSourceRoot());
+  const sourceRoot = await resolveRealCandidate(skillRoot);
+  const homeRoot = await resolveRealCandidate(homedir3());
+  if (isFilesystemRoot(candidate)) {
+    return { ok: false, errors: [`protected output directory rejected: filesystem root ${candidate}`] };
+  }
+  if (samePath(candidate, homeRoot) || isInsidePath(candidate, homeRoot)) {
+    return { ok: false, errors: [`protected output directory rejected: home directory or ancestor ${outDir}`] };
+  }
+  if (samePath(candidate, repoRoot) || isInsidePath(candidate, repoRoot)) {
+    return { ok: false, errors: [`protected output directory rejected: repository root or ancestor ${outDir}`] };
+  }
+  if (samePath(candidate, sourceRoot) || isInsidePath(candidate, sourceRoot) || isInsidePath(sourceRoot, candidate)) {
+    return { ok: false, errors: [`protected output directory rejected: skill source or ancestor ${outDir}`] };
+  }
+  return { ok: true, errors: [] };
+}
+async function resolveRealCandidate(target) {
+  const missing = [];
+  let current = resolve9(target);
+  while (true) {
+    try {
+      const real = await realpath4(current);
+      return normalize3(resolve9(real, ...missing.reverse()));
+    } catch {
+      const parent = dirname5(current);
+      if (parent === current) return normalize3(resolve9(target));
+      missing.push(basename3(current));
+      current = parent;
+    }
+  }
+}
+function isFilesystemRoot(path) {
+  return dirname5(path) === path;
+}
+function samePath(left, right) {
+  return normalize3(resolve9(left)).toLowerCase() === normalize3(resolve9(right)).toLowerCase();
+}
+function isInsidePath(parent, candidate) {
+  const normalizedParent = normalize3(resolve9(parent)).toLowerCase();
+  const normalizedCandidate = normalize3(resolve9(candidate)).toLowerCase();
+  return normalizedCandidate.startsWith(normalizedParent.endsWith(sep9) ? normalizedParent : normalizedParent + sep9);
 }
 async function resolveSingleSkillDir(skillDir) {
   const abs = resolve9(skillDir);
@@ -18735,12 +19057,13 @@ function renderOpenAiYaml(skill) {
   const display = titleCase(skill.name);
   const short = truncate(skill.description || `Use the ${skill.name} skill.`, 240);
   const prompt = `Use this skill when: ${short}`;
+  const allowImplicitInvocation = skill.sidecar?.routing?.mode === "auto";
   return `interface:
   display_name: ${yamlScalar(display)}
   short_description: ${yamlScalar(short)}
   default_prompt: ${yamlScalar(prompt)}
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: ${allowImplicitInvocation ? "true" : "false"}
 `;
 }
 function yamlScalar(value) {
@@ -19041,6 +19364,7 @@ function buildScaffoldFiles(spec) {
   const antiTriggers = spec.antiTriggers ?? ["unrelated coding task", "install skillsforge"];
   const writeScope = spec.write ?? "project";
   const title = titleCase2(name);
+  const allowImplicitInvocation = mode !== "explicit";
   const skillMd = `---
 name: ${name}
 description: ${description}
@@ -19058,11 +19382,11 @@ hooks:
 
 ## Overview
 
-${spec.overview ?? `Original SkillsForge skill for ${title}. Follow phases; write proof into docs/work/.`}
+${spec.overview ?? `Lean SkillsForge scaffold for ${title}. Use it as a routed starting point; extend with domain-specific examples, edge cases, and verification before claiming production depth.`}
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for ${title} without copying third-party skill bodies.
+Deliver a trustworthy, repeatable outcome for ${title} without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 
@@ -19131,7 +19455,7 @@ See \`pressure/\` fixtures when this is a discipline skill.
   short_description: ${description.replace(/\n/g, " ").slice(0, 200)}
   default_prompt: Use the ${name} skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: ${allowImplicitInvocation ? "true" : "false"}
 `;
   return {
     "SKILL.md": skillMd,
@@ -19483,8 +19807,8 @@ Generated by \`skillsforge export-agents\`. Cross-harness context for Claude Cod
 
 Use SkillsForge as the trust and routing layer for Agent Skills.
 
-- Magical moment: \`npx skillsforge vibe\`
-- Judge demo: \`npx skillsforge demo\`
+- Magical moment: \`node plugins/skillsforge/bin/skillsforge.mjs vibe\`
+- Judge demo: \`node plugins/skillsforge/bin/skillsforge.mjs demo\`
 - Validate: \`skillsforge validate --all\`
 - Route: \`skillsforge route --query "..."\` or \`--pack <id>\`
 - Quality: \`skillsforge quality --skill <dir>\`
@@ -19735,8 +20059,8 @@ async function runJudgeDemo(root, options = {}) {
     };
   } finally {
     if (!options.keepWork) {
-      const { rm: rm3 } = await import("node:fs/promises");
-      await rm3(work, { recursive: true, force: true });
+      const { rm: rm4 } = await import("node:fs/promises");
+      await rm4(work, { recursive: true, force: true });
     }
   }
 }
@@ -19829,10 +20153,879 @@ async function compareSkillTrust(root, leftDir, rightDir) {
   };
 }
 
-// scripts/skillsforge-cli.mjs
-var modulePath2 = fileURLToPath5(import.meta.url);
-var modulePluginRoot = resolve17(dirname8(modulePath2), "..");
-async function pathExists7(path) {
+// lib/capabilities/library.mjs
+init_skill_loader();
+init_hosts();
+init_catalog();
+import { access as access12, mkdir as mkdir9, readFile as readFile16, rm as rm3, writeFile as writeFile9 } from "node:fs/promises";
+import { createServer } from "node:http";
+import { basename as basename5, join as join18, relative as relative10, resolve as resolve16, sep as sep12 } from "node:path";
+
+// lib/capabilities/workflows.mjs
+init_skill_loader();
+init_router();
+import { access as access11, readFile as readFile15, readdir as readdir8 } from "node:fs/promises";
+import { basename as basename4, dirname as dirname6, join as join17, relative as relative9, resolve as resolve15, sep as sep11 } from "node:path";
+var WORKFLOW_ROOT_REL = join17("plugins", "skillsforge", "workflows");
+var WORKFLOW_CATEGORIES = Object.freeze([
+  "coding",
+  "testing",
+  "security",
+  "docs",
+  "design",
+  "product",
+  "ops",
+  "data",
+  "media",
+  "agentic"
+]);
+var REQUIRED_FIELDS = Object.freeze([
+  "id",
+  "category",
+  "goal",
+  "inputs",
+  "steps",
+  "recommendedSkills",
+  "recommendedAgents",
+  "commands",
+  "stopGates",
+  "tokenBudget",
+  "qualityGate",
+  "risk"
+]);
+var STOP_WORDS = /* @__PURE__ */ new Set([
+  "a",
+  "an",
+  "and",
+  "are",
+  "as",
+  "at",
+  "be",
+  "by",
+  "do",
+  "for",
+  "from",
+  "in",
+  "into",
+  "is",
+  "it",
+  "of",
+  "on",
+  "or",
+  "our",
+  "the",
+  "then",
+  "this",
+  "to",
+  "with",
+  "without"
+]);
+var tokenize2 = (text) => (String(text ?? "").toLowerCase().match(/[a-z0-9]+/g) ?? []).filter((token) => !STOP_WORDS.has(token));
+async function loadWorkflows(root, options = {}) {
+  const workflowRoot = resolve15(root, options.workflowRoot ?? WORKFLOW_ROOT_REL);
+  const files = await listJsonFiles(workflowRoot);
+  const workflows = [];
+  const errors = [];
+  for (const file of files) {
+    try {
+      const workflow = JSON.parse(await readFile15(file, "utf8"));
+      const validation = validateWorkflow(workflow, { file, workflowRoot });
+      if (!validation.ok) {
+        errors.push(...validation.errors.map((error) => ({ file, error })));
+      } else {
+        workflows.push({
+          ...workflow,
+          file,
+          relativePath: relative9(workflowRoot, file).replaceAll("\\", "/")
+        });
+      }
+    } catch (error) {
+      errors.push({ file, error: error.message });
+    }
+  }
+  workflows.sort((left, right) => left.id.localeCompare(right.id));
+  return { ok: errors.length === 0, workflows, errors, root: workflowRoot };
+}
+function validateWorkflow(workflow, options = {}) {
+  const errors = [];
+  if (!workflow || typeof workflow !== "object" || Array.isArray(workflow)) {
+    return { ok: false, errors: ["workflow must be an object"] };
+  }
+  for (const field of REQUIRED_FIELDS) {
+    if (!(field in workflow)) errors.push(`missing field: ${field}`);
+  }
+  if (typeof workflow.id !== "string" || !/^[a-z]+[.][a-z0-9]+(?:-[a-z0-9]+)*$/.test(workflow.id)) {
+    errors.push("id must look like category.slug-name");
+  }
+  if (!WORKFLOW_CATEGORIES.includes(workflow.category)) {
+    errors.push(`category must be one of: ${WORKFLOW_CATEGORIES.join(", ")}`);
+  }
+  if (typeof workflow.id === "string" && typeof workflow.category === "string" && !workflow.id.startsWith(`${workflow.category}.`)) {
+    errors.push("id prefix must match category");
+  }
+  if (typeof workflow.goal !== "string" || workflow.goal.trim().length < 12) {
+    errors.push("goal must be a useful string");
+  }
+  for (const field of ["inputs", "steps", "recommendedSkills", "recommendedAgents", "commands", "stopGates"]) {
+    if (!Array.isArray(workflow[field])) errors.push(`${field} must be an array`);
+  }
+  if (Array.isArray(workflow.steps) && workflow.steps.length === 0) errors.push("steps must not be empty");
+  if (!["low", "medium", "high"].includes(workflow.risk)) errors.push("risk must be low, medium, or high");
+  if (options.file && options.workflowRoot && !isInside7(options.workflowRoot, options.file)) {
+    errors.push("workflow file must stay inside workflow root");
+  }
+  return { ok: errors.length === 0, errors };
+}
+async function recommendWorkflows(root, query, options = {}) {
+  const loaded = await loadWorkflows(root);
+  const limit = clampLimit(options.limit, 5);
+  const category = options.category ?? null;
+  const scoped = loaded.workflows.filter((workflow) => !category || workflow.category === category);
+  const candidates = scoped.map((workflow) => scoreWorkflow(query, workflow)).sort((left, right) => right.score - left.score || left.workflow.id.localeCompare(right.workflow.id)).slice(0, limit);
+  return {
+    ok: loaded.ok,
+    query,
+    category,
+    candidates: candidates.map(({ workflow, score, reasons }) => summarizeWorkflow(workflow, { score, reasons })),
+    errors: loaded.errors
+  };
+}
+async function showWorkflow(root, id) {
+  const loaded = await loadWorkflows(root);
+  const workflow = loaded.workflows.find((item) => item.id === id);
+  if (!workflow) {
+    return { ok: false, id, error: `unknown workflow: ${id}`, errors: loaded.errors };
+  }
+  return { ok: true, workflow };
+}
+async function runWorkflowDryRun(root, id) {
+  const shown = await showWorkflow(root, id);
+  if (!shown.ok) return shown;
+  const workflow = shown.workflow;
+  return {
+    ok: true,
+    dryRun: true,
+    workflow: workflow.id,
+    category: workflow.category,
+    goal: workflow.goal,
+    steps: workflow.steps.map((step, index) => ({
+      index: index + 1,
+      id: step.id ?? `step-${index + 1}`,
+      action: step.action ?? step.note ?? String(step),
+      skill: step.skill ?? null,
+      agent: step.agent ?? null,
+      command: step.command ?? null
+    })),
+    commands: workflow.commands,
+    stopGates: workflow.stopGates,
+    note: "dry-run only; no workflow command executed"
+  };
+}
+async function planAuto(root, query, options = {}) {
+  const skills = await loadAllSkills(root, {
+    includeInstalled: true,
+    home: options.home,
+    noCache: options.noCache === true,
+    tolerateErrors: true
+  });
+  const skillRoute = routeQuery(query, skills, {
+    includeExplicit: true,
+    pack: options.pack ?? void 0
+  });
+  const workflowRoute = await recommendWorkflows(root, query, {
+    limit: options.limit ?? 5,
+    category: options.category
+  });
+  return {
+    ok: workflowRoute.ok,
+    mode: "plan",
+    query,
+    skill: {
+      selected: skillRoute.selected,
+      fallback: skillRoute.fallback,
+      candidates: skillRoute.candidates.slice(0, 5)
+    },
+    workflows: workflowRoute.candidates,
+    nextCommands: buildNextCommands(query, skillRoute, workflowRoute.candidates),
+    errors: workflowRoute.errors
+  };
+}
+async function runAutoReadOnly(root, query, options = {}) {
+  const plan = await planAuto(root, query, options);
+  const selected = plan.workflows[0]?.id ?? null;
+  const dryRun = selected ? await runWorkflowDryRun(root, selected) : null;
+  return {
+    ...plan,
+    mode: "read-only-run",
+    dryRun: true,
+    selectedWorkflow: selected,
+    workflowDryRun: dryRun,
+    note: "read-only mode produces routing and dry-run workflow steps only"
+  };
+}
+function summarizeWorkflow(workflow, extra = {}) {
+  return {
+    id: workflow.id,
+    category: workflow.category,
+    goal: workflow.goal,
+    recommendedSkills: workflow.recommendedSkills,
+    recommendedAgents: workflow.recommendedAgents,
+    commands: workflow.commands,
+    risk: workflow.risk,
+    tokenBudget: workflow.tokenBudget,
+    qualityGate: workflow.qualityGate,
+    score: extra.score ?? void 0,
+    reasons: extra.reasons ?? void 0
+  };
+}
+function scoreWorkflow(query, workflow) {
+  const queryList = tokenize2(query);
+  const queryTokens = new Set(queryList);
+  const haystack = [
+    workflow.id,
+    workflow.category,
+    workflow.goal,
+    ...workflow.inputs ?? [],
+    ...workflow.recommendedSkills ?? [],
+    ...workflow.recommendedAgents ?? [],
+    ...workflow.stopGates ?? []
+  ].join(" ");
+  const workflowTokens = tokenize2(haystack);
+  const hits = workflowTokens.filter((token) => queryTokens.has(token));
+  const uniqueHits = [...new Set(hits)];
+  const exactCategory = queryTokens.has(workflow.category) ? 3 : 0;
+  const exactId = tokenPhraseMatches(queryList, workflow.id) ? 8 : 0;
+  const score = uniqueHits.length + exactCategory + exactId;
+  const reasons = uniqueHits.slice(0, 8).map((token) => `token:${token}`);
+  if (exactCategory) reasons.push("category-match");
+  if (exactId) reasons.push("id-match");
+  return { workflow, score, reasons };
+}
+function tokenPhraseMatches(queryTokens, phrase) {
+  const phraseTokens = tokenize2(phrase);
+  if (phraseTokens.length === 0 || phraseTokens.length > queryTokens.length) return false;
+  for (let index = 0; index <= queryTokens.length - phraseTokens.length; index += 1) {
+    let matched = true;
+    for (let offset = 0; offset < phraseTokens.length; offset += 1) {
+      if (queryTokens[index + offset] !== phraseTokens[offset]) {
+        matched = false;
+        break;
+      }
+    }
+    if (matched) return true;
+  }
+  return false;
+}
+function buildNextCommands(query, skillRoute, workflows) {
+  const encodedQuery = String(query).replaceAll('"', '\\"');
+  const commands = [
+    `skillsforge auto plan --query "${encodedQuery}"`,
+    `skillsforge workflows recommend --query "${encodedQuery}"`
+  ];
+  if (skillRoute.selected) commands.push(`skillsforge route --query "${encodedQuery}" --include-explicit`);
+  if (workflows[0]?.id) commands.push(`skillsforge workflows run --id ${workflows[0].id} --dry-run`);
+  return commands;
+}
+async function listJsonFiles(root) {
+  try {
+    await access11(root);
+  } catch {
+    return [];
+  }
+  const out = [];
+  async function walk(current) {
+    const entries = await readdir8(current, { withFileTypes: true });
+    for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+      const path = join17(current, entry.name);
+      if (entry.isDirectory()) await walk(path);
+      else if (entry.isFile() && entry.name.endsWith(".json")) out.push(path);
+    }
+  }
+  await walk(root);
+  return out;
+}
+function clampLimit(value, fallback) {
+  return Math.max(1, Math.min(100, Number(value) || fallback));
+}
+function isInside7(parent, candidate) {
+  const path = relative9(resolve15(parent), resolve15(candidate));
+  return path === "" || !path.startsWith(`..${sep11}`) && path !== "..";
+}
+
+// lib/capabilities/library.mjs
+var LIBRARY_OUT_REL = join18("artifacts", "skillsforge-library");
+async function buildLibraryIndex(root, options = {}) {
+  const absRoot = resolve16(root);
+  const home = options.home;
+  const [skills, hosts, workflowsLoaded, catalogLoaded] = await Promise.all([
+    loadAllSkills(absRoot, {
+      includeInstalled: true,
+      home,
+      noCache: options.noCache === true,
+      tolerateErrors: true
+    }),
+    detectHosts({ home }),
+    loadWorkflows(absRoot),
+    loadCatalog(absRoot).catch(() => null)
+  ]);
+  const catalog = catalogLoaded?.catalog ?? null;
+  const packBySkill = buildPackMap(catalog);
+  const session = detectSession(hosts, options);
+  const hostInstallChecks = /* @__PURE__ */ new Map();
+  for (const host of hosts) {
+    for (const skill of skills) {
+      hostInstallChecks.set(`${host.id}:${skill.name}`, await pathExists6(join18(host.skillsDir, skill.name)));
+    }
+  }
+  const records = skills.map((skill) => summarizeSkill(absRoot, skill, {
+    packBySkill,
+    hosts,
+    installed: hostInstallChecks,
+    home,
+    session
+  })).map(assignRecordKey()).sort((left, right) => left.key.localeCompare(right.key));
+  const categories = [...new Set(records.map((skill) => skill.category).filter(Boolean))].sort();
+  const sources = [...new Set(records.map((skill) => skill.sourcePlugin))].sort();
+  return {
+    ok: workflowsLoaded.ok,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    root: absRoot,
+    stats: {
+      skills: records.length,
+      workflows: workflowsLoaded.workflows.length,
+      packs: catalog ? listPacks(catalog).length : 0,
+      profiles: catalog ? listProfiles(catalog).length : 0,
+      hosts: hosts.length,
+      detectedHosts: hosts.filter((host) => host.detected).length,
+      installedSkills: records.filter((skill) => skill.installedHosts.length > 0).length,
+      sessionSkills: session.host ? records.filter((skill) => skill.installedHosts.includes(session.host)).length : 0,
+      categories: categories.length,
+      sources: sources.length
+    },
+    session,
+    categories,
+    sources,
+    hosts: hosts.map((host) => ({
+      id: host.id,
+      label: host.label,
+      detected: host.detected,
+      skillsDir: host.skillsDir,
+      fidelity: host.fidelity,
+      runtimeEnforced: host.runtimeEnforced,
+      installHint: host.installHint
+    })),
+    skills: records,
+    workflows: workflowsLoaded.workflows.map((workflow) => ({
+      id: workflow.id,
+      category: workflow.category,
+      goal: workflow.goal,
+      recommendedSkills: workflow.recommendedSkills,
+      recommendedAgents: workflow.recommendedAgents,
+      commands: workflow.commands,
+      tokenBudget: workflow.tokenBudget,
+      qualityGate: workflow.qualityGate,
+      risk: workflow.risk,
+      relativePath: workflow.relativePath
+    })),
+    errors: workflowsLoaded.errors
+  };
+}
+async function writeLibraryArtifacts(root, options = {}) {
+  const outDir = resolve16(root, options.outDir ?? LIBRARY_OUT_REL);
+  if (!options.allowAbsolute && !isInside8(root, outDir)) {
+    throw new Error(`library output path escapes root: ${outDir}`);
+  }
+  const index = await buildLibraryIndex(root, options);
+  await mkdir9(outDir, { recursive: true });
+  const jsonPath = join18(outDir, "skillsforge-library.json");
+  const htmlPath = join18(outDir, "skillsforge-library.html");
+  const aiPath = join18(outDir, "skillsforge-ai-index.html");
+  await writeFile9(jsonPath, `${JSON.stringify(index, null, 2)}
+`);
+  await writeFile9(htmlPath, buildLibraryHtml(index, { apiEnabled: false, allowMutations: false }));
+  await writeFile9(aiPath, buildAiIndexHtml(index));
+  return {
+    ok: index.ok,
+    outDir,
+    files: { json: jsonPath, html: htmlPath, ai: aiPath },
+    stats: index.stats,
+    errors: index.errors
+  };
+}
+async function serveLibrary(root, options = {}) {
+  const host = options.host ?? "127.0.0.1";
+  const port = Number(options.port ?? 4763);
+  const allowMutations = options.allowMutations === true;
+  const home = options.home;
+  const sessionHost = options.sessionHost;
+  const server = createServer(async (request, response) => {
+    try {
+      const url = new URL(request.url ?? "/", `http://${host}:${port}`);
+      if (url.pathname === "/skillsforge-library.json") {
+        const index2 = await buildLibraryIndex(root, { home, sessionHost });
+        sendJson(response, index2);
+        return;
+      }
+      if (url.pathname === "/api/recommend") {
+        const query = url.searchParams.get("query") ?? "";
+        const index2 = await buildLibraryIndex(root, { home, sessionHost });
+        sendJson(response, recommendFromLibrary(index2, query, { limit: 5, sessionHost }));
+        return;
+      }
+      if (url.pathname === "/api/remove") {
+        const body = await readRequestJson(request);
+        const result = allowMutations ? await removeInstalledSkill(root, { ...body, home, allowMutations: true, yes: body?.yes === true }) : await planSkillRemoval(root, { ...body, home });
+        sendJson(response, result);
+        return;
+      }
+      const index = await buildLibraryIndex(root, { home, sessionHost });
+      sendHtml(response, buildLibraryHtml(index, { apiEnabled: true, allowMutations }));
+    } catch (error) {
+      response.statusCode = 500;
+      sendJson(response, { ok: false, error: error.message });
+    }
+  });
+  await new Promise((resolveListen) => server.listen(port, host, resolveListen));
+  return { ok: true, host, port, url: `http://${host}:${port}/`, readOnly: !allowMutations, server };
+}
+async function planSkillRemoval(root, options = {}) {
+  const target = await resolveInstalledSkillTarget(options);
+  return {
+    ok: true,
+    dryRun: true,
+    host: target.host.id,
+    skill: target.skill,
+    path: target.path,
+    exists: target.exists,
+    command: `skillsforge lib remove --host ${target.host.id} --skill ${target.skill} --dry-run`
+  };
+}
+async function removeInstalledSkill(root, options = {}) {
+  if (options.yes !== true || options.allowMutations !== true) {
+    const plan = await planSkillRemoval(root, options);
+    return {
+      ok: false,
+      error: "removal requires --allow-mutations and --yes",
+      dryRun: true,
+      host: plan.host,
+      skill: plan.skill,
+      path: plan.path,
+      exists: plan.exists,
+      command: plan.command
+    };
+  }
+  const target = await resolveInstalledSkillTarget(options);
+  if (!target.exists) {
+    return { ok: true, removed: false, host: target.host.id, skill: target.skill, path: target.path, reason: "not installed" };
+  }
+  await rm3(target.path, { recursive: true, force: false });
+  return { ok: true, removed: true, host: target.host.id, skill: target.skill, path: target.path };
+}
+function recommendFromLibrary(index, query, options = {}) {
+  const limit = clampLimit2(options.limit, 5);
+  const sessionHost = options.sessionHost ?? index.session?.host ?? null;
+  const skills = index.skills.map((skill) => scoreLibrarySkill(query, skill, { sessionHost })).filter((item) => item.score > 0).sort((left, right) => right.score - left.score || left.skill.key.localeCompare(right.skill.key)).slice(0, limit).map(({ skill, score, reasons }) => ({
+    key: skill.key,
+    id: skill.id,
+    category: skill.category,
+    sourcePlugin: skill.sourcePlugin,
+    installedHosts: skill.installedHosts,
+    description: skill.description,
+    score,
+    reasons
+  }));
+  const workflows = index.workflows.map((workflow) => scoreLibraryWorkflow(query, workflow, { sessionHost, skillMatches: skills })).filter((item) => item.score > 0).sort((left, right) => right.score - left.score || left.workflow.id.localeCompare(right.workflow.id)).slice(0, limit).map(({ workflow, score, reasons }) => ({
+    id: workflow.id,
+    category: workflow.category,
+    goal: workflow.goal,
+    recommendedSkills: workflow.recommendedSkills,
+    recommendedAgents: workflow.recommendedAgents,
+    risk: workflow.risk,
+    score,
+    reasons
+  }));
+  return {
+    ok: true,
+    query,
+    sessionHost,
+    skills,
+    workflows,
+    policy: "read-only recommendation; install, remove, and write actions require explicit confirmation"
+  };
+}
+function buildLibraryHtml(index, options = {}) {
+  const data = safeScriptJson({
+    ...index,
+    ui: {
+      apiEnabled: options.apiEnabled === true,
+      allowMutations: options.allowMutations === true
+    }
+  });
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkillsForge Library</title>
+<style>
+:root{color-scheme:light dark;--bg:#f6f8fa;--panel:#ffffff;--panel2:#f6f8fa;--line:#d0d7de;--text:#24292f;--muted:#57606a;--accent:#0969da;--ok:#1a7f37;--warn:#9a6700;--bad:#cf222e;--shadow:0 12px 30px rgb(27 31 36 / .08);--radius:8px}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--panel:#161b22;--panel2:#0d1117;--line:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#2f81f7;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--shadow:0 12px 30px rgb(1 4 9 / .35)}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}button,input,select{font:inherit}.shell{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100dvh;max-width:100vw}.side{border-right:1px solid var(--line);padding:16px;background:var(--panel);position:sticky;top:0;height:100dvh;overflow:auto;min-width:0}.main{padding:18px;min-width:0}.brand{display:flex;align-items:center;gap:10px;margin-bottom:16px;min-width:0}.mark{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#1a7f37);box-shadow:inset 0 0 0 1px rgb(255 255 255 / .22);flex:0 0 auto}h1{font-size:18px;margin:0;letter-spacing:0}h2{font-size:14px;margin:18px 0 8px;letter-spacing:0}.label,.meta,.hint{color:var(--muted);font-size:12px}.stat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat>div,.filter button,.row,.detail,.panel,.select,.smallbtn,.dangerbtn{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}.stat>div{padding:10px;min-width:0}.num{font:650 20px/1 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}.search,.select{width:100%;height:36px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);padding:0 10px;margin:10px 0;min-width:0}.filter,.action-row,.topbar{display:flex;flex-wrap:wrap;gap:6px;min-width:0}.filter button,.smallbtn,.dangerbtn{color:var(--text);padding:6px 9px;cursor:pointer;min-height:32px;max-width:100%;white-space:nowrap}.smallbtn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.dangerbtn{color:var(--bad)}button:disabled{opacity:.55;cursor:not-allowed}.filter button.active{border-color:var(--accent);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.topbar{align-items:center;margin-bottom:12px}.topbar .search{flex:1 1 260px;margin:0}.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,390px);gap:16px;min-width:0}.rows{display:grid;gap:8px;min-width:0}.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:10px;text-align:left;color:var(--text);cursor:pointer;min-width:0;box-shadow:none}.row:hover,.row.active{border-color:var(--accent)}.title{font-weight:650;overflow-wrap:anywhere}.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.chip{border:1px solid var(--line);border-radius:999px;padding:2px 7px;color:var(--muted);font-size:12px;max-width:100%;overflow-wrap:anywhere}.chip.good{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 50%,var(--line))}.chip.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 50%,var(--line))}.risk-high{color:var(--bad)}.risk-medium{color:var(--warn)}.risk-low{color:var(--ok)}.detail{padding:14px;position:sticky;top:18px;max-height:calc(100dvh - 36px);overflow:auto;min-width:0;box-shadow:var(--shadow)}.detail pre,.codebox{white-space:pre-wrap;word-break:break-word;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:10px;max-width:100%;overflow:auto}.panel{padding:10px;margin-top:8px;min-width:0}.split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.empty{padding:18px;border:1px dashed var(--line);border-radius:var(--radius);color:var(--muted);background:var(--panel)}@media (prefers-reduced-motion:no-preference){.row,.filter button,.smallbtn,.dangerbtn{transition:border-color 140ms cubic-bezier(.2,0,0,1),color 140ms cubic-bezier(.2,0,0,1),transform 120ms cubic-bezier(.2,0,0,1),box-shadow 180ms cubic-bezier(.2,0,0,1)}.row:active,.filter button:active,.smallbtn:active,.dangerbtn:active{transform:translateY(1px)}}@media (max-width:940px){.shell{grid-template-columns:minmax(0,1fr)}.side{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line);width:100%;max-width:100vw}.main{padding:16px;width:100%;max-width:100vw}.grid{grid-template-columns:minmax(0,1fr)}.detail{position:relative;top:auto;max-height:none}.stat{grid-template-columns:repeat(4,minmax(0,1fr))}}@media (max-width:640px){.stat,.split{grid-template-columns:minmax(0,1fr)}.filter button{flex:1 1 100%;text-align:left}.topbar .smallbtn{width:100%}.shell{min-width:0}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><div class="mark"></div><div><h1>SkillsForge Library</h1><div class="label">Session-aware local index</div></div></div>
+    <div class="stat">
+      <div><div class="num">${index.stats.skills}</div><div class="label">skills</div></div>
+      <div><div class="num">${index.stats.workflows}</div><div class="label">workflows</div></div>
+      <div><div class="num">${index.stats.sources}</div><div class="label">sources</div></div>
+      <div><div class="num">${index.session.host ?? "none"}</div><div class="label">session host</div></div>
+    </div>
+    <input id="q" class="search" type="search" placeholder="Search skills, sources, triggers">
+    <select id="sourceFilter" class="select" aria-label="Source filter"></select>
+    <h2>Categories</h2>
+    <div id="filters" class="filter"></div>
+    <h2>Hosts</h2>
+    <div id="hosts"></div>
+  </aside>
+  <main class="main">
+    <div class="topbar"><input id="recommendQ" class="search" type="search" placeholder="Describe the task for skill and workflow recommendation"><button id="recommendBtn" class="smallbtn primary">Recommend</button><button id="resetBtn" class="smallbtn">Reset</button></div>
+    <div class="grid">
+      <section><div id="rows" class="rows"></div></section>
+      <aside id="detail" class="detail"></aside>
+    </div>
+  </main>
+</div>
+<script id="skillsforge-data" type="application/json">${data}</script>
+<script>
+const data=JSON.parse(document.getElementById('skillsforge-data').textContent);
+let category='all';let source='all';let selected=data.skills[0]?.key;let lastRecommendation=null;
+const q=document.getElementById('q');const rows=document.getElementById('rows');const detail=document.getElementById('detail');const sourceFilter=document.getElementById('sourceFilter');
+function esc(v){return String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+const stopWords=new Set(['a','an','and','are','as','at','be','by','do','for','from','in','into','is','it','of','on','or','our','the','then','this','to','with','without']);
+function tokens(v){return (String(v??'').toLowerCase().match(/[a-z0-9]+/g)||[]).filter(t=>!stopWords.has(t))}
+function phrase(q,txt){const parts=tokens(txt);if(!parts.length||parts.length>q.length)return false;for(let i=0;i<=q.length-parts.length;i++){let ok=true;for(let j=0;j<parts.length;j++){if(q[i+j]!==parts[j]){ok=false;break}}if(ok)return true}return false}
+function renderFilters(){const root=document.getElementById('filters');root.innerHTML=['all',...data.categories].map(c=>'<button class="'+(category===c?'active':'')+'" data-cat="'+esc(c)+'">'+esc(c)+'</button>').join('');root.onclick=e=>{if(e.target.dataset.cat){category=e.target.dataset.cat;lastRecommendation=null;render();renderFilters();}}}
+function renderSources(){sourceFilter.innerHTML=['all',...data.sources].map(s=>'<option value="'+esc(s)+'">'+esc(s)+'</option>').join('');sourceFilter.value=source;sourceFilter.onchange=()=>{source=sourceFilter.value;lastRecommendation=null;render();}}
+function riskClass(skill){return skill.riskFlags.length>1?'risk-high':skill.riskFlags.length?'risk-medium':'risk-low'}
+function filtered(){const text=q.value.toLowerCase();return data.skills.filter(s=>(category==='all'||s.category===category)&&(source==='all'||s.sourcePlugin===source)&&[s.id,s.description,s.category,s.sourcePlugin,s.sourcePath,...s.recommendedFor].join(' ').toLowerCase().includes(text));}
+function statusChip(s){if(s.sessionInstalled)return '<span class="chip good">current session</span>';if(s.installedHosts.length)return '<span class="chip good">installed</span>';return '<span class="chip">available</span>'}
+function render(){const list=lastRecommendation?lastRecommendation.skills.map(hit=>data.skills.find(s=>s.key===hit.key)).filter(Boolean):filtered();if(!list.find(s=>s.key===selected))selected=list[0]?.key;rows.innerHTML=list.length?list.map(s=>'<button class="row '+(s.key===selected?'active':'')+'" data-key="'+esc(s.key)+'"><span><div class="title">'+esc(s.id)+'</div><div class="meta">'+esc(s.category)+' / '+esc(s.sourcePlugin)+' / '+esc(s.maturity)+'</div><span class="chips">'+statusChip(s)+s.riskFlags.slice(0,2).map(r=>'<span class="chip warn">'+esc(r)+'</span>').join('')+'</span></span><span class="'+riskClass(s)+'">'+(s.riskFlags.length?'review':'clean')+'</span></button>').join(''):'<div class="empty">No skills match the current filters.</div>';renderDetail();}
+function hostOptions(s){const installed=new Set(s.installedHosts);const hosts=data.hosts.filter(h=>h.detected||installed.has(h.id));const list=hosts.length?hosts:data.hosts;return list.map(h=>'<option value="'+esc(h.id)+'">'+esc(h.id)+(installed.has(h.id)?' installed':'')+'</option>').join('')}
+function removalCommand(s,host){return 'skillsforge lib remove --host '+host+' --skill '+s.id+' --dry-run'}
+function renderDetail(){const s=data.skills.find(x=>x.key===selected);if(!s){detail.innerHTML='<p>No skill selected.</p>';return}const rec=lastRecommendation?lastRecommendation.skills.find(r=>r.key===s.key):null;detail.innerHTML='<h2>'+esc(s.id)+'</h2><p>'+esc(s.description||'No description provided')+'</p><div class="chips"><span class="chip">'+esc(s.category)+'</span><span class="chip">'+esc(s.sourcePlugin)+'</span><span class="chip">'+esc(s.maturity)+'</span>'+statusChip(s)+'</div>'+(rec?'<h2>Recommendation score</h2><pre>'+esc(String(rec.score)+'\\n'+rec.reasons.join('\\n'))+'</pre>':'')+'<h2>Recommended for</h2><pre>'+esc(s.recommendedFor.join('\\n')||'No triggers')+'</pre><h2>Risk flags</h2><pre>'+esc(s.riskFlags.join('\\n')||'No obvious capability risk flags')+'</pre><h2>Installed hosts</h2><pre>'+esc(s.installedHosts.join('\\n')||'Not installed in detected host roots')+'</pre><h2>Removal check</h2><select id="removeHost" class="select">'+hostOptions(s)+'</select><div class="action-row"><button id="removePreview" class="smallbtn">Dry-run</button><button id="removeConfirm" class="dangerbtn">Remove</button></div><pre id="removeResult"></pre><h2>Source</h2><pre>'+esc(s.sourcePath)+'</pre>';bindRemoval(s)}
+function bindRemoval(s){const host=document.getElementById('removeHost');const preview=document.getElementById('removePreview');const confirm=document.getElementById('removeConfirm');const out=document.getElementById('removeResult');const ui=data.ui||{};function show(value){out.textContent=typeof value==='string'?value:JSON.stringify(value,null,2)}function plan(){return {dryRun:true,command:removalCommand(s,host.value),apiEnabled:Boolean(ui.apiEnabled),allowMutations:Boolean(ui.allowMutations)}}show(plan());preview.onclick=async()=>{if(!ui.apiEnabled){show(plan());return}const res=await fetch('/api/remove',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({host:host.value,skill:s.id})});show(await res.json())};confirm.disabled=!ui.allowMutations;confirm.onclick=async()=>{if(!ui.allowMutations){show(plan());return}const typed=window.prompt('Type '+s.id+' to remove from '+host.value);if(typed!==s.id){show('confirmation mismatch');return}const res=await fetch('/api/remove',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({host:host.value,skill:s.id,yes:true})});show(await res.json())};host.onchange=()=>show(plan())}
+function scoreSkill(text,s){const q=tokens(text);const qset=new Set(q);const stokens=tokens([s.id,s.description,s.category,s.sourcePlugin,s.origin,...s.recommendedFor,...s.notFor].join(' '));const hits=[...new Set(stokens.filter(t=>qset.has(t)))];let score=hits.length;const reasons=hits.slice(0,8).map(t=>'token:'+t);if(phrase(q,s.id)){score+=8;reasons.push('id-match')}if(qset.has(s.category)){score+=3;reasons.push('category-match')}if(data.session.host&&s.installedHosts.includes(data.session.host)){score+=2;reasons.push('session-installed')}else if(s.installedHosts.length){score+=1;reasons.push('installed-host')}if(s.riskFlags.length>1){score-=1;reasons.push('risk-review')}return {key:s.key,id:s.id,category:s.category,sourcePlugin:s.sourcePlugin,installedHosts:s.installedHosts,description:s.description,score,reasons}}
+function scoreWorkflow(text,w,skillHits){const q=tokens(text);const qset=new Set(q);const wtokens=tokens([w.id,w.category,w.goal,w.qualityGate,...w.recommendedSkills,...w.recommendedAgents,...(w.commands||[])].join(' '));const hits=[...new Set(wtokens.filter(t=>qset.has(t)))];let score=hits.length;const reasons=hits.slice(0,8).map(t=>'token:'+t);if(phrase(q,w.id)){score+=8;reasons.push('id-match')}if(qset.has(w.category)){score+=3;reasons.push('category-match')}const matched=new Set(skillHits.map(s=>s.id));const overlap=w.recommendedSkills.filter(s=>matched.has(s)).length;if(overlap){score+=overlap;reasons.push('skill-overlap:'+overlap)}return {id:w.id,category:w.category,goal:w.goal,recommendedSkills:w.recommendedSkills,recommendedAgents:w.recommendedAgents,risk:w.risk,score,reasons}}
+function localRecommend(text){const skills=data.skills.map(s=>scoreSkill(text,s)).filter(s=>s.score>0).sort((a,b)=>b.score-a.score||a.key.localeCompare(b.key)).slice(0,8);const workflows=data.workflows.map(w=>scoreWorkflow(text,w,skills)).filter(w=>w.score>0).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id)).slice(0,8);return {ok:true,query:text,sessionHost:data.session.host,skills,workflows,policy:'read-only recommendation'}}
+function renderRecommendation(result){lastRecommendation=result;selected=result.skills[0]?.key||selected;render();const blocks=result.workflows.length?result.workflows.map(w=>'<div class="panel"><b>'+esc(w.id)+'</b><p>'+esc(w.goal)+'</p><div class="meta">'+esc(w.category)+' / '+esc(w.risk)+' / score '+esc(w.score)+'</div><pre>'+esc(w.reasons.join('\\n'))+'</pre></div>').join(''):'<div class="empty">No workflow matched this query.</div>';detail.innerHTML='<h2>Workflow recommendations</h2><p class="hint">'+esc(result.policy||'read-only recommendation')+'</p>'+blocks}
+async function recommend(){const text=document.getElementById('recommendQ').value.trim();if(!text)return;const ui=data.ui||{};if(ui.apiEnabled){const res=await fetch('/api/recommend?query='+encodeURIComponent(text));renderRecommendation(await res.json());return}renderRecommendation(localRecommend(text))}
+rows.onclick=e=>{const b=e.target.closest('button[data-key]');if(b){selected=b.dataset.key;render();}};q.oninput=()=>{lastRecommendation=null;render()};
+document.getElementById('hosts').innerHTML=data.hosts.map(h=>'<div class="panel"><b>'+esc(h.id)+'</b><div class="meta">'+(h.detected?'detected':'missing')+' / '+esc(h.fidelity)+'</div><div class="hint">'+esc(h.skillsDir)+'</div></div>').join('');
+document.getElementById('recommendBtn').onclick=recommend;document.getElementById('resetBtn').onclick=()=>{lastRecommendation=null;q.value='';document.getElementById('recommendQ').value='';category='all';source='all';renderFilters();renderSources();render()};
+renderFilters();renderSources();render();
+</script>
+</body>
+</html>
+`;
+}
+function buildAiIndexHtml(index) {
+  const compact = {
+    generatedAt: index.generatedAt,
+    stats: index.stats,
+    session: index.session,
+    instruction: "Use key, id, recommendedFor, notFor, category, sourcePlugin, installedHosts, sessionInstalled, and riskFlags to pick the smallest useful skill or workflow for this session. Prefer current-session installed skills when they fit. Do not execute write, remove, install, or shell actions without explicit user confirmation.",
+    skills: index.skills.map((skill) => ({
+      key: skill.key,
+      id: skill.id,
+      category: skill.category,
+      sourcePlugin: skill.sourcePlugin,
+      sourcePath: skill.sourcePath,
+      installedHosts: skill.installedHosts,
+      sessionInstalled: skill.sessionInstalled,
+      recommendedFor: skill.recommendedFor,
+      notFor: skill.notFor,
+      riskFlags: skill.riskFlags
+    })),
+    workflows: index.workflows
+  };
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>SkillsForge AI Index</title></head>
+<body>
+<h1>SkillsForge AI Index</h1>
+<p>Read the embedded JSON. Choose the smallest matching skill or workflow. Writes require explicit confirmation.</p>
+<script id="skillsforge-ai-index" type="application/json">${safeScriptJson(compact)}</script>
+</body></html>
+`;
+}
+async function resolveInstalledSkillTarget(options = {}) {
+  if (!options.host) throw new Error("--host is required");
+  if (!options.skill) throw new Error("--skill is required");
+  const hosts = await detectHosts({ home: options.home });
+  const host = hosts.find((item) => item.id === options.host);
+  if (!host) throw new Error(`unknown host: ${options.host}`);
+  const skill = basename5(String(options.skill));
+  if (skill !== options.skill || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(skill)) {
+    throw new Error("skill must be a skill id");
+  }
+  const target = resolve16(host.skillsDir, skill);
+  if (!isInside8(host.skillsDir, target)) throw new Error("resolved skill path escaped host skills directory");
+  return { host, skill, path: target, exists: await pathExists6(target) };
+}
+function summarizeSkill(root, skill, context) {
+  const sourcePlugin = detectSourcePlugin(root, skill.directory, context.home);
+  const category = skill.sidecar?.routing?.pack ?? context.packBySkill.get(skill.name) ?? "unpacked";
+  const installedHosts = context.hosts.filter((host) => context.installed.get(`${host.id}:${skill.name}`)).map((host) => host.id);
+  const recommendedFor = (skill.sidecar?.routing?.triggers ?? []).slice(0, 6);
+  return {
+    id: skill.name,
+    name: skill.name,
+    description: skill.description,
+    category,
+    sourcePlugin,
+    sourceRoot: displayPath(root, skill.sourceRoot ?? skill.directory, context.home),
+    sourcePath: displayPath(root, skill.directory, context.home),
+    installedHosts,
+    sessionInstalled: context.session.host ? installedHosts.includes(context.session.host) : false,
+    origin: skill.sidecar?.provenance?.source ?? "unknown",
+    maturity: skill.maturity,
+    capabilities: summarizeCapabilities(skill.sidecar?.capabilities),
+    riskFlags: riskFlags(skill.sidecar?.capabilities),
+    recommendedFor: recommendedFor.length ? recommendedFor : compactDescription(skill.description),
+    notFor: (skill.sidecar?.routing?.antiTriggers ?? []).slice(0, 6),
+    routingMode: skill.sidecar?.routing?.mode ?? "auto",
+    requires: skill.requires
+  };
+}
+function summarizeCapabilities(capabilities = {}) {
+  return {
+    exec: Boolean(capabilities.exec?.allowed),
+    execCommands: capabilities.exec?.commands ?? [],
+    network: Boolean(capabilities.network?.allowed),
+    networkHosts: capabilities.network?.hosts ?? [],
+    writeScope: capabilities.write?.scope ?? "unknown"
+  };
+}
+function riskFlags(capabilities = {}) {
+  const flags = [];
+  if (capabilities.exec?.allowed) flags.push("exec allowed");
+  if (capabilities.network?.allowed) flags.push("network allowed");
+  const writeScope = capabilities.write?.scope ?? "unknown";
+  if (writeScope !== "none") flags.push(`write ${writeScope}`);
+  if (writeScope === "unknown") flags.push("write scope unknown");
+  return flags;
+}
+function buildPackMap(catalog) {
+  const map = /* @__PURE__ */ new Map();
+  if (!catalog) return map;
+  for (const pack of listPacks(catalog)) {
+    for (const skill of pack.skills) map.set(skill, pack.id);
+  }
+  return map;
+}
+function detectSourcePlugin(root, directory, homeOption) {
+  if (isInside8(root, directory)) {
+    const rel = relative10(root, directory).replaceAll("\\", "/");
+    const parts = rel.split("/");
+    const pluginsIndex = parts.indexOf("plugins");
+    if (pluginsIndex >= 0 && parts[pluginsIndex + 1]) return parts[pluginsIndex + 1];
+  }
+  const normalized = resolve16(directory).replaceAll("\\", "/");
+  const home = homeOption ? resolve16(homeOption) : process.env.USERPROFILE ? resolve16(process.env.USERPROFILE) : null;
+  const homeRel = home ? relativeDisplayPath(home, directory) ?? normalized : normalized;
+  const cacheParts = homeRel.split("/");
+  const cacheIndex = cacheParts.findIndex((part, index) => part === "cache" && cacheParts[index - 1] === "plugins");
+  if (cacheIndex >= 0 && cacheParts[cacheIndex + 1] && cacheParts[cacheIndex + 2]) {
+    return `${cacheParts[cacheIndex + 2]}@${cacheParts[cacheIndex + 1]}`;
+  }
+  if (homeRel.startsWith(".codex/skills/.system/")) return "codex-system";
+  if (homeRel.startsWith(".codex/skills/")) return "user-codex";
+  if (homeRel.startsWith(".agents/skills/")) return "user-agents";
+  if (homeRel.startsWith(".claude/skills/")) return "claude-code";
+  if (homeRel.startsWith(".cursor/skills/")) return "cursor";
+  if (homeRel.startsWith(".config/opencode/skills/")) return "opencode";
+  if (homeRel.startsWith(".zcode/skills/")) return "zcode";
+  if (homeRel.startsWith(".hermes/skills/")) return "hermes";
+  if (homeRel.startsWith(".gemini/skills/")) return "gemini";
+  return "local";
+}
+function displayPath(root, directory, home) {
+  const resolved = resolve16(directory);
+  const rootRel = relativeDisplayPath(root, resolved);
+  if (rootRel !== null) return rootRel;
+  const homeRel = home ? relativeDisplayPath(home, resolved) : null;
+  if (homeRel !== null) return `~/${homeRel}`;
+  return resolved.replaceAll("\\", "/");
+}
+function relativeDisplayPath(parent, child) {
+  const parentPath = resolve16(parent).replaceAll("\\", "/").replace(/\/+$/, "");
+  const childPath = resolve16(child).replaceAll("\\", "/");
+  const parentKey = process.platform === "win32" ? parentPath.toLowerCase() : parentPath;
+  const childKey = process.platform === "win32" ? childPath.toLowerCase() : childPath;
+  if (childKey === parentKey) return "";
+  const prefix = `${parentKey}/`;
+  return childKey.startsWith(prefix) ? childPath.slice(parentPath.length + 1) : null;
+}
+function assignRecordKey() {
+  const seen = /* @__PURE__ */ new Map();
+  return (record) => {
+    const base = `${record.sourcePlugin}:${record.id}`;
+    const count = (seen.get(base) ?? 0) + 1;
+    seen.set(base, count);
+    return {
+      ...record,
+      key: count === 1 ? base : `${base}#${count}`
+    };
+  };
+}
+function detectSession(hosts, options = {}) {
+  const envHost = String(options.sessionHost ?? process.env.SKILLSFORGE_SESSION_HOST ?? "").trim();
+  const known = new Set(hosts.map((host) => host.id));
+  if (envHost && known.has(envHost)) {
+    const host = hosts.find((item) => item.id === envHost);
+    return { host: envHost, label: host.label, source: "explicit" };
+  }
+  const env = process.env;
+  const inferred = [
+    [env.CODEX_HOME || env.CODEX_SESSION_ID || env.CODEX_SANDBOX, "codex"],
+    [env.CLAUDECODE || env.CLAUDE_CONFIG_DIR, "claude-code"],
+    [env.CURSOR_TRACE_ID || env.CURSOR_AGENT, "cursor"],
+    [env.OPENCODE || env.OPENCODE_CONFIG_DIR, "opencode"],
+    [env.HERMES_HOME || env.HERMES_AGENT, "hermes"],
+    [env.GEMINI_API_KEY && env.GEMINI_CLI, "gemini"]
+  ].find(([signal, id]) => signal && known.has(id));
+  if (inferred) {
+    const host = hosts.find((item) => item.id === inferred[1]);
+    return { host: inferred[1], label: host.label, source: "environment" };
+  }
+  const detected = hosts.find((host) => host.id === "codex" && host.detected) ?? hosts.find((host) => host.detected) ?? null;
+  return detected ? { host: detected.id, label: detected.label, source: "detected-host" } : { host: null, label: null, source: "none" };
+}
+function compactDescription(description) {
+  const text = String(description ?? "").replace(/\s+/g, " ").trim();
+  return text ? [text.slice(0, 180)] : [];
+}
+function scoreLibrarySkill(query, skill, context = {}) {
+  const queryList = tokenize3(query);
+  const queryTokens = new Set(queryList);
+  const skillTokens = tokenize3([
+    skill.id,
+    skill.description,
+    skill.category,
+    skill.sourcePlugin,
+    skill.origin,
+    ...skill.recommendedFor ?? [],
+    ...skill.notFor ?? []
+  ].join(" "));
+  const uniqueHits = [...new Set(skillTokens.filter((token) => queryTokens.has(token)))];
+  const reasons = uniqueHits.slice(0, 8).map((token) => `token:${token}`);
+  let score = uniqueHits.length;
+  if (tokenPhraseMatches2(queryList, skill.id)) {
+    score += 8;
+    reasons.push("id-match");
+  }
+  if (queryTokens.has(skill.category)) {
+    score += 3;
+    reasons.push("category-match");
+  }
+  if (context.sessionHost && skill.installedHosts.includes(context.sessionHost)) {
+    score += 2;
+    reasons.push("session-installed");
+  } else if (skill.installedHosts.length > 0) {
+    score += 1;
+    reasons.push("installed-host");
+  }
+  if (skill.riskFlags.length > 1) {
+    score -= 1;
+    reasons.push("risk-review");
+  }
+  return { skill, score, reasons };
+}
+function scoreLibraryWorkflow(query, workflow, context = {}) {
+  const queryList = tokenize3(query);
+  const queryTokens = new Set(queryList);
+  const workflowTokens = tokenize3([
+    workflow.id,
+    workflow.category,
+    workflow.goal,
+    workflow.qualityGate,
+    ...workflow.recommendedSkills ?? [],
+    ...workflow.recommendedAgents ?? [],
+    ...workflow.commands ?? []
+  ].join(" "));
+  const uniqueHits = [...new Set(workflowTokens.filter((token) => queryTokens.has(token)))];
+  const reasons = uniqueHits.slice(0, 8).map((token) => `token:${token}`);
+  let score = uniqueHits.length;
+  if (tokenPhraseMatches2(queryList, workflow.id)) {
+    score += 8;
+    reasons.push("id-match");
+  }
+  if (queryTokens.has(workflow.category)) {
+    score += 3;
+    reasons.push("category-match");
+  }
+  const matchedSkills = new Set((context.skillMatches ?? []).map((skill) => skill.id));
+  const overlap = (workflow.recommendedSkills ?? []).filter((skill) => matchedSkills.has(skill)).length;
+  if (overlap > 0) {
+    score += overlap;
+    reasons.push(`skill-overlap:${overlap}`);
+  }
+  return { workflow, score, reasons };
+}
+function tokenize3(text) {
+  return (String(text ?? "").toLowerCase().match(/[a-z0-9]+/g) ?? []).filter((token) => !STOP_WORDS2.has(token));
+}
+function tokenPhraseMatches2(queryTokens, phrase) {
+  const phraseTokens = tokenize3(phrase);
+  if (phraseTokens.length === 0 || phraseTokens.length > queryTokens.length) return false;
+  for (let index = 0; index <= queryTokens.length - phraseTokens.length; index += 1) {
+    let matched = true;
+    for (let offset = 0; offset < phraseTokens.length; offset += 1) {
+      if (queryTokens[index + offset] !== phraseTokens[offset]) {
+        matched = false;
+        break;
+      }
+    }
+    if (matched) return true;
+  }
+  return false;
+}
+function clampLimit2(value, fallback) {
+  return Math.max(1, Math.min(50, Number(value) || fallback));
+}
+var STOP_WORDS2 = /* @__PURE__ */ new Set([
+  "a",
+  "an",
+  "and",
+  "are",
+  "as",
+  "at",
+  "be",
+  "by",
+  "do",
+  "for",
+  "from",
+  "in",
+  "into",
+  "is",
+  "it",
+  "of",
+  "on",
+  "or",
+  "our",
+  "the",
+  "then",
+  "this",
+  "to",
+  "with",
+  "without"
+]);
+function safeScriptJson(value) {
+  return JSON.stringify(value).replaceAll("</script", "<\\/script");
+}
+async function pathExists6(path) {
   try {
     await access12(path);
     return true;
@@ -19840,11 +21033,343 @@ async function pathExists7(path) {
     return false;
   }
 }
+function isInside8(parent, candidate) {
+  const path = relative10(resolve16(parent), resolve16(candidate));
+  return path === "" || !path.startsWith(`..${sep12}`) && path !== "..";
+}
+function sendJson(response, payload) {
+  response.setHeader("content-type", "application/json; charset=utf-8");
+  response.end(`${JSON.stringify(payload, null, 2)}
+`);
+}
+function sendHtml(response, html) {
+  response.setHeader("content-type", "text/html; charset=utf-8");
+  response.end(html);
+}
+async function readRequestJson(request) {
+  const chunks = [];
+  for await (const chunk of request) chunks.push(chunk);
+  const text = Buffer.concat(chunks).toString("utf8");
+  return text ? JSON.parse(text) : {};
+}
+
+// lib/capabilities/powershell.mjs
+import { mkdir as mkdir10, writeFile as writeFile10 } from "node:fs/promises";
+import { join as join19, resolve as resolve17 } from "node:path";
+var POWERSHELL_HELPERS = Object.freeze([
+  {
+    name: "sf-status",
+    description: "Compact repo and SkillsForge status",
+    args: ["wb", "status", "--json"]
+  },
+  {
+    name: "sf-tree",
+    description: "Compact file tree",
+    args: ["wb", "tree"]
+  },
+  {
+    name: "sf-find",
+    description: "Token-friendly file finder",
+    args: ["wb", "find"]
+  },
+  {
+    name: "sf-grep",
+    description: "Token-friendly ripgrep wrapper",
+    args: ["wb", "grep"]
+  },
+  {
+    name: "sf-diff",
+    description: "Compact git diff summary",
+    args: ["wb", "diff"]
+  },
+  {
+    name: "sf-errors",
+    description: "Find likely error and TODO markers",
+    args: ["wb", "errors"]
+  },
+  {
+    name: "sf-bigfiles",
+    description: "List largest repo files",
+    args: ["wb", "bigfiles"]
+  },
+  {
+    name: "sf-recent",
+    description: "Recent git commits",
+    args: ["wb", "recent"]
+  },
+  {
+    name: "sf-ports",
+    description: "Listening port snapshot",
+    args: ["os-ports"]
+  },
+  {
+    name: "sf-proof",
+    description: "Trust proof command hints",
+    args: ["wb", "proof", "--json"]
+  },
+  {
+    name: "sf-lib",
+    description: "Build local skill library artifacts",
+    args: ["lib", "build", "--json"]
+  },
+  {
+    name: "sf-lib-update",
+    description: "Refresh local skill library after installing skills",
+    args: ["lib", "update", "--json"]
+  },
+  {
+    name: "sf-recommend",
+    description: "Session-aware skill and workflow recommendation",
+    args: ["lib", "recommend", "--json"]
+  },
+  {
+    name: "sf-workflow",
+    description: "Workflow catalog browser",
+    args: ["workflows", "recommend", "--json"]
+  },
+  {
+    name: "sf-auto",
+    description: "Read-only auto plan for a task",
+    args: ["auto", "plan", "--json"]
+  }
+]);
+async function exportPowerShellHelpers(root, options = {}) {
+  const outDir = resolve17(root, options.outDir ?? join19("artifacts", "powershell"));
+  const cliPath = resolve17(root, "plugins", "skillsforge", "bin", "skillsforge.mjs");
+  await mkdir10(outDir, { recursive: true });
+  const files = [];
+  for (const helper of POWERSHELL_HELPERS) {
+    const path = join19(outDir, `${helper.name}.ps1`);
+    await writeFile10(path, renderHelper(helper, cliPath));
+    files.push({ name: helper.name, path, description: helper.description });
+  }
+  const manifest = {
+    ok: true,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    cli: cliPath,
+    helpers: files
+  };
+  await writeFile10(join19(outDir, "skillsforge-powershell.json"), `${JSON.stringify(manifest, null, 2)}
+`);
+  return { ok: true, outDir, files, manifest: join19(outDir, "skillsforge-powershell.json") };
+}
+function renderHelper(helper, cliPath) {
+  const baseArgs = helper.args.map((arg) => `'${escapeSingle(arg)}'`).join(", ");
+  return `# ${helper.description}
+# Generated by skillsforge ps export.
+param(
+  [Parameter(ValueFromRemainingArguments = $true)]
+  [string[]] $Args
+)
+
+$SfCli = '${escapeSingle(cliPath)}'
+$BaseArgs = @(${baseArgs})
+& node $SfCli @BaseArgs @Args
+exit $LASTEXITCODE
+`;
+}
+function escapeSingle(value) {
+  return String(value).replaceAll("'", "''");
+}
+
+// lib/capabilities/workbench.mjs
+init_skill_loader();
+import { access as access13, readdir as readdir9, stat as stat3 } from "node:fs/promises";
+import { spawn } from "node:child_process";
+import { join as join20, relative as relative11, resolve as resolve18 } from "node:path";
+var SKIP = /* @__PURE__ */ new Set([".git", ".codegraph", "node_modules", "dist", "artifacts", ".next", ".turbo"]);
+async function runWorkbench(root, task, options = {}) {
+  const full = options.full === true;
+  const limit = clampLimit3(options.limit, full ? 5e3 : 80, full ? 5e3 : 1e3);
+  switch (task) {
+    case "status":
+      return workbenchStatus(root);
+    case "tree":
+      return { ok: true, task, files: await listFiles(root, limit), limit };
+    case "find":
+      return workbenchFind(root, options.query ?? options.name ?? "", limit);
+    case "grep":
+      return workbenchGrep(root, options.query ?? "", limit, { full });
+    case "diff":
+      return workbenchDiff(root);
+    case "errors":
+      return workbenchGrep(root, options.query ?? "TODO|FIXME|ERROR|FAIL|throw new Error", limit, { regex: true, full });
+    case "bigfiles":
+      return workbenchBigFiles(root, limit);
+    case "recent":
+      return workbenchRecent(root, limit);
+    case "proof":
+      return workbenchProof(root);
+    default:
+      return { ok: false, task, error: `unknown wb task: ${task}` };
+  }
+}
+function formatWorkbenchText(payload) {
+  if (!payload.ok) return `${payload.error}
+`;
+  if (payload.task === "status") {
+    return [
+      `branch	${payload.branch}`,
+      `dirty	${payload.dirty}`,
+      `skills	${payload.skills}`,
+      `workflows	${payload.workflows}`,
+      ...payload.status.map((line) => `git	${line}`)
+    ].join("\n") + "\n";
+  }
+  if (payload.files) return payload.files.join("\n") + (payload.files.length ? "\n" : "");
+  if (payload.matches) return payload.matches.map((item) => `${item.file}:${item.line}:${item.text}`).join("\n") + (payload.matches.length ? "\n" : "");
+  if (payload.bigFiles) return payload.bigFiles.map((item) => `${item.bytes}	${item.path}`).join("\n") + (payload.bigFiles.length ? "\n" : "");
+  if (payload.lines) return payload.lines.join("\n") + (payload.lines.length ? "\n" : "");
+  if (payload.commands) return payload.commands.join("\n") + "\n";
+  return `${JSON.stringify(payload, null, 2)}
+`;
+}
+async function workbenchStatus(root) {
+  const [git, skillsResult, workflowsResult] = await Promise.all([
+    runProcess("git", ["status", "--short", "--branch"], { cwd: root }),
+    loadAllSkills(root).then((skills) => skills.length).catch(() => 0),
+    loadWorkflows(root).then((result) => result.workflows.length).catch(() => 0)
+  ]);
+  const lines = git.stdout.trim().split(/\r?\n/).filter(Boolean);
+  const branch = lines[0]?.replace(/^##\s*/, "") ?? "unknown";
+  return {
+    ok: git.status === 0,
+    task: "status",
+    branch,
+    dirty: lines.length > 1,
+    status: lines.slice(1),
+    skills: skillsResult,
+    workflows: workflowsResult
+  };
+}
+async function workbenchFind(root, query, limit) {
+  if (!query) return { ok: false, task: "find", error: "find requires --query or text" };
+  const needle = String(query).toLowerCase();
+  const matches = (await listFiles(root, 5e3)).filter((file) => file.toLowerCase().includes(needle));
+  const files = matches.slice(0, limit);
+  return { ok: true, task: "find", query, files, limit, truncated: matches.length > files.length };
+}
+async function workbenchGrep(root, query, limit, options = {}) {
+  if (!query) return { ok: false, task: "grep", error: "grep requires --query or text" };
+  const args = ["-n", "--glob", "!node_modules/**", "--glob", "!dist/**", "--glob", "!artifacts/**"];
+  if (!options.regex) args.push("-F");
+  args.push(String(query), ".");
+  const result = await runProcess("rg", args, { cwd: root, timeoutMs: 1e4 });
+  if (result.status > 1) return { ok: false, task: "grep", error: result.stderr || result.stdout };
+  const lines = result.stdout.split(/\r?\n/).filter(Boolean);
+  const matches = lines.slice(0, limit).map((line) => {
+    const [file, lineNo, ...rest] = line.split(":");
+    return { file, line: Number(lineNo), text: rest.join(":").slice(0, options.full ? 2e3 : 300) };
+  });
+  return { ok: true, task: "grep", query, matches, limit, truncated: lines.length > matches.length };
+}
+async function workbenchDiff(root) {
+  const [statResult, namesResult] = await Promise.all([
+    runProcess("git", ["diff", "--stat"], { cwd: root }),
+    runProcess("git", ["diff", "--name-only"], { cwd: root })
+  ]);
+  return {
+    ok: statResult.status === 0 && namesResult.status === 0,
+    task: "diff",
+    lines: [
+      ...namesResult.stdout.trim().split(/\r?\n/).filter(Boolean).map((line) => `file	${line}`),
+      ...statResult.stdout.trim().split(/\r?\n/).filter(Boolean).map((line) => `stat	${line}`)
+    ]
+  };
+}
+async function workbenchBigFiles(root, limit) {
+  const files = [];
+  await walkFiles(root, async (path) => {
+    const info = await stat3(path);
+    files.push({ path: relative11(root, path).replaceAll("\\", "/"), bytes: info.size });
+  });
+  files.sort((left, right) => right.bytes - left.bytes || left.path.localeCompare(right.path));
+  return { ok: true, task: "bigfiles", bigFiles: files.slice(0, limit), limit };
+}
+async function workbenchRecent(root, limit) {
+  const result = await runProcess("git", ["log", `-${limit}`, "--oneline", "--decorate"], { cwd: root });
+  return { ok: result.status === 0, task: "recent", lines: result.stdout.trim().split(/\r?\n/).filter(Boolean) };
+}
+async function workbenchProof(root) {
+  const commands = [
+    "node plugins/skillsforge/bin/skillsforge.mjs demo",
+    "node plugins/skillsforge/bin/skillsforge.mjs validate --all",
+    "node plugins/skillsforge/bin/skillsforge.mjs evidence --out artifacts/evidence",
+    "node plugins/skillsforge/bin/skillsforge.mjs lib build",
+    "node plugins/skillsforge/bin/skillsforge.mjs workflows list --json"
+  ];
+  return { ok: true, task: "proof", commands };
+}
+async function listFiles(root, limit) {
+  const files = [];
+  await walkFiles(root, (path) => {
+    if (files.length < limit) files.push(relative11(root, path).replaceAll("\\", "/"));
+  });
+  return files;
+}
+async function walkFiles(root, onFile) {
+  async function walk(dir) {
+    let entries;
+    try {
+      entries = await readdir9(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+      if (SKIP.has(entry.name)) continue;
+      const path = join20(dir, entry.name);
+      if (entry.isDirectory()) await walk(path);
+      else if (entry.isFile()) await onFile(path);
+    }
+  }
+  await walk(resolve18(root));
+}
+function runProcess(command, args, options = {}) {
+  return new Promise((resolveProcess) => {
+    const child = spawn(command, args, {
+      cwd: options.cwd ?? process.cwd(),
+      shell: false,
+      windowsHide: true
+    });
+    let stdout = "";
+    let stderr = "";
+    const timer = setTimeout(() => child.kill("SIGTERM"), options.timeoutMs ?? 3e4);
+    child.stdout?.on("data", (chunk) => {
+      stdout = (stdout + chunk.toString()).slice(-2e5);
+    });
+    child.stderr?.on("data", (chunk) => {
+      stderr = (stderr + chunk.toString()).slice(-2e5);
+    });
+    child.on("error", (error) => {
+      clearTimeout(timer);
+      resolveProcess({ status: 127, stdout, stderr: error.message });
+    });
+    child.on("close", (status) => {
+      clearTimeout(timer);
+      resolveProcess({ status: status ?? 1, stdout, stderr });
+    });
+  });
+}
+function clampLimit3(value, fallback, max = 1e3) {
+  return Math.max(1, Math.min(max, Number(value) || fallback));
+}
+
+// scripts/skillsforge-cli.mjs
+var modulePath2 = fileURLToPath5(import.meta.url);
+var modulePluginRoot = resolve21(dirname9(modulePath2), "..");
+async function pathExists8(path) {
+  try {
+    await access15(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
 async function isPluginRoot(root) {
-  return await pathExists7(join19(root, ".claude-plugin", "plugin.json")) && await pathExists7(join19(root, "skills"));
+  return await pathExists8(join23(root, ".claude-plugin", "plugin.json")) && await pathExists8(join23(root, "skills"));
 }
 async function isRepositoryRoot(root) {
-  return pathExists7(join19(root, "plugins", "skillsforge", ".claude-plugin", "plugin.json"));
+  return pathExists8(join23(root, "plugins", "skillsforge", ".claude-plugin", "plugin.json"));
 }
 async function resolveRuntimeRoot(options, { explicitPaths = false } = {}) {
   if (options.root) return options.root;
@@ -19887,9 +21412,11 @@ Commands:
     --package-only                  Skip evaluation authenticity checks
   enforce --policy <sidecar.json>   Decide PreToolUse allow/deny from stdin event JSON
   eval                              Run holdout routing evaluation (P/R gate)
+  hosts [--json] [--home <dir>]     List universal AI CLI host targets and trust boundaries
   install [skill-paths...]          Install skills into detected agent hosts
-    --hosts <ids>                   Comma list: claude-code,cursor,codex,opencode,gemini
-    --yes                           Non-interactive (requires --hosts)
+    --hosts <ids>                   Comma list or all|detected: claude-code,cursor,codex,opencode,zcode,hermes,gemini
+    --custom-host <id>:<skills-dir> Add package-fidelity target under --home
+    --yes                           Non-interactive (requires --hosts or --custom-host)
     --list                          Print detected hosts and exit
     --dry-run                       Plan installs without writing
     --force                         Overwrite existing skill directories
@@ -19934,6 +21461,24 @@ Commands:
   compare-skill --a <dir> --b <dir> Side-by-side sidecar vs policy (trust delta)
   demo                              Judge path: unsafe deny \u2192 safe package \u2192 receipt
   watch --skill <dir>               Re-quality on interval (single pass in CI)
+  wb <task>                         Token-friendly workbench: status/tree/find/grep/diff/errors/bigfiles/recent/proof
+    --json --limit <n> --full       Compact by default; --full raises safe output caps
+  lib <build|update|serve|check|recommend|remove>
+                                    Local skill library index, UI, recommendation, and removal preview
+  workflows <list|show|recommend|run|export-html>
+                                    Curated workflow catalog (dry-run execution only)
+  auto <plan|run>                    Recommend skill + workflow; run requires --read-only
+  ps export                         Export PowerShell sf-*.ps1 helper commands
+  os-env [--name <VAR>] [--json]     Inspect safe environment facts without dumping secrets
+  os-find --name <glob> [--root <dir>] [--json]
+                                    Cross-platform file finder with repo-safe defaults
+  os-ports [--json]                 Best-effort listening port snapshot
+  os-open <path-or-url> [--dry-run] [--json]
+                                    Open target via platform launcher
+  os-run [--yes|--dry-run] -- <cmd> [args...]
+                                    Agent-safe command runner; dry-run unless --yes
+  os-copy-path <path> [--json]      Resolve and print canonical path
+  os-clean --root <dir> [--json]    Dry-run cleanup candidate inventory only
 
 Exit codes: 0 success, 1 command failure, 2 invalid usage
 `);
@@ -19956,6 +21501,8 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runEnforce(argv.slice(1), options);
     case "eval":
       return runEvalCommand(argv.slice(1), options);
+    case "hosts":
+      return runHostsCommand(argv.slice(1), options);
     case "install":
       return runInstall(argv.slice(1), options);
     case "package":
@@ -20000,6 +21547,30 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runDemoCommand(argv.slice(1), options);
     case "watch":
       return runWatchCommand(argv.slice(1), options);
+    case "wb":
+      return runWorkbenchCommand(argv.slice(1), options);
+    case "lib":
+      return runLibCommand(argv.slice(1), options);
+    case "workflows":
+      return runWorkflowsCommand(argv.slice(1), options);
+    case "auto":
+      return runAutoCommand(argv.slice(1), options);
+    case "ps":
+      return runPsCommand(argv.slice(1), options);
+    case "os-env":
+      return runOsEnvCommand(argv.slice(1), options);
+    case "os-find":
+      return runOsFindCommand(argv.slice(1), options);
+    case "os-ports":
+      return runOsPortsCommand(argv.slice(1), options);
+    case "os-open":
+      return runOsOpenCommand(argv.slice(1), options);
+    case "os-run":
+      return runOsRunCommand(argv.slice(1), options);
+    case "os-copy-path":
+      return runOsCopyPathCommand(argv.slice(1), options);
+    case "os-clean":
+      return runOsCleanCommand(argv.slice(1), options);
     default:
       process.stderr.write(`unknown command: ${command}
 `);
@@ -20055,6 +21626,20 @@ function consumeOption(values, flag) {
   values.splice(index, 2);
   return value;
 }
+function consumeOptions(values, flag) {
+  const picked = [];
+  for (; ; ) {
+    const index = values.indexOf(flag);
+    if (index === -1) return picked;
+    const value = values[index + 1];
+    if (!value || value.startsWith("--")) {
+      values.splice(index, 1);
+      return null;
+    }
+    picked.push(value);
+    values.splice(index, 2);
+  }
+}
 function resolveUserPath(root, value, allowAbsolute = false) {
   return resolveUnderRoot(root, value, { allowAbsolute });
 }
@@ -20101,24 +21686,24 @@ async function runForge(argv, options) {
     return 2;
   }
   const outIndex = argv.indexOf("--out");
-  const spec = JSON.parse(await readFile17(argv[specIndex + 1], "utf8"));
+  const spec = JSON.parse(await readFile19(argv[specIndex + 1], "utf8"));
   const root = await resolveRuntimeRoot(options);
   const result = await forgeSkill(spec, {
     write: argv.includes("--write"),
     dryRun: !argv.includes("--write"),
     force: argv.includes("--force"),
-    outRoot: outIndex >= 0 ? argv[outIndex + 1] : join19(root, ...await isPluginRoot(root) ? ["skills"] : ["plugins", "skillsforge", "skills"])
+    outRoot: outIndex >= 0 ? argv[outIndex + 1] : join23(root, ...await isPluginRoot(root) ? ["skills"] : ["plugins", "skillsforge", "skills"])
   });
   process.stdout.write(`${JSON.stringify(result, null, 2)}
 `);
   return result.ok ? 0 : 1;
 }
 async function resolvePackageRoot(root, packageOption) {
-  if (packageOption) return resolve17(packageOption);
+  if (packageOption) return resolve21(packageOption);
   if (await isPluginRoot(root)) return root;
-  const distPackage = join19(root, "dist", "claude-code");
-  if (await pathExists7(join19(distPackage, ".claude-plugin", "plugin.json"))) return distPackage;
-  if (await isRepositoryRoot(root)) return join19(root, "plugins", "skillsforge");
+  const distPackage = join23(root, "dist", "claude-code");
+  if (await pathExists8(join23(distPackage, ".claude-plugin", "plugin.json"))) return distPackage;
+  if (await isRepositoryRoot(root)) return join23(root, "plugins", "skillsforge");
   return root;
 }
 async function runReceipt(argv, options) {
@@ -20141,7 +21726,7 @@ async function runReceipt(argv, options) {
   const requireEvaluation = consumeFlag(args, "--require-evaluation");
   const root = await resolveRuntimeRoot(options);
   const packageRoot = await resolvePackageRoot(root, packageOption);
-  const receiptOut = out ?? join19(root, "dist", "trust-receipt.json");
+  const receiptOut = out ?? join23(root, "dist", "trust-receipt.json");
   const skills = await loadAllSkills(packageRoot);
   const graph = analyzeDependencies(skills);
   if (graph.cycles.length || graph.missing.length || graph.duplicates.length) {
@@ -20151,9 +21736,9 @@ async function runReceipt(argv, options) {
   }
   let evaluation = null;
   let reportBytes = null;
-  const evaluationPath = evaluationOption ?? join19(root, "artifacts", "evaluation", "routing-report.json");
+  const evaluationPath = evaluationOption ?? join23(root, "artifacts", "evaluation", "routing-report.json");
   try {
-    reportBytes = await readFile17(evaluationPath);
+    reportBytes = await readFile19(evaluationPath);
     evaluation = normalizeEvaluation(JSON.parse(reportBytes.toString("utf8")), { reportBytes });
   } catch {
   }
@@ -20168,8 +21753,8 @@ async function runReceipt(argv, options) {
 `);
     return 1;
   }
-  await mkdir11(dirname8(receiptOut), { recursive: true });
-  await writeFile11(receiptOut, result.text);
+  await mkdir13(dirname9(receiptOut), { recursive: true });
+  await writeFile13(receiptOut, result.text);
   process.stdout.write(`${JSON.stringify({
     ok: true,
     out: receiptOut,
@@ -20192,9 +21777,14 @@ async function runVerifyReceipt(argv, options) {
     process.stderr.write("--evaluation requires a value\n");
     return 2;
   }
+  const receiptSha256 = consumeOption(args, "--receipt-sha256");
+  if (receiptSha256 === null) {
+    process.stderr.write("--receipt-sha256 requires a value\n");
+    return 2;
+  }
   const path = args.find((item) => !item.startsWith("--"));
   if (!path) {
-    process.stderr.write("usage: skillsforge verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only]\n");
+    process.stderr.write("usage: skillsforge verify-receipt <file> [--package <dir>] [--evaluation <routing-report.json>|--package-only] [--receipt-sha256 <hash>]\n");
     return 2;
   }
   const root = await resolveRuntimeRoot(options);
@@ -20203,13 +21793,14 @@ async function runVerifyReceipt(argv, options) {
   const verifyOptions = {
     packageRoot,
     packageOnly,
-    requireEvaluation: !packageOnly
+    requireEvaluation: !packageOnly,
+    expectedReceiptHash: receiptSha256 || void 0
   };
   if (!packageOnly && evaluationOption) {
-    verifyOptions.evaluationPath = resolve17(evaluationOption);
+    verifyOptions.evaluationPath = resolve21(evaluationOption);
   } else if (!packageOnly) {
-    const defaultEval = join19(root, "artifacts", "evaluation", "routing-report.json");
-    if (await pathExists7(defaultEval)) verifyOptions.evaluationPath = defaultEval;
+    const defaultEval = join23(root, "artifacts", "evaluation", "routing-report.json");
+    if (await pathExists8(defaultEval)) verifyOptions.evaluationPath = defaultEval;
   }
   const result = await verifyReceipt(path, skills, verifyOptions);
   process.stdout.write(`${JSON.stringify(result, null, 2)}
@@ -20225,9 +21816,9 @@ async function runEnforce(argv) {
   const chunks = [];
   for await (const chunk of process.stdin) chunks.push(chunk);
   const event = JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
-  const policyPath = resolve17(argv[policyIndex + 1]);
-  const policy = JSON.parse(await readFile17(policyPath, "utf8"));
-  policy.__skillRoot = dirname8(policyPath);
+  const policyPath = resolve21(argv[policyIndex + 1]);
+  const policy = JSON.parse(await readFile19(policyPath, "utf8"));
+  policy.__skillRoot = dirname9(policyPath);
   policy.__projectRoot = event?.cwd || process.env.CLAUDE_PROJECT_DIR || process.env.CLAUDE_CWD || process.cwd();
   const decision = enforcePolicy(event, policy);
   if (decision) process.stdout.write(`${JSON.stringify(decision)}
@@ -20241,6 +21832,59 @@ async function runEvalCommand(argv, options) {
 `);
   return report.precision >= HOLDOUT_PRECISION_MIN2 && report.recall >= HOLDOUT_RECALL_MIN2 ? 0 : 1;
 }
+async function runHostsCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const homeOption = consumeOption(args, "--home");
+  if (homeOption === null) {
+    process.stderr.write("--home requires a value\n");
+    return 2;
+  }
+  if (args.some((item) => item.startsWith("--"))) {
+    process.stderr.write(`unknown hosts option: ${args.find((item) => item.startsWith("--"))}
+`);
+    return 2;
+  }
+  if (args.length) {
+    process.stderr.write(`unknown hosts argument: ${args[0]}
+`);
+    return 2;
+  }
+  const home = homeOption ? resolve21(homeOption) : options.home;
+  const hosts = await detectHosts({ home });
+  const registry = HOST_REGISTRY.map((host) => ({
+    id: host.id,
+    label: host.label,
+    fidelity: host.fidelity,
+    runtimeEnforced: host.runtimeEnforced,
+    usesSidecar: host.usesSidecar,
+    installHint: host.installHint
+  }));
+  const examples = [
+    "skillsforge install --hosts codex,claude-code --yes --dry-run",
+    "skillsforge install --hosts all --yes --dry-run",
+    "skillsforge install --custom-host my-agent:.my-agent/skills --yes --dry-run"
+  ];
+  const payload = { ok: true, registry, hosts, examples };
+  if (json) {
+    process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+    return 0;
+  }
+  process.stdout.write("Universal AI CLI hosts\n");
+  for (const host of hosts) {
+    const mark = host.detected ? "detected" : "missing";
+    const policy = host.runtimeEnforced ? "runtime-policy" : "package-only";
+    process.stdout.write(`${host.id}	${mark}	${host.fidelity}	${policy}	${host.skillsDir}
+`);
+    process.stdout.write(`  ${host.installHint}
+`);
+  }
+  process.stdout.write("Examples:\n");
+  for (const example of examples) process.stdout.write(`  ${example}
+`);
+  return 0;
+}
 async function runInstall(argv, options) {
   const args = [...argv];
   const json = consumeFlag(args, "--json");
@@ -20248,6 +21892,11 @@ async function runInstall(argv, options) {
   const yes = consumeFlag(args, "--yes");
   const dryRun = consumeFlag(args, "--dry-run");
   const force = consumeFlag(args, "--force");
+  const customSpecs = consumeOptions(args, "--custom-host");
+  if (customSpecs === null) {
+    process.stderr.write("--custom-host requires <id>:<skills-dir>\n");
+    return 2;
+  }
   const hostsOption = consumeOption(args, "--hosts");
   if (hostsOption === null) {
     process.stderr.write("--hosts requires a value\n");
@@ -20258,14 +21907,21 @@ async function runInstall(argv, options) {
     process.stderr.write("--home requires a value\n");
     return 2;
   }
-  const home = homeOption ? resolve17(homeOption) : options.home;
+  const home = homeOption ? resolve21(homeOption) : options.home;
   const skillPaths = args.filter((item) => !item.startsWith("--"));
   const root = await resolveRuntimeRoot(options, { explicitPaths: skillPaths.length > 0 });
   const detected = await detectHosts({ home });
   if (list) {
     const payload = {
       ok: true,
-      registry: HOST_REGISTRY.map((host) => ({ id: host.id, label: host.label, fidelity: host.fidelity })),
+      registry: HOST_REGISTRY.map((host) => ({
+        id: host.id,
+        label: host.label,
+        fidelity: host.fidelity,
+        runtimeEnforced: host.runtimeEnforced,
+        usesSidecar: host.usesSidecar,
+        installHint: host.installHint
+      })),
       hosts: detected
     };
     if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
@@ -20280,44 +21936,64 @@ async function runInstall(argv, options) {
     return 0;
   }
   let hostIds = hostsOption ? hostsOption.split(",").map((item) => item.trim()).filter(Boolean) : null;
-  if (!hostIds) {
-    if (yes) {
-      process.stderr.write("install --yes requires --hosts <ids>\n");
-      return 2;
-    }
-    const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
-    if (!interactive) {
-      process.stderr.write("usage: skillsforge install --hosts <ids> --yes [skill-paths...]\n");
-      process.stderr.write("       (interactive picker requires a TTY; use --list to see hosts)\n");
-      return 2;
-    }
-    try {
-      const picked = await pickHosts(detected);
-      if (picked == null) {
-        process.stderr.write("install aborted\n");
-        return 1;
-      }
-      hostIds = picked;
-    } catch (error) {
-      process.stderr.write(`${error.message}
-`);
-      return 2;
-    }
+  if (hostIds?.length === 1 && hostIds[0] === "all") {
+    hostIds = HOST_REGISTRY.map((host) => host.id);
+  } else if (hostIds?.length === 1 && hostIds[0] === "detected") {
+    hostIds = detected.filter((host) => host.detected).map((host) => host.id);
+  } else if (hostIds?.includes("all") || hostIds?.includes("detected")) {
+    process.stderr.write("--hosts all|detected cannot be combined with other ids\n");
+    return 2;
   }
-  if (!hostIds.length) {
-    process.stderr.write("no hosts selected\n");
-    return 1;
-  }
-  const selection = await resolveHostSelection(hostIds, { home });
-  if (selection.unknown.length) {
-    process.stderr.write(`unknown hosts: ${selection.unknown.join(", ")}
-`);
-    process.stderr.write(`known: ${HOST_REGISTRY.map((host) => host.id).join(", ")}
+  let customHosts;
+  try {
+    customHosts = customSpecs.map((spec) => buildCustomHost(spec, { home }));
+  } catch (error) {
+    process.stderr.write(`${error.message}
 `);
     return 2;
   }
+  if (!hostIds) {
+    if (customHosts.length) {
+      hostIds = [];
+    } else if (yes) {
+      process.stderr.write("install --yes requires --hosts <ids> or --custom-host <id>:<skills-dir>\n");
+      return 2;
+    } else {
+      const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+      if (!interactive) {
+        process.stderr.write("usage: skillsforge install --hosts <ids> --yes [skill-paths...]\n");
+        process.stderr.write("       (interactive picker requires a TTY; use --list to see hosts)\n");
+        return 2;
+      }
+      try {
+        const picked = await pickHosts(detected);
+        if (picked == null) {
+          process.stderr.write("install aborted\n");
+          return 1;
+        }
+        hostIds = picked;
+      } catch (error) {
+        process.stderr.write(`${error.message}
+`);
+        return 2;
+      }
+    }
+  }
+  if (!hostIds.length && !customHosts.length) {
+    process.stderr.write("no hosts selected\n");
+    return 1;
+  }
+  const selection = hostIds.length ? await resolveHostSelection(hostIds, { home }) : { selected: [], unknown: [], all: detected };
+  if (selection.unknown.length) {
+    process.stderr.write(`unknown hosts: ${selection.unknown.join(", ")}
+`);
+    process.stderr.write(`known: ${HOST_REGISTRY.map((host) => host.id).join(", ")} or --custom-host <id>:<skills-dir>
+`);
+    return 2;
+  }
+  const selectedHosts = [...selection.selected, ...customHosts];
   const result = await installSkills({
-    hostIds,
+    hosts: selectedHosts,
     home,
     root,
     skillPaths: skillPaths.length ? skillPaths : void 0,
@@ -20614,8 +22290,8 @@ async function runBatchCommand(argv, options) {
   const ids = skillsForPack(catalog, pack) ?? [];
   const reports = [];
   for (const id of ids) {
-    const dir = join19(root, "plugins", "skillsforge", "skills", id);
-    if (!await pathExists7(dir)) {
+    const dir = join23(root, "plugins", "skillsforge", "skills", id);
+    if (!await pathExists8(dir)) {
       reports.push({ id, ok: false, error: "missing" });
       continue;
     }
@@ -20797,6 +22473,450 @@ async function runDemoCommand(argv, options) {
 `);
   return result.ok ? 0 : 1;
 }
+async function runOsEnvCommand(argv) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const name = consumeOption(args, "--name");
+  if (name === null) return usage("--name requires a value");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  if (name) {
+    const exists = Object.hasOwn(process.env, name);
+    return writeOsResult({
+      ok: exists,
+      command: "os-env",
+      name,
+      exists,
+      value: exists ? process.env[name] : null
+    }, json, ({ value }) => `${value ?? ""}
+`, exists ? 0 : 1);
+  }
+  const pathEntries = String(process.env.PATH ?? process.env.Path ?? "").split(process.platform === "win32" ? ";" : ":").filter(Boolean);
+  return writeOsResult({
+    ok: true,
+    command: "os-env",
+    platform: process.platform,
+    arch: process.arch,
+    node: process.version,
+    cwd: process.cwd(),
+    shell: process.env.SHELL ?? process.env.ComSpec ?? null,
+    home: process.env.HOME ?? process.env.USERPROFILE ?? null,
+    pathEntries,
+    envKeys: Object.keys(process.env).sort()
+  }, json, (payload) => [
+    `platform=${payload.platform}`,
+    `arch=${payload.arch}`,
+    `node=${payload.node}`,
+    `cwd=${payload.cwd}`,
+    `shell=${payload.shell ?? ""}`,
+    `pathEntries=${payload.pathEntries.length}`,
+    `envKeys=${payload.envKeys.length}`
+  ].join("\n") + "\n");
+}
+async function runOsFindCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  const name = consumeOption(args, "--name");
+  const rootOption = consumeOption(args, "--root") ?? ".";
+  const limitValue = consumeOption(args, "--limit") ?? "200";
+  if (name === null) return usage("--name requires a value");
+  if (rootOption === null) return usage("--root requires a value");
+  if (limitValue === null) return usage("--limit requires a value");
+  if (!name) return usage("usage: skillsforge os-find --name <glob> [--root <dir>] [--json]");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const repoRoot = await resolveRuntimeRoot(options);
+  let root;
+  try {
+    root = resolveUserPath(repoRoot, rootOption, allowAbsolute);
+  } catch (error) {
+    return failOsResult("os-find", error.message, json);
+  }
+  const limit = Math.max(1, Math.min(1e3, Number(limitValue) || 200));
+  const regex = globToRegExp(name);
+  const matches = [];
+  await walkFind(root, root, regex, matches, limit);
+  return writeOsResult({
+    ok: true,
+    command: "os-find",
+    root,
+    pattern: name,
+    limit,
+    truncated: matches.length >= limit,
+    matches
+  }, json, (payload) => payload.matches.map((item) => `${item.type}	${item.path}`).join("\n") + (payload.matches.length ? "\n" : ""));
+}
+async function runOsPortsCommand(argv) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const attempts = process.platform === "win32" ? [["netstat", ["-ano", "-p", "tcp"]]] : [["lsof", ["-nP", "-iTCP", "-sTCP:LISTEN"]], ["netstat", ["-an"]]];
+  for (const [command, commandArgs] of attempts) {
+    const result = await runProcess2(command, commandArgs, { timeoutMs: 5e3 });
+    if (result.status === 0 && result.stdout.trim()) {
+      const lines = result.stdout.split(/\r?\n/).filter(Boolean).slice(0, 200);
+      return writeOsResult({
+        ok: true,
+        command: "os-ports",
+        probe: [command, ...commandArgs].join(" "),
+        lines
+      }, json, (payload) => payload.lines.join("\n") + "\n");
+    }
+  }
+  return failOsResult("os-ports", "no port probe command succeeded", json);
+}
+async function runOsOpenCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const dryRun = consumeFlag(args, "--dry-run");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  const target = args.shift();
+  if (!target) return usage("usage: skillsforge os-open <path-or-url> [--dry-run] [--json]");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const repoRoot = await resolveRuntimeRoot(options);
+  let resolved = target;
+  if (!isUrlLike(target)) {
+    try {
+      resolved = resolveUserPath(repoRoot, target, allowAbsolute);
+    } catch (error) {
+      return failOsResult("os-open", error.message, json);
+    }
+  }
+  const launcher = platformOpenCommand(resolved);
+  const payload = {
+    ok: true,
+    command: "os-open",
+    dryRun,
+    target: resolved,
+    launcher: [launcher.command, ...launcher.args]
+  };
+  if (dryRun) {
+    return writeOsResult(payload, json, (item) => `${item.launcher.join(" ")}
+`);
+  }
+  const result = await runProcess2(launcher.command, launcher.args, { timeoutMs: 1e4 });
+  return writeOsResult({ ...payload, result }, json, () => result.stderr || result.stdout || "", result.status === 0 ? 0 : 1);
+}
+async function runOsRunCommand(argv, options) {
+  const split = splitCommandArgs(argv);
+  const args = [...split.options];
+  const json = consumeFlag(args, "--json");
+  const dryRunFlag = consumeFlag(args, "--dry-run");
+  const yes = consumeFlag(args, "--yes");
+  const cwdOption = consumeOption(args, "--cwd") ?? ".";
+  const timeoutValue = consumeOption(args, "--timeout-ms") ?? "30000";
+  if (cwdOption === null) return usage("--cwd requires a value");
+  if (timeoutValue === null) return usage("--timeout-ms requires a value");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  if (split.command.length === 0) return usage("usage: skillsforge os-run [--yes|--dry-run] -- <cmd> [args...]");
+  const root = await resolveRuntimeRoot(options);
+  let cwd;
+  try {
+    cwd = resolveUserPath(root, cwdOption, true);
+  } catch (error) {
+    return failOsResult("os-run", error.message, json);
+  }
+  const [command, ...commandArgs] = split.command;
+  const timeoutMs = Math.max(1e3, Math.min(3e5, Number(timeoutValue) || 3e4));
+  const dryRun = dryRunFlag || !yes;
+  const payload = {
+    ok: true,
+    command: "os-run",
+    dryRun,
+    cwd,
+    timeoutMs,
+    argv: [command, ...commandArgs]
+  };
+  if (dryRun) {
+    return writeOsResult(payload, json, (item) => `${item.argv.join(" ")}
+`);
+  }
+  const result = await runProcess2(command, commandArgs, { cwd, timeoutMs });
+  return writeOsResult({ ...payload, result, ok: result.status === 0 }, json, () => result.stdout + result.stderr, result.status === 0 ? 0 : 1);
+}
+async function runOsCopyPathCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  const target = args.shift();
+  if (!target) return usage("usage: skillsforge os-copy-path <path> [--json]");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  try {
+    const resolved = resolveUserPath(root, target, allowAbsolute);
+    return writeOsResult({ ok: true, command: "os-copy-path", path: resolved }, json, (payload) => `${payload.path}
+`);
+  } catch (error) {
+    return failOsResult("os-copy-path", error.message, json);
+  }
+}
+async function runOsCleanCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  const rootOption = consumeOption(args, "--root") ?? ".";
+  if (rootOption === null) return usage("--root requires a value");
+  if (hasUnknownOption(args)) return usage(`unknown option: ${hasUnknownOption(args)}`);
+  const repoRoot = await resolveRuntimeRoot(options);
+  let root;
+  try {
+    root = resolveUserPath(repoRoot, rootOption, allowAbsolute);
+  } catch (error) {
+    return failOsResult("os-clean", error.message, json);
+  }
+  const names = ["node_modules", "dist", "artifacts", "coverage", ".next", ".turbo", "tests/.tmp-runner"];
+  const candidates = [];
+  for (const name of names) {
+    const path = resolve21(root, name);
+    if (await pathExists8(path)) {
+      candidates.push({
+        path,
+        relativePath: relative13(root, path).replaceAll("\\", "/"),
+        bytes: await directorySize(path)
+      });
+    }
+  }
+  return writeOsResult({
+    ok: true,
+    command: "os-clean",
+    dryRun: true,
+    root,
+    candidates,
+    note: "phase 1 inventory only; no files deleted"
+  }, json, (payload) => payload.candidates.map((item) => `${item.bytes}	${item.relativePath}`).join("\n") + (payload.candidates.length ? "\n" : ""));
+}
+async function runWorkbenchCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const full = consumeFlag(args, "--full");
+  const limitOption = consumeOption(args, "--limit");
+  const limitValue = limitOption ?? (full ? "5000" : "80");
+  const queryOption = consumeOption(args, "--query");
+  if (limitOption === null) return usage("--limit requires a value");
+  if (queryOption === null) return usage("--query requires a value");
+  const task = args.shift() ?? "status";
+  const query = queryOption ?? args.join(" ");
+  if (hasUnknownOption(args)) return usage(`unknown wb option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const payload = await runWorkbench(root, task, {
+    query,
+    limit: Number(limitValue) || (full ? 5e3 : 80),
+    full
+  });
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  else process.stdout.write(formatWorkbenchText(payload));
+  return payload.ok ? 0 : 1;
+}
+async function runLibCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, "--json");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  const out = consumeOption(args, "--out");
+  const homeOption = consumeOption(args, "--home");
+  const sessionHost = consumeOption(args, "--session-host");
+  if (out === null) return usage("--out requires a value");
+  if (homeOption === null) return usage("--home requires a value");
+  if (sessionHost === null) return usage("--session-host requires a value");
+  const root = await resolveRuntimeRoot(options);
+  const home = homeOption ? resolve21(homeOption) : options.home;
+  if (subcommand === "build" || subcommand === "update") {
+    if (hasUnknownOption(args)) return usage(`unknown lib ${subcommand} option: ${hasUnknownOption(args)}`);
+    let result;
+    try {
+      result = await writeLibraryArtifacts(root, {
+        outDir: out ?? void 0,
+        home,
+        allowAbsolute,
+        sessionHost: sessionHost ?? void 0,
+        noCache: subcommand === "update"
+      });
+    } catch (error) {
+      process.stderr.write(`${error.message}
+`);
+      return 1;
+    }
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (subcommand === "check") {
+    const skill = consumeOption(args, "--skill") ?? args.shift();
+    if (skill === null) return usage("--skill requires a value");
+    if (hasUnknownOption(args)) return usage(`unknown lib check option: ${hasUnknownOption(args)}`);
+    const index = await buildLibraryIndex(root, { home, sessionHost: sessionHost ?? void 0 });
+    const record = skill ? index.skills.find((item) => item.id === skill || item.key === skill) : null;
+    const result = record ? { ok: true, skill: record } : { ok: false, error: `unknown skill: ${skill}` };
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (subcommand === "recommend") {
+    const queryOption = consumeOption(args, "--query");
+    const limitValue = consumeOption(args, "--limit") ?? "5";
+    if (queryOption === null) return usage("--query requires a value");
+    if (limitValue === null) return usage("--limit requires a value");
+    if (hasUnknownOption(args)) return usage(`unknown lib recommend option: ${hasUnknownOption(args)}`);
+    const query = queryOption ?? args.join(" ");
+    if (!query) return usage("usage: skillsforge lib recommend --query <text>");
+    const index = await buildLibraryIndex(root, {
+      home,
+      sessionHost: sessionHost ?? void 0
+    });
+    const result = recommendFromLibrary(index, query, {
+      limit: Number(limitValue) || 5,
+      sessionHost: sessionHost ?? void 0
+    });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (subcommand === "remove") {
+    const dryRun = consumeFlag(args, "--dry-run");
+    const allowMutations = consumeFlag(args, "--allow-mutations");
+    const yes = consumeFlag(args, "--yes");
+    const host = consumeOption(args, "--host");
+    const skill = consumeOption(args, "--skill");
+    if (host === null) return usage("--host requires a value");
+    if (skill === null) return usage("--skill requires a value");
+    if (hasUnknownOption(args)) return usage(`unknown lib remove option: ${hasUnknownOption(args)}`);
+    if (!host || !skill) return usage("usage: skillsforge lib remove --host <id> --skill <id> [--dry-run|--allow-mutations --yes]");
+    const result = dryRun || !allowMutations || !yes ? await planSkillRemoval(root, { host, skill, home }) : await removeInstalledSkill(root, { host, skill, home, allowMutations, yes });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (subcommand === "serve") {
+    const allowMutations = consumeFlag(args, "--allow-mutations");
+    const host = consumeOption(args, "--host") ?? "127.0.0.1";
+    const portValue = consumeOption(args, "--port") ?? "4763";
+    if (host === null) return usage("--host requires a value");
+    if (portValue === null) return usage("--port requires a value");
+    if (hasUnknownOption(args)) return usage(`unknown lib serve option: ${hasUnknownOption(args)}`);
+    const result = await serveLibrary(root, {
+      host,
+      port: Number(portValue) || 4763,
+      allowMutations,
+      home,
+      sessionHost: sessionHost ?? void 0
+    });
+    process.stdout.write(`${JSON.stringify({ ok: result.ok, url: result.url, readOnly: result.readOnly }, null, 2)}
+`);
+    return 0;
+  }
+  if (!subcommand) return usage("usage: skillsforge lib <build|update|serve|check|recommend|remove>");
+  return usage(`unknown lib command: ${subcommand}`);
+}
+async function runWorkflowsCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift() ?? "list";
+  const json = consumeFlag(args, "--json");
+  const limitValue = consumeOption(args, "--limit") ?? "20";
+  const category = consumeOption(args, "--category");
+  const queryOption = consumeOption(args, "--query");
+  const idOption = consumeOption(args, "--id");
+  const dryRun = consumeFlag(args, "--dry-run");
+  if (limitValue === null) return usage("--limit requires a value");
+  if (category === null) return usage("--category requires a value");
+  if (queryOption === null) return usage("--query requires a value");
+  if (idOption === null) return usage("--id requires a value");
+  const root = await resolveRuntimeRoot(options);
+  let result;
+  if (subcommand === "list") {
+    const loaded = await loadWorkflows(root);
+    const workflows = loaded.workflows.filter((workflow) => !category || workflow.category === category).slice(0, Math.max(1, Number(limitValue) || 20));
+    result = { ok: loaded.ok, workflows, count: loaded.workflows.length, errors: loaded.errors };
+  } else if (subcommand === "show") {
+    const id = idOption ?? args.shift();
+    if (!id) return usage("usage: skillsforge workflows show --id <workflow-id>");
+    result = await showWorkflow(root, id);
+  } else if (subcommand === "recommend") {
+    const query = queryOption ?? args.join(" ");
+    if (!query) return usage("usage: skillsforge workflows recommend --query <text>");
+    result = await recommendWorkflows(root, query, {
+      category: category ?? void 0,
+      limit: Number(limitValue) || 20
+    });
+  } else if (subcommand === "run") {
+    const id = idOption ?? args.shift();
+    if (!dryRun) return usage("skillsforge workflows run requires --dry-run");
+    if (!id) return usage("usage: skillsforge workflows run --id <workflow-id> --dry-run");
+    result = await runWorkflowDryRun(root, id);
+  } else if (subcommand === "export-html") {
+    const out = consumeOption(args, "--out");
+    if (out === null) return usage("--out requires a value");
+    result = await writeLibraryArtifacts(root, { outDir: out ?? void 0 });
+  } else {
+    return usage(`unknown workflows command: ${subcommand}`);
+  }
+  if (hasUnknownOption(args)) return usage(`unknown workflows option: ${hasUnknownOption(args)}`);
+  if (json || subcommand !== "list") process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else {
+    for (const workflow of result.workflows) process.stdout.write(`${workflow.id}	${workflow.category}	${workflow.goal}
+`);
+  }
+  return result.ok ? 0 : 1;
+}
+async function runAutoCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, "--json");
+  const readOnly = consumeFlag(args, "--read-only");
+  const queryOption = consumeOption(args, "--query");
+  const limitValue = consumeOption(args, "--limit") ?? "5";
+  const homeOption = consumeOption(args, "--home");
+  const sessionHost = consumeOption(args, "--session-host");
+  if (queryOption === null) return usage("--query requires a value");
+  if (limitValue === null) return usage("--limit requires a value");
+  if (homeOption === null) return usage("--home requires a value");
+  if (sessionHost === null) return usage("--session-host requires a value");
+  const query = queryOption ?? args.join(" ");
+  if (!query) return usage("usage: skillsforge auto <plan|run> --query <text>");
+  if (hasUnknownOption(args)) return usage(`unknown auto option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const home = homeOption ? resolve21(homeOption) : options.home;
+  let result;
+  if (subcommand === "plan") {
+    result = await planAuto(root, query, {
+      limit: Number(limitValue) || 5,
+      home,
+      sessionHost: sessionHost ?? void 0
+    });
+  } else if (subcommand === "run") {
+    if (!readOnly) return usage("skillsforge auto run requires --read-only");
+    result = await runAutoReadOnly(root, query, {
+      limit: Number(limitValue) || 5,
+      home,
+      sessionHost: sessionHost ?? void 0
+    });
+  } else {
+    return usage("usage: skillsforge auto <plan|run> --query <text>");
+  }
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  return result.ok ? 0 : 1;
+}
+async function runPsCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, "--json");
+  const out = consumeOption(args, "--out");
+  if (out === null) return usage("--out requires a value");
+  if (subcommand !== "export") return usage("usage: skillsforge ps export [--out <dir>] [--json]");
+  if (hasUnknownOption(args)) return usage(`unknown ps option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const result = await exportPowerShellHelpers(root, { outDir: out ?? void 0 });
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else {
+    for (const file of result.files) process.stdout.write(`${file.name}	${file.path}
+`);
+  }
+  return result.ok ? 0 : 1;
+}
 async function runWatchCommand(argv, options) {
   const args = [...argv];
   const skill = consumeOption(args, "--skill");
@@ -20819,12 +22939,125 @@ async function runWatchCommand(argv, options) {
 `);
   return result.pass ? 0 : 1;
 }
+function usage(message) {
+  process.stderr.write(`${message}
+`);
+  return 2;
+}
+function hasUnknownOption(args) {
+  return args.find((item) => item.startsWith("--"));
+}
+function writeOsResult(payload, json, textFormatter, status = 0) {
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  else process.stdout.write(textFormatter(payload));
+  return status;
+}
+function failOsResult(command, error, json) {
+  return writeOsResult({ ok: false, command, error }, json, (payload) => `${payload.error}
+`, 1);
+}
+function splitCommandArgs(argv) {
+  const marker = argv.indexOf("--");
+  if (marker === -1) return { options: argv, command: [] };
+  return {
+    options: argv.slice(0, marker),
+    command: argv.slice(marker + 1)
+  };
+}
+function globToRegExp(glob) {
+  const escaped = String(glob).replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*").replace(/\?/g, ".");
+  return new RegExp(`^${escaped}$`, "i");
+}
+async function walkFind(root, dir, regex, matches, limit) {
+  if (matches.length >= limit) return;
+  let entries;
+  try {
+    entries = await readdir11(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  entries.sort((a, b) => a.name.localeCompare(b.name));
+  for (const entry of entries) {
+    if (matches.length >= limit) return;
+    if (shouldSkipFindEntry(entry.name)) continue;
+    const full = join23(dir, entry.name);
+    const rel = relative13(root, full).replaceAll("\\", "/");
+    const type = entry.isDirectory() ? "dir" : entry.isFile() ? "file" : "other";
+    if (regex.test(entry.name) || regex.test(rel)) matches.push({ path: rel, type });
+    if (entry.isDirectory()) await walkFind(root, full, regex, matches, limit);
+  }
+}
+function shouldSkipFindEntry(name) {
+  return (/* @__PURE__ */ new Set([".git", ".codegraph", "node_modules", ".worktrees", "dist", "artifacts"])).has(name);
+}
+function isUrlLike(value) {
+  return /^[a-z][a-z0-9+.-]*:\/\//i.test(value) || /^mailto:/i.test(value);
+}
+function platformOpenCommand(target) {
+  if (process.platform === "win32") {
+    return { command: "powershell.exe", args: ["-NoProfile", "-Command", "Start-Process", "-FilePath", target] };
+  }
+  if (process.platform === "darwin") return { command: "open", args: [target] };
+  return { command: "xdg-open", args: [target] };
+}
+function runProcess2(command, args, options = {}) {
+  return new Promise((resolveProcess) => {
+    const child = spawn2(command, args, {
+      cwd: options.cwd ?? process.cwd(),
+      shell: false,
+      windowsHide: true
+    });
+    let stdout = "";
+    let stderr = "";
+    let timedOut = false;
+    const limit = 2e5;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      child.kill("SIGTERM");
+    }, options.timeoutMs ?? 3e4);
+    child.stdout?.on("data", (chunk) => {
+      stdout = (stdout + chunk.toString()).slice(-limit);
+    });
+    child.stderr?.on("data", (chunk) => {
+      stderr = (stderr + chunk.toString()).slice(-limit);
+    });
+    child.on("error", (error) => {
+      clearTimeout(timer);
+      resolveProcess({ status: 127, stdout, stderr: error.message, timedOut });
+    });
+    child.on("close", (status, signal) => {
+      clearTimeout(timer);
+      resolveProcess({ status: status ?? 1, signal, stdout, stderr, timedOut });
+    });
+  });
+}
+async function directorySize(path) {
+  let info;
+  try {
+    info = await stat4(path);
+  } catch {
+    return 0;
+  }
+  if (!info.isDirectory()) return info.size;
+  let total = 0;
+  let entries;
+  try {
+    entries = await readdir11(path, { withFileTypes: true });
+  } catch {
+    return 0;
+  }
+  for (const entry of entries) {
+    total += await directorySize(join23(path, entry.name));
+  }
+  return total;
+}
 if (process.argv[1]) {
   let sameEntry = false;
   try {
     sameEntry = realpathSync(process.argv[1]) === realpathSync(modulePath2);
   } catch {
-    sameEntry = resolve17(process.argv[1]) === modulePath2;
+    sameEntry = resolve21(process.argv[1]) === modulePath2;
   }
   if (sameEntry) {
     process.exitCode = await main();

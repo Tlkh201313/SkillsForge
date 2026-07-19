@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need product experiment in a SkillsForge product workflow.
   default_prompt: Use the product-experiment skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

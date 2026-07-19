@@ -2,7 +2,7 @@
 
 ## Scope
 
-SkillsForge validates, forges, routes, policy-scans, and packages Agent Skills for **Codex** (native plugin + guarded package) and **Claude Code** (full), with package-fidelity installs for Cursor / OpenCode / Gemini. This document covers trust boundaries for static capability scanning and host PreToolUse policy hooks.
+SkillsForge validates, forges, routes, policy-scans, and packages Agent Skills for **Codex** (native plugin + guarded package) and **Claude Code** (full), with package-fidelity installs for Cursor / OpenCode / ZCode / Hermes / Gemini and custom local AI CLI targets. This document covers trust boundaries for static capability scanning and host PreToolUse policy hooks.
 
 One plugin: `skillsforge`. No MCP servers, LSP, monitors, token ledgers, or domain packs are in scope.
 
@@ -69,7 +69,7 @@ SkillsForge’s Codex runner still aims to **fail closed** on missing/invalid po
 - Guaranteeing confidentiality against a compromised host runtime
 - Replacing container/VM sandboxing for untrusted code execution
 - Claiming MCP, LSP, monitors, token ledgers, domain packs, multi-host parity, or attestation
-- Claiming that package-fidelity installs for Cursor/OpenCode/Gemini enforce runtime policy
+- Claiming that package-fidelity installs for Cursor/OpenCode/ZCode/Hermes/Gemini/custom hosts enforce runtime policy
 
 ## Residual risk
 

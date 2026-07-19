@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "maturity": "stable",
+  "requires": [
+    "using-skillsforge"
+  ],
+  "routing": {
+    "triggers": [
+      "update skill library",
+      "refresh skillsforge library",
+      "rebuild ai skill index",
+      "installed new skills",
+      "skills changed",
+      "refresh local skills html"
+    ],
+    "antiTriggers": [
+      "install a new skill",
+      "remove a skill",
+      "write a new skill from scratch",
+      "edit README only"
+    ],
+    "mode": "auto",
+    "pack": "browse-catalog"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": true,
+      "commands": [
+        "skillsforge lib update",
+        "node plugins/skillsforge/bin/skillsforge.mjs lib update"
+      ]
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

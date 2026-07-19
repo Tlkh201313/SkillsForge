@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need docs examples in a SkillsForge docs workflow.
   default_prompt: Use the docs-examples skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

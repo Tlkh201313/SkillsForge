@@ -1,4 +1,4 @@
-/** Compact skill inventory for SkillsForge Total Dominance. Original skills only. */
+/** Compact skill inventory for SkillsForge. Original skills only. */
 
 function skill(id, opts = {}) {
   return {
@@ -161,6 +161,13 @@ export const PACKS = {
       'ops-incident-comms', 'ops-runbook-drill', 'ops-feature-freeze', 'ops-canary'
     ])
   },
+  os: {
+    description: 'Cross-platform OS helpers for agentic workstations',
+    skills: expand([
+      'os-command-router', 'os-file-ops-safe', 'os-process-port-doctor', 'os-env-doctor',
+      'os-shell-modernize', 'os-app-launcher', 'os-path-cleanup', 'os-agent-terminal'
+    ])
+  },
   agentic: {
     description: 'Agentic workflows and crew patterns',
     skills: expand([
@@ -215,7 +222,8 @@ export const PACKS = {
     skills: expand([
       'media-image-brief', 'media-video-script', 'media-brand-asset', 'media-podcast',
       'media-thumbnail', 'media-storyboard', 'media-alt-text', 'media-compression',
-      'media-style-guide', 'media-ugc', 'media-localization', 'media-accessibility'
+      'media-style-guide', 'media-ugc', 'media-localization', 'media-accessibility',
+      'media-video-watch', 'media-frame-sampling', 'media-video-plan', 'media-caption-qc'
     ])
   },
   mobile: {
@@ -274,17 +282,17 @@ export const PROFILES = {
   },
   core: {
     description: 'Default install for vibecoders',
-    packs: ['trust', 'browse-catalog', 'lifecycle', 'methodology', 'roles', 'eng', 'design']
+    packs: ['trust', 'browse-catalog', 'lifecycle', 'methodology', 'roles', 'eng', 'design', 'os']
   },
   full: {
-    description: 'Everything — beat ECC surface',
+    description: 'Everything -- broad trusted skill surface',
     packs: Object.keys(PACKS)
   },
   eng: { description: 'Engineering focus', packs: ['trust', 'methodology', 'eng', 'testing', 'lang', 'framework'] },
   design: { description: 'Design focus', packs: ['trust', 'design', 'roles', 'content'] },
   product: { description: 'Product focus', packs: ['trust', 'product', 'research', 'growth'] },
   growth: { description: 'Growth focus', packs: ['trust', 'growth', 'content', 'media'] },
-  ops: { description: 'Ops focus', packs: ['trust', 'ops', 'security', 'cloud-devops'] },
+  ops: { description: 'Ops focus', packs: ['trust', 'ops', 'os', 'security', 'cloud-devops'] },
   methodology: { description: 'Discipline only', packs: ['trust', 'methodology'] },
   roles: { description: 'Role lenses', packs: ['trust', 'roles'] }
 };
@@ -304,7 +312,17 @@ export const AGENTS = [
   'cursor-specialist', 'claude-specialist', 'opencode-specialist', 'gemini-specialist',
   'enterprise-liaison', 'legal-lite', 'finance-lite', 'media-producer', 'mobile-releaser',
   'framework-coach', 'language-coach', 'growth-experimenter', 'research-synthesizer',
-  'retro-facilitator', 'oncall-lead', 'validator'
+  'retro-facilitator', 'oncall-lead', 'validator', 'os-workstation-helper',
+  'video-workflow-producer', 'skill-pack-architect', 'agent-terminal-operator',
+  'repo-map-specialist', 'dependency-upgrade-surgeon', 'package-auditor',
+  'cli-workbench-engineer', 'policy-tester', 'llm-index-librarian',
+  'ui-systems-designer', 'motion-qa', 'data-quality-auditor',
+  'data-governance-auditor', 'hackathon-judge-reviewer',
+  'terminal-output-compressor', 'ci-diagnostician', 'workflow-curator',
+  'token-budget-controller', 'handoff-compressor', 'powershell-workbench-engineer',
+  'library-librarian', 'mcp-interface-engineer', 'star-map-designer',
+  'documentarian', 'readme-claim-auditor', 'local-ui-builder',
+  'safe-removal-operator'
 ];
 
 export const COMMANDS = [
@@ -321,7 +339,11 @@ export const COMMANDS = [
   'perf', 'ci', 'migrations', 'flags', 'incident', 'privacy', 'docker', 'k8s',
   'doctor', 'validate', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce',
   'eval', 'install', 'package', 'evidence', 'browse', 'pack-methodology', 'pack-roles',
-  'pack-lifecycle', 'next', 'status', 'work-brief', 'work-plan', 'work-proof'
+  'pack-lifecycle', 'next', 'status', 'work-brief', 'work-plan', 'work-proof',
+  'os-run', 'os-open', 'os-find', 'os-ports', 'os-env', 'os-copy-path',
+  'os-clean', 'wb', 'lib', 'workflows', 'auto', 'ps',
+  'agent-terminal', 'video-watch', 'video-frames', 'skill-generate',
+  'pack-author'
 ];
 
 export function allSkills() {

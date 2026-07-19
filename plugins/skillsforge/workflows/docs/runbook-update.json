@@ -1,0 +1,65 @@
+{
+  "id": "docs.runbook-update",
+  "category": "docs",
+  "goal": "Write an operator runbook for install, validate, and rollback.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "docs-runbook",
+      "agent": "sre",
+      "command": "skillsforge route --query \"Write an operator runbook for install, validate, and rollback.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "ops-runbook-drill",
+      "agent": "docs-engineer"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "ship-release",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "docs-runbook",
+    "ops-runbook-drill",
+    "ship-release"
+  ],
+  "recommendedAgents": [
+    "sre",
+    "docs-engineer"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Write an operator runbook for install, validate, and rollback.\"",
+    "skillsforge workflows run --id docs.runbook-update --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "medium"
+}

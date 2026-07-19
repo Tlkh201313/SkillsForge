@@ -15,11 +15,11 @@ hooks:
 
 ## Overview
 
-Original SkillsForge skill for growth waitlist (growth pack).
+Lean SkillsForge scaffold for growth waitlist (growth pack). Add domain examples and verification before calling it production-depth.
 
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Growth Waitlist without copying third-party skill bodies.
+Deliver a trustworthy, repeatable outcome for Growth Waitlist without copying third-party skill bodies or overstating this scaffold's depth.
 
 ## When to Use
 

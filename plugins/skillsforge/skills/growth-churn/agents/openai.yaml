@@ -3,4 +3,4 @@ interface:
   short_description: Use when you need growth churn in a SkillsForge growth workflow.
   default_prompt: Use the growth-churn skill for this task.
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

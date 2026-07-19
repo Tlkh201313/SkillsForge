@@ -1,0 +1,65 @@
+{
+  "id": "design.library-ui-audit",
+  "category": "design",
+  "goal": "Audit a local library UI for density, hierarchy, and actions.",
+  "inputs": [
+    "task brief",
+    "repo path",
+    "verification command",
+    "risk constraints"
+  ],
+  "steps": [
+    {
+      "id": "shape",
+      "action": "State goal, risk, and smallest useful scope.",
+      "skill": "shape-intent",
+      "agent": "planner"
+    },
+    {
+      "id": "route",
+      "action": "Route to the smallest matching SkillsForge skill set.",
+      "skill": "design-anti-slop",
+      "agent": "ui-systems-designer",
+      "command": "skillsforge route --query \"Audit a local library UI for density, hierarchy, and actions.\" --include-explicit"
+    },
+    {
+      "id": "execute-plan",
+      "action": "Perform only the bounded task steps and keep output compact.",
+      "skill": "design-layout",
+      "agent": "design-reviewer"
+    },
+    {
+      "id": "verify",
+      "action": "Run the listed quality gate and record evidence.",
+      "skill": "design-system",
+      "agent": "quality-gate",
+      "command": "skillsforge wb proof"
+    }
+  ],
+  "recommendedSkills": [
+    "design-anti-slop",
+    "design-layout",
+    "design-system"
+  ],
+  "recommendedAgents": [
+    "ui-systems-designer",
+    "design-reviewer"
+  ],
+  "commands": [
+    "skillsforge auto plan --query \"Audit a local library UI for density, hierarchy, and actions.\"",
+    "skillsforge workflows run --id design.library-ui-audit --dry-run",
+    "skillsforge wb status --json"
+  ],
+  "stopGates": [
+    "scope is explicit",
+    "no unrelated files changed",
+    "quality gate passes",
+    "final diff is reviewed"
+  ],
+  "tokenBudget": {
+    "mode": "compact",
+    "target": "read only routed files and command summaries"
+  },
+  "qualityGate": "Run the smallest relevant test or proof command and keep the result attached to the final note.",
+  "risk": "medium"
+}
