@@ -2,7 +2,7 @@
 
 Judge-friendly map of **every** SkillsForge surface. **Product first:** SkillsForge is a **productivity Work OS** for agent coding (skills, packs, profiles, workflows, agents, commands, library, auto, workbench). **Trust** (validate / package / hooks / receipts) is the **safety layer underneath**, not the hero story.
 
-Counts are live from catalog, plugin trees, CLI help, and capability registries — not marketing estimates. Version **0.4.1**.
+Counts are live from catalog, plugin trees, CLI help, and capability registries - not marketing estimates. Version **0.4.1**.
 
 ## Related docs
 
@@ -18,12 +18,12 @@ Counts are live from catalog, plugin trees, CLI help, and capability registries 
 
 | Claim | Reality |
 | --- | --- |
-| Core product | Productivity Work OS — route the right skill/workflow and ship faster |
-| Domain pack depth | Most domain packs are **lean scaffolds** — useful routing surface, not production-depth playbooks |
+| Core product | Productivity Work OS - route the right skill/workflow and ship faster |
+| Domain pack depth | Domain skills are contract-backed routing playbooks with output, stop-gate, verification, failure-mode, and pressure-test sections |
 | Auto routing | Exactly **8** auto-route heroes; everything else is `explicit` (pack/command scoped) |
 | Hooks | Host PreToolUse hooks are **policy guards**, not an OS sandbox |
 | Host fidelity | Claude Code + Codex runtime where supported; other hosts are package-fidelity installs |
-| MCP | Thin, **read-only** tools — no swarm/AgentDB/write defaults |
+| MCP | Thin, **read-only** tools - no swarm/AgentDB/write defaults |
 | Workflows | Catalog entries are **dry-run** by default |
 | Demo artifact | `demo-scoreboard.json` = package-tree hash, not a full trust receipt |
 
@@ -33,16 +33,16 @@ Counts are live from catalog, plugin trees, CLI help, and capability registries 
 
 | Surface | Count | Source |
 | --- | ---: | --- |
-| Catalog skills | 367 | `catalog/skillsforge.catalog.yaml` packs |
-| Skill packages with `SKILL.md` | 367 | `plugins/skillsforge/skills/*/SKILL.md` |
+| Catalog skills | 399 | `catalog/skillsforge.catalog.yaml` packs |
+| Skill packages with `SKILL.md` | 399 | `plugins/skillsforge/skills/*/SKILL.md` |
 | Packs | 26 | catalog packs |
 | Profiles | 10 | catalog profiles |
 | Agents | 98 | `plugins/skillsforge/agents/*.md` |
-| Slash commands | 124 | `plugins/skillsforge/commands/*.*` (25 upgraded / 99 generated thin) |
+| Slash commands | 128 | `plugins/skillsforge/commands/*.*` |
 | Workflows | 100 | `plugins/skillsforge/workflows/**/*.json` (10 categories) |
 | Hosts | 7 | `HOST_REGISTRY` in `lib/capabilities/hosts.mjs` |
-| PowerShell helpers | 15 | `POWERSHELL_HELPERS` in `lib/capabilities/powershell.mjs` |
-| MCP tools | 7 | `scripts/skillsforge-mcp.mjs` |
+| PowerShell helpers | 22 | `POWERSHELL_HELPERS` in `lib/capabilities/powershell.mjs` |
+| MCP tools | 15 | `scripts/skillsforge-mcp.mjs` |
 | Auto-route heroes | 8 | sidecars with `routing.mode: auto` |
 
 Catalog skill ids and on-disk `SKILL.md` packages match 1:1 (no missing / no orphans).
@@ -51,7 +51,7 @@ Catalog skill ids and on-disk `SKILL.md` packages match 1:1 (no missing / no orp
 
 Entry points: `node plugins/skillsforge/bin/skillsforge.mjs` (bundled) or `node scripts/skillsforge-cli.mjs`.
 
-Magical moment: `skillsforge vibe` · recommend: `lib recommend` / `workflows recommend` / `auto run --read-only`.
+Magical moment: `skillsforge vibe` - recommend: `lib recommend` / `workflows recommend` / `auto run --read-only`.
 
 ### Catalog & authoring
 
@@ -69,7 +69,7 @@ Magical moment: `skillsforge vibe` · recommend: `lib recommend` / `workflows re
 
 `validate`, `doctor`, `forge`, `receipt`, `verify-receipt`, `enforce`, `eval`, `skillshield`, `pressure`, `lint-skill`, `evidence`, `demo`
 
-Judge path: `skillsforge demo` → unsafe deny → safe package → **demo scoreboard** (package-tree hash).
+Judge path: `skillsforge demo` -> unsafe deny -> safe package -> **demo scoreboard** (package-tree hash).
 
 Full help text is the source of truth: `skillsforge help`.
 
@@ -135,7 +135,7 @@ From `HOST_REGISTRY` (`lib/capabilities/hosts.mjs`):
 | `hermes` | Hermes Agent | package | no | no |
 | `gemini` | Gemini CLI | package | no | no |
 
-Install: `skillsforge hosts`, `skillsforge install --hosts …`, optional `--custom-host <id>:<skills-dir>`.
+Install: `skillsforge hosts`, `skillsforge install --hosts ...`, optional `--custom-host <id>:<skills-dir>`.
 
 ## Profiles
 
@@ -150,11 +150,11 @@ Install: `skillsforge hosts`, `skillsforge install --hosts …`, optional `--cus
 | `ops` | `trust`, `ops`, `os`, `security`, `cloud-devops` | Ops focus |
 | `product` | `trust`, `product`, `research`, `growth` | Product focus |
 | `roles` | `trust`, `roles` | Role lenses |
-| `vibe` | `trust`, `browse-catalog`, `lifecycle` | Magical moment — trust + lifecycle + browse |
+| `vibe` | `trust`, `browse-catalog`, `lifecycle` | Magical moment - trust + lifecycle + browse |
 
 ## Packs
 
-**26 packs / 367 skills.** Trust + lifecycle + methodology are the production-depth spine; domain packs are lean scaffolds.
+**26 packs / 399 skills.** Trust + lifecycle + methodology are the production-depth spine; domain packs are contract-backed SkillsForge skills.
 
 ### `agentic` (14)
 
@@ -348,7 +348,7 @@ Media and creative briefs
 
 ### `methodology` (12)
 
-Discipline iron laws — brainstorm, plan, TDD, verify (original)
+Discipline iron laws - brainstorm, plan, TDD, verify (original)
 
 | | | |
 | --- | --- | --- |
@@ -507,7 +507,7 @@ Hand-authored or native CLI shims (**25**). Prefer these for trust-critical and 
 
 ### Generated thin commands
 
-Pack/domain shims (**99**) that mostly `route --query "…"`. Prefer upgraded entries for trust work:
+Pack/domain shims (**99**) that mostly `route --query "..."`. Prefer upgraded entries for trust work:
 
 `a11y`, `adr`, `agent-terminal`, `agentic`, `anti-slop`, `batch`, `bench`, `brainstorm`, `browse`, `capture`, `ceo`, `ci`, `cloud`, `compare`, `compose`, `content`, `copy`, `crew`, `data`, `deploy`, `design-first`, `design-review`, `devex`, `docker`, `docs`, `e2e`, `enforce`, `eng`, `eng-review`, `enterprise`, `eval`, `export-agents`, `finance`, `flags`, `forge-from-capture`, `framework`, `growth`, `incident`, `install`, `jtbd`, `k8s`, `lang`, `launch`, `learn`, `legal`, `lint-skill`, `load-test`, `lock-design`, `media`, `migrations`, `mobile`, `next`, `no-rationalize`, `oncall`, `ops`, `os-clean`, `os-copy-path`, `os-env`, `os-find`, `os-open`, `os-ports`, `os-run`, `pack-author`, `pack-lifecycle`, `pack-methodology`, `pack-roles`, `package`, `perf`, `prd`, `privacy`, `quickstart`, `readme`, `receipt`, `refactor`, `research`, `retention`, `retro`, `rice`, `runbook`, `scorecard`, `secrets`, `security`, `seo`, `skill-generate`, `spike`, `status`, `stocktake`, `tdd`, `testing`, `threat-model`, `triage`, `unit-test`, `verify`, `video-frames`, `video-watch`, `watch`, `work-brief`, `work-plan`, `work-proof`
 
@@ -546,12 +546,12 @@ Thin stdio NDJSON server: `scripts/skillsforge-mcp.mjs`. Read-only; no swarm / A
 
 | Path | Role |
 | --- | --- |
-| `examples/codex-unsafe-release` | Judge deny path — undeclared exec/network fails validation without executing the skill |
-| `examples/codex-safe-release` | Judge package path — passes → guarded Codex plugin compile |
+| `examples/codex-unsafe-release` | Judge deny path - undeclared exec/network fails validation without executing the skill |
+| `examples/codex-safe-release` | Judge package path - passes -> guarded Codex plugin compile |
 | `examples/safe-dependency-upgrade/forge-spec.json` | Deterministic forge-spec input for `skillsforge forge` |
 
 Run the bundled judge path: `node plugins/skillsforge/bin/skillsforge.mjs demo`.
 
 ---
 
-*Generated from live inventory. Snapshot counts: skills 367, packs 26, profiles 10, agents 98, commands 124, workflows 100, hosts 7, PowerShell helpers 15, MCP tools 7, auto heroes 8.*
+*Generated from live inventory. Snapshot counts: skills 399, packs 26, profiles 10, agents 98, commands 128, workflows 100, hosts 7, PowerShell helpers 22, MCP tools 15, auto heroes 8.*

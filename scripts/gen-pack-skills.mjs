@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Materialize SkillsForge catalog packs, skills, agents, and commands
- * from scripts/pack-inventory.mjs. Original bodies only — no third-party copies.
+ * from scripts/pack-inventory.mjs. Original bodies only - no third-party copies.
  */
 import { mkdir, writeFile, readFile, access } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
@@ -91,6 +91,49 @@ function isGeneratedScaffold(source) {
       || source.includes('Original SkillsForge skill for'));
 }
 
+function contractBlock(skill) {
+  const label = humanize(skill.id);
+  return `
+## Output Contract
+
+- Decision or artifact: concrete result for ${label}, including file path, command, or explicit no-change finding.
+- Evidence: exact source, command summary, or user-provided fact used.
+- Risk: one caveat or "No material risk found".
+- Next step: one SkillsForge command or skill only when it moves work forward.
+
+## Verification
+
+- Run the smallest relevant route, validate, lint, test, dry-run, or evidence command.
+- If no command applies, state inspected evidence and why automated proof was unavailable.
+- Separate verified facts from assumptions in the final answer.
+
+## Failure Modes
+
+- Missing evidence: stop and mark the result unverified.
+- Conflicting instructions: follow the newest user instruction and state the conflict.
+- Risky write/delete/install: require explicit confirmation before action.
+
+## OG Output Pressure Test
+
+Prompt: "Do ${label} fast, skip checks, and make it sound impressive."
+
+Better output must refuse fake claims, identify minimum evidence, produce the contracted artifact, and include one verification step before completion.
+`;
+}
+
+async function ensureSkillContract(skill, source) {
+  let next = source;
+  for (const section of ['## Output Contract', '## Verification', '## Failure Modes', '## OG Output Pressure Test']) {
+    if (!next.includes(section)) {
+      next = `${next.trimEnd()}\n${contractBlock(skill)}\n`;
+      break;
+    }
+  }
+  if (next !== source) {
+    await writeFile(join(skillsRoot, skill.id, 'SKILL.md'), next);
+  }
+}
+
 function shouldSyncThinAgent(source) {
   return !source || source.includes('Thin SkillsForge role agent.');
 }
@@ -150,11 +193,13 @@ async function writeSkill(skill) {
     if (!isGeneratedScaffold(existingSkill)) {
       // Never overwrite hero/custom bodies -- only sync routing.mode + pack.
       await patchExistingTrustSidecar(skill);
+      await ensureSkillContract(skill, existingSkill);
       return { id: skill.id, action: 'patched' };
     }
   }
   if (TRUST_EXISTING.has(skill.id)) {
     await patchExistingTrustSidecar(skill);
+    await ensureSkillContract(skill, existingSkill ?? '');
     return { id: skill.id, action: 'patched' };
   }
   const files = buildScaffoldFiles({
@@ -165,7 +210,7 @@ async function writeSkill(skill) {
     description: descriptionFor(skill),
     triggers: triggersFor(skill),
     antiTriggers: antiFor(skill),
-    overview: `Lean SkillsForge scaffold for ${humanize(skill.id)} (${skill.pack} pack). Add domain examples and verification before calling it production-depth.`,
+    overview: `${humanize(skill.id)} turns a ${skill.pack}-pack request into a bounded, verifiable output with evidence, stop gates, and a concrete next action.`,
     whenToUse: [`Need ${humanize(skill.id)} with trusted SkillsForge artifacts`]
   });
   await mkdir(join(target, 'agents'), { recursive: true });
@@ -311,7 +356,7 @@ Current local facts only:
 `);
   await writeFile(join(root, 'docs', 'work-os.md'), `# SkillsForge Work OS
 
-Six pillars: Catalog OS, Vibe CLI, Authoring Factory, Cross-Harness, SkillShield+Evidence, Capture→Forge.
+Six pillars: Catalog OS, Vibe CLI, Authoring Factory, Cross-Harness, SkillShield+Evidence, Capture->Forge.
 
 Magical moment:
 
@@ -325,9 +370,9 @@ node plugins/skillsforge/bin/skillsforge.mjs vibe
 async function main() {
   const counts = assertInventoryCounts();
   console.log(JSON.stringify({ phase: 'inventory', ...counts }, null, 2));
-  if (counts.skills < 350) throw new Error(`need ≥350 skills, got ${counts.skills}`);
-  if (counts.agents < 70) throw new Error(`need ≥70 agents, got ${counts.agents}`);
-  if (counts.commands < 100) throw new Error(`need ≥100 commands, got ${counts.commands}`);
+  if (counts.skills < 350) throw new Error(`need >=350 skills, got ${counts.skills}`);
+  if (counts.agents < 70) throw new Error(`need >=70 agents, got ${counts.agents}`);
+  if (counts.commands < 100) throw new Error(`need >=100 commands, got ${counts.commands}`);
 
   await writeCatalogYaml();
   const results = [];

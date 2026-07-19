@@ -114,7 +114,7 @@ test('bundled CLI help lists every subcommand', () => {
     encoding: 'utf8'
   });
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'hosts', 'help', 'install', 'wb', 'lib', 'workflows', 'auto', 'ps']) {
+  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'hosts', 'help', 'install', 'wb', 'lib', 'workflows', 'auto', 'ps', 'tokens', 'digest', 'next', 'map', 'slim', 'settings']) {
     assert.match(result.stdout, new RegExp(`\\b${name}\\b`));
   }
 });

@@ -9,7 +9,7 @@ allowed-tools: "Bash(node *),Read,Write,Edit"
 Prove outcomes before ship.
 
 1. Follow skill `prove-outcome`: re-run relevant `validate` / tests / `quality`.
-2. Write `docs/work/proof.md` with command → result → paths.
+2. Write `docs/work/proof.md` with command -> result -> paths.
 3. If evidence requested:
 
 ```bash

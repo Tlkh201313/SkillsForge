@@ -21,4 +21,4 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" verify-receipt $ARGUMENTS --pac
 ```
 
 3. Report `ok`, `packageVerified`, and whether evaluation was verified or left unverified.
-4. Do not claim cryptographic attestation — receipts are reproducible evidence hashes.
+4. Do not claim cryptographic attestation - receipts are reproducible evidence hashes.

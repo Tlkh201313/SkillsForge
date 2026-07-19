@@ -1,10 +1,11 @@
 {
   "name": "skillsforge",
   "version": "0.4.2",
-  "description": "Work OS for productive Agent Skills: route, workflows, library, multi-host install — with validate/package/receipts as the safety layer.",
+  "description": "Work OS for productive Agent Skills: route, workflows, library, multi-host install - with validate/package/receipts as the safety layer.",
   "type": "module",
   "bin": {
     "skillsforge": "./plugins/skillsforge/bin/skillsforge.mjs",
+    "sf": "./plugins/skillsforge/bin/skillsforge.mjs",
     "skillsforge-validate": "./plugins/skillsforge/bin/skillsforge-validate"
   },
   "engines": {

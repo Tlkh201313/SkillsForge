@@ -24,7 +24,7 @@ Criteria map:
 
 | Time | Beat | What to show / say |
 | --- | --- | --- |
-| 0:00–0:20 | Thesis | *Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, and tamper-evident.* A release helper can hide undeclared shell + network. |
+| 0:00-0:20 | Thesis | *Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, and tamper-evident.* A release helper can hide undeclared shell + network. |
 | 0:20-0:50 | Unsafe deny | `node plugins/skillsforge/bin/skillsforge.mjs demo` **or** `node plugins/skillsforge/bin/skillsforge.mjs validate examples/codex-unsafe-release` -> blocking findings, exit non-zero. Say: rejected **without executing** the skill. |
 | 0:50-1:20 | Safe package | Same demo packages `examples/codex-safe-release` -> native Codex plugin tree. Show sidecar capabilities + hooks. |
 | 1:20-1:50 | Scoreboard | Show package-tree hash and `artifacts/demo-evidence/demo-scoreboard.json`. Optional: `compare-skill` unsafe vs safe. |

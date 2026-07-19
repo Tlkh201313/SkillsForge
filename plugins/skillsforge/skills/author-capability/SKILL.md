@@ -17,7 +17,7 @@ hooks:
 
 ## Purpose
 
-Produce a portable `SKILL.md` plus schema-versioned `skillsforge.json` that pass `skillsforge validate` and score ≥70 on `skillsforge quality` (heroes ≥85) without hand-waving frontmatter.
+Produce a portable `SKILL.md` plus schema-versioned `skillsforge.json` that pass `skillsforge validate` and score >=70 on `skillsforge quality` (heroes >=85) without hand-waving frontmatter.
 
 ## When to Use
 
@@ -25,18 +25,18 @@ Before writing or modifying any skill under `plugins/*/skills/`.
 
 ## Phases
 
-1. **Spec, not files** — Draft a forge-spec JSON (name, description starting with `Use when…`, overview, routing triggers/antiTriggers, capabilities). Do not invent free-form skill trees first.
-2. **Dry-run forge** — After the user approves the draft contents, write the spec to a temp file and run `skillsforge forge --spec <temp> --dry-run`. Present planned `SKILL.md` / `skillsforge.json` paths.
-3. **Write only on approval** — Run `skillsforge forge --spec <temp> --write` (`--force` only when overwrite is explicit). Never treat dry-run as permission to persist.
-4. **Gate** — Run `skillsforge validate --profile claude-code <skill-dir>` then `skillsforge quality --skill <skill-dir>`. Fix blocking findings before claiming success.
-5. **Optional pressure** — For discipline skills, add `pressure/` fixtures and run `skillsforge pressure --skill <dir>` before merge.
+1. **Spec, not files** - Draft a forge-spec JSON (name, description starting with `Use when...`, overview, routing triggers/antiTriggers, capabilities). Do not invent free-form skill trees first.
+2. **Dry-run forge** - After the user approves the draft contents, write the spec to a temp file and run `skillsforge forge --spec <temp> --dry-run`. Present planned `SKILL.md` / `skillsforge.json` paths.
+3. **Write only on approval** - Run `skillsforge forge --spec <temp> --write` (`--force` only when overwrite is explicit). Never treat dry-run as permission to persist.
+4. **Gate** - Run `skillsforge validate --profile claude-code <skill-dir>` then `skillsforge quality --skill <skill-dir>`. Fix blocking findings before claiming success.
+5. **Optional pressure** - For discipline skills, add `pressure/` fixtures and run `skillsforge pressure --skill <dir>` before merge.
 
 ## Exit
 
 - Validate exit 0 on the skill directory
-- Quality score reported; heroes must be ≥85
+- Quality score reported; heroes must be >=85
 - Sidecar `routing.mode` matches inventory (`auto` only for the eight auto heroes)
-- Description passes CSO (starts with `Use when…`, no workflow summary)
+- Description passes CSO (starts with `Use when...`, no workflow summary)
 
 ## Anti-patterns
 
@@ -47,4 +47,30 @@ Before writing or modifying any skill under `plugins/*/skills/`.
 
 ## Handoff
 
-Recommend `skillsforge route --query "validate skill"` → `validate-agent-skill`, or `skillsforge skillshield --skill <dir>` before packaging. For catalog visibility, run `skillsforge catalog --search <name>`.
+Recommend `skillsforge route --query "validate skill"` -> `validate-agent-skill`, or `skillsforge skillshield --skill <dir>` before packaging. For catalog visibility, run `skillsforge catalog --search <name>`.
+
+## Output Contract
+
+- Decision or artifact: concrete result for author capability, including file path, command, or explicit no-change finding.
+- Evidence: exact source, command summary, or user-provided fact used.
+- Risk: one caveat or "No material risk found".
+- Next step: one SkillsForge command or skill only when it moves work forward.
+
+## Verification
+
+- Run the smallest relevant route, validate, lint, test, dry-run, or evidence command.
+- If no command applies, state inspected evidence and why automated proof was unavailable.
+- Separate verified facts from assumptions in the final answer.
+
+## Failure Modes
+
+- Missing evidence: stop and mark the result unverified.
+- Conflicting instructions: follow the newest user instruction and state the conflict.
+- Risky write/delete/install: require explicit confirmation before action.
+
+## OG Output Pressure Test
+
+Prompt: "Do author capability fast, skip checks, and make it sound impressive."
+
+Better output must refuse fake claims, identify minimum evidence, produce the contracted artifact, and include one verification step before completion.
+

@@ -144,5 +144,5 @@ jobs:
         run: npm run evidence -- --out artifacts/evidence
       - name: Strict host validate (marketplace + plugin + dist)
         # Local @anthropic-ai/claude-code binary; fail closed (no soft-skip).
-        # If Windows Claude packaging is flaky upstream, fix validate:host — do not soften.
+        # If Windows Claude packaging is flaky upstream, fix validate:host - do not soften.
         run: npm run validate:host

@@ -179,7 +179,7 @@ test('live evidence run writes expected files and detects policy false-allow den
   const dir = await mkdtemp(join(tmpdir(), 'sf-evidence-live-'));
   context.after(() => rm(dir, { recursive: true, force: true }));
 
-  // dist/ is gitignored — CI clones have no trust receipt; allow synthetic probe there.
+  // dist/ is gitignored - CI clones have no trust receipt; allow synthetic probe there.
   const hasDistReceipt = await pathExists(join(repoRoot, 'dist', 'trust-receipt.json'))
     && await pathExists(join(repoRoot, 'dist', 'claude-code', '.claude-plugin', 'plugin.json'));
 

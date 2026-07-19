@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
  * Thin SkillsForge MCP server (stdio JSON-RPC subset).
- * Tools: validate, route, skillshield, and read-only library/workflow recommendation.
+ * Tools: validate, route, skillshield, library/workflow recommend, plus token-saving
+ * map / slim / digest / next / tokens for AI CLI hosts.
  * No swarm, AgentDB, consensus, or default write tools.
  *
- * Protocol: newline-delimited JSON (NDJSON) on stdin/stdout — default and only framing:
+ * Protocol: newline-delimited JSON (NDJSON) on stdin/stdout - default and only framing:
  *   {"id":1,"method":"tools/list"}
  *   {"id":2,"method":"tools/call","params":{"name":"validate","arguments":{...}}}
  *
@@ -25,6 +26,12 @@ import { runSkillShield } from '../lib/capabilities/skillshield.mjs';
 import { isInside, resolveUnderRoot } from '../lib/capabilities/paths.mjs';
 import { buildLibraryIndex, recommendFromLibrary } from '../lib/capabilities/library.mjs';
 import { recommendWorkflows, showWorkflow } from '../lib/capabilities/workflows.mjs';
+import { runForgeMap } from '../lib/capabilities/forgemap.mjs';
+import { runSlim } from '../lib/capabilities/slim.mjs';
+import { runDigestCommand, runNextCommand, runTokensCommand } from '../lib/capabilities/operator.mjs';
+import { loadSettings } from '../lib/capabilities/settings.mjs';
+import { scoreSkillQuality } from '../lib/capabilities/quality.mjs';
+import { loadSkill } from '../lib/capabilities/skill-loader.mjs';
 
 const moduleDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(process.env.SKILLSFORGE_ROOT ?? join(moduleDir, '..'));
@@ -114,6 +121,119 @@ const TOOLS = [
       },
       required: ['id']
     }
+  },
+  {
+    name: 'settings_show',
+    description: 'Read-only resolved SkillsForge settings',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        config: { type: 'string', description: 'Optional config path relative to repo root' }
+      }
+    }
+  },
+  {
+    name: 'quality_skill',
+    description: 'Read-only skill quality score and checks',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        skill: { type: 'string', description: 'Skill directory relative to repo root' }
+      },
+      required: ['skill']
+    }
+  },
+  {
+    name: 'skill_contract',
+    description: 'Read-only extracted skill output contract sections',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        skill: { type: 'string', description: 'Skill directory relative to repo root' }
+      },
+      required: ['skill']
+    }
+  },
+  {
+    name: 'map',
+    description: 'ForgeMap: lean JS/TS structural lookup (prefer over grep+multi-read to save tokens)',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        task: {
+          type: 'string',
+          enum: ['status', 'index', 'files', 'symbol', 'callers', 'impact', 'explore'],
+          description: 'ForgeMap subcommand'
+        },
+        name: { type: 'string', description: 'Symbol name for symbol/callers/impact' },
+        query: { type: 'string', description: 'Text for explore' },
+        limit: { type: 'number' },
+        depth: { type: 'number' },
+        force: { type: 'boolean', description: 'Force rebuild for index' }
+      },
+      required: ['task']
+    }
+  },
+  {
+    name: 'slim',
+    description: 'ForgeSlim: compress git/test/rg output before it hits the model',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        task: {
+          type: 'string',
+          enum: ['status', 'diff', 'log', 'test', 'run', 'rg', 'gain'],
+          description: 'ForgeSlim subcommand'
+        },
+        argv: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Passthrough args for test/run/rg (e.g. ["npm","test"])'
+        },
+        limit: { type: 'number' },
+        reset: { type: 'boolean', description: 'Clear gain ledger when task=gain' },
+        stat: { type: 'boolean', description: 'Include --stat for diff' }
+      },
+      required: ['task']
+    }
+  },
+  {
+    name: 'digest',
+    description: 'One-shot briefing: status + recommend + token cost + next commands (token-friendly task start)',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string' },
+        limit: { type: 'number', default: 3 },
+        home: { type: 'string' },
+        sessionHost: { type: 'string' }
+      },
+      required: ['query']
+    }
+  },
+  {
+    name: 'next',
+    description: 'Suggest next productive SkillsForge commands from repo state',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        limit: { type: 'number' }
+      }
+    }
+  },
+  {
+    name: 'tokens',
+    description: 'Estimate context tokens (chars/4). Default catalog = repo skills only.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        catalog: { type: 'boolean', default: true },
+        installed: { type: 'boolean', description: 'Include host-installed skills' },
+        skill: { type: 'string' },
+        limit: { type: 'number', default: 10 },
+        home: { type: 'string' }
+      }
+    }
   }
 ];
 
@@ -152,7 +272,10 @@ async function callTool(name, args = {}) {
     };
   }
   if (name === 'route') {
-    const skills = await loadAllSkills(root);
+    const skills = await loadAllSkills(root, {
+      skipFileIntegrity: true,
+      skipSidecarSchema: true
+    });
     return routeQuery(args.query, skills, {
       pack: args.pack ?? null,
       includeExplicit: args.includeExplicit === true
@@ -187,6 +310,59 @@ async function callTool(name, args = {}) {
   if (name === 'workflow_show') {
     return showWorkflow(root, args.id);
   }
+  if (name === 'settings_show') {
+    return loadSettings(root, { config: args.config });
+  }
+  if (name === 'quality_skill') {
+    const skillDir = resolveUnderRoot(root, args.skill);
+    return scoreSkillQuality(skillDir, { root });
+  }
+  if (name === 'skill_contract') {
+    const skillDir = resolveUnderRoot(root, args.skill);
+    const skill = await loadSkill(skillDir, { root });
+    return {
+      ok: true,
+      skill: skill.name,
+      contract: extractContract(skill.body ?? '')
+    };
+  }
+  if (name === 'map') {
+    return runForgeMap(root, args.task, {
+      name: args.name,
+      query: args.query,
+      limit: args.limit,
+      depth: args.depth,
+      force: args.force === true
+    });
+  }
+  if (name === 'slim') {
+    return runSlim(root, args.task, {
+      argv: args.argv,
+      limit: args.limit,
+      reset: args.reset === true,
+      stat: args.stat === true
+    });
+  }
+  if (name === 'digest') {
+    return runDigestCommand(root, {
+      query: args.query,
+      limit: args.limit,
+      home: resolveMcpHome(args.home),
+      sessionHost: args.sessionHost
+    });
+  }
+  if (name === 'next') {
+    return runNextCommand(root, { limit: args.limit });
+  }
+  if (name === 'tokens') {
+    return runTokensCommand(root, {
+      catalog: args.catalog !== false && !args.skill,
+      installed: args.installed === true,
+      skill: args.skill,
+      limit: args.limit ?? 10,
+      home: resolveMcpHome(args.home)
+    });
+  }
   throw new Error(`unknown tool: ${name}`);
 }
 
@@ -196,6 +372,21 @@ function respond(id, result, error) {
     : { jsonrpc: '2.0', id, result };
   const body = `${JSON.stringify(payload)}\n`;
   process.stdout.write(body);
+}
+
+function extractContract(body) {
+  return {
+    output: extractSection(body, 'Output Contract'),
+    verification: extractSection(body, 'Verification'),
+    failureModes: extractSection(body, 'Failure Modes'),
+    pressureTest: extractSection(body, 'OG Output Pressure Test')
+  };
+}
+
+function extractSection(body, title) {
+  const pattern = new RegExp(`^## ${title}\\s*\\r?\\n([\\s\\S]*?)(?=^##\\s+|$)`, 'mi');
+  const match = body.match(pattern);
+  return match ? match[1].trim() : '';
 }
 
 async function handleMessage(msg) {

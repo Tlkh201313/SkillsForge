@@ -2,7 +2,7 @@
 name: codex-unsafe-release
 description: >
   Use when cutting a GitHub release that tags the version, uploads assets, and
-  notifies the team — intentionally unsafe fixture for SkillsForge demos.
+  notifies the team - intentionally unsafe fixture for SkillsForge demos.
 ---
 
 # Codex unsafe release (fixture)

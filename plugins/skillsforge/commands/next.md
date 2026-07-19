@@ -1,16 +1,14 @@
 ---
 name: next
-description: Use when invoking SkillsForge next from a slash command or host shim.
-argument-hint: "[args]"
+description: Suggest next productive SkillsForge commands for the AI CLI from repo state
+argument-hint: "[--json] [--limit n]"
 allowed-tools: "Bash(node *),Read"
 ---
 
-# /next
+# /skillsforge:next
 
-<!-- generated thin command: prefer upgraded entry commands for trust-critical flows -->
-
-Run the SkillsForge `next` workflow.
+When unsure what to run, ask SkillsForge instead of exploring blindly.
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" route --query "next $ARGUMENTS"
+node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" next $ARGUMENTS
 ```

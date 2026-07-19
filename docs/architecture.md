@@ -6,31 +6,31 @@ SkillsForge is a **productivity Work OS** for portable Agent Skills (catalog, ro
 
 | Surface | Role |
 | --- | --- |
-| Codex marketplace | `.agents/plugins/marketplace.json` → `plugins/skillsforge` |
+| Codex marketplace | `.agents/plugins/marketplace.json` -> `plugins/skillsforge` |
 | Codex plugin | `plugins/skillsforge/.codex-plugin/plugin.json` + skills + hooks |
 | Claude marketplace | `.claude-plugin/marketplace.json` with `metadata.pluginRoot: ./plugins` |
-| Claude plugin | `plugins/skillsforge/.claude-plugin/plugin.json` — commands, skills, hooks, agents, CLI |
+| Claude plugin | `plugins/skillsforge/.claude-plugin/plugin.json` - commands, skills, hooks, agents, CLI |
 | Canonical IR | `skillsforge.json` sidecar (Ajv Draft 2020-12) beside `SKILL.md` |
 | Runtime CLI | `plugins/skillsforge/bin/skillsforge.mjs` (esbuild bundle) |
-| Capability engine | `lib/capabilities/*` — loader, forge, router, policy, package, evidence, receipt, install |
-| Codex compiler | `codex-package.mjs` + `codex-policy-compiler.mjs` — one skill → guarded plugin |
+| Capability engine | `lib/capabilities/*` - loader, forge, router, policy, package, evidence, receipt, install |
+| Codex compiler | `codex-package.mjs` + `codex-policy-compiler.mjs` - one skill -> guarded plugin |
 | Host inventory | `skillsforge hosts` lists known AI CLI targets, detection paths, fidelity, and install hints |
-| Host installer | `skillsforge install` — full (Claude), package-fidelity (Codex/Cursor/OpenCode/ZCode/Hermes/Gemini), or custom package target |
+| Host installer | `skillsforge install` - full (Claude), package-fidelity (Codex/Cursor/OpenCode/ZCode/Hermes/Gemini), or custom package target |
 | Workbench | `skillsforge wb` gives compact repo status, search, diff, recent commits, large files, and proof hints |
 | Skill library | `skillsforge lib build|update|recommend` indexes repo and installed user skills; HTML/AI index are single-file; `lib serve` is localhost and read-only by default |
 | Workflow catalog | `plugins/skillsforge/workflows/` contains 100 dry-run workflow definitions; `skillsforge workflows` lists, recommends, and previews them |
 | Auto router | `skillsforge auto plan|run --read-only` combines installed-skill routing with workflow recommendations without writes |
 | PowerShell helpers | `skillsforge ps export` writes local `sf-*.ps1` wrappers around token-friendly repo, library, workflow, and auto commands |
 | Thin MCP | `scripts/skillsforge-mcp.mjs` exposes validate/route/skillshield plus read-only library/workflow recommendation |
-| Distribution | `npm run build:dist` → `dist/claude-code`, `dist/codex`, `dist/cursor`, receipts |
+| Distribution | `npm run build:dist` -> `dist/claude-code`, `dist/codex`, `dist/cursor`, receipts |
 
-## Canonical skill → Codex plugin compilation
+## Canonical skill -> Codex plugin compilation
 
 ```mermaid
 flowchart TD
     SkillDir["Skill directory\nSKILL.md + skillsforge.json\n(+ scripts/references/assets)"] --> Load["loadSkill + verifySkillPaths"]
     Load --> Scan["Static capability policy scan"]
-    Scan -->|blocking finding| Fail["ok:false — no write"]
+    Scan -->|blocking finding| Fail["ok:false - no write"]
     Scan -->|pass| Plan["planCodexPackage"]
     Plan --> Manifest[".codex-plugin/plugin.json"]
     Plan --> CopySkill["skills/name/ complete package"]
@@ -50,7 +50,7 @@ flowchart TD
 Rules:
 
 - Dry-run is default; `--write` mutates the filesystem.
-- Multi-skill inputs are rejected — Codex hooks are plugin-level, so one capability policy per generated plugin.
+- Multi-skill inputs are rejected - Codex hooks are plugin-level, so one capability policy per generated plugin.
 - Validation or policy failure leaves `--out` unwritten.
 
 ## Codex hook trust flow
@@ -58,7 +58,7 @@ Rules:
 ```mermaid
 flowchart TD
     ToolCall["Codex tool call"] --> Matcher{"matcher:\nBash | apply_patch | mcp__*?"}
-    Matcher -->|no| HostDefault["Host default — not intercepted"]
+    Matcher -->|no| HostDefault["Host default - not intercepted"]
     Matcher -->|yes| Hook["codex-pre-tool-policy.mjs\n--policy ${PLUGIN_ROOT}/policy/..."]
     Hook --> LoadPol{"Load sidecar policy?"}
     LoadPol -->|missing / invalid / exception| DenyFC["deny + exit 0\nfail-closed from SkillsForge"]
@@ -75,7 +75,7 @@ flowchart TD
 
 Host caveats (see [threat-model.md](threat-model.md)):
 
-- Incomplete interception — tools outside the matcher are not guarded by SkillsForge.
+- Incomplete interception - tools outside the matcher are not guarded by SkillsForge.
 - After installing or changing hooks, Codex may require `/hooks` trust review.
 - If the host receives **invalid hook output**, behavior can fail open at the host even when SkillsForge intends fail-closed.
 
@@ -192,6 +192,6 @@ Not in scope for this product track:
 
 - Swarms, AgentDB, Raft-style consensus, LSP integrations, or always-on monitors
 - Token usage billing ledgers or cost accounting
-- Domain expertise skill packs or multi-plugin “family” installs
-- Multi-host runtime policy parity (package install ≠ Codex/Claude hooks)
+- Domain expertise skill packs or multi-plugin "family" installs
+- Multi-host runtime policy parity (package install != Codex/Claude hooks)
 - OS sandboxing or third-party attestation of safety

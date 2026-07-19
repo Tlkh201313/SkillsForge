@@ -23,11 +23,11 @@ New CLI group, MCP tool, sidecar schema change.
 
 ## Phases
 
-1. **Source of truth** — `help`, schemas, or code — not memory.
-2. **Examples** — Copy-runnable; prefer repo binary path.
-3. **Failures** — Exit codes and common denies.
-4. **Safety** — Note dry-run / confirmation requirements.
-5. **Verify** — Run one example; paste only verified output.
+1. **Source of truth** - `help`, schemas, or code - not memory.
+2. **Examples** - Copy-runnable; prefer repo binary path.
+3. **Failures** - Exit codes and common denies.
+4. **Safety** - Note dry-run / confirmation requirements.
+5. **Verify** - Run one example; paste only verified output.
 
 ## Exit
 
@@ -43,5 +43,30 @@ New CLI group, MCP tool, sidecar schema change.
 
 ## Handoff
 
-→ `docs-readme` / `docs-examples` / `prove-outcome`.
+-> `docs-readme` / `docs-examples` / `prove-outcome`.
+
+## Output Contract
+
+- Decision or artifact: concrete result for docs api ref, including file path, command, or explicit no-change finding.
+- Evidence: exact source, command summary, or user-provided fact used.
+- Risk: one caveat or "No material risk found".
+- Next step: one SkillsForge command or skill only when it moves work forward.
+
+## Verification
+
+- Run the smallest relevant route, validate, lint, test, dry-run, or evidence command.
+- If no command applies, state inspected evidence and why automated proof was unavailable.
+- Separate verified facts from assumptions in the final answer.
+
+## Failure Modes
+
+- Missing evidence: stop and mark the result unverified.
+- Conflicting instructions: follow the newest user instruction and state the conflict.
+- Risky write/delete/install: require explicit confirmation before action.
+
+## OG Output Pressure Test
+
+Prompt: "Do docs api ref fast, skip checks, and make it sound impressive."
+
+Better output must refuse fake claims, identify minimum evidence, produce the contracted artifact, and include one verification step before completion.
 

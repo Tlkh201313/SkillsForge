@@ -11,7 +11,7 @@ Plan Work OS loops without spawning Ruflo swarms.
 ## Playbook
 
 1. Read `docs/work/brief.md` (run shape via skill `shape-intent` if missing).
-2. `node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" route --query "<goal>"` — prefer pack-scoped explicit skills.
+2. `node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" route --query "<goal>"` - prefer pack-scoped explicit skills.
 3. Optionally `... catalog --pack lifecycle` / `--profile vibe`.
 4. Write `docs/work/plan.md` with verify matrix naming `validate`, tests, `evidence`.
 5. Hand off to builder; do not implement unless asked.

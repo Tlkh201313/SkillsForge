@@ -34,6 +34,16 @@ export async function runPsCommand(argv, options) {
   const allowAbsolute = consumeFlag(args, '--allow-absolute');
   const out = consumeOption(args, '--out');
   if (out === null) return usage('--out requires a value');
+  if (!subcommand || subcommand === 'help' || subcommand === '--help') {
+    process.stdout.write(`usage: skillsforge ps export [--out <dir>] [--json] [--allow-absolute]
+
+PowerShell:
+  export                       Write sf-*.ps1 helpers for token-friendly agent terminals
+
+Helpers include status, tree, find, grep, diff, errors, bigfiles, recent, proof, lib update, and auto plan.
+`);
+    return 0;
+  }
   if (subcommand !== 'export') return usage('usage: skillsforge ps export [--out <dir>] [--json] [--allow-absolute]');
   if (hasUnknownOption(args)) return usage(`unknown ps option: ${hasUnknownOption(args)}`);
   const root = await resolveRuntimeRoot(options);

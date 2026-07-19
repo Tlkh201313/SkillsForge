@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Density Audit
+  short_description: Use when doing design density audit work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
+  default_prompt: Use the design-density-audit skill for this task.
+policy:
+  allow_implicit_invocation: false

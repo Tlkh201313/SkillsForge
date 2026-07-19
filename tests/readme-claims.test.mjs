@@ -9,7 +9,8 @@ const root = process.cwd();
 test('README does not advertise dead npx skillsforge CTA', async () => {
   const readme = await readFile(join(root, 'README.md'), 'utf8');
   assert.match(readme, /Not on npm yet|do not use `npx skillsforge`/i);
-  assert.match(readme, /node plugins\/skillsforge\/bin\/skillsforge\.mjs demo/);
+  assert.match(readme, /npm link/);
+  assert.match(readme, /\bsf demo\b|skillsforge demo|node plugins\/skillsforge\/bin\/skillsforge\.mjs demo/);
   for (const match of readme.matchAll(/npx skillsforge/gi)) {
     const start = Math.max(0, match.index - 100);
     const ctx = readme.slice(start, match.index + match[0].length + 20);

@@ -21,6 +21,10 @@ import {
   runOsRunCommand, runOsCopyPathCommand, runOsCleanCommand
 } from './cli/commands/os.mjs';
 import { runWorkbenchCommand, runPsCommand } from './cli/commands/wb.mjs';
+import { runTokensCli, runDigestCli, runNextCli } from './cli/commands/operator.mjs';
+import { runMapCli } from './cli/commands/map.mjs';
+import { runSlimCli } from './cli/commands/slim.mjs';
+import { runSettingsCommand } from './cli/commands/settings.mjs';
 
 export { enforcePolicy, exportPortableSkill };
 
@@ -47,7 +51,7 @@ Catalog & authoring:
   stocktake                         Diff installed skills vs catalog
   export-agents [--out <file>]      Write AGENTS.md from catalog/agents
   forge --spec <file>               Deterministic skill generation (--dry-run/--write)
-  capture / forge-from-capture      Learning capture → skill proposals
+  capture / forge-from-capture      Learning capture -> skill proposals
   compare / compare-skill            Sidecar / trust delta diffs
   bench / scorecard / compose / batch / watch / pressure / skillshield
 
@@ -59,15 +63,24 @@ Operator terminals:
   workflows <list|show|recommend|run|export-html>
                                     Workflow catalog (run = dry-run only)
   auto <plan|run>                   Skill + workflow recommend; run requires --read-only
+  tokens [--catalog|--skill|--path] Estimate context tokens (chars/4); optional --track/--session
+                                    Default catalog = repo skills; add --installed for host skills.
+                                    Heuristic only - not tiktoken / API billing.
+  digest --query <text>             One-shot: status + recommend + token cost + next commands
+  next                              Suggest next productive SkillsForge commands from repo state
+  map <status|index|symbol|...>     ForgeMap: lean JS/TS structural index (optional codegraph.db)
+  slim <status|diff|log|test|...>   ForgeSlim: compress git/test/rg output + gain ledger
+  settings <show|set|reset|validate>
+                                    Local config for thresholds, library UI, and mutation defaults
   ps export                         Write PowerShell sf-*.ps1 helpers (token-friendly)
 
 Hosts & install:
   hosts [--json] [--home <dir>]     AI CLI host targets and trust boundaries
   install [skill-paths...]          Multi-host install (--hosts/--custom-host/--yes/--dry-run/--force)
-  package --host codex              One skill → guarded Codex plugin (--skill/--out/--dry-run/--write)
+  package --host codex              One skill -> guarded Codex plugin (--skill/--out/--dry-run/--write)
 
 Trust & ship:
-  demo                              Judge path: unsafe deny → safe package → demo scoreboard
+  demo                              Judge path: unsafe deny -> safe package -> demo scoreboard
   validate [paths...]               Structure + capability policy (--all/--json/--profile/--allow-empty)
   doctor                            Plugin + installed-skill health (--json)
   receipt / verify-receipt         Tamper-evident package receipt (--package-only for verify)
@@ -122,6 +135,12 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
     case 'lib': return runLibCommand(argv.slice(1), options);
     case 'workflows': return runWorkflowsCommand(argv.slice(1), options);
     case 'auto': return runAutoCommand(argv.slice(1), options);
+    case 'tokens': return runTokensCli(argv.slice(1), options);
+    case 'digest': return runDigestCli(argv.slice(1), options);
+    case 'next': return runNextCli(argv.slice(1), options);
+    case 'map': return runMapCli(argv.slice(1), options);
+    case 'slim': return runSlimCli(argv.slice(1), options);
+    case 'settings': return runSettingsCommand(argv.slice(1), options);
     case 'ps': return runPsCommand(argv.slice(1), options);
     case 'os-env': return runOsEnvCommand(argv.slice(1), options);
     case 'os-find': return runOsFindCommand(argv.slice(1), options);

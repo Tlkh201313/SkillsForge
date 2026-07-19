@@ -81,7 +81,7 @@ test('router uses alphabetical name order for equal scores when margin allows so
       description: 'extra words unused'
     })
   ];
-  // Make alpha win with margin via second trigger not present — instead force unique win:
+  // Make alpha win with margin via second trigger not present - instead force unique win:
   const unique = [
     skill('zeta-skill', { triggers: ['other phrase'] }),
     skill('alpha-skill', { triggers: ['choose capability'] })

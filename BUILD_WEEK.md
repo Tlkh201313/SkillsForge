@@ -1,8 +1,8 @@
-# OpenAI Build Week — SkillsForge provenance
+# OpenAI Build Week - SkillsForge provenance
 
 **Track:** Developer Tools  
-**Project:** SkillsForge — Work OS for productive Agent Skills (trust safety layer included)  
-**Build window:** 2026-07-13 09:00 PT → 2026-07-21 17:00 PT  
+**Project:** SkillsForge - Work OS for productive Agent Skills (trust safety layer included)  
+**Build window:** 2026-07-13 09:00 PT -> 2026-07-21 17:00 PT  
 **Branch:** `main`
 
 ## Codex / GPT-5.6 Session ID (required)
@@ -39,7 +39,7 @@ Without a real Session ID, Stage One compliance fails. Do **not** invent a Sessi
 
 - Native Codex plugin packaging (`.codex-plugin/plugin.json`, `.agents/plugins/marketplace.json`)
 - Full-fidelity Agent Skill installs across hosts (complete packages, corrected Codex/OpenCode roots)
-- `skillsforge package --host codex` — one guarded skill → native Codex plugin
+- `skillsforge package --host codex` - one guarded skill -> native Codex plugin
 - Codex `PreToolUse` policy compiler + fail-closed hook runner
 - Deterministic `skillsforge evidence` bundle + stronger eval fixtures
 - Codex-first demo, examples, and documentation

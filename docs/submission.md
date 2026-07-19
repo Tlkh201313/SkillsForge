@@ -3,16 +3,16 @@
 **Category:** Developer Tools  
 **Repo:** https://github.com/Tlkh201313/SkillsForge  
 **Branch:** `main`  
-**Thesis:** SkillsForge is the Work OS that makes Agent Skills productive — route, workflows, library, multi-host install — with validate/package/hooks/receipts as the safety layer. Prove it in &lt;90s with `demo`.
+**Thesis:** SkillsForge is the Work OS that makes Agent Skills productive - route, workflows, library, multi-host install - with validate/package/hooks/receipts as the safety layer. Prove it in &lt;90s with `demo`.
 
 ## Automated gates (done)
 
 - [x] Native Codex plugin + local marketplace
 - [x] Full-fidelity Agent Skill installs across hosts
 - [x] Productivity surfaces: catalog, lib, workflows, auto, wb, ps helpers
-- [x] `skillsforge package --host codex` (one guarded skill → one plugin)
+- [x] `skillsforge package --host codex` (one guarded skill -> one plugin)
 - [x] Codex PreToolUse policy hooks
-- [x] `skillsforge evidence` + `skillsforge demo` (unsafe deny → safe package → scoreboard)
+- [x] `skillsforge evidence` + `skillsforge demo` (unsafe deny -> safe package -> scoreboard)
 - [x] Path confinement + routing honesty (eight auto heroes) + thin read-only MCP
 - [x] Codex-first README / demo / safe-unsafe examples
 - [ ] Local `npm run check` green (re-run before submit)
@@ -39,7 +39,7 @@ node plugins/skillsforge/bin/skillsforge.mjs demo
 npm run check
 ```
 
-> Not published to npm — do **not** use `npx skillsforge`.
+> Not published to npm - do **not** use `npx skillsforge`.
 
 Codex plugin (from repo root):
 
@@ -57,5 +57,5 @@ codex plugin add skillsforge@skillsforge-marketplace
 - Pressure is a fixture gate (expanding toward behavioral pressure)
 - Receipts are unsigned tamper-evident hashes (not third-party attestation)
 - Judge demo scoreboard (`artifacts/demo-evidence/demo-scoreboard.json`) is a package-tree hash, not a full `buildReceipt`/`verifyReceipt` trust receipt
-- 367 catalog entries / eight auto-route heroes — honest depth claim (lean domain scaffolds)
+- 399 catalog entries / 50 design skills / eight auto-route heroes - honest depth claim (contract-backed domain skills)
 - Codex does not intercept every tool path; incomplete matchers; invalid hook output can fail open at the host

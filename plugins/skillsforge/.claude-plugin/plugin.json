@@ -1,7 +1,7 @@
 {
   "name": "skillsforge",
   "version": "0.4.2",
-  "description": "Work OS for productive Agent Skills — packs, workflows, library routing, and multi-host install with a built-in trust safety layer.",
+  "description": "Work OS for productive Agent Skills - packs, workflows, library routing, and multi-host install with a built-in trust safety layer.",
   "author": {
     "name": "Tlkh201313",
     "url": "https://github.com/Tlkh201313"

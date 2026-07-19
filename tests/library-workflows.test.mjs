@@ -99,7 +99,7 @@ test('library index and HTML artifacts include skills, workflows, hosts, and AI 
   context.after(() => rm(outDir, { recursive: true, force: true }));
 
   const index = await buildLibraryIndex(root, { home: outDir });
-  assert.ok(index.stats.skills >= 367);
+  assert.ok(index.stats.skills >= 399);
   assert.equal(index.stats.workflows, 100);
   assert.ok(index.skills.some((skill) => skill.id === 'using-skillsforge'));
   assert.ok(index.skills.some((skill) => skill.id === 'update-skill-library'));

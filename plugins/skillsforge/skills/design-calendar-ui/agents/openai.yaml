@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Calendar Ui
+  short_description: Use when doing design calendar ui work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
+  default_prompt: Use the design-calendar-ui skill for this task.
+policy:
+  allow_implicit_invocation: false

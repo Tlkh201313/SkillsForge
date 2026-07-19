@@ -5,7 +5,7 @@ import { validateWithSchema } from './schema-lib.mjs';
 
 const readmeBadgePattern = /img\.shields\.io\/badge\/version-([0-9]+\.[0-9]+\.[0-9]+)-/;
 const SUPERLATIVE_PATTERN = /\b(fastest|best-in-class|#1\b|number one|world'?s best|guaranteed hackathon winner)\b/i;
-const JUNK_README_PATTERN = /\bnpm run video:render\b|\bRemotion source project\b(?![^\n]{0,80}removed)/i;
+const JUNK_README_PATTERN = /\bnpm run video:render\b|\bremoved source renderer\b|\bsource renderer is included\b/i;
 
 export async function validateRepository(root = process.cwd()) {
   const repositoryRoot = resolve(root);
@@ -56,7 +56,7 @@ export async function validateRepository(root = process.cwd()) {
     if (!errors.some((error) => error.includes('version '))) passes.push(`version lockstep ${expected}`);
   }
 
-  // Optional Codex plugin presence — warn/pass only; do not join Claude marketplace lockstep.
+  // Optional Codex plugin presence - warn/pass only; do not join Claude marketplace lockstep.
   await validateOptionalCodexPlugin(repositoryRoot, errors, passes);
 
   const fullRepo = await pathExists(join(repositoryRoot, 'plugins', 'skillsforge', 'skills', 'using-skillsforge', 'SKILL.md'));
@@ -143,7 +143,7 @@ async function validateReadmeClaims(readme, repositoryRoot, errors, passes) {
     errors.push('README contains unverifiable superlative marketing claims');
   }
   if (JUNK_README_PATTERN.test(readme)) {
-    errors.push('README references removed Remotion/video:render path without honesty note');
+    errors.push('README references removed renderer/video:render path without honesty note');
   }
   if (!errors.some((error) => error.startsWith('README'))) {
     passes.push('README claim hygiene');

@@ -29,14 +29,32 @@ test('compare-skill shows sidecar vs policy delta on examples', async () => {
 
 test('thin MCP exposes trust plus read-only library/workflow tools', () => {
   assert.deepEqual(TOOLS.map((t) => t.name).sort(), [
+    'digest',
     'library_index',
+    'map',
+    'next',
+    'quality_skill',
     'recommend_skill',
     'recommend_workflow',
     'route',
+    'settings_show',
+    'skill_contract',
     'skillshield',
+    'slim',
+    'tokens',
     'validate',
     'workflow_show'
   ]);
+});
+
+test('MCP map and slim tools return compact operator payloads', async () => {
+  const mapped = await callTool('map', { task: 'symbol', name: 'runTokensCommand' });
+  assert.equal(mapped.ok, true);
+  assert.ok(mapped.count >= 1);
+
+  const slimmed = await callTool('slim', { task: 'status' });
+  assert.equal(slimmed.ok, true);
+  assert.ok(Array.isArray(slimmed.lines) || typeof slimmed.text === 'string');
 });
 
 test('MCP route tool returns selected or fallback', async () => {
@@ -79,7 +97,7 @@ test('MCP stdio tools/list responds', async () => {
   assert.equal(code, 0);
   const line = stdout.trim().split('\n').pop();
   const msg = JSON.parse(line);
-  assert.equal(msg.result.tools.length, 7);
+  assert.equal(msg.result.tools.length, 15);
 });
 
 test('MCP content-length framing is rejected with a clear error', async () => {

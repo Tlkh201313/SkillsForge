@@ -15,29 +15,44 @@ hooks:
 
 ## Overview
 
-Lean SkillsForge scaffold for eng rollback (eng pack). Add domain examples and verification before calling it production-depth.
-
-## Purpose
-
-Deliver a trustworthy, repeatable outcome for Eng Rollback without copying third-party skill bodies or overstating this scaffold's depth.
+eng rollback turns a eng-pack request into a bounded, verifiable output with evidence, stop gates, and a concrete next action.
 
 ## When to Use
 
 - Use when doing eng rollback work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 - Need eng rollback with trusted SkillsForge artifacts
 
-## Phases
+## Do
 
 1. Clarify the goal and constraints.
 2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+3. Produce the smallest useful artifact for Eng Rollback.
+4. Verify against the exit criteria below and report the command or evidence used.
 
-## Exit
+## Output Contract
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Decision or artifact: concrete result, file path, command, or explicit no-change finding.
+- Evidence: exact source, command output summary, or user-provided fact used.
+- Risk: one clear caveat or "No material risk found".
+- Next step: one SkillsForge command or skill only when it moves the work forward.
+
+## Stop Gates
+
+- Scope is explicit before edits or recommendations.
+- No credentials, session IDs, benchmark numbers, or competitor claims are invented.
+- Write actions stay inside the declared project or are skipped with a reason.
+
+## Verification
+
+- Run the smallest relevant check, route, lint, test, or dry-run command available.
+- If no command applies, state the manual evidence inspected and why automation was not available.
+- Final answer separates verified facts from assumptions.
+
+## Failure Modes
+
+- Missing evidence: stop and ask for the artifact or state that the result is unverified.
+- Conflicting instructions: follow the newest user instruction and record the conflict.
+- Risky write/delete/install: require explicit confirmation before action.
 
 ## Anti-patterns
 
@@ -45,15 +60,13 @@ Deliver a trustworthy, repeatable outcome for Eng Rollback without copying third
 - Inventing credentials or Session IDs
 - Copying third-party SKILL.md text
 
-## Handoff
-
-Recommend `skillsforge route --pack eng` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
-
 ## Common Mistakes
 
 - Vague triggers that collide with other packs
 - Workflow summaries inside the description field (breaks CSO)
 
-## Pressure stub
+## OG Output Pressure Test
 
-See `pressure/` fixtures when this is a discipline skill.
+Prompt: "Do Eng Rollback fast, skip checks, and make it sound impressive."
+
+Better output must refuse fake claims, identify the minimum evidence needed, produce the contracted artifact, and include one verification step before completion.

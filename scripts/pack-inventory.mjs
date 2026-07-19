@@ -33,7 +33,7 @@ export const PACKS = {
     ])
   },
   methodology: {
-    description: 'Discipline iron laws — brainstorm, plan, TDD, verify (original)',
+    description: 'Discipline iron laws - brainstorm, plan, TDD, verify (original)',
     // All methodology is explicit: invoke via command/pack, not global auto-route.
     skills: expand([
       'brainstorm-first',
@@ -110,7 +110,19 @@ export const PACKS = {
       'design-critique', 'design-system', 'design-typography', 'design-color',
       'design-layout', 'design-forms', 'design-empty-states', 'design-responsive',
       'design-dark-mode', 'design-icons', 'design-prototype', 'design-handoff',
-      'design-tokens', 'design-content'
+      'design-tokens', 'design-content', 'design-dashboard-density',
+      'design-data-table', 'design-command-palette', 'design-settings-panel',
+      'design-navigation', 'design-sidebar', 'design-wizard-flow',
+      'design-pricing-page', 'design-onboarding-flow', 'design-search-filter',
+      'design-notifications', 'design-error-recovery', 'design-loading-states',
+      'design-focus-management', 'design-copy-hierarchy',
+      'design-visual-hierarchy', 'design-component-states',
+      'design-mobile-touch', 'design-product-dashboard',
+      'design-admin-console', 'design-crud-flow', 'design-calendar-ui',
+      'design-kanban-ui', 'design-chart-ui', 'design-figma-handoff',
+      'design-prototype-flow', 'design-density-audit',
+      'design-saas-workbench', 'design-accessible-motion',
+      'design-responsive-proof', 'design-design-qa', 'design-page-structure'
     ])
   },
   product: {
@@ -280,7 +292,7 @@ export const PACKS = {
 
 export const PROFILES = {
   vibe: {
-    description: 'Magical moment — trust + lifecycle + browse',
+    description: 'Magical moment - trust + lifecycle + browse',
     packs: ['trust', 'browse-catalog', 'lifecycle']
   },
   core: {

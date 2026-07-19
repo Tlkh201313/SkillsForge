@@ -733,6 +733,66 @@ export const schemas = Object.freeze({
       }
     }
   },
+  "skillsforge.config": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://skillsforge.local/schemas/skillsforge.config.schema.json",
+    "title": "SkillsForge Config",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "recommendThreshold": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20
+      },
+      "defaultHost": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "enum": [
+          "claude-code",
+          "cursor",
+          "codex",
+          "opencode",
+          "zcode",
+          "hermes",
+          "gemini",
+          null
+        ]
+      },
+      "library": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": [
+              "system",
+              "light",
+              "dark"
+            ]
+          },
+          "outDir": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cacheHostChecks": {
+            "type": "boolean"
+          }
+        }
+      },
+      "mutations": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "allowByDefault": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
   "skillsforge.sidecar": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://skillsforge.local/schemas/skillsforge.sidecar.schema.json",

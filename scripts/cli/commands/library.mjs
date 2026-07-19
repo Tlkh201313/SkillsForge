@@ -13,9 +13,26 @@ export async function runLibCommand(argv, options) {
   const out = consumeOption(args, '--out');
   const homeOption = consumeOption(args, '--home');
   const sessionHost = consumeOption(args, '--session-host');
+  const config = consumeOption(args, '--config');
   if (out === null) return usage('--out requires a value');
   if (homeOption === null) return usage('--home requires a value');
   if (sessionHost === null) return usage('--session-host requires a value');
+  if (config === null) return usage('--config requires a value');
+  if (!subcommand || subcommand === 'help' || subcommand === '--help') {
+    process.stdout.write(`usage: skillsforge lib <build|update|serve|check|recommend|remove> [options]
+
+Library:
+  build/update                  Write skillsforge-library.json/html and skillsforge-ai-index.html
+  serve                         Serve localhost read-only UI unless --allow-mutations
+  check --skill <id>            Show one indexed skill
+  recommend --query <text>      Read-only skill/workflow recommendation
+  remove --host <id> --skill <id>
+                                Dry-run by default; write requires --allow-mutations --yes
+
+Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --allow-absolute
+`);
+    return 0;
+  }
   const root = await resolveRuntimeRoot(options);
   const home = homeOption ? resolve(homeOption) : options.home;
 
@@ -28,6 +45,7 @@ export async function runLibCommand(argv, options) {
         home,
         allowAbsolute,
         sessionHost: sessionHost ?? undefined,
+        config,
         noCache: subcommand === 'update'
       });
     } catch (error) {
@@ -42,7 +60,7 @@ export async function runLibCommand(argv, options) {
     const skill = consumeOption(args, '--skill') ?? args.shift();
     if (skill === null) return usage('--skill requires a value');
     if (hasUnknownOption(args)) return usage(`unknown lib check option: ${hasUnknownOption(args)}`);
-    const index = await buildLibraryIndex(root, { home, sessionHost: sessionHost ?? undefined });
+    const index = await buildLibraryIndex(root, { home, sessionHost: sessionHost ?? undefined, config });
     const record = skill ? index.skills.find((item) => item.id === skill || item.key === skill) : null;
     const result = record ? { ok: true, skill: record } : { ok: false, error: `unknown skill: ${skill}` };
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
@@ -59,7 +77,8 @@ export async function runLibCommand(argv, options) {
     if (!query) return usage('usage: skillsforge lib recommend --query <text>');
     const index = await buildLibraryIndex(root, {
       home,
-      sessionHost: sessionHost ?? undefined
+      sessionHost: sessionHost ?? undefined,
+      config
     });
     const result = recommendFromLibrary(index, query, {
       limit: Number(limitValue) || 5,
@@ -98,7 +117,8 @@ export async function runLibCommand(argv, options) {
       port: Number(portValue) || 4763,
       allowMutations,
       home,
-      sessionHost: sessionHost ?? undefined
+      sessionHost: sessionHost ?? undefined,
+      config
     });
     process.stdout.write(`${JSON.stringify({ ok: result.ok, url: result.url, readOnly: result.readOnly }, null, 2)}\n`);
     return 0;
@@ -121,6 +141,21 @@ export async function runWorkflowsCommand(argv, options) {
   if (category === null) return usage('--category requires a value');
   if (queryOption === null) return usage('--query requires a value');
   if (idOption === null) return usage('--id requires a value');
+  if (subcommand === 'help' || subcommand === '--help') {
+    process.stdout.write(`usage: skillsforge workflows <list|show|recommend|run|export-html> [options]
+
+Workflows:
+  list [--category <id>]        List workflow catalog
+  show --id <workflow-id>       Show workflow JSON
+  recommend --query <text>      Read-only workflow recommendation
+  run --id <workflow-id> --dry-run
+                                Preview workflow steps only
+  export-html [--out <dir>]     Build library HTML/AI index
+
+Options: --json --limit <n> --category <id> --query <text> --id <id>
+`);
+    return 0;
+  }
   const root = await resolveRuntimeRoot(options);
 
   let result;
@@ -174,6 +209,18 @@ export async function runAutoCommand(argv, options) {
   if (limitValue === null) return usage('--limit requires a value');
   if (homeOption === null) return usage('--home requires a value');
   if (sessionHost === null) return usage('--session-host requires a value');
+  if (!subcommand || subcommand === 'help' || subcommand === '--help') {
+    process.stdout.write(`usage: skillsforge auto <plan|run> --query <text> [options]
+
+Auto:
+  plan --query <text>           Recommend skill + workflow, no writes
+  run --read-only --query <text>
+                                Dry-run selected workflow steps only
+
+Options: --json --limit <n> --home <dir> --session-host <id> --read-only
+`);
+    return 0;
+  }
   const query = queryOption ?? args.join(' ');
   if (!query) return usage('usage: skillsforge auto <plan|run> --query <text>');
   if (hasUnknownOption(args)) return usage(`unknown auto option: ${hasUnknownOption(args)}`);

@@ -26,7 +26,7 @@
   <rect class="core" x="548" y="298" width="304" height="128"/>
   <text class="label" x="700" y="344" text-anchor="middle" font-size="34" font-weight="800">SkillsForge</text>
   <text class="muted" x="700" y="378" text-anchor="middle" font-size="18">Productivity Work OS</text>
-  <text class="mono" x="700" y="406" text-anchor="middle" font-size="15">route · workflows · library · ship</text>
+  <text class="mono" x="700" y="406" text-anchor="middle" font-size="15">route - workflows - library - ship</text>
 
   <rect class="node" x="82" y="82" width="250" height="116"/>
   <text class="label" x="207" y="126" text-anchor="middle" font-size="26" font-weight="700">367 skills</text>

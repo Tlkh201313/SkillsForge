@@ -4,7 +4,7 @@ Judge-facing demo video for GitHub / Devpost (~90s). Mirrors:
 
 `node plugins/skillsforge/bin/skillsforge.mjs demo`
 
-(Not published to npm — do not use `npx skillsforge`.)
+(Not published to npm - do not use `npx skillsforge`.)
 
 ## Committed asset
 
@@ -14,7 +14,7 @@ The rendered MP4 lives at:
 
 Poster still (when present): `assets/skillsforge-demo-poster.png`
 
-> **Note:** The Remotion source project was removed from this repo. Do not expect `video/` + `npm run video:render` to rebuild the clip here. Re-render offline if you need a new cut, then replace the committed MP4.
+No source renderer is included in this repo. Replace the committed MP4 directly if a new cut is produced elsewhere.
 
 ## Upload
 
@@ -34,4 +34,4 @@ Poster still (when present): `assets/skillsforge-demo-poster.png`
 | 1:00 | Demo scoreboard / package-tree hash |
 | 1:16 | CTA: clone + `node plugins/skillsforge/bin/skillsforge.mjs demo` |
 
-Do not invent Session IDs in the video. Keep claim boundaries (hooks ≠ sandbox; receipts unsigned; demo scoreboard ≠ full trust receipt).
+Do not invent Session IDs in the video. Keep claim boundaries (hooks != sandbox; receipts unsigned; demo scoreboard != full trust receipt).
