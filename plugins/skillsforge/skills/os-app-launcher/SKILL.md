@@ -1,6 +1,6 @@
 ---
 name: os-app-launcher
-description: Use when you need os app launcher in a SkillsForge os workflow.
+description: Use when doing os app launcher work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Os App Launcher without copying th
 
 ## When to Use
 
-- Use when you need os app launcher in a SkillsForge os workflow.
+- Use when doing os app launcher work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
 - Need os app launcher with trusted SkillsForge artifacts
 
 ## Phases

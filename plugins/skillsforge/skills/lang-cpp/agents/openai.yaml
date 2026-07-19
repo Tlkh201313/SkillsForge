@@ -1,6 +1,6 @@
 interface:
   display_name: Lang Cpp
-  short_description: Use when you need lang cpp in a SkillsForge lang workflow.
+  short_description: Use when doing lang cpp work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the lang-cpp skill for this task.
 policy:
   allow_implicit_invocation: false

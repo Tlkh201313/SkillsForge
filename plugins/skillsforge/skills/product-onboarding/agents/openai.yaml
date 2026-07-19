@@ -1,6 +1,6 @@
 interface:
   display_name: Product Onboarding
-  short_description: Use when you need product onboarding in a SkillsForge product workflow.
+  short_description: Use when doing product onboarding work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the product-onboarding skill for this task.
 policy:
   allow_implicit_invocation: false

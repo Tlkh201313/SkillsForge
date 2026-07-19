@@ -1,6 +1,6 @@
 ---
 name: media-video-script
-description: Use when you need media video script in a SkillsForge media workflow.
+description: Use when doing media video script work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Media Video Script without copying
 
 ## When to Use
 
-- Use when you need media video script in a SkillsForge media workflow.
+- Use when doing media video script work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
 - Need media video script with trusted SkillsForge artifacts
 
 ## Phases

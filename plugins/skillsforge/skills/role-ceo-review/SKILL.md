@@ -1,6 +1,6 @@
 ---
 name: role-ceo-review
-description: Use when you need role ceo review in a SkillsForge roles workflow.
+description: Use when doing role ceo review work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Ceo Review without copying th
 
 ## When to Use
 
-- Use when you need role ceo review in a SkillsForge roles workflow.
+- Use when doing role ceo review work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role ceo review with trusted SkillsForge artifacts
 
 ## Phases

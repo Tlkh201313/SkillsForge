@@ -51,7 +51,7 @@ Most skill dumps optimize for **count**. Operators need **throughput**: which sk
 SkillsForge is that layer:
 
 1. **Catalog + profiles** — 26 packs / 10 profiles spanning methodology, eng, design, product, ops, security, and more
-2. **Route & recommend** — `route`, `lib recommend`, `workflows recommend`, `auto plan|run --read-only`
+2. **Route & recommend** — `route`, `lib recommend`, `workflows recommend`, `auto plan|run --read-only` (returns `no confident match` instead of forcing weak hits)
 3. **Operator terminals** — `wb`, `os-*`, `ps export` → `sf-*.ps1`
 4. **Ship across hosts** — Codex + Claude Code runtime where supported; package-fidelity elsewhere
 5. **Safety underneath** — `skillsforge.json` sidecars, validate/package, PreToolUse guards, unsigned receipts

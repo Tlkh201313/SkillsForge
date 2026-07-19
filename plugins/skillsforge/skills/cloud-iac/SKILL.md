@@ -1,6 +1,6 @@
 ---
 name: cloud-iac
-description: Use when you need cloud iac in a SkillsForge cloud-devops workflow.
+description: Use when doing cloud iac work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Cloud Iac without copying third-pa
 
 ## When to Use
 
-- Use when you need cloud iac in a SkillsForge cloud-devops workflow.
+- Use when doing cloud iac work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
 - Need cloud iac with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: agent-parallel
-description: Use when you need agent parallel in a SkillsForge agentic workflow.
+description: Use when doing agent parallel work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Agent Parallel without copying thi
 
 ## When to Use
 
-- Use when you need agent parallel in a SkillsForge agentic workflow.
+- Use when doing agent parallel work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 - Need agent parallel with trusted SkillsForge artifacts
 
 ## Phases

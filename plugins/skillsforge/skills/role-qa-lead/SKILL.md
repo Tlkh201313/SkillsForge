@@ -1,6 +1,6 @@
 ---
 name: role-qa-lead
-description: Use when you need role qa lead in a SkillsForge roles workflow.
+description: Use when doing role qa lead work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Qa Lead without copying third
 
 ## When to Use
 
-- Use when you need role qa lead in a SkillsForge roles workflow.
+- Use when doing role qa lead work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role qa lead with trusted SkillsForge artifacts
 
 ## Phases

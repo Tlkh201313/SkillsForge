@@ -1,6 +1,6 @@
 ---
 name: legal-disclaimer
-description: Use when you need legal disclaimer in a SkillsForge legal-lite workflow.
+description: Use when doing legal disclaimer work and you need bounded legal-lite-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Legal Disclaimer without copying t
 
 ## When to Use
 
-- Use when you need legal disclaimer in a SkillsForge legal-lite workflow.
+- Use when doing legal disclaimer work and you need bounded legal-lite-pack steps, stop conditions, and a verification check before shipping.
 - Need legal disclaimer with trusted SkillsForge artifacts
 
 ## Phases

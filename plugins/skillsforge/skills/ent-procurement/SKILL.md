@@ -1,6 +1,6 @@
 ---
 name: ent-procurement
-description: Use when you need ent procurement in a SkillsForge enterprise workflow.
+description: Use when doing ent procurement work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ent Procurement without copying th
 
 ## When to Use
 
-- Use when you need ent procurement in a SkillsForge enterprise workflow.
+- Use when doing ent procurement work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 - Need ent procurement with trusted SkillsForge artifacts
 
 ## Phases

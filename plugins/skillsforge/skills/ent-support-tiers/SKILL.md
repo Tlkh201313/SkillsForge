@@ -1,6 +1,6 @@
 ---
 name: ent-support-tiers
-description: Use when you need ent support tiers in a SkillsForge enterprise workflow.
+description: Use when doing ent support tiers work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ent Support Tiers without copying 
 
 ## When to Use
 
-- Use when you need ent support tiers in a SkillsForge enterprise workflow.
+- Use when doing ent support tiers work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 - Need ent support tiers with trusted SkillsForge artifacts
 
 ## Phases

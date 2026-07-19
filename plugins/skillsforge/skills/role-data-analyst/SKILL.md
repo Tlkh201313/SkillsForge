@@ -1,6 +1,6 @@
 ---
 name: role-data-analyst
-description: Use when you need role data analyst in a SkillsForge roles workflow.
+description: Use when doing role data analyst work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Data Analyst without copying 
 
 ## When to Use
 
-- Use when you need role data analyst in a SkillsForge roles workflow.
+- Use when doing role data analyst work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role data analyst with trusted SkillsForge artifacts
 
 ## Phases

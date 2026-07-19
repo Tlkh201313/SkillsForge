@@ -1,6 +1,6 @@
 ---
 name: design-prototype
-description: Use when you need design prototype in a SkillsForge design workflow.
+description: Use when doing design prototype work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Design Prototype without copying t
 
 ## When to Use
 
-- Use when you need design prototype in a SkillsForge design workflow.
+- Use when doing design prototype work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 - Need design prototype with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 interface:
   display_name: Sec Input Validation
-  short_description: Use when you need sec input validation in a SkillsForge security workflow.
+  short_description: Use when doing sec input validation work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the sec-input-validation skill for this task.
 policy:
   allow_implicit_invocation: false

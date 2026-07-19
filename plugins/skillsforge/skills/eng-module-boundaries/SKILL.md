@@ -1,6 +1,6 @@
 ---
 name: eng-module-boundaries
-description: Use when you need eng module boundaries in a SkillsForge eng workflow.
+description: Use when doing eng module boundaries work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Eng Module Boundaries without copy
 
 ## When to Use
 
-- Use when you need eng module boundaries in a SkillsForge eng workflow.
+- Use when doing eng module boundaries work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 - Need eng module boundaries with trusted SkillsForge artifacts
 
 ## Phases

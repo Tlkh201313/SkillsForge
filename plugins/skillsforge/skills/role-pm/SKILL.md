@@ -1,6 +1,6 @@
 ---
 name: role-pm
-description: Use when you need role pm in a SkillsForge roles workflow.
+description: Use when doing role pm work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Pm without copying third-part
 
 ## When to Use
 
-- Use when you need role pm in a SkillsForge roles workflow.
+- Use when doing role pm work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role pm with trusted SkillsForge artifacts
 
 ## Phases

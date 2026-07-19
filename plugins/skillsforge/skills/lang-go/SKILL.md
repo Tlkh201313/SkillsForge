@@ -1,6 +1,6 @@
 ---
 name: lang-go
-description: Use when you need lang go in a SkillsForge lang workflow.
+description: Use when doing lang go work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Lang Go without copying third-part
 
 ## When to Use
 
-- Use when you need lang go in a SkillsForge lang workflow.
+- Use when doing lang go work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 - Need lang go with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 interface:
   display_name: Eng Webhooks
-  short_description: Use when you need eng webhooks in a SkillsForge eng workflow.
+  short_description: Use when doing eng webhooks work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the eng-webhooks skill for this task.
 policy:
   allow_implicit_invocation: false

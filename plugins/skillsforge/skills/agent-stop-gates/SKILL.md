@@ -1,6 +1,6 @@
 ---
 name: agent-stop-gates
-description: Use when you need agent stop gates in a SkillsForge agentic workflow.
+description: Use when doing agent stop gates work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Agent Stop Gates without copying t
 
 ## When to Use
 
-- Use when you need agent stop gates in a SkillsForge agentic workflow.
+- Use when doing agent stop gates work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 - Need agent stop gates with trusted SkillsForge artifacts
 
 ## Phases

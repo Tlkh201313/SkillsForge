@@ -1,6 +1,6 @@
 ---
 name: fw-rn
-description: Use when you need fw rn in a SkillsForge framework workflow.
+description: Use when doing fw rn work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Fw Rn without copying third-party 
 
 ## When to Use
 
-- Use when you need fw rn in a SkillsForge framework workflow.
+- Use when doing fw rn work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
 - Need fw rn with trusted SkillsForge artifacts
 
 ## Phases

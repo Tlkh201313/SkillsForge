@@ -1,6 +1,6 @@
 ---
 name: os-path-cleanup
-description: Use when you need os path cleanup in a SkillsForge os workflow.
+description: Use when doing os path cleanup work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Os Path Cleanup without copying th
 
 ## When to Use
 
-- Use when you need os path cleanup in a SkillsForge os workflow.
+- Use when doing os path cleanup work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
 - Need os path cleanup with trusted SkillsForge artifacts
 
 ## Phases

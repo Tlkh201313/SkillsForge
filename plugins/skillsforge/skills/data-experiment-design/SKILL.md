@@ -1,6 +1,6 @@
 ---
 name: data-experiment-design
-description: Use when you need data experiment design in a SkillsForge data workflow.
+description: Use when doing data experiment design work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Experiment Design without cop
 
 ## When to Use
 
-- Use when you need data experiment design in a SkillsForge data workflow.
+- Use when doing data experiment design work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data experiment design with trusted SkillsForge artifacts
 
 ## Phases

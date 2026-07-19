@@ -1,6 +1,6 @@
 ---
 name: lang-swift
-description: Use when you need lang swift in a SkillsForge lang workflow.
+description: Use when doing lang swift work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Lang Swift without copying third-p
 
 ## When to Use
 
-- Use when you need lang swift in a SkillsForge lang workflow.
+- Use when doing lang swift work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 - Need lang swift with trusted SkillsForge artifacts
 
 ## Phases

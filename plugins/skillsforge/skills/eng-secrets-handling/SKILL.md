@@ -1,6 +1,6 @@
 ---
 name: eng-secrets-handling
-description: Use when you need eng secrets handling in a SkillsForge eng workflow.
+description: Use when doing eng secrets handling work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Eng Secrets Handling without copyi
 
 ## When to Use
 
-- Use when you need eng secrets handling in a SkillsForge eng workflow.
+- Use when doing eng secrets handling work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 - Need eng secrets handling with trusted SkillsForge artifacts
 
 ## Phases

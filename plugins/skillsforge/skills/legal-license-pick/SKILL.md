@@ -1,6 +1,6 @@
 ---
 name: legal-license-pick
-description: Use when you need legal license pick in a SkillsForge legal-lite workflow.
+description: Use when doing legal license pick work and you need bounded legal-lite-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Legal License Pick without copying
 
 ## When to Use
 
-- Use when you need legal license pick in a SkillsForge legal-lite workflow.
+- Use when doing legal license pick work and you need bounded legal-lite-pack steps, stop conditions, and a verification check before shipping.
 - Need legal license pick with trusted SkillsForge artifacts
 
 ## Phases

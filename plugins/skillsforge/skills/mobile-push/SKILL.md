@@ -1,6 +1,6 @@
 ---
 name: mobile-push
-description: Use when you need mobile push in a SkillsForge mobile workflow.
+description: Use when doing mobile push work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Mobile Push without copying third-
 
 ## When to Use
 
-- Use when you need mobile push in a SkillsForge mobile workflow.
+- Use when doing mobile push work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 - Need mobile push with trusted SkillsForge artifacts
 
 ## Phases

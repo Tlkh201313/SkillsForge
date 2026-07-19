@@ -1,6 +1,6 @@
 ---
 name: fin-unit-econ
-description: Use when you need fin unit econ in a SkillsForge finance-lite workflow.
+description: Use when doing fin unit econ work and you need bounded finance-lite-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Fin Unit Econ without copying thir
 
 ## When to Use
 
-- Use when you need fin unit econ in a SkillsForge finance-lite workflow.
+- Use when doing fin unit econ work and you need bounded finance-lite-pack steps, stop conditions, and a verification check before shipping.
 - Need fin unit econ with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 interface:
   display_name: Subagent Driven Dev
-  short_description: Use when you need subagent driven dev in a SkillsForge methodology workflow.
+  short_description: Use when doing subagent driven dev work and you need bounded methodology-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the subagent-driven-dev skill for this task.
 policy:
   allow_implicit_invocation: false

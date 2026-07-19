@@ -1,6 +1,6 @@
 ---
 name: eng-migrations
-description: Use when you need eng migrations in a SkillsForge eng workflow.
+description: Use when doing eng migrations work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Eng Migrations without copying thi
 
 ## When to Use
 
-- Use when you need eng migrations in a SkillsForge eng workflow.
+- Use when doing eng migrations work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 - Need eng migrations with trusted SkillsForge artifacts
 
 ## Phases

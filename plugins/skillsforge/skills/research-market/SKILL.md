@@ -1,6 +1,6 @@
 ---
 name: research-market
-description: Use when you need research market in a SkillsForge research workflow.
+description: Use when doing research market work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Research Market without copying th
 
 ## When to Use
 
-- Use when you need research market in a SkillsForge research workflow.
+- Use when doing research market work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 - Need research market with trusted SkillsForge artifacts
 
 ## Phases

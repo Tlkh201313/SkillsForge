@@ -1,6 +1,6 @@
 ---
 name: fw-hono
-description: Use when you need fw hono in a SkillsForge framework workflow.
+description: Use when doing fw hono work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Fw Hono without copying third-part
 
 ## When to Use
 
-- Use when you need fw hono in a SkillsForge framework workflow.
+- Use when doing fw hono work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
 - Need fw hono with trusted SkillsForge artifacts
 
 ## Phases

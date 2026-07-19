@@ -1,6 +1,6 @@
 ---
 name: docs-quickstart
-description: Use when you need docs quickstart in a SkillsForge docs workflow.
+description: Use when doing docs quickstart work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Docs Quickstart without copying th
 
 ## When to Use
 
-- Use when you need docs quickstart in a SkillsForge docs workflow.
+- Use when doing docs quickstart work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
 - Need docs quickstart with trusted SkillsForge artifacts
 
 ## Phases

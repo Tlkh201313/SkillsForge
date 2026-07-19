@@ -1,6 +1,6 @@
 ---
 name: lang-cpp
-description: Use when you need lang cpp in a SkillsForge lang workflow.
+description: Use when doing lang cpp work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Lang Cpp without copying third-par
 
 ## When to Use
 
-- Use when you need lang cpp in a SkillsForge lang workflow.
+- Use when doing lang cpp work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 - Need lang cpp with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: test-smoke
-description: Use when you need test smoke in a SkillsForge testing workflow.
+description: Use when doing test smoke work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Test Smoke without copying third-p
 
 ## When to Use
 
-- Use when you need test smoke in a SkillsForge testing workflow.
+- Use when doing test smoke work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 - Need test smoke with trusted SkillsForge artifacts
 
 ## Phases

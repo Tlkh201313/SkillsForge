@@ -1,6 +1,6 @@
 ---
 name: docs-troubleshooting
-description: Use when you need docs troubleshooting in a SkillsForge docs workflow.
+description: Use when doing docs troubleshooting work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Docs Troubleshooting without copyi
 
 ## When to Use
 
-- Use when you need docs troubleshooting in a SkillsForge docs workflow.
+- Use when doing docs troubleshooting work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
 - Need docs troubleshooting with trusted SkillsForge artifacts
 
 ## Phases

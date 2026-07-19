@@ -1,6 +1,6 @@
 ---
 name: sec-secrets
-description: Use when you need sec secrets in a SkillsForge security workflow.
+description: Use when hunting leaked secrets or designing secret handling so keys stay out of git, logs, and skill bodies.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,35 @@ hooks:
 
 # Sec Secrets
 
-## Overview
-
-Lean SkillsForge scaffold for sec secrets (security pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Sec Secrets without copying third-party skill bodies or overstating this scaffold's depth.
+Find and prevent secret leakage in repo, skills, CI logs, and agent transcripts.
 
 ## When to Use
 
-- Use when you need sec secrets in a SkillsForge security workflow.
-- Need sec secrets with trusted SkillsForge artifacts
+Pre-ship audit, suspected leak, new install/home path handling.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Scan** — Config, examples, fixtures, skill bodies, committed `.env*`.
+2. **Classify** — Real secret vs placeholder vs public ID.
+3. **Contain** — Rotate if real; purge guidance if needed (do not force-push unless asked).
+4. **Prevent** — `.gitignore`, allowlists, redaction in `os-env`, no secret dumps in CLI.
+5. **Verify** — Re-scan; document remaining placeholders.
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Findings list with severity
+- Rotation done or explicitly not needed
+- Prevention note for authors
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- Printing full env dumps
+- Committing temporary tokens
+- Claiming tools that were not run
 
 ## Handoff
 
-Recommend `skillsforge route --pack security` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+→ `sec-supply-chain` / `review-diff` / `skillshield`.
 
-## Common Mistakes
-
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
-
-## Pressure stub
-
-See `pressure/` fixtures when this is a discipline skill.

@@ -1,6 +1,6 @@
 ---
 name: cloud-networking
-description: Use when you need cloud networking in a SkillsForge cloud-devops workflow.
+description: Use when doing cloud networking work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Cloud Networking without copying t
 
 ## When to Use
 
-- Use when you need cloud networking in a SkillsForge cloud-devops workflow.
+- Use when doing cloud networking work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
 - Need cloud networking with trusted SkillsForge artifacts
 
 ## Phases

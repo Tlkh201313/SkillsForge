@@ -1,6 +1,6 @@
 ---
 name: growth-launch
-description: Use when you need growth launch in a SkillsForge growth workflow.
+description: Use when doing growth launch work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Growth Launch without copying thir
 
 ## When to Use
 
-- Use when you need growth launch in a SkillsForge growth workflow.
+- Use when doing growth launch work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 - Need growth launch with trusted SkillsForge artifacts
 
 ## Phases

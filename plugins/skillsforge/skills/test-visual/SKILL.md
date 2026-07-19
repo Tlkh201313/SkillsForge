@@ -1,6 +1,6 @@
 ---
 name: test-visual
-description: Use when you need test visual in a SkillsForge testing workflow.
+description: Use when doing test visual work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Test Visual without copying third-
 
 ## When to Use
 
-- Use when you need test visual in a SkillsForge testing workflow.
+- Use when doing test visual work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 - Need test visual with trusted SkillsForge artifacts
 
 ## Phases

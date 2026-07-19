@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
+      "error handling",
+      "failure modes",
       "eng error handling",
-      "run eng error handling",
-      "eng error handling skill",
-      "help with eng error handling",
-      "eng eng error handling"
+      "typed errors",
+      "exit codes design"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "skip verification",
+      "marketing copy only"
     ],
     "mode": "explicit",
     "pack": "eng"

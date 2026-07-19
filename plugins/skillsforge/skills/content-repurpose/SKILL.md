@@ -1,6 +1,6 @@
 ---
 name: content-repurpose
-description: Use when you need content repurpose in a SkillsForge content workflow.
+description: Use when doing content repurpose work and you need bounded content-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Content Repurpose without copying 
 
 ## When to Use
 
-- Use when you need content repurpose in a SkillsForge content workflow.
+- Use when doing content repurpose work and you need bounded content-pack steps, stop conditions, and a verification check before shipping.
 - Need content repurpose with trusted SkillsForge artifacts
 
 ## Phases

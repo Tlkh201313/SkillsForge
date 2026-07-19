@@ -1,6 +1,6 @@
 interface:
   display_name: Research Interview
-  short_description: Use when you need research interview in a SkillsForge research workflow.
+  short_description: Use when doing research interview work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the research-interview skill for this task.
 policy:
   allow_implicit_invocation: false

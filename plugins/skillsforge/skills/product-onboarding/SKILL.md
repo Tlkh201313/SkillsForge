@@ -1,6 +1,6 @@
 ---
 name: product-onboarding
-description: Use when you need product onboarding in a SkillsForge product workflow.
+description: Use when doing product onboarding work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Product Onboarding without copying
 
 ## When to Use
 
-- Use when you need product onboarding in a SkillsForge product workflow.
+- Use when doing product onboarding work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 - Need product onboarding with trusted SkillsForge artifacts
 
 ## Phases

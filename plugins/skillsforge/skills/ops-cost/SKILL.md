@@ -1,6 +1,6 @@
 ---
 name: ops-cost
-description: Use when you need ops cost in a SkillsForge ops workflow.
+description: Use when doing ops cost work and you need bounded ops-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ops Cost without copying third-par
 
 ## When to Use
 
-- Use when you need ops cost in a SkillsForge ops workflow.
+- Use when doing ops cost work and you need bounded ops-pack steps, stop conditions, and a verification check before shipping.
 - Need ops cost with trusted SkillsForge artifacts
 
 ## Phases

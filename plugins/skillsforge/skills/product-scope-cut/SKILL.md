@@ -1,6 +1,6 @@
 ---
 name: product-scope-cut
-description: Use when you need product scope cut in a SkillsForge product workflow.
+description: Use when doing product scope cut work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Product Scope Cut without copying 
 
 ## When to Use
 
-- Use when you need product scope cut in a SkillsForge product workflow.
+- Use when doing product scope cut work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 - Need product scope cut with trusted SkillsForge artifacts
 
 ## Phases

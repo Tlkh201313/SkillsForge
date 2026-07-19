@@ -1,6 +1,6 @@
 ---
 name: media-brand-asset
-description: Use when you need media brand asset in a SkillsForge media workflow.
+description: Use when doing media brand asset work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Media Brand Asset without copying 
 
 ## When to Use
 
-- Use when you need media brand asset in a SkillsForge media workflow.
+- Use when doing media brand asset work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
 - Need media brand asset with trusted SkillsForge artifacts
 
 ## Phases

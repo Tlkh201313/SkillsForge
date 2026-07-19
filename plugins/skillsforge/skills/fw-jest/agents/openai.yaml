@@ -1,6 +1,6 @@
 interface:
   display_name: Fw Jest
-  short_description: Use when you need fw jest in a SkillsForge framework workflow.
+  short_description: Use when doing fw jest work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the fw-jest skill for this task.
 policy:
   allow_implicit_invocation: false

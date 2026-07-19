@@ -1,6 +1,6 @@
 ---
 name: ent-audit-prep
-description: Use when you need ent audit prep in a SkillsForge enterprise workflow.
+description: Use when doing ent audit prep work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ent Audit Prep without copying thi
 
 ## When to Use
 
-- Use when you need ent audit prep in a SkillsForge enterprise workflow.
+- Use when doing ent audit prep work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 - Need ent audit prep with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 interface:
   display_name: Design Content
-  short_description: Use when you need design content in a SkillsForge design workflow.
+  short_description: Use when doing design content work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the design-content skill for this task.
 policy:
   allow_implicit_invocation: false

@@ -1,6 +1,6 @@
 ---
 name: research-survey
-description: Use when you need research survey in a SkillsForge research workflow.
+description: Use when doing research survey work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Research Survey without copying th
 
 ## When to Use
 
-- Use when you need research survey in a SkillsForge research workflow.
+- Use when doing research survey work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 - Need research survey with trusted SkillsForge artifacts
 
 ## Phases

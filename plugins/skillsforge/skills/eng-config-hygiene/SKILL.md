@@ -1,6 +1,6 @@
 ---
 name: eng-config-hygiene
-description: Use when you need eng config hygiene in a SkillsForge eng workflow.
+description: Use when doing eng config hygiene work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Eng Config Hygiene without copying
 
 ## When to Use
 
-- Use when you need eng config hygiene in a SkillsForge eng workflow.
+- Use when doing eng config hygiene work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 - Need eng config hygiene with trusted SkillsForge artifacts
 
 ## Phases

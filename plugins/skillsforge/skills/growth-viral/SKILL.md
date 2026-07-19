@@ -1,6 +1,6 @@
 ---
 name: growth-viral
-description: Use when you need growth viral in a SkillsForge growth workflow.
+description: Use when doing growth viral work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Growth Viral without copying third
 
 ## When to Use
 
-- Use when you need growth viral in a SkillsForge growth workflow.
+- Use when doing growth viral work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 - Need growth viral with trusted SkillsForge artifacts
 
 ## Phases

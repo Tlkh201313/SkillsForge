@@ -45,7 +45,25 @@ function triggersFor(skill) {
 }
 
 function antiFor(skill) {
-  return ['install skillsforge plugin', 'unrelated coding task', 'write application code only'];
+  const pack = skill.pack;
+  const base = [
+    'install skillsforge plugin',
+    'unrelated coding task',
+    'write application code only'
+  ];
+  const byPack = {
+    eng: ['design mockups only', 'marketing copy only', 'finance ledger only'],
+    security: ['feature brainstorm only', 'docs polish only', 'UI visual QA only'],
+    docs: ['implement production code only', 'pentest live systems', 'deploy to prod only'],
+    methodology: ['skip planning and ship immediately', 'ignore verification gates'],
+    lifecycle: ['one-off throwaway script with no brief', 'skip capture and proof'],
+    testing: ['ship without tests', 'manual poke only with no plan'],
+    ops: ['local UI mock only', 'ignore runbooks and alerts'],
+    design: ['backend schema migration only', 'CLI packaging only'],
+    'cloud-devops': ['pure frontend styling only', 'legal contract drafting'],
+    media: ['database migration only', 'authz policy rewrite']
+  };
+  return [...base, ...(byPack[pack] ?? ['skip verification', 'invent credentials'])];
 }
 
 async function pathExists(path) {

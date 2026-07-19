@@ -1,6 +1,6 @@
 ---
 name: retro-improve
-description: Use when you need retro improve in a SkillsForge lifecycle workflow.
+description: Use when doing retro improve work and you need bounded lifecycle-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Retro Improve without copying thir
 
 ## When to Use
 
-- Use when you need retro improve in a SkillsForge lifecycle workflow.
+- Use when doing retro improve work and you need bounded lifecycle-pack steps, stop conditions, and a verification check before shipping.
 - Need retro improve with trusted SkillsForge artifacts
 
 ## Phases

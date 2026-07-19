@@ -1,6 +1,6 @@
 ---
 name: agent-eval-loop
-description: Use when you need agent eval loop in a SkillsForge agentic workflow.
+description: Use when doing agent eval loop work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Agent Eval Loop without copying th
 
 ## When to Use
 
-- Use when you need agent eval loop in a SkillsForge agentic workflow.
+- Use when doing agent eval loop work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 - Need agent eval loop with trusted SkillsForge artifacts
 
 ## Phases

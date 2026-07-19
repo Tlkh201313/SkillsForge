@@ -1,6 +1,6 @@
 interface:
   display_name: Ent Training
-  short_description: Use when you need ent training in a SkillsForge enterprise workflow.
+  short_description: Use when doing ent training work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the ent-training skill for this task.
 policy:
   allow_implicit_invocation: false

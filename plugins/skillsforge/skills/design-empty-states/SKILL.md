@@ -1,6 +1,6 @@
 ---
 name: design-empty-states
-description: Use when you need design empty states in a SkillsForge design workflow.
+description: Use when doing design empty states work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Design Empty States without copyin
 
 ## When to Use
 
-- Use when you need design empty states in a SkillsForge design workflow.
+- Use when doing design empty states work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 - Need design empty states with trusted SkillsForge artifacts
 
 ## Phases

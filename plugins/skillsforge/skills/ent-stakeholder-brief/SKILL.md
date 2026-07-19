@@ -1,6 +1,6 @@
 ---
 name: ent-stakeholder-brief
-description: Use when you need ent stakeholder brief in a SkillsForge enterprise workflow.
+description: Use when doing ent stakeholder brief work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ent Stakeholder Brief without copy
 
 ## When to Use
 
-- Use when you need ent stakeholder brief in a SkillsForge enterprise workflow.
+- Use when doing ent stakeholder brief work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 - Need ent stakeholder brief with trusted SkillsForge artifacts
 
 ## Phases

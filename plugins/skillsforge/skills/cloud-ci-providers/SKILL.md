@@ -1,6 +1,6 @@
 ---
 name: cloud-ci-providers
-description: Use when you need cloud ci providers in a SkillsForge cloud-devops workflow.
+description: Use when doing cloud ci providers work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Cloud Ci Providers without copying
 
 ## When to Use
 
-- Use when you need cloud ci providers in a SkillsForge cloud-devops workflow.
+- Use when doing cloud ci providers work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
 - Need cloud ci providers with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 interface:
   display_name: Ops Canary
-  short_description: Use when you need ops canary in a SkillsForge ops workflow.
+  short_description: Use when doing ops canary work and you need bounded ops-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the ops-canary skill for this task.
 policy:
   allow_implicit_invocation: false

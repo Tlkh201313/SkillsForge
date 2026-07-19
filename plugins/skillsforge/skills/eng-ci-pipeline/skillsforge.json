@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
+      "ci pipeline",
+      "fix github actions",
+      "add CI gate",
       "eng ci pipeline",
-      "run eng ci pipeline",
-      "eng ci pipeline skill",
-      "help with eng ci pipeline",
-      "eng eng ci pipeline"
+      "workflow CI green"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "skip verification",
+      "marketing copy only"
     ],
     "mode": "explicit",
     "pack": "eng"

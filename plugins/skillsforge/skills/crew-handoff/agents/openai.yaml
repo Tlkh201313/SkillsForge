@@ -1,6 +1,6 @@
 interface:
   display_name: Crew Handoff
-  short_description: Use when you need crew handoff in a SkillsForge lifecycle workflow.
+  short_description: Use when doing crew handoff work and you need bounded lifecycle-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the crew-handoff skill for this task.
 policy:
   allow_implicit_invocation: false

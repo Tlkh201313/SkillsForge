@@ -1,6 +1,6 @@
 ---
 name: role-eng-review
-description: Use when you need role eng review in a SkillsForge roles workflow.
+description: Use when doing role eng review work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Eng Review without copying th
 
 ## When to Use
 
-- Use when you need role eng review in a SkillsForge roles workflow.
+- Use when doing role eng review work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role eng review with trusted SkillsForge artifacts
 
 ## Phases

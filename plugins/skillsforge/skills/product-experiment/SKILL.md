@@ -1,6 +1,6 @@
 ---
 name: product-experiment
-description: Use when you need product experiment in a SkillsForge product workflow.
+description: Use when doing product experiment work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Product Experiment without copying
 
 ## When to Use
 
-- Use when you need product experiment in a SkillsForge product workflow.
+- Use when doing product experiment work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 - Need product experiment with trusted SkillsForge artifacts
 
 ## Phases

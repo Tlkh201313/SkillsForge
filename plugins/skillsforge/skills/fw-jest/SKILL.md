@@ -1,6 +1,6 @@
 ---
 name: fw-jest
-description: Use when you need fw jest in a SkillsForge framework workflow.
+description: Use when doing fw jest work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Fw Jest without copying third-part
 
 ## When to Use
 
-- Use when you need fw jest in a SkillsForge framework workflow.
+- Use when doing fw jest work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
 - Need fw jest with trusted SkillsForge artifacts
 
 ## Phases

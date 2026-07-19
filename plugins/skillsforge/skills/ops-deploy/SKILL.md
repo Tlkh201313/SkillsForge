@@ -1,6 +1,6 @@
 ---
 name: ops-deploy
-description: Use when you need ops deploy in a SkillsForge ops workflow.
+description: Use when doing ops deploy work and you need bounded ops-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ops Deploy without copying third-p
 
 ## When to Use
 
-- Use when you need ops deploy in a SkillsForge ops workflow.
+- Use when doing ops deploy work and you need bounded ops-pack steps, stop conditions, and a verification check before shipping.
 - Need ops deploy with trusted SkillsForge artifacts
 
 ## Phases

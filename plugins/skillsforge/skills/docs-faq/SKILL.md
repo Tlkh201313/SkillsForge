@@ -1,6 +1,6 @@
 ---
 name: docs-faq
-description: Use when you need docs faq in a SkillsForge docs workflow.
+description: Use when doing docs faq work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Docs Faq without copying third-par
 
 ## When to Use
 
-- Use when you need docs faq in a SkillsForge docs workflow.
+- Use when doing docs faq work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
 - Need docs faq with trusted SkillsForge artifacts
 
 ## Phases

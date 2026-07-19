@@ -1,6 +1,6 @@
 ---
 name: data-etl
-description: Use when you need data etl in a SkillsForge data workflow.
+description: Use when doing data etl work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Etl without copying third-par
 
 ## When to Use
 
-- Use when you need data etl in a SkillsForge data workflow.
+- Use when doing data etl work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data etl with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: ops-incident-comms
-description: Use when you need ops incident comms in a SkillsForge ops workflow.
+description: Use when doing ops incident comms work and you need bounded ops-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ops Incident Comms without copying
 
 ## When to Use
 
-- Use when you need ops incident comms in a SkillsForge ops workflow.
+- Use when doing ops incident comms work and you need bounded ops-pack steps, stop conditions, and a verification check before shipping.
 - Need ops incident comms with trusted SkillsForge artifacts
 
 ## Phases

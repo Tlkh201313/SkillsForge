@@ -1,6 +1,6 @@
 ---
 name: content-longform
-description: Use when you need content longform in a SkillsForge content workflow.
+description: Use when doing content longform work and you need bounded content-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Content Longform without copying t
 
 ## When to Use
 
-- Use when you need content longform in a SkillsForge content workflow.
+- Use when doing content longform work and you need bounded content-pack steps, stop conditions, and a verification check before shipping.
 - Need content longform with trusted SkillsForge artifacts
 
 ## Phases

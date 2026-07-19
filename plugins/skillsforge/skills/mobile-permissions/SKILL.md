@@ -1,6 +1,6 @@
 ---
 name: mobile-permissions
-description: Use when you need mobile permissions in a SkillsForge mobile workflow.
+description: Use when doing mobile permissions work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Mobile Permissions without copying
 
 ## When to Use
 
-- Use when you need mobile permissions in a SkillsForge mobile workflow.
+- Use when doing mobile permissions work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 - Need mobile permissions with trusted SkillsForge artifacts
 
 ## Phases

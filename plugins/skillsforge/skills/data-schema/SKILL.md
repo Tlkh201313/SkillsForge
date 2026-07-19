@@ -1,6 +1,6 @@
 ---
 name: data-schema
-description: Use when you need data schema in a SkillsForge data workflow.
+description: Use when doing data schema work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Schema without copying third-
 
 ## When to Use
 
-- Use when you need data schema in a SkillsForge data workflow.
+- Use when doing data schema work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data schema with trusted SkillsForge artifacts
 
 ## Phases

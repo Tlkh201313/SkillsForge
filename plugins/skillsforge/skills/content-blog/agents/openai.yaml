@@ -1,6 +1,6 @@
 interface:
   display_name: Content Blog
-  short_description: Use when you need content blog in a SkillsForge content workflow.
+  short_description: Use when doing content blog work and you need bounded content-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the content-blog skill for this task.
 policy:
   allow_implicit_invocation: false

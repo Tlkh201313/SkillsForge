@@ -1,6 +1,6 @@
 interface:
   display_name: Docs Contributing
-  short_description: Use when you need docs contributing in a SkillsForge docs workflow.
+  short_description: Use when doing docs contributing work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the docs-contributing skill for this task.
 policy:
   allow_implicit_invocation: false

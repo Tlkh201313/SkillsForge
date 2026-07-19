@@ -1,6 +1,6 @@
 ---
 name: ent-compliance-lite
-description: Use when you need ent compliance lite in a SkillsForge enterprise workflow.
+description: Use when doing ent compliance lite work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ent Compliance Lite without copyin
 
 ## When to Use
 
-- Use when you need ent compliance lite in a SkillsForge enterprise workflow.
+- Use when doing ent compliance lite work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 - Need ent compliance lite with trusted SkillsForge artifacts
 
 ## Phases

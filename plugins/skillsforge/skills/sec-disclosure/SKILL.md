@@ -1,6 +1,6 @@
 ---
 name: sec-disclosure
-description: Use when you need sec disclosure in a SkillsForge security workflow.
+description: Use when doing sec disclosure work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Sec Disclosure without copying thi
 
 ## When to Use
 
-- Use when you need sec disclosure in a SkillsForge security workflow.
+- Use when doing sec disclosure work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
 - Need sec disclosure with trusted SkillsForge artifacts
 
 ## Phases

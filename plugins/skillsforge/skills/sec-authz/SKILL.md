@@ -1,6 +1,6 @@
 ---
 name: sec-authz
-description: Use when you need sec authz in a SkillsForge security workflow.
+description: Use when doing sec authz work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Sec Authz without copying third-pa
 
 ## When to Use
 
-- Use when you need sec authz in a SkillsForge security workflow.
+- Use when doing sec authz work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
 - Need sec authz with trusted SkillsForge artifacts
 
 ## Phases

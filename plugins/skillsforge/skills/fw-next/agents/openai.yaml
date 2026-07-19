@@ -1,6 +1,6 @@
 interface:
   display_name: Fw Next
-  short_description: Use when you need fw next in a SkillsForge framework workflow.
+  short_description: Use when doing fw next work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the fw-next skill for this task.
 policy:
   allow_implicit_invocation: false

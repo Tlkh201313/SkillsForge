@@ -1,6 +1,6 @@
 ---
 name: fw-prisma
-description: Use when you need fw prisma in a SkillsForge framework workflow.
+description: Use when doing fw prisma work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Fw Prisma without copying third-pa
 
 ## When to Use
 
-- Use when you need fw prisma in a SkillsForge framework workflow.
+- Use when doing fw prisma work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
 - Need fw prisma with trusted SkillsForge artifacts
 
 ## Phases

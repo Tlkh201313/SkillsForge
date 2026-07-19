@@ -1,6 +1,6 @@
 ---
 name: docs-llms-txt
-description: Use when you need docs llms txt in a SkillsForge docs workflow.
+description: Use when doing docs llms txt work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Docs Llms Txt without copying thir
 
 ## When to Use
 
-- Use when you need docs llms txt in a SkillsForge docs workflow.
+- Use when doing docs llms txt work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
 - Need docs llms txt with trusted SkillsForge artifacts
 
 ## Phases

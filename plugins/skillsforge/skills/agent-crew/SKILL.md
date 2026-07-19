@@ -1,6 +1,6 @@
 ---
 name: agent-crew
-description: Use when you need agent crew in a SkillsForge agentic workflow.
+description: Use when doing agent crew work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Agent Crew without copying third-p
 
 ## When to Use
 
-- Use when you need agent crew in a SkillsForge agentic workflow.
+- Use when doing agent crew work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 - Need agent crew with trusted SkillsForge artifacts
 
 ## Phases

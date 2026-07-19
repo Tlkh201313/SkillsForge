@@ -1,6 +1,6 @@
 ---
 name: fw-flutter
-description: Use when you need fw flutter in a SkillsForge framework workflow.
+description: Use when doing fw flutter work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Fw Flutter without copying third-p
 
 ## When to Use
 
-- Use when you need fw flutter in a SkillsForge framework workflow.
+- Use when doing fw flutter work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
 - Need fw flutter with trusted SkillsForge artifacts
 
 ## Phases

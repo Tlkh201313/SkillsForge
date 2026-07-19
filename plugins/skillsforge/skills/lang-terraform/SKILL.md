@@ -1,6 +1,6 @@
 ---
 name: lang-terraform
-description: Use when you need lang terraform in a SkillsForge lang workflow.
+description: Use when doing lang terraform work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Lang Terraform without copying thi
 
 ## When to Use
 
-- Use when you need lang terraform in a SkillsForge lang workflow.
+- Use when doing lang terraform work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 - Need lang terraform with trusted SkillsForge artifacts
 
 ## Phases

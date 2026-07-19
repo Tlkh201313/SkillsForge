@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: Use when you need executing plans in a SkillsForge methodology workflow.
+description: Use when doing executing plans work and you need bounded methodology-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Executing Plans without copying th
 
 ## When to Use
 
-- Use when you need executing plans in a SkillsForge methodology workflow.
+- Use when doing executing plans work and you need bounded methodology-pack steps, stop conditions, and a verification check before shipping.
 - Need executing plans with trusted SkillsForge artifacts
 
 ## Phases

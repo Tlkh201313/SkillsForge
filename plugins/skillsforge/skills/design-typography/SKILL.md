@@ -1,6 +1,6 @@
 ---
 name: design-typography
-description: Use when you need design typography in a SkillsForge design workflow.
+description: Use when doing design typography work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Design Typography without copying 
 
 ## When to Use
 
-- Use when you need design typography in a SkillsForge design workflow.
+- Use when doing design typography work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 - Need design typography with trusted SkillsForge artifacts
 
 ## Phases

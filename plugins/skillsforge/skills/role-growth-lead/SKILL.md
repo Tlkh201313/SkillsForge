@@ -1,6 +1,6 @@
 ---
 name: role-growth-lead
-description: Use when you need role growth lead in a SkillsForge roles workflow.
+description: Use when doing role growth lead work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Growth Lead without copying t
 
 ## When to Use
 
-- Use when you need role growth lead in a SkillsForge roles workflow.
+- Use when doing role growth lead work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role growth lead with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: growth-partnerships
-description: Use when you need growth partnerships in a SkillsForge growth workflow.
+description: Use when doing growth partnerships work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Growth Partnerships without copyin
 
 ## When to Use
 
-- Use when you need growth partnerships in a SkillsForge growth workflow.
+- Use when doing growth partnerships work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 - Need growth partnerships with trusted SkillsForge artifacts
 
 ## Phases

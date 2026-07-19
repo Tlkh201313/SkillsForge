@@ -1,6 +1,6 @@
 ---
 name: product-metrics
-description: Use when you need product metrics in a SkillsForge product workflow.
+description: Use when doing product metrics work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Product Metrics without copying th
 
 ## When to Use
 
-- Use when you need product metrics in a SkillsForge product workflow.
+- Use when doing product metrics work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 - Need product metrics with trusted SkillsForge artifacts
 
 ## Phases

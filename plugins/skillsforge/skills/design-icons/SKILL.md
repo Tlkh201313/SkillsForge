@@ -1,6 +1,6 @@
 ---
 name: design-icons
-description: Use when you need design icons in a SkillsForge design workflow.
+description: Use when doing design icons work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Design Icons without copying third
 
 ## When to Use
 
-- Use when you need design icons in a SkillsForge design workflow.
+- Use when doing design icons work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 - Need design icons with trusted SkillsForge artifacts
 
 ## Phases

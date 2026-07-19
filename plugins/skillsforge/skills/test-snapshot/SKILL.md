@@ -1,6 +1,6 @@
 ---
 name: test-snapshot
-description: Use when you need test snapshot in a SkillsForge testing workflow.
+description: Use when doing test snapshot work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Test Snapshot without copying thir
 
 ## When to Use
 
-- Use when you need test snapshot in a SkillsForge testing workflow.
+- Use when doing test snapshot work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 - Need test snapshot with trusted SkillsForge artifacts
 
 ## Phases

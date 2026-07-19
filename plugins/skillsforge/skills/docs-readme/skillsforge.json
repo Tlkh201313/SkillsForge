@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
+      "update README",
+      "readme for judges",
       "docs readme",
-      "run docs readme",
-      "docs readme skill",
-      "help with docs readme",
-      "docs docs readme"
+      "README claims audit",
+      "judge readme"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "skip verification",
+      "marketing copy only"
     ],
     "mode": "explicit",
     "pack": "docs"

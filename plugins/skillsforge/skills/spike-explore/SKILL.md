@@ -1,6 +1,6 @@
 ---
 name: spike-explore
-description: Use when you need spike explore in a SkillsForge lifecycle workflow.
+description: Use when doing spike explore work and you need bounded lifecycle-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Spike Explore without copying thir
 
 ## When to Use
 
-- Use when you need spike explore in a SkillsForge lifecycle workflow.
+- Use when doing spike explore work and you need bounded lifecycle-pack steps, stop conditions, and a verification check before shipping.
 - Need spike explore with trusted SkillsForge artifacts
 
 ## Phases

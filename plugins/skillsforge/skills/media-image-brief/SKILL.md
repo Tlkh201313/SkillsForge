@@ -1,6 +1,6 @@
 ---
 name: media-image-brief
-description: Use when you need media image brief in a SkillsForge media workflow.
+description: Use when doing media image brief work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Media Image Brief without copying 
 
 ## When to Use
 
-- Use when you need media image brief in a SkillsForge media workflow.
+- Use when doing media image brief work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
 - Need media image brief with trusted SkillsForge artifacts
 
 ## Phases

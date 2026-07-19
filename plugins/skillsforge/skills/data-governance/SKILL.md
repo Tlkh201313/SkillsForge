@@ -1,6 +1,6 @@
 ---
 name: data-governance
-description: Use when you need data governance in a SkillsForge data workflow.
+description: Use when doing data governance work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Governance without copying th
 
 ## When to Use
 
-- Use when you need data governance in a SkillsForge data workflow.
+- Use when doing data governance work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data governance with trusted SkillsForge artifacts
 
 ## Phases

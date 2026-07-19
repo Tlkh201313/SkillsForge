@@ -1,6 +1,6 @@
 ---
 name: agent-prompt-budget
-description: Use when you need agent prompt budget in a SkillsForge agentic workflow.
+description: Use when doing agent prompt budget work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Agent Prompt Budget without copyin
 
 ## When to Use
 
-- Use when you need agent prompt budget in a SkillsForge agentic workflow.
+- Use when doing agent prompt budget work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 - Need agent prompt budget with trusted SkillsForge artifacts
 
 ## Phases

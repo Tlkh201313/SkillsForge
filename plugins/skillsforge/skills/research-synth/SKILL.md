@@ -1,6 +1,6 @@
 ---
 name: research-synth
-description: Use when you need research synth in a SkillsForge research workflow.
+description: Use when doing research synth work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Research Synth without copying thi
 
 ## When to Use
 
-- Use when you need research synth in a SkillsForge research workflow.
+- Use when doing research synth work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 - Need research synth with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: eng-idempotency
-description: Use when you need eng idempotency in a SkillsForge eng workflow.
+description: Use when doing eng idempotency work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Eng Idempotency without copying th
 
 ## When to Use
 
-- Use when you need eng idempotency in a SkillsForge eng workflow.
+- Use when doing eng idempotency work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 - Need eng idempotency with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: design-handoff
-description: Use when you need design handoff in a SkillsForge design workflow.
+description: Use when doing design handoff work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Design Handoff without copying thi
 
 ## When to Use
 
-- Use when you need design handoff in a SkillsForge design workflow.
+- Use when doing design handoff work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 - Need design handoff with trusted SkillsForge artifacts
 
 ## Phases

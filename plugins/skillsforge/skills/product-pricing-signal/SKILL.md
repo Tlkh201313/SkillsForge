@@ -1,6 +1,6 @@
 ---
 name: product-pricing-signal
-description: Use when you need product pricing signal in a SkillsForge product workflow.
+description: Use when doing product pricing signal work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Product Pricing Signal without cop
 
 ## When to Use
 
-- Use when you need product pricing signal in a SkillsForge product workflow.
+- Use when doing product pricing signal work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 - Need product pricing signal with trusted SkillsForge artifacts
 
 ## Phases

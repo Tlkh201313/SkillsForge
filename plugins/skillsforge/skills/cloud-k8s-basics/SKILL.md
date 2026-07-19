@@ -1,6 +1,6 @@
 ---
 name: cloud-k8s-basics
-description: Use when you need cloud k8s basics in a SkillsForge cloud-devops workflow.
+description: Use when doing cloud k8s basics work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Cloud K8s Basics without copying t
 
 ## When to Use
 
-- Use when you need cloud k8s basics in a SkillsForge cloud-devops workflow.
+- Use when doing cloud k8s basics work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
 - Need cloud k8s basics with trusted SkillsForge artifacts
 
 ## Phases

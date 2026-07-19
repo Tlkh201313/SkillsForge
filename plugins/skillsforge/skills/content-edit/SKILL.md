@@ -1,6 +1,6 @@
 ---
 name: content-edit
-description: Use when you need content edit in a SkillsForge content workflow.
+description: Use when doing content edit work and you need bounded content-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Content Edit without copying third
 
 ## When to Use
 
-- Use when you need content edit in a SkillsForge content workflow.
+- Use when doing content edit work and you need bounded content-pack steps, stop conditions, and a verification check before shipping.
 - Need content edit with trusted SkillsForge artifacts
 
 ## Phases

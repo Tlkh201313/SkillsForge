@@ -1,6 +1,6 @@
 interface:
   display_name: Media Frame Sampling
-  short_description: Use when you need media frame sampling in a SkillsForge media workflow.
+  short_description: Use when doing media frame sampling work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the media-frame-sampling skill for this task.
 policy:
   allow_implicit_invocation: false

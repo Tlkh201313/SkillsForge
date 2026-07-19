@@ -1,6 +1,6 @@
 ---
 name: mobile-offline
-description: Use when you need mobile offline in a SkillsForge mobile workflow.
+description: Use when doing mobile offline work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Mobile Offline without copying thi
 
 ## When to Use
 
-- Use when you need mobile offline in a SkillsForge mobile workflow.
+- Use when doing mobile offline work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 - Need mobile offline with trusted SkillsForge artifacts
 
 ## Phases

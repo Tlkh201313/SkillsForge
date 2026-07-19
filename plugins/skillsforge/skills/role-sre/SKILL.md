@@ -1,6 +1,6 @@
 ---
 name: role-sre
-description: Use when you need role sre in a SkillsForge roles workflow.
+description: Use when doing role sre work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Sre without copying third-par
 
 ## When to Use
 
-- Use when you need role sre in a SkillsForge roles workflow.
+- Use when doing role sre work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role sre with trusted SkillsForge artifacts
 
 ## Phases

@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
+      "dependency upgrade",
+      "bump dependencies",
       "eng deps upgrade",
-      "run eng deps upgrade",
-      "eng deps upgrade skill",
-      "help with eng deps upgrade",
-      "eng eng deps upgrade"
+      "npm audit fix plan",
+      "upgrade lockfile"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "skip verification",
+      "marketing copy only"
     ],
     "mode": "explicit",
     "pack": "eng"

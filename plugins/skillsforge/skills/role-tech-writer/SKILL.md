@@ -1,6 +1,6 @@
 ---
 name: role-tech-writer
-description: Use when you need role tech writer in a SkillsForge roles workflow.
+description: Use when doing role tech writer work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Tech Writer without copying t
 
 ## When to Use
 
-- Use when you need role tech writer in a SkillsForge roles workflow.
+- Use when doing role tech writer work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role tech writer with trusted SkillsForge artifacts
 
 ## Phases

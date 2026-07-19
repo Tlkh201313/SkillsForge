@@ -1,6 +1,6 @@
 ---
 name: sec-session
-description: Use when you need sec session in a SkillsForge security workflow.
+description: Use when doing sec session work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Sec Session without copying third-
 
 ## When to Use
 
-- Use when you need sec session in a SkillsForge security workflow.
+- Use when doing sec session work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
 - Need sec session with trusted SkillsForge artifacts
 
 ## Phases

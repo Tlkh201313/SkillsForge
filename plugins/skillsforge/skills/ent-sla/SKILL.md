@@ -1,6 +1,6 @@
 ---
 name: ent-sla
-description: Use when you need ent sla in a SkillsForge enterprise workflow.
+description: Use when doing ent sla work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ent Sla without copying third-part
 
 ## When to Use
 
-- Use when you need ent sla in a SkillsForge enterprise workflow.
+- Use when doing ent sla work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 - Need ent sla with trusted SkillsForge artifacts
 
 ## Phases

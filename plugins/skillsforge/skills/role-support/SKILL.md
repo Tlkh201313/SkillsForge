@@ -1,6 +1,6 @@
 ---
 name: role-support
-description: Use when you need role support in a SkillsForge roles workflow.
+description: Use when doing role support work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Support without copying third
 
 ## When to Use
 
-- Use when you need role support in a SkillsForge roles workflow.
+- Use when doing role support work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role support with trusted SkillsForge artifacts
 
 ## Phases

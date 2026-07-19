@@ -1,6 +1,6 @@
 ---
 name: research-desk
-description: Use when you need research desk in a SkillsForge research workflow.
+description: Use when doing research desk work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Research Desk without copying thir
 
 ## When to Use
 
-- Use when you need research desk in a SkillsForge research workflow.
+- Use when doing research desk work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 - Need research desk with trusted SkillsForge artifacts
 
 ## Phases

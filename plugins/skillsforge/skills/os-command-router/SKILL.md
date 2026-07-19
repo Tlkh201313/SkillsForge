@@ -1,6 +1,6 @@
 ---
 name: os-command-router
-description: Use when you need os command router in a SkillsForge os workflow.
+description: Use when doing os command router work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Os Command Router without copying 
 
 ## When to Use
 
-- Use when you need os command router in a SkillsForge os workflow.
+- Use when doing os command router work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
 - Need os command router with trusted SkillsForge artifacts
 
 ## Phases

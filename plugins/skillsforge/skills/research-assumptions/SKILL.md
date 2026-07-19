@@ -1,6 +1,6 @@
 ---
 name: research-assumptions
-description: Use when you need research assumptions in a SkillsForge research workflow.
+description: Use when doing research assumptions work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Research Assumptions without copyi
 
 ## When to Use
 
-- Use when you need research assumptions in a SkillsForge research workflow.
+- Use when doing research assumptions work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 - Need research assumptions with trusted SkillsForge artifacts
 
 ## Phases

@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
+      "OWASP check",
+      "owasp top 10",
       "sec owasp",
-      "run sec owasp",
-      "sec owasp skill",
-      "help with sec owasp",
-      "security sec owasp"
+      "injection review",
+      "XSS CSRF review"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "docs polish only",
+      "feature brainstorm only"
     ],
     "mode": "explicit",
     "pack": "security"

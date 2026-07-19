@@ -1,6 +1,6 @@
 ---
 name: cloud-cost-tags
-description: Use when you need cloud cost tags in a SkillsForge cloud-devops workflow.
+description: Use when doing cloud cost tags work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Cloud Cost Tags without copying th
 
 ## When to Use
 
-- Use when you need cloud cost tags in a SkillsForge cloud-devops workflow.
+- Use when doing cloud cost tags work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
 - Need cloud cost tags with trusted SkillsForge artifacts
 
 ## Phases

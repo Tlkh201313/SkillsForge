@@ -1,6 +1,6 @@
 ---
 name: fin-forecast-lite
-description: Use when you need fin forecast lite in a SkillsForge finance-lite workflow.
+description: Use when doing fin forecast lite work and you need bounded finance-lite-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Fin Forecast Lite without copying 
 
 ## When to Use
 
-- Use when you need fin forecast lite in a SkillsForge finance-lite workflow.
+- Use when doing fin forecast lite work and you need bounded finance-lite-pack steps, stop conditions, and a verification check before shipping.
 - Need fin forecast lite with trusted SkillsForge artifacts
 
 ## Phases

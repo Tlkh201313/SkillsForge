@@ -1,6 +1,6 @@
 ---
 name: data-metrics-dict
-description: Use when you need data metrics dict in a SkillsForge data workflow.
+description: Use when doing data metrics dict work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Metrics Dict without copying 
 
 ## When to Use
 
-- Use when you need data metrics dict in a SkillsForge data workflow.
+- Use when doing data metrics dict work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data metrics dict with trusted SkillsForge artifacts
 
 ## Phases

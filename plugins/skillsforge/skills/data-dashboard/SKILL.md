@@ -1,6 +1,6 @@
 ---
 name: data-dashboard
-description: Use when you need data dashboard in a SkillsForge data workflow.
+description: Use when doing data dashboard work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Dashboard without copying thi
 
 ## When to Use
 
-- Use when you need data dashboard in a SkillsForge data workflow.
+- Use when doing data dashboard work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data dashboard with trusted SkillsForge artifacts
 
 ## Phases

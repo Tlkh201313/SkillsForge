@@ -1,6 +1,6 @@
 interface:
   display_name: Growth Analytics
-  short_description: Use when you need growth analytics in a SkillsForge growth workflow.
+  short_description: Use when doing growth analytics work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the growth-analytics skill for this task.
 policy:
   allow_implicit_invocation: false

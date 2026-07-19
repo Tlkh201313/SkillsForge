@@ -1,6 +1,6 @@
 ---
 name: lang-python
-description: Use when you need lang python in a SkillsForge lang workflow.
+description: Use when doing lang python work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Lang Python without copying third-
 
 ## When to Use
 
-- Use when you need lang python in a SkillsForge lang workflow.
+- Use when doing lang python work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 - Need lang python with trusted SkillsForge artifacts
 
 ## Phases

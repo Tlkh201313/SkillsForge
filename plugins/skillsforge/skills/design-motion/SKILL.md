@@ -1,6 +1,6 @@
 ---
 name: design-motion
-description: Use when you need design motion in a SkillsForge design workflow.
+description: Use when doing design motion work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Design Motion without copying thir
 
 ## When to Use
 
-- Use when you need design motion in a SkillsForge design workflow.
+- Use when doing design motion work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 - Need design motion with trusted SkillsForge artifacts
 
 ## Phases

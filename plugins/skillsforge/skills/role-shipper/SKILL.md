@@ -1,6 +1,6 @@
 ---
 name: role-shipper
-description: Use when you need role shipper in a SkillsForge roles workflow.
+description: Use when doing role shipper work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Shipper without copying third
 
 ## When to Use
 
-- Use when you need role shipper in a SkillsForge roles workflow.
+- Use when doing role shipper work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role shipper with trusted SkillsForge artifacts
 
 ## Phases

@@ -32,12 +32,26 @@ export async function main(argv = process.argv.slice(2), options = {}) {
     process.stdout.write(`usage: skillsforge <command> [options]
 
 Work OS for productive Agent Skills. Trust validate/package/hooks/receipts = safety layer.
-Default output is compact. Most commands accept --json. Prefer --dry-run before writes.
+Default output is compact. Most commands accept --json. Operator cmds also accept --limit / --full.
+Prefer --dry-run before writes. Install/remove/write require explicit confirmation.
 
-Productivity:
+  help                              Show this help
+
+Catalog & authoring:
   vibe                              Magical moment: work stubs + catalog summary + quality sample
   catalog                           List packs/profiles/skills (--pack/--profile/--search/--json)
   route --query <text>              Explainable skill routing (--pack / --include-explicit)
+  quality --skill <dir>             Score skill quality 0-100
+  lint-skill --skill <dir>          Fail if quality below threshold (--threshold / --hero)
+  scaffold --name <id>              Scaffold skill + sidecar (--pack/--mode/--write/--force)
+  stocktake                         Diff installed skills vs catalog
+  export-agents [--out <file>]      Write AGENTS.md from catalog/agents
+  forge --spec <file>               Deterministic skill generation (--dry-run/--write)
+  capture / forge-from-capture      Learning capture → skill proposals
+  compare / compare-skill            Sidecar / trust delta diffs
+  bench / scorecard / compose / batch / watch / pressure / skillshield
+
+Operator terminals:
   wb <task>                         Workbench: status/tree/find/grep/diff/errors/bigfiles/recent/proof
                                     (--json --limit <n> --full)
   lib <build|update|serve|check|recommend|remove>
@@ -46,29 +60,22 @@ Productivity:
                                     Workflow catalog (run = dry-run only)
   auto <plan|run>                   Skill + workflow recommend; run requires --read-only
   ps export                         Write PowerShell sf-*.ps1 helpers (token-friendly)
-  quality --skill <dir>             Score skill quality 0-100
-  lint-skill --skill <dir>          Fail if quality below threshold (--threshold / --hero)
-  scaffold --name <id>              Scaffold skill + sidecar (--pack/--mode/--write/--force)
-  stocktake                         Diff installed skills vs catalog
-  export-agents [--out <file>]      Write AGENTS.md from catalog/agents
+
+Hosts & install:
+  hosts [--json] [--home <dir>]     AI CLI host targets and trust boundaries
+  install [skill-paths...]          Multi-host install (--hosts/--custom-host/--yes/--dry-run/--force)
+  package --host codex              One skill → guarded Codex plugin (--skill/--out/--dry-run/--write)
 
 Trust & ship:
   demo                              Judge path: unsafe deny → safe package → demo scoreboard
   validate [paths...]               Structure + capability policy (--all/--json/--profile/--allow-empty)
   doctor                            Plugin + installed-skill health (--json)
-  hosts [--json] [--home <dir>]     AI CLI host targets and trust boundaries
-  install [skill-paths...]          Multi-host install (--hosts/--custom-host/--yes/--dry-run/--force)
-  package --host codex              One skill → guarded Codex plugin (--skill/--out/--dry-run/--write)
-  receipt / verify-receipt         Tamper-evident package receipt
+  receipt / verify-receipt         Tamper-evident package receipt (--package-only for verify)
   evidence --out <dir>              Deterministic trust/eval evidence bundle
   enforce --policy <sidecar.json>   PreToolUse allow/deny from stdin event JSON
-  forge --spec <file>               Deterministic skill generation (--dry-run/--write)
   eval                              Holdout routing evaluation (P/R gate)
   skillshield / pressure            Body scan / fixture pressure gate
   compare-skill --a <dir> --b <dir> Side-by-side trust delta
-
-Authoring / ops:
-  bench / scorecard / compose / batch / capture / forge-from-capture / compare / watch
 
 Compat OS helpers (prefer wb/ps when possible):
   os-env / os-find / os-ports / os-open / os-run / os-copy-path / os-clean

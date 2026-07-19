@@ -1,6 +1,6 @@
 ---
 name: agent-critique
-description: Use when you need agent critique in a SkillsForge agentic workflow.
+description: Use when doing agent critique work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Agent Critique without copying thi
 
 ## When to Use
 
-- Use when you need agent critique in a SkillsForge agentic workflow.
+- Use when doing agent critique work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 - Need agent critique with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: eng-versioning
-description: Use when you need eng versioning in a SkillsForge eng workflow.
+description: Use when doing eng versioning work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Eng Versioning without copying thi
 
 ## When to Use
 
-- Use when you need eng versioning in a SkillsForge eng workflow.
+- Use when doing eng versioning work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 - Need eng versioning with trusted SkillsForge artifacts
 
 ## Phases

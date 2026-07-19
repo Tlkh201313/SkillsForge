@@ -1,6 +1,6 @@
 ---
 name: test-contract
-description: Use when you need test contract in a SkillsForge testing workflow.
+description: Use when doing test contract work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Test Contract without copying thir
 
 ## When to Use
 
-- Use when you need test contract in a SkillsForge testing workflow.
+- Use when doing test contract work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 - Need test contract with trusted SkillsForge artifacts
 
 ## Phases

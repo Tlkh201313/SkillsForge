@@ -1,6 +1,6 @@
 ---
 name: docs-changelog
-description: Use when you need docs changelog in a SkillsForge docs workflow.
+description: Use when doing docs changelog work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Docs Changelog without copying thi
 
 ## When to Use
 
-- Use when you need docs changelog in a SkillsForge docs workflow.
+- Use when doing docs changelog work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
 - Need docs changelog with trusted SkillsForge artifacts
 
 ## Phases

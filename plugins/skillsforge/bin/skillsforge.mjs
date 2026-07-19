@@ -15984,7 +15984,21 @@ async function skillsRootsFingerprint(skillsRoots) {
       const st = await stat2(skillsRoot);
       parts.push(`${skillsRoot}:${st.mtimeMs}`);
       const entries = await readdir2(skillsRoot, { withFileTypes: true });
-      parts.push(String(entries.filter((e) => e.isDirectory()).length));
+      const dirs = entries.filter((e) => e.isDirectory()).sort((a, b) => a.name.localeCompare(b.name));
+      parts.push(String(dirs.length));
+      for (const entry of dirs) {
+        const skillDir = join2(skillsRoot, entry.name);
+        let stamp = entry.name;
+        for (const file of ["SKILL.md", "skillsforge.json"]) {
+          try {
+            const fileStat = await stat2(join2(skillDir, file));
+            stamp += `:${file}:${fileStat.mtimeMs}`;
+          } catch {
+            stamp += `:${file}:missing`;
+          }
+        }
+        parts.push(stamp);
+      }
     } catch {
       parts.push(`${skillsRoot}:missing`);
     }
@@ -21430,17 +21444,31 @@ function validateWorkflow(workflow, options = {}) {
   }
   return { ok: errors.length === 0, errors };
 }
+var WORKFLOW_RECOMMEND_THRESHOLD = 2;
 async function recommendWorkflows(root, query, options = {}) {
   const loaded = await loadWorkflows(root);
   const limit = clampLimit(options.limit, 5);
+  const threshold = options.threshold ?? WORKFLOW_RECOMMEND_THRESHOLD;
   const category = options.category ?? null;
+  const trimmed = String(query ?? "").trim();
   const scoped = loaded.workflows.filter((workflow) => !category || workflow.category === category);
-  const candidates = scoped.map((workflow) => scoreWorkflow(query, workflow)).sort((left, right) => right.score - left.score || left.workflow.id.localeCompare(right.workflow.id)).slice(0, limit);
+  const ranked = scoped.map((workflow) => scoreWorkflow(query, workflow)).filter((item) => item.score >= threshold).sort((left, right) => right.score - left.score || left.workflow.id.localeCompare(right.workflow.id));
+  const candidates = ranked.slice(0, limit);
+  const confidence = !trimmed || candidates.length === 0 ? "none" : (candidates[0]?.score ?? 0) >= threshold + 2 ? "high" : "low";
   return {
     ok: loaded.ok,
     query,
     category,
-    candidates: candidates.map(({ workflow, score, reasons }) => summarizeWorkflow(workflow, { score, reasons })),
+    confidence,
+    fallback: confidence === "none" ? "no-confident-match" : null,
+    note: confidence === "none" ? "no confident workflow match; try --category or refine the query" : void 0,
+    alternatives: confidence === "none" ? ["skillsforge workflows list", "skillsforge catalog --search <text>", "skillsforge auto plan --query <text>"] : ranked.slice(limit, limit + 3).map((item) => item.workflow.id),
+    candidates: candidates.map(({ workflow, score, reasons }) => summarizeWorkflow(workflow, {
+      score,
+      reasons,
+      needsConfirmation: workflow.risk === "high" || workflow.risk === "medium"
+    })),
+    needsConfirmation: true,
     errors: loaded.errors
   };
 }
@@ -21509,6 +21537,9 @@ async function planAuto(root, query, options = {}) {
       candidates: skillRoute.candidates.slice(0, 5)
     },
     workflows: workflowRoute.candidates,
+    workflowConfidence: workflowRoute.confidence,
+    workflowFallback: workflowRoute.fallback,
+    needsConfirmation: true,
     nextCommands: buildNextCommands(query, skillRoute, workflowRoute.candidates),
     errors
   };
@@ -21538,7 +21569,8 @@ function summarizeWorkflow(workflow, extra = {}) {
     tokenBudget: workflow.tokenBudget,
     qualityGate: workflow.qualityGate,
     score: extra.score ?? void 0,
-    reasons: extra.reasons ?? void 0
+    reasons: extra.reasons ?? void 0,
+    needsConfirmation: extra.needsConfirmation ?? (workflow.risk === "high" || workflow.risk === "medium")
   };
 }
 function scoreWorkflow(query, workflow) {
@@ -21801,17 +21833,23 @@ function recommendFromLibrary(index, query, options = {}) {
   const threshold = options.threshold ?? LIBRARY_RECOMMEND_THRESHOLD;
   const sessionHost = options.sessionHost ?? index.session?.host ?? null;
   const trimmed = String(query ?? "").trim();
-  const skills = index.skills.map((skill) => scoreLibrarySkill(query, skill, { sessionHost })).filter((item) => item.score >= threshold).sort((left, right) => right.score - left.score || left.skill.key.localeCompare(right.skill.key)).slice(0, limit).map(({ skill, score, reasons }) => ({
+  const rankedSkills = index.skills.map((skill) => scoreLibrarySkill(query, skill, { sessionHost })).filter((item) => item.score >= threshold).sort((left, right) => right.score - left.score || left.skill.key.localeCompare(right.skill.key));
+  const skills = rankedSkills.slice(0, limit).map(({ skill, score, reasons }) => ({
     key: skill.key,
     id: skill.id,
     category: skill.category,
     sourcePlugin: skill.sourcePlugin,
     installedHosts: skill.installedHosts,
     description: skill.description,
+    riskFlags: skill.riskFlags ?? [],
+    maturity: skill.maturity,
+    routingMode: skill.routingMode,
     score,
-    reasons
+    reasons,
+    needsConfirmation: (skill.riskFlags?.length ?? 0) > 0 || skill.routingMode === "explicit"
   }));
-  const workflows = index.workflows.map((workflow) => scoreLibraryWorkflow(query, workflow, { sessionHost, skillMatches: skills })).filter((item) => item.score >= threshold).sort((left, right) => right.score - left.score || left.workflow.id.localeCompare(right.workflow.id)).slice(0, limit).map(({ workflow, score, reasons }) => ({
+  const rankedWorkflows = index.workflows.map((workflow) => scoreLibraryWorkflow(query, workflow, { sessionHost, skillMatches: skills })).filter((item) => item.score >= threshold).sort((left, right) => right.score - left.score || left.workflow.id.localeCompare(right.workflow.id));
+  const workflows = rankedWorkflows.slice(0, limit).map(({ workflow, score, reasons }) => ({
     id: workflow.id,
     category: workflow.category,
     goal: workflow.goal,
@@ -21819,18 +21857,28 @@ function recommendFromLibrary(index, query, options = {}) {
     recommendedAgents: workflow.recommendedAgents,
     risk: workflow.risk,
     score,
-    reasons
+    reasons,
+    needsConfirmation: workflow.risk === "high" || workflow.risk === "medium"
   }));
   const confidence = !trimmed || skills.length === 0 && workflows.length === 0 ? "none" : (skills[0]?.score ?? 0) >= threshold + 2 || (workflows[0]?.score ?? 0) >= threshold + 2 ? "high" : "low";
+  const fallback = confidence === "none" ? "no-confident-match" : null;
+  const alternatives = confidence === "none" ? [
+    "skillsforge catalog --search <text>",
+    "skillsforge route --query <text> --include-explicit",
+    "skillsforge workflows list --category <id>",
+    "skillsforge lib update"
+  ] : rankedSkills.slice(limit, limit + 3).map((item) => item.skill.id).concat(rankedWorkflows.slice(limit, limit + 2).map((item) => item.workflow.id));
   return {
     ok: true,
     query,
     sessionHost,
     confidence,
+    fallback,
     note: confidence === "none" ? "no confident match; refine the query, browse catalog --pack, or refresh lib update" : void 0,
-    alternatives: confidence === "none" ? ["skillsforge catalog --search <text>", "skillsforge route --query <text> --include-explicit", "skillsforge lib update"] : void 0,
+    alternatives: alternatives.length ? alternatives : void 0,
     skills,
     workflows,
+    needsConfirmation: true,
     policy: "read-only recommendation; install, remove, and write actions require explicit confirmation"
   };
 }
@@ -23022,12 +23070,26 @@ async function main(argv = process.argv.slice(2), options = {}) {
     process.stdout.write(`usage: skillsforge <command> [options]
 
 Work OS for productive Agent Skills. Trust validate/package/hooks/receipts = safety layer.
-Default output is compact. Most commands accept --json. Prefer --dry-run before writes.
+Default output is compact. Most commands accept --json. Operator cmds also accept --limit / --full.
+Prefer --dry-run before writes. Install/remove/write require explicit confirmation.
 
-Productivity:
+  help                              Show this help
+
+Catalog & authoring:
   vibe                              Magical moment: work stubs + catalog summary + quality sample
   catalog                           List packs/profiles/skills (--pack/--profile/--search/--json)
   route --query <text>              Explainable skill routing (--pack / --include-explicit)
+  quality --skill <dir>             Score skill quality 0-100
+  lint-skill --skill <dir>          Fail if quality below threshold (--threshold / --hero)
+  scaffold --name <id>              Scaffold skill + sidecar (--pack/--mode/--write/--force)
+  stocktake                         Diff installed skills vs catalog
+  export-agents [--out <file>]      Write AGENTS.md from catalog/agents
+  forge --spec <file>               Deterministic skill generation (--dry-run/--write)
+  capture / forge-from-capture      Learning capture \u2192 skill proposals
+  compare / compare-skill            Sidecar / trust delta diffs
+  bench / scorecard / compose / batch / watch / pressure / skillshield
+
+Operator terminals:
   wb <task>                         Workbench: status/tree/find/grep/diff/errors/bigfiles/recent/proof
                                     (--json --limit <n> --full)
   lib <build|update|serve|check|recommend|remove>
@@ -23036,29 +23098,22 @@ Productivity:
                                     Workflow catalog (run = dry-run only)
   auto <plan|run>                   Skill + workflow recommend; run requires --read-only
   ps export                         Write PowerShell sf-*.ps1 helpers (token-friendly)
-  quality --skill <dir>             Score skill quality 0-100
-  lint-skill --skill <dir>          Fail if quality below threshold (--threshold / --hero)
-  scaffold --name <id>              Scaffold skill + sidecar (--pack/--mode/--write/--force)
-  stocktake                         Diff installed skills vs catalog
-  export-agents [--out <file>]      Write AGENTS.md from catalog/agents
+
+Hosts & install:
+  hosts [--json] [--home <dir>]     AI CLI host targets and trust boundaries
+  install [skill-paths...]          Multi-host install (--hosts/--custom-host/--yes/--dry-run/--force)
+  package --host codex              One skill \u2192 guarded Codex plugin (--skill/--out/--dry-run/--write)
 
 Trust & ship:
   demo                              Judge path: unsafe deny \u2192 safe package \u2192 demo scoreboard
   validate [paths...]               Structure + capability policy (--all/--json/--profile/--allow-empty)
   doctor                            Plugin + installed-skill health (--json)
-  hosts [--json] [--home <dir>]     AI CLI host targets and trust boundaries
-  install [skill-paths...]          Multi-host install (--hosts/--custom-host/--yes/--dry-run/--force)
-  package --host codex              One skill \u2192 guarded Codex plugin (--skill/--out/--dry-run/--write)
-  receipt / verify-receipt         Tamper-evident package receipt
+  receipt / verify-receipt         Tamper-evident package receipt (--package-only for verify)
   evidence --out <dir>              Deterministic trust/eval evidence bundle
   enforce --policy <sidecar.json>   PreToolUse allow/deny from stdin event JSON
-  forge --spec <file>               Deterministic skill generation (--dry-run/--write)
   eval                              Holdout routing evaluation (P/R gate)
   skillshield / pressure            Body scan / fixture pressure gate
   compare-skill --a <dir> --b <dir> Side-by-side trust delta
-
-Authoring / ops:
-  bench / scorecard / compose / batch / capture / forge-from-capture / compare / watch
 
 Compat OS helpers (prefer wb/ps when possible):
   os-env / os-find / os-ports / os-open / os-run / os-copy-path / os-clean

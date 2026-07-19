@@ -1,6 +1,6 @@
 ---
 name: data-warehouse
-description: Use when you need data warehouse in a SkillsForge data workflow.
+description: Use when doing data warehouse work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Warehouse without copying thi
 
 ## When to Use
 
-- Use when you need data warehouse in a SkillsForge data workflow.
+- Use when doing data warehouse work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data warehouse with trusted SkillsForge artifacts
 
 ## Phases

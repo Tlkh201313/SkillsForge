@@ -1,6 +1,6 @@
 ---
 name: test-flaky
-description: Use when you need test flaky in a SkillsForge testing workflow.
+description: Use when doing test flaky work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Test Flaky without copying third-p
 
 ## When to Use
 
-- Use when you need test flaky in a SkillsForge testing workflow.
+- Use when doing test flaky work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 - Need test flaky with trusted SkillsForge artifacts
 
 ## Phases

@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
+      "structured logging",
       "eng logging",
-      "run eng logging",
-      "eng logging skill",
-      "help with eng logging",
-      "eng eng logging"
+      "add logs safely",
+      "log redaction",
+      "operator logs"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "skip verification",
+      "marketing copy only"
     ],
     "mode": "explicit",
     "pack": "eng"

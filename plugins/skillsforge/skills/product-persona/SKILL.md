@@ -1,6 +1,6 @@
 ---
 name: product-persona
-description: Use when you need product persona in a SkillsForge product workflow.
+description: Use when doing product persona work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Product Persona without copying th
 
 ## When to Use
 
-- Use when you need product persona in a SkillsForge product workflow.
+- Use when doing product persona work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 - Need product persona with trusted SkillsForge artifacts
 
 ## Phases

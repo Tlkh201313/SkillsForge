@@ -1,6 +1,6 @@
 ---
 name: docs-readme
-description: Use when you need docs readme in a SkillsForge docs workflow.
+description: Use when updating README for operators or judges so claims stay verifiable and demo commands actually run.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,35 @@ hooks:
 
 # Docs Readme
 
-## Overview
-
-Lean SkillsForge scaffold for docs readme (docs pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Docs Readme without copying third-party skill bodies or overstating this scaffold's depth.
+Keep README accurate: what it is, why it exists, demo path, safety model — no fake stats or dead CTAs.
 
 ## When to Use
 
-- Use when you need docs readme in a SkillsForge docs workflow.
-- Need docs readme with trusted SkillsForge artifacts
+Release notes, hackathon submit, post-feature README sync.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Audience** — Judges vs operators; lead with Work OS value.
+2. **Claims audit** — Every count/command must match `catalog` / `help` / tests.
+3. **Demo** — Repo binary path; poster + MP4 honesty for GitHub.
+4. **Safety** — validate/package/hooks/receipts as layer, not OS sandbox.
+5. **Verify** — Run the demo command; fix drift before merge.
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- README matches VERSION
+- No `npx skillsforge` without not-published warning
+- Media paths exist
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- Superlatives without evidence
+- Remotion render CTAs when source removed
+- Inflating skill depth beyond lean scaffolds
 
 ## Handoff
 
-Recommend `skillsforge route --pack docs` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+→ `readme-claim-auditor` agent / `prove-outcome` / `skillsforge demo`.
 
-## Common Mistakes
-
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
-
-## Pressure stub
-
-See `pressure/` fixtures when this is a discipline skill.

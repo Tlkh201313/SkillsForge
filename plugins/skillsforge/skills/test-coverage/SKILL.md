@@ -1,6 +1,6 @@
 ---
 name: test-coverage
-description: Use when you need test coverage in a SkillsForge testing workflow.
+description: Use when doing test coverage work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Test Coverage without copying thir
 
 ## When to Use
 
-- Use when you need test coverage in a SkillsForge testing workflow.
+- Use when doing test coverage work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 - Need test coverage with trusted SkillsForge artifacts
 
 ## Phases

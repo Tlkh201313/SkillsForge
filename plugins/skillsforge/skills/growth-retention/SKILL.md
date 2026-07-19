@@ -1,6 +1,6 @@
 ---
 name: growth-retention
-description: Use when you need growth retention in a SkillsForge growth workflow.
+description: Use when doing growth retention work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Growth Retention without copying t
 
 ## When to Use
 
-- Use when you need growth retention in a SkillsForge growth workflow.
+- Use when doing growth retention work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 - Need growth retention with trusted SkillsForge artifacts
 
 ## Phases

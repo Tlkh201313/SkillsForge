@@ -1,6 +1,6 @@
 ---
 name: research-evidence-grade
-description: Use when you need research evidence grade in a SkillsForge research workflow.
+description: Use when doing research evidence grade work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Research Evidence Grade without co
 
 ## When to Use
 
-- Use when you need research evidence grade in a SkillsForge research workflow.
+- Use when doing research evidence grade work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 - Need research evidence grade with trusted SkillsForge artifacts
 
 ## Phases

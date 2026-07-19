@@ -1,6 +1,6 @@
 ---
 name: research-user-journey
-description: Use when you need research user journey in a SkillsForge research workflow.
+description: Use when doing research user journey work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Research User Journey without copy
 
 ## When to Use
 
-- Use when you need research user journey in a SkillsForge research workflow.
+- Use when doing research user journey work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 - Need research user journey with trusted SkillsForge artifacts
 
 ## Phases

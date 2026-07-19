@@ -1,6 +1,6 @@
 ---
 name: lang-json-schema
-description: Use when you need lang json schema in a SkillsForge lang workflow.
+description: Use when doing lang json schema work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Lang Json Schema without copying t
 
 ## When to Use
 
-- Use when you need lang json schema in a SkillsForge lang workflow.
+- Use when doing lang json schema work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 - Need lang json schema with trusted SkillsForge artifacts
 
 ## Phases

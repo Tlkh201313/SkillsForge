@@ -1,6 +1,6 @@
 ---
 name: ent-training
-description: Use when you need ent training in a SkillsForge enterprise workflow.
+description: Use when doing ent training work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ent Training without copying third
 
 ## When to Use
 
-- Use when you need ent training in a SkillsForge enterprise workflow.
+- Use when doing ent training work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 - Need ent training with trusted SkillsForge artifacts
 
 ## Phases

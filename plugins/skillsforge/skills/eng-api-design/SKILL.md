@@ -1,6 +1,6 @@
 ---
 name: eng-api-design
-description: Use when you need eng api design in a SkillsForge eng workflow.
+description: Use when designing or changing an API contract and you need compatibility, errors, and verification notes before implementation.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,35 @@ hooks:
 
 # Eng Api Design
 
-## Overview
-
-Lean SkillsForge scaffold for eng api design (eng pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Eng Api Design without copying third-party skill bodies or overstating this scaffold's depth.
+Lock a small, versioned API contract (shapes, errors, auth assumptions) before coding handlers.
 
 ## When to Use
 
-- Use when you need eng api design in a SkillsForge eng workflow.
-- Need eng api design with trusted SkillsForge artifacts
+New endpoints, breaking field changes, public SDK surfaces.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Consumers** — Who calls this and what must not break.
+2. **Resources** — Nouns, IDs, pagination, idempotency keys.
+3. **Errors** — Status map + stable error codes.
+4. **Compat** — Additive vs breaking; migration note if needed.
+5. **Verify plan** — Contract tests or example requests listed.
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Contract sketch in `docs/work/` or OpenAPI fragment
+- Compat decision recorded
+- Test/verify commands named
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- Coding handlers before contract agreement
+- Silent breaking changes
+- Vague REST-ish blobs without error model
 
 ## Handoff
 
-Recommend `skillsforge route --pack eng` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+→ `write-plan` / `run-build`. Security-sensitive → `sec-authz` / `sec-input-validation`.
 
-## Common Mistakes
-
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
-
-## Pressure stub
-
-See `pressure/` fixtures when this is a discipline skill.

@@ -1,6 +1,6 @@
 ---
 name: agent-handoff
-description: Use when you need agent handoff in a SkillsForge agentic workflow.
+description: Use when doing agent handoff work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Agent Handoff without copying thir
 
 ## When to Use
 
-- Use when you need agent handoff in a SkillsForge agentic workflow.
+- Use when doing agent handoff work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 - Need agent handoff with trusted SkillsForge artifacts
 
 ## Phases

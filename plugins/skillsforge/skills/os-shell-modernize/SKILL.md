@@ -1,6 +1,6 @@
 ---
 name: os-shell-modernize
-description: Use when you need os shell modernize in a SkillsForge os workflow.
+description: Use when doing os shell modernize work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Os Shell Modernize without copying
 
 ## When to Use
 
-- Use when you need os shell modernize in a SkillsForge os workflow.
+- Use when doing os shell modernize work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
 - Need os shell modernize with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: crew-handoff
-description: Use when you need crew handoff in a SkillsForge lifecycle workflow.
+description: Use when doing crew handoff work and you need bounded lifecycle-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Crew Handoff without copying third
 
 ## When to Use
 
-- Use when you need crew handoff in a SkillsForge lifecycle workflow.
+- Use when doing crew handoff work and you need bounded lifecycle-pack steps, stop conditions, and a verification check before shipping.
 - Need crew handoff with trusted SkillsForge artifacts
 
 ## Phases

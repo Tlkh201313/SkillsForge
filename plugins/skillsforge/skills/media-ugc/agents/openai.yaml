@@ -1,6 +1,6 @@
 interface:
   display_name: Media Ugc
-  short_description: Use when you need media ugc in a SkillsForge media workflow.
+  short_description: Use when doing media ugc work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the media-ugc skill for this task.
 policy:
   allow_implicit_invocation: false

@@ -1,6 +1,6 @@
 ---
 name: design-dark-mode
-description: Use when you need design dark mode in a SkillsForge design workflow.
+description: Use when doing design dark mode work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Design Dark Mode without copying t
 
 ## When to Use
 
-- Use when you need design dark mode in a SkillsForge design workflow.
+- Use when doing design dark mode work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 - Need design dark mode with trusted SkillsForge artifacts
 
 ## Phases

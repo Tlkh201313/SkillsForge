@@ -13,7 +13,9 @@
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "skip verification",
+      "invent credentials"
     ],
     "mode": "explicit",
     "pack": "data"

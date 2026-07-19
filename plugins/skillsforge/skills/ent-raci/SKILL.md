@@ -1,6 +1,6 @@
 ---
 name: ent-raci
-description: Use when you need ent raci in a SkillsForge enterprise workflow.
+description: Use when doing ent raci work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ent Raci without copying third-par
 
 ## When to Use
 
-- Use when you need ent raci in a SkillsForge enterprise workflow.
+- Use when doing ent raci work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 - Need ent raci with trusted SkillsForge artifacts
 
 ## Phases

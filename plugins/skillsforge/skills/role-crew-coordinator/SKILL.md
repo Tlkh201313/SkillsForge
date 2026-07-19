@@ -1,6 +1,6 @@
 ---
 name: role-crew-coordinator
-description: Use when you need role crew coordinator in a SkillsForge roles workflow.
+description: Use when doing role crew coordinator work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Crew Coordinator without copy
 
 ## When to Use
 
-- Use when you need role crew coordinator in a SkillsForge roles workflow.
+- Use when doing role crew coordinator work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role crew coordinator with trusted SkillsForge artifacts
 
 ## Phases

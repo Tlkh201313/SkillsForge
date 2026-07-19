@@ -1,6 +1,6 @@
 ---
 name: sec-owasp
-description: Use when you need sec owasp in a SkillsForge security workflow.
+description: Use when mapping a web or agent surface to OWASP-style risks with concrete repo checks instead of generic posters.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,35 @@ hooks:
 
 # Sec Owasp
 
-## Overview
-
-Lean SkillsForge scaffold for sec owasp (security pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Sec Owasp without copying third-party skill bodies or overstating this scaffold's depth.
+Map relevant OWASP-class risks to this repo/feature with commands and file evidence.
 
 ## When to Use
 
-- Use when you need sec owasp in a SkillsForge security workflow.
-- Need sec owasp with trusted SkillsForge artifacts
+Web endpoints, HTML library UI, agent tool input, MCP argument handling.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Surface** — HTTP handlers, HTML sinks, shell args, path joins.
+2. **Pick risks** — Only applicable classes (injection, XSS, path traversal, SSRF, authz).
+3. **Probe** — Named checks (tests, grep, manual cases) — no invented pass rates.
+4. **Fix or accept** — Each finding gets owner + verification.
+5. **Record** — Findings in `docs/work/findings.md`.
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Applicable risk list (not all 10 blindly)
+- Evidence for each check run
+- Open risks explicit
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- Pasting OWASP posters as done
+- Fake scanner scores
+- Skipping path confinement on `--home` / `--out`
 
 ## Handoff
 
-Recommend `skillsforge route --pack security` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+→ `sec-input-validation` / path tests / `prove-outcome`.
 
-## Common Mistakes
-
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
-
-## Pressure stub
-
-See `pressure/` fixtures when this is a discipline skill.

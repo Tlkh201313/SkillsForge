@@ -1,6 +1,6 @@
 ---
 name: mobile-crash
-description: Use when you need mobile crash in a SkillsForge mobile workflow.
+description: Use when doing mobile crash work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Mobile Crash without copying third
 
 ## When to Use
 
-- Use when you need mobile crash in a SkillsForge mobile workflow.
+- Use when doing mobile crash work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 - Need mobile crash with trusted SkillsForge artifacts
 
 ## Phases

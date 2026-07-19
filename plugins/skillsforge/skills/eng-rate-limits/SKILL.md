@@ -1,6 +1,6 @@
 ---
 name: eng-rate-limits
-description: Use when you need eng rate limits in a SkillsForge eng workflow.
+description: Use when doing eng rate limits work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Eng Rate Limits without copying th
 
 ## When to Use
 
-- Use when you need eng rate limits in a SkillsForge eng workflow.
+- Use when doing eng rate limits work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 - Need eng rate limits with trusted SkillsForge artifacts
 
 ## Phases

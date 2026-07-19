@@ -1,6 +1,6 @@
 interface:
   display_name: Research Market
-  short_description: Use when you need research market in a SkillsForge research workflow.
+  short_description: Use when doing research market work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the research-market skill for this task.
 policy:
   allow_implicit_invocation: false

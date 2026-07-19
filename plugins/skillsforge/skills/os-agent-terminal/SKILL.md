@@ -1,6 +1,6 @@
 ---
 name: os-agent-terminal
-description: Use when you need os agent terminal in a SkillsForge os workflow.
+description: Use when doing os agent terminal work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Os Agent Terminal without copying 
 
 ## When to Use
 
-- Use when you need os agent terminal in a SkillsForge os workflow.
+- Use when doing os agent terminal work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
 - Need os agent terminal with trusted SkillsForge artifacts
 
 ## Phases

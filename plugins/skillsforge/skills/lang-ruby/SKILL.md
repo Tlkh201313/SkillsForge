@@ -1,6 +1,6 @@
 ---
 name: lang-ruby
-description: Use when you need lang ruby in a SkillsForge lang workflow.
+description: Use when doing lang ruby work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Lang Ruby without copying third-pa
 
 ## When to Use
 
-- Use when you need lang ruby in a SkillsForge lang workflow.
+- Use when doing lang ruby work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 - Need lang ruby with trusted SkillsForge artifacts
 
 ## Phases

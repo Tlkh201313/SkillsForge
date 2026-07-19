@@ -1,6 +1,6 @@
 ---
 name: lang-csharp
-description: Use when you need lang csharp in a SkillsForge lang workflow.
+description: Use when doing lang csharp work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Lang Csharp without copying third-
 
 ## When to Use
 
-- Use when you need lang csharp in a SkillsForge lang workflow.
+- Use when doing lang csharp work and you need bounded lang-pack steps, stop conditions, and a verification check before shipping.
 - Need lang csharp with trusted SkillsForge artifacts
 
 ## Phases

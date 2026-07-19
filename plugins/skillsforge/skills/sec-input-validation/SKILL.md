@@ -1,6 +1,6 @@
 ---
 name: sec-input-validation
-description: Use when you need sec input validation in a SkillsForge security workflow.
+description: Use when validating untrusted input at CLI, MCP, or HTTP boundaries with allowlists and path confinement.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,35 @@ hooks:
 
 # Sec Input Validation
 
-## Overview
-
-Lean SkillsForge scaffold for sec input validation (security pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Sec Input Validation without copying third-party skill bodies or overstating this scaffold's depth.
+Treat CLI/MCP/HTTP args as hostile: allowlist, confine paths, reject NUL/escape.
 
 ## When to Use
 
-- Use when you need sec input validation in a SkillsForge security workflow.
-- Need sec input validation with trusted SkillsForge artifacts
+New flags (`--home`, `--out`), MCP tools, HTML library mutation APIs.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Trust boundary** — Where input enters.
+2. **Allowlist** — Enums, id patterns, absolute-vs-relative rules.
+3. **Confine** — `isInside` / resolve-under-root patterns.
+4. **Fail closed** — Invalid → exit 2 / deny, not best-effort.
+5. **Tests** — Escape and NUL cases in unit tests.
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Validation rules documented
+- Escape tests pass
+- No silent path coercion outside root
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- Blacklist-only filters
+- `eval` on user strings
+- Accepting `..` segments casually
 
 ## Handoff
 
-Recommend `skillsforge route --pack security` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+→ path-confinement tests / `sec-owasp` / `prove-outcome`.
 
-## Common Mistakes
-
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
-
-## Pressure stub
-
-See `pressure/` fixtures when this is a discipline skill.

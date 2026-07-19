@@ -1,6 +1,6 @@
 interface:
   display_name: Role Founder
-  short_description: Use when you need role founder in a SkillsForge roles workflow.
+  short_description: Use when doing role founder work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the role-founder skill for this task.
 policy:
   allow_implicit_invocation: false

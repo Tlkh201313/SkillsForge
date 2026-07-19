@@ -1,6 +1,6 @@
 ---
 name: data-privacy
-description: Use when you need data privacy in a SkillsForge data workflow.
+description: Use when doing data privacy work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Privacy without copying third
 
 ## When to Use
 
-- Use when you need data privacy in a SkillsForge data workflow.
+- Use when doing data privacy work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data privacy with trusted SkillsForge artifacts
 
 ## Phases

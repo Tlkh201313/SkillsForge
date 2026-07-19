@@ -1,6 +1,6 @@
 ---
 name: product-postmortem
-description: Use when you need product postmortem in a SkillsForge product workflow.
+description: Use when doing product postmortem work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Product Postmortem without copying
 
 ## When to Use
 
-- Use when you need product postmortem in a SkillsForge product workflow.
+- Use when doing product postmortem work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 - Need product postmortem with trusted SkillsForge artifacts
 
 ## Phases

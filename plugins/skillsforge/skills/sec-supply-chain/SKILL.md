@@ -1,6 +1,6 @@
 ---
 name: sec-supply-chain
-description: Use when you need sec supply chain in a SkillsForge security workflow.
+description: Use when doing sec supply chain work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Sec Supply Chain without copying t
 
 ## When to Use
 
-- Use when you need sec supply chain in a SkillsForge security workflow.
+- Use when doing sec supply chain work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
 - Need sec supply chain with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: sec-crypto-hygiene
-description: Use when you need sec crypto hygiene in a SkillsForge security workflow.
+description: Use when doing sec crypto hygiene work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Sec Crypto Hygiene without copying
 
 ## When to Use
 
-- Use when you need sec crypto hygiene in a SkillsForge security workflow.
+- Use when doing sec crypto hygiene work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
 - Need sec crypto hygiene with trusted SkillsForge artifacts
 
 ## Phases

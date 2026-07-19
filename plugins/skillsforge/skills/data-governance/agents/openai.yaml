@@ -1,6 +1,6 @@
 interface:
   display_name: Data Governance
-  short_description: Use when you need data governance in a SkillsForge data workflow.
+  short_description: Use when doing data governance work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the data-governance skill for this task.
 policy:
   allow_implicit_invocation: false

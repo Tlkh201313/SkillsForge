@@ -1,6 +1,6 @@
 ---
 name: data-sql-review
-description: Use when you need data sql review in a SkillsForge data workflow.
+description: Use when doing data sql review work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Sql Review without copying th
 
 ## When to Use
 
-- Use when you need data sql review in a SkillsForge data workflow.
+- Use when doing data sql review work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data sql review with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: triage-inbox
-description: Use when you need triage inbox in a SkillsForge lifecycle workflow.
+description: Use when doing triage inbox work and you need bounded lifecycle-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Triage Inbox without copying third
 
 ## When to Use
 
-- Use when you need triage inbox in a SkillsForge lifecycle workflow.
+- Use when doing triage inbox work and you need bounded lifecycle-pack steps, stop conditions, and a verification check before shipping.
 - Need triage inbox with trusted SkillsForge artifacts
 
 ## Phases

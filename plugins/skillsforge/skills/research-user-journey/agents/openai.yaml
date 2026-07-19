@@ -1,6 +1,6 @@
 interface:
   display_name: Research User Journey
-  short_description: Use when you need research user journey in a SkillsForge research workflow.
+  short_description: Use when doing research user journey work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the research-user-journey skill for this task.
 policy:
   allow_implicit_invocation: false

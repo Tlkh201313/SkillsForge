@@ -1,6 +1,6 @@
 ---
 name: ent-security-review
-description: Use when you need ent security review in a SkillsForge enterprise workflow.
+description: Use when doing ent security review work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ent Security Review without copyin
 
 ## When to Use
 
-- Use when you need ent security review in a SkillsForge enterprise workflow.
+- Use when doing ent security review work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 - Need ent security review with trusted SkillsForge artifacts
 
 ## Phases

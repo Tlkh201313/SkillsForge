@@ -124,6 +124,10 @@ test('CLI help exits 0 and lists every subcommand', async () => {
   for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'help', 'install']) {
     assert.match(help, new RegExp(`\\b${name}\\b`));
   }
+  assert.match(help, /Catalog & authoring:/);
+  assert.match(help, /Operator terminals:/);
+  assert.match(help, /Hosts & install:/);
+  assert.match(help, /Trust & ship:/);
   assert.match(help, /--profile/);
   assert.match(help, /--package-only/);
   assert.match(help, /Exit codes/);

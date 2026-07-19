@@ -1,6 +1,6 @@
 interface:
   display_name: Ent Change Mgmt
-  short_description: Use when you need ent change mgmt in a SkillsForge enterprise workflow.
+  short_description: Use when doing ent change mgmt work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the ent-change-mgmt skill for this task.
 policy:
   allow_implicit_invocation: false

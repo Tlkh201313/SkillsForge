@@ -1,6 +1,6 @@
 ---
 name: eng-background-jobs
-description: Use when you need eng background jobs in a SkillsForge eng workflow.
+description: Use when doing eng background jobs work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Eng Background Jobs without copyin
 
 ## When to Use
 
-- Use when you need eng background jobs in a SkillsForge eng workflow.
+- Use when doing eng background jobs work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 - Need eng background jobs with trusted SkillsForge artifacts
 
 ## Phases

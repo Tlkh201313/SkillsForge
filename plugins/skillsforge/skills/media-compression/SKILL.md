@@ -1,6 +1,6 @@
 ---
 name: media-compression
-description: Use when you need media compression in a SkillsForge media workflow.
+description: Use when doing media compression work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Media Compression without copying 
 
 ## When to Use
 
-- Use when you need media compression in a SkillsForge media workflow.
+- Use when doing media compression work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
 - Need media compression with trusted SkillsForge artifacts
 
 ## Phases

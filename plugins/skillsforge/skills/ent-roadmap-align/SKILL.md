@@ -1,6 +1,6 @@
 ---
 name: ent-roadmap-align
-description: Use when you need ent roadmap align in a SkillsForge enterprise workflow.
+description: Use when doing ent roadmap align work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ent Roadmap Align without copying 
 
 ## When to Use
 
-- Use when you need ent roadmap align in a SkillsForge enterprise workflow.
+- Use when doing ent roadmap align work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 - Need ent roadmap align with trusted SkillsForge artifacts
 
 ## Phases

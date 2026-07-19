@@ -39,7 +39,14 @@ test('workflow catalog contains exactly 100 valid workflows in planned categorie
 test('workflow recommendation and dry-run expose compact actionable plans', async () => {
   const recommended = await recommendWorkflows(root, 'safe refactor code with tests', { limit: 3 });
   assert.equal(recommended.ok, true);
+  assert.ok(recommended.confidence === 'high' || recommended.confidence === 'low');
+  assert.equal(recommended.needsConfirmation, true);
   assert.ok(recommended.candidates.some((workflow) => workflow.id === 'coding.safe-refactor'));
+
+  const noise = await recommendWorkflows(root, 'zzzzqx qqqqxyz', { limit: 3 });
+  assert.equal(noise.confidence, 'none');
+  assert.equal(noise.fallback, 'no-confident-match');
+  assert.equal(noise.candidates.length, 0);
 
   const shown = await showWorkflow(root, 'coding.safe-refactor');
   assert.equal(shown.ok, true);

@@ -1,6 +1,6 @@
 interface:
   display_name: Sec Privacy
-  short_description: Use when you need sec privacy in a SkillsForge security workflow.
+  short_description: Use when doing sec privacy work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the sec-privacy skill for this task.
 policy:
   allow_implicit_invocation: false

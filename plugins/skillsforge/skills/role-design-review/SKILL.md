@@ -1,6 +1,6 @@
 ---
 name: role-design-review
-description: Use when you need role design review in a SkillsForge roles workflow.
+description: Use when doing role design review work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Design Review without copying
 
 ## When to Use
 
-- Use when you need role design review in a SkillsForge roles workflow.
+- Use when doing role design review work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role design review with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: ent-change-mgmt
-description: Use when you need ent change mgmt in a SkillsForge enterprise workflow.
+description: Use when doing ent change mgmt work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ent Change Mgmt without copying th
 
 ## When to Use
 
-- Use when you need ent change mgmt in a SkillsForge enterprise workflow.
+- Use when doing ent change mgmt work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
 - Need ent change mgmt with trusted SkillsForge artifacts
 
 ## Phases

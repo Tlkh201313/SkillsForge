@@ -1,6 +1,6 @@
 ---
 name: design-before-code
-description: Use when you need design before code in a SkillsForge methodology workflow.
+description: Use when doing design before code work and you need bounded methodology-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Design Before Code without copying
 
 ## When to Use
 
-- Use when you need design before code in a SkillsForge methodology workflow.
+- Use when doing design before code work and you need bounded methodology-pack steps, stop conditions, and a verification check before shipping.
 - Need design before code with trusted SkillsForge artifacts
 
 ## Phases

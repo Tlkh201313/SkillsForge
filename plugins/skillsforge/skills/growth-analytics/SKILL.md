@@ -1,6 +1,6 @@
 ---
 name: growth-analytics
-description: Use when you need growth analytics in a SkillsForge growth workflow.
+description: Use when doing growth analytics work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Growth Analytics without copying t
 
 ## When to Use
 
-- Use when you need growth analytics in a SkillsForge growth workflow.
+- Use when doing growth analytics work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 - Need growth analytics with trusted SkillsForge artifacts
 
 ## Phases

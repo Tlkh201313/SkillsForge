@@ -32,9 +32,12 @@ test('library recommend returns no confident match for empty/noise queries', asy
   const index = await buildLibraryIndex(root, { home: join(root, 'artifacts') });
   const empty = recommendFromLibrary(index, '   ', { limit: 3 });
   assert.equal(empty.confidence, 'none');
+  assert.equal(empty.fallback, 'no-confident-match');
   assert.equal(empty.skills.length, 0);
   assert.equal(empty.workflows.length, 0);
+  assert.equal(empty.needsConfirmation, true);
   assert.match(empty.note ?? '', /no confident match/i);
+  assert.ok(Array.isArray(empty.alternatives) && empty.alternatives.length >= 1);
 
   const noise = recommendFromLibrary(index, 'zzzzqx qqqqxyz', { limit: 3 });
   assert.equal(noise.confidence, 'none');
@@ -48,4 +51,17 @@ test('library recommend stays non-hardcoded for a real query', async () => {
   assert.notEqual(a.skills[0]?.id ?? a.workflows[0]?.id, b.skills[0]?.id ?? b.workflows[0]?.id);
   assert.ok(a.confidence === 'high' || a.confidence === 'low');
   assert.ok((a.skills.length + a.workflows.length) > 0);
+  assert.equal(a.needsConfirmation, true);
+  if (a.skills[0]) {
+    assert.ok(Array.isArray(a.skills[0].riskFlags));
+    assert.equal(typeof a.skills[0].needsConfirmation, 'boolean');
+  }
+});
+
+test('library HTML has no external CDN stylesheet or script deps', async () => {
+  const { buildLibraryHtml, buildLibraryIndex } = await import('../lib/capabilities/library.mjs');
+  const index = await buildLibraryIndex(root, { home: join(root, 'artifacts') });
+  const html = buildLibraryHtml(index);
+  assert.doesNotMatch(html, /https?:\/\/cdn\.|googleapis\.com|unpkg\.com|jsdelivr/i);
+  assert.match(html, /prefers-reduced-motion/);
 });

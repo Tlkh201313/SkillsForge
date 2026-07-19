@@ -1,6 +1,6 @@
 ---
 name: growth-seo
-description: Use when you need growth seo in a SkillsForge growth workflow.
+description: Use when doing growth seo work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Growth Seo without copying third-p
 
 ## When to Use
 
-- Use when you need growth seo in a SkillsForge growth workflow.
+- Use when doing growth seo work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 - Need growth seo with trusted SkillsForge artifacts
 
 ## Phases

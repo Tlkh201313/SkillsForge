@@ -1,6 +1,6 @@
 ---
 name: test-property
-description: Use when you need test property in a SkillsForge testing workflow.
+description: Use when doing test property work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Test Property without copying thir
 
 ## When to Use
 
-- Use when you need test property in a SkillsForge testing workflow.
+- Use when doing test property work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
 - Need test property with trusted SkillsForge artifacts
 
 ## Phases

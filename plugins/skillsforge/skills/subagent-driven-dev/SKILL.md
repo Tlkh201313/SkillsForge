@@ -1,6 +1,6 @@
 ---
 name: subagent-driven-dev
-description: Use when you need subagent driven dev in a SkillsForge methodology workflow.
+description: Use when doing subagent driven dev work and you need bounded methodology-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Subagent Driven Dev without copyin
 
 ## When to Use
 
-- Use when you need subagent driven dev in a SkillsForge methodology workflow.
+- Use when doing subagent driven dev work and you need bounded methodology-pack steps, stop conditions, and a verification check before shipping.
 - Need subagent driven dev with trusted SkillsForge artifacts
 
 ## Phases

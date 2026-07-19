@@ -1,6 +1,6 @@
 ---
 name: docs-examples
-description: Use when you need docs examples in a SkillsForge docs workflow.
+description: Use when doing docs examples work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Docs Examples without copying thir
 
 ## When to Use
 
-- Use when you need docs examples in a SkillsForge docs workflow.
+- Use when doing docs examples work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
 - Need docs examples with trusted SkillsForge artifacts
 
 ## Phases

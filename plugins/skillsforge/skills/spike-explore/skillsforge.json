@@ -13,7 +13,9 @@
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "one-off throwaway script with no brief",
+      "skip capture and proof"
     ],
     "mode": "explicit",
     "pack": "lifecycle"

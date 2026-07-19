@@ -1,6 +1,6 @@
 ---
 name: legal-oss-notice
-description: Use when you need legal oss notice in a SkillsForge legal-lite workflow.
+description: Use when doing legal oss notice work and you need bounded legal-lite-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Legal Oss Notice without copying t
 
 ## When to Use
 
-- Use when you need legal oss notice in a SkillsForge legal-lite workflow.
+- Use when doing legal oss notice work and you need bounded legal-lite-pack steps, stop conditions, and a verification check before shipping.
 - Need legal oss notice with trusted SkillsForge artifacts
 
 ## Phases

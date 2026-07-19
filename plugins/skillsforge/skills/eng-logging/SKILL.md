@@ -1,6 +1,6 @@
 ---
 name: eng-logging
-description: Use when you need eng logging in a SkillsForge eng workflow.
+description: Use when adding structured logging so operators get actionable signals without secret leakage or noisy spam.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,35 @@ hooks:
 
 # Eng Logging
 
-## Overview
-
-Lean SkillsForge scaffold for eng logging (eng pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Eng Logging without copying third-party skill bodies or overstating this scaffold's depth.
+Add structured, redacted logs that help debug without dumping secrets or flooding agents.
 
 ## When to Use
 
-- Use when you need eng logging in a SkillsForge eng workflow.
-- Need eng logging with trusted SkillsForge artifacts
+New CLI commands, hooks, library serve, package/receipt paths.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Events** — Name the few events that matter (start/deny/fail/success).
+2. **Fields** — Stable keys; ids not payloads.
+3. **Redact** — Tokens, homedir dumps, raw skill bodies.
+4. **Levels** — Compact default; `--full` / debug opt-in.
+5. **Verify** — Failure case shows useful next step, not a stack-only wall.
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Log contract sketched
+- Default output stays token-friendly
+- Secrets absent from sample output
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- Logging full request bodies with credentials
+- Debug-by-default spam
+- Inconsistent field names
 
 ## Handoff
 
-Recommend `skillsforge route --pack eng` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+→ `eng-error-handling` / `os-env` / `prove-outcome`.
 
-## Common Mistakes
-
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
-
-## Pressure stub
-
-See `pressure/` fixtures when this is a discipline skill.

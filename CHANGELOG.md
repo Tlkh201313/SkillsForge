@@ -4,13 +4,16 @@ All notable changes to SkillsForge are recorded here.
 
 ## [0.4.2] - 2026-07-19
 
-### Changed — Work OS quality pass
+### Changed — Work OS quality pass (Phase A)
 
-- CLI `help` regrouped: Productivity → Trust & ship → Compat (os-*).
-- `lib recommend` uses confidence threshold (aligned with router); returns `confidence: none` + note instead of forcing weak matches.
+- CLI `help` regrouped: Catalog & authoring → Operator terminals → Hosts & install → Trust & ship → Compat (os-*).
+- `lib recommend` / `workflows recommend` use confidence thresholds; return `confidence`, `fallback: no-confident-match`, `alternatives`, `needsConfirmation`, and skill `riskFlags` instead of forcing weak matches.
 - Library UI shows explicit “No confident match” empty state.
-- Lean scaffold/gen-pack description templates now use Use-when + stop/verify wording (existing lean skills unchanged until `gen:packs`).
-- AGENTS.md productivity framing; claim/media/no-match tests added.
+- `validate-repo` claim/media/package-allowlist hygiene for full repos; README claim + media tests.
+- Skill index cache fingerprint includes per-skill `SKILL.md` / sidecar mtimes.
+- Lean scaffold/gen-pack descriptions + pack-aware antiTriggers; regenerable scaffolds synced.
+- Promoted 15 high-traffic eng/security/docs skills from lean scaffolds to concrete workflows (still experimental maturity).
+- AGENTS.md productivity framing.
 
 ## [0.4.1] - 2026-07-19
 

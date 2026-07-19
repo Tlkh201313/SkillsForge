@@ -1,6 +1,6 @@
 ---
 name: content-case-study
-description: Use when you need content case study in a SkillsForge content workflow.
+description: Use when doing content case study work and you need bounded content-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Content Case Study without copying
 
 ## When to Use
 
-- Use when you need content case study in a SkillsForge content workflow.
+- Use when doing content case study work and you need bounded content-pack steps, stop conditions, and a verification check before shipping.
 - Need content case study with trusted SkillsForge artifacts
 
 ## Phases

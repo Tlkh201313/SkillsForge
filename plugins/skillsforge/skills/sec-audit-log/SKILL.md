@@ -1,6 +1,6 @@
 ---
 name: sec-audit-log
-description: Use when you need sec audit log in a SkillsForge security workflow.
+description: Use when doing sec audit log work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Sec Audit Log without copying thir
 
 ## When to Use
 
-- Use when you need sec audit log in a SkillsForge security workflow.
+- Use when doing sec audit log work and you need bounded security-pack steps, stop conditions, and a verification check before shipping.
 - Need sec audit log with trusted SkillsForge artifacts
 
 ## Phases

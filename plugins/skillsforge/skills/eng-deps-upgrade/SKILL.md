@@ -1,6 +1,6 @@
 ---
 name: eng-deps-upgrade
-description: Use when you need eng deps upgrade in a SkillsForge eng workflow.
+description: Use when upgrading dependencies with a bounded blast radius, lockfile discipline, and regression checks before merge.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,35 @@ hooks:
 
 # Eng Deps Upgrade
 
-## Overview
-
-Lean SkillsForge scaffold for eng deps upgrade (eng pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Eng Deps Upgrade without copying third-party skill bodies or overstating this scaffold's depth.
+Upgrade deps safely: one concern per PR when possible, verify, and record risk.
 
 ## When to Use
 
-- Use when you need eng deps upgrade in a SkillsForge eng workflow.
-- Need eng deps upgrade with trusted SkillsForge artifacts
+Routine bumps, audit findings, engine changes.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Scope** — Direct vs transitive; security vs feature.
+2. **Plan** — Target versions; note breaking changelogs.
+3. **Apply** — Update manifests/lockfile only as needed.
+4. **Verify** — `npm test` / project check subset that proves the bump.
+5. **Record** — Residual risk (peer warnings, skipped majors).
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Lockfile committed
+- Verification commands listed with results
+- No drive-by refactors
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- Blind `npm audit fix --force`
+- Major bumps without reading changelog
+- Committing `node_modules`
 
 ## Handoff
 
-Recommend `skillsforge route --pack eng` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+→ `sec-deps` / `sec-supply-chain` / `review-diff`.
 
-## Common Mistakes
-
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
-
-## Pressure stub
-
-See `pressure/` fixtures when this is a discipline skill.

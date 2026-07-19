@@ -1,6 +1,6 @@
 ---
 name: data-contracts
-description: Use when you need data contracts in a SkillsForge data workflow.
+description: Use when doing data contracts work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Contracts without copying thi
 
 ## When to Use
 
-- Use when you need data contracts in a SkillsForge data workflow.
+- Use when doing data contracts work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data contracts with trusted SkillsForge artifacts
 
 ## Phases

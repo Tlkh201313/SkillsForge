@@ -1,6 +1,6 @@
 ---
 name: design-critique
-description: Use when you need design critique in a SkillsForge design workflow.
+description: Use when doing design critique work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Design Critique without copying th
 
 ## When to Use
 
-- Use when you need design critique in a SkillsForge design workflow.
+- Use when doing design critique work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 - Need design critique with trusted SkillsForge artifacts
 
 ## Phases

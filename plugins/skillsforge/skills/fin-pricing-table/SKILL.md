@@ -1,6 +1,6 @@
 ---
 name: fin-pricing-table
-description: Use when you need fin pricing table in a SkillsForge finance-lite workflow.
+description: Use when doing fin pricing table work and you need bounded finance-lite-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Fin Pricing Table without copying 
 
 ## When to Use
 
-- Use when you need fin pricing table in a SkillsForge finance-lite workflow.
+- Use when doing fin pricing table work and you need bounded finance-lite-pack steps, stop conditions, and a verification check before shipping.
 - Need fin pricing table with trusted SkillsForge artifacts
 
 ## Phases

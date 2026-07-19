@@ -1,6 +1,6 @@
 ---
 name: content-calendar
-description: Use when you need content calendar in a SkillsForge content workflow.
+description: Use when doing content calendar work and you need bounded content-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Content Calendar without copying t
 
 ## When to Use
 
-- Use when you need content calendar in a SkillsForge content workflow.
+- Use when doing content calendar work and you need bounded content-pack steps, stop conditions, and a verification check before shipping.
 - Need content calendar with trusted SkillsForge artifacts
 
 ## Phases

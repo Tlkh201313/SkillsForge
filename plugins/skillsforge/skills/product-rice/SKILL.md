@@ -1,6 +1,6 @@
 ---
 name: product-rice
-description: Use when you need product rice in a SkillsForge product workflow.
+description: Use when doing product rice work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Product Rice without copying third
 
 ## When to Use
 
-- Use when you need product rice in a SkillsForge product workflow.
+- Use when doing product rice work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 - Need product rice with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 interface:
   display_name: Role Growth Lead
-  short_description: Use when you need role growth lead in a SkillsForge roles workflow.
+  short_description: Use when doing role growth lead work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the role-growth-lead skill for this task.
 policy:
   allow_implicit_invocation: false

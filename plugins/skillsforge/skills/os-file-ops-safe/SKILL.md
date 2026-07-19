@@ -1,6 +1,6 @@
 ---
 name: os-file-ops-safe
-description: Use when you need os file ops safe in a SkillsForge os workflow.
+description: Use when doing os file ops safe work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Os File Ops Safe without copying t
 
 ## When to Use
 
-- Use when you need os file ops safe in a SkillsForge os workflow.
+- Use when doing os file ops safe work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
 - Need os file ops safe with trusted SkillsForge artifacts
 
 ## Phases

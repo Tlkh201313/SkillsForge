@@ -1,6 +1,6 @@
 ---
 name: research-contradictions
-description: Use when you need research contradictions in a SkillsForge research workflow.
+description: Use when doing research contradictions work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Research Contradictions without co
 
 ## When to Use
 
-- Use when you need research contradictions in a SkillsForge research workflow.
+- Use when doing research contradictions work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
 - Need research contradictions with trusted SkillsForge artifacts
 
 ## Phases

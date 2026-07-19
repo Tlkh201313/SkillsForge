@@ -1,6 +1,6 @@
 ---
 name: design-a11y
-description: Use when you need design a11y in a SkillsForge design workflow.
+description: Use when doing design a11y work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Design A11y without copying third-
 
 ## When to Use
 
-- Use when you need design a11y in a SkillsForge design workflow.
+- Use when doing design a11y work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 - Need design a11y with trusted SkillsForge artifacts
 
 ## Phases

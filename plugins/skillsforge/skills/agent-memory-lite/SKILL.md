@@ -1,6 +1,6 @@
 ---
 name: agent-memory-lite
-description: Use when you need agent memory lite in a SkillsForge agentic workflow.
+description: Use when doing agent memory lite work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Agent Memory Lite without copying 
 
 ## When to Use
 
-- Use when you need agent memory lite in a SkillsForge agentic workflow.
+- Use when doing agent memory lite work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
 - Need agent memory lite with trusted SkillsForge artifacts
 
 ## Phases

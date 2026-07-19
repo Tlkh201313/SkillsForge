@@ -1,6 +1,6 @@
 ---
 name: product-launch
-description: Use when you need product launch in a SkillsForge product workflow.
+description: Use when doing product launch work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Product Launch without copying thi
 
 ## When to Use
 
-- Use when you need product launch in a SkillsForge product workflow.
+- Use when doing product launch work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
 - Need product launch with trusted SkillsForge artifacts
 
 ## Phases

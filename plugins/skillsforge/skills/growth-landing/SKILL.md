@@ -1,6 +1,6 @@
 ---
 name: growth-landing
-description: Use when you need growth landing in a SkillsForge growth workflow.
+description: Use when doing growth landing work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Growth Landing without copying thi
 
 ## When to Use
 
-- Use when you need growth landing in a SkillsForge growth workflow.
+- Use when doing growth landing work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 - Need growth landing with trusted SkillsForge artifacts
 
 ## Phases

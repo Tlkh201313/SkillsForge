@@ -1,6 +1,6 @@
 ---
 name: media-frame-sampling
-description: Use when you need media frame sampling in a SkillsForge media workflow.
+description: Use when doing media frame sampling work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Media Frame Sampling without copyi
 
 ## When to Use
 
-- Use when you need media frame sampling in a SkillsForge media workflow.
+- Use when doing media frame sampling work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
 - Need media frame sampling with trusted SkillsForge artifacts
 
 ## Phases

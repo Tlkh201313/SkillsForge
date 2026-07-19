@@ -1,6 +1,6 @@
 ---
 name: data-streaming
-description: Use when you need data streaming in a SkillsForge data workflow.
+description: Use when doing data streaming work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Streaming without copying thi
 
 ## When to Use
 
-- Use when you need data streaming in a SkillsForge data workflow.
+- Use when doing data streaming work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data streaming with trusted SkillsForge artifacts
 
 ## Phases

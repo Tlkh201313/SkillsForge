@@ -1,6 +1,6 @@
 ---
 name: data-backfill
-description: Use when you need data backfill in a SkillsForge data workflow.
+description: Use when doing data backfill work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Backfill without copying thir
 
 ## When to Use
 
-- Use when you need data backfill in a SkillsForge data workflow.
+- Use when doing data backfill work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data backfill with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: fw-fastapi
-description: Use when you need fw fastapi in a SkillsForge framework workflow.
+description: Use when doing fw fastapi work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Fw Fastapi without copying third-p
 
 ## When to Use
 
-- Use when you need fw fastapi in a SkillsForge framework workflow.
+- Use when doing fw fastapi work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
 - Need fw fastapi with trusted SkillsForge artifacts
 
 ## Phases

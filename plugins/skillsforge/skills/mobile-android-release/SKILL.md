@@ -1,6 +1,6 @@
 ---
 name: mobile-android-release
-description: Use when you need mobile android release in a SkillsForge mobile workflow.
+description: Use when doing mobile android release work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Mobile Android Release without cop
 
 ## When to Use
 
-- Use when you need mobile android release in a SkillsForge mobile workflow.
+- Use when doing mobile android release work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 - Need mobile android release with trusted SkillsForge artifacts
 
 ## Phases

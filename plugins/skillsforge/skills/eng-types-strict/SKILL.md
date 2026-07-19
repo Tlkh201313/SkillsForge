@@ -1,6 +1,6 @@
 ---
 name: eng-types-strict
-description: Use when you need eng types strict in a SkillsForge eng workflow.
+description: Use when doing eng types strict work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Eng Types Strict without copying t
 
 ## When to Use
 
-- Use when you need eng types strict in a SkillsForge eng workflow.
+- Use when doing eng types strict work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 - Need eng types strict with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: growth-positioning
-description: Use when you need growth positioning in a SkillsForge growth workflow.
+description: Use when doing growth positioning work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Growth Positioning without copying
 
 ## When to Use
 
-- Use when you need growth positioning in a SkillsForge growth workflow.
+- Use when doing growth positioning work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 - Need growth positioning with trusted SkillsForge artifacts
 
 ## Phases

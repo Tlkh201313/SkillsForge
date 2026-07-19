@@ -1,6 +1,6 @@
 ---
 name: cloud-dns
-description: Use when you need cloud dns in a SkillsForge cloud-devops workflow.
+description: Use when doing cloud dns work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Cloud Dns without copying third-pa
 
 ## When to Use
 
-- Use when you need cloud dns in a SkillsForge cloud-devops workflow.
+- Use when doing cloud dns work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
 - Need cloud dns with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: growth-referral
-description: Use when you need growth referral in a SkillsForge growth workflow.
+description: Use when doing growth referral work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Growth Referral without copying th
 
 ## When to Use
 
-- Use when you need growth referral in a SkillsForge growth workflow.
+- Use when doing growth referral work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 - Need growth referral with trusted SkillsForge artifacts
 
 ## Phases

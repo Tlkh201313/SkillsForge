@@ -1,6 +1,6 @@
 ---
 name: design-responsive
-description: Use when you need design responsive in a SkillsForge design workflow.
+description: Use when doing design responsive work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Design Responsive without copying 
 
 ## When to Use
 
-- Use when you need design responsive in a SkillsForge design workflow.
+- Use when doing design responsive work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 - Need design responsive with trusted SkillsForge artifacts
 
 ## Phases

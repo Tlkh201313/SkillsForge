@@ -1,6 +1,6 @@
 interface:
   display_name: Docs Api Ref
-  short_description: Use when you need docs api ref in a SkillsForge docs workflow.
+  short_description: Use when doing docs api ref work and you need bounded docs-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the docs-api-ref skill for this task.
 policy:
   allow_implicit_invocation: false

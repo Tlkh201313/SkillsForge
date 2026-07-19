@@ -1,6 +1,6 @@
 ---
 name: eng-feature-flags
-description: Use when you need eng feature flags in a SkillsForge eng workflow.
+description: Use when doing eng feature flags work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Eng Feature Flags without copying 
 
 ## When to Use
 
-- Use when you need eng feature flags in a SkillsForge eng workflow.
+- Use when doing eng feature flags work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
 - Need eng feature flags with trusted SkillsForge artifacts
 
 ## Phases

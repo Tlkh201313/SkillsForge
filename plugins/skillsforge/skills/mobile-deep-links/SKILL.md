@@ -1,6 +1,6 @@
 ---
 name: mobile-deep-links
-description: Use when you need mobile deep links in a SkillsForge mobile workflow.
+description: Use when doing mobile deep links work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Mobile Deep Links without copying 
 
 ## When to Use
 
-- Use when you need mobile deep links in a SkillsForge mobile workflow.
+- Use when doing mobile deep links work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 - Need mobile deep links with trusted SkillsForge artifacts
 
 ## Phases

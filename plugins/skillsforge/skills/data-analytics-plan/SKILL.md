@@ -1,6 +1,6 @@
 ---
 name: data-analytics-plan
-description: Use when you need data analytics plan in a SkillsForge data workflow.
+description: Use when doing data analytics plan work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Data Analytics Plan without copyin
 
 ## When to Use
 
-- Use when you need data analytics plan in a SkillsForge data workflow.
+- Use when doing data analytics plan work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
 - Need data analytics plan with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: legal-tos-outline
-description: Use when you need legal tos outline in a SkillsForge legal-lite workflow.
+description: Use when doing legal tos outline work and you need bounded legal-lite-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Legal Tos Outline without copying 
 
 ## When to Use
 
-- Use when you need legal tos outline in a SkillsForge legal-lite workflow.
+- Use when doing legal tos outline work and you need bounded legal-lite-pack steps, stop conditions, and a verification check before shipping.
 - Need legal tos outline with trusted SkillsForge artifacts
 
 ## Phases

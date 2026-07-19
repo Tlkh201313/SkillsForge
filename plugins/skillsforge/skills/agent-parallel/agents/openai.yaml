@@ -1,6 +1,6 @@
 interface:
   display_name: Agent Parallel
-  short_description: Use when you need agent parallel in a SkillsForge agentic workflow.
+  short_description: Use when doing agent parallel work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the agent-parallel skill for this task.
 policy:
   allow_implicit_invocation: false

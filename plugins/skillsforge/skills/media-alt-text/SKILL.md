@@ -1,6 +1,6 @@
 ---
 name: media-alt-text
-description: Use when you need media alt text in a SkillsForge media workflow.
+description: Use when doing media alt text work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Media Alt Text without copying thi
 
 ## When to Use
 
-- Use when you need media alt text in a SkillsForge media workflow.
+- Use when doing media alt text work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
 - Need media alt text with trusted SkillsForge artifacts
 
 ## Phases

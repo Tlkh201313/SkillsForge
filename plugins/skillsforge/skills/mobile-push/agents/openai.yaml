@@ -1,6 +1,6 @@
 interface:
   display_name: Mobile Push
-  short_description: Use when you need mobile push in a SkillsForge mobile workflow.
+  short_description: Use when doing mobile push work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
   default_prompt: Use the mobile-push skill for this task.
 policy:
   allow_implicit_invocation: false

@@ -1,6 +1,6 @@
 ---
 name: role-researcher
-description: Use when you need role researcher in a SkillsForge roles workflow.
+description: Use when doing role researcher work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Role Researcher without copying th
 
 ## When to Use
 
-- Use when you need role researcher in a SkillsForge roles workflow.
+- Use when doing role researcher work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
 - Need role researcher with trusted SkillsForge artifacts
 
 ## Phases

@@ -1,6 +1,6 @@
 ---
 name: ops-canary
-description: Use when you need ops canary in a SkillsForge ops workflow.
+description: Use when doing ops canary work and you need bounded ops-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Ops Canary without copying third-p
 
 ## When to Use
 
-- Use when you need ops canary in a SkillsForge ops workflow.
+- Use when doing ops canary work and you need bounded ops-pack steps, stop conditions, and a verification check before shipping.
 - Need ops canary with trusted SkillsForge artifacts
 
 ## Phases

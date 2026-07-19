@@ -1,6 +1,6 @@
 ---
 name: design-content
-description: Use when you need design content in a SkillsForge design workflow.
+description: Use when doing design content work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Design Content without copying thi
 
 ## When to Use
 
-- Use when you need design content in a SkillsForge design workflow.
+- Use when doing design content work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
 - Need design content with trusted SkillsForge artifacts
 
 ## Phases

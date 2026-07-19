@@ -1,6 +1,6 @@
 ---
 name: growth-email
-description: Use when you need growth email in a SkillsForge growth workflow.
+description: Use when doing growth email work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Growth Email without copying third
 
 ## When to Use
 
-- Use when you need growth email in a SkillsForge growth workflow.
+- Use when doing growth email work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
 - Need growth email with trusted SkillsForge artifacts
 
 ## Phases

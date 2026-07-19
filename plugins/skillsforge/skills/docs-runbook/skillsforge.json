@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
+      "write runbook",
+      "ops runbook",
       "docs runbook",
-      "run docs runbook",
-      "docs runbook skill",
-      "help with docs runbook",
-      "docs docs runbook"
+      "incident runbook",
+      "oncall procedure"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "skip verification",
+      "marketing copy only"
     ],
     "mode": "explicit",
     "pack": "docs"

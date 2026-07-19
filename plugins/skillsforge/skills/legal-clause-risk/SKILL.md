@@ -1,6 +1,6 @@
 ---
 name: legal-clause-risk
-description: Use when you need legal clause risk in a SkillsForge legal-lite workflow.
+description: Use when doing legal clause risk work and you need bounded legal-lite-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Legal Clause Risk without copying 
 
 ## When to Use
 
-- Use when you need legal clause risk in a SkillsForge legal-lite workflow.
+- Use when doing legal clause risk work and you need bounded legal-lite-pack steps, stop conditions, and a verification check before shipping.
 - Need legal clause risk with trusted SkillsForge artifacts
 
 ## Phases

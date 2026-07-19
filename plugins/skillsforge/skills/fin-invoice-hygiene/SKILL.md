@@ -1,6 +1,6 @@
 ---
 name: fin-invoice-hygiene
-description: Use when you need fin invoice hygiene in a SkillsForge finance-lite workflow.
+description: Use when doing fin invoice hygiene work and you need bounded finance-lite-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Fin Invoice Hygiene without copyin
 
 ## When to Use
 
-- Use when you need fin invoice hygiene in a SkillsForge finance-lite workflow.
+- Use when doing fin invoice hygiene work and you need bounded finance-lite-pack steps, stop conditions, and a verification check before shipping.
 - Need fin invoice hygiene with trusted SkillsForge artifacts
 
 ## Phases

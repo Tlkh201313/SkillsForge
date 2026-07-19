@@ -1,6 +1,6 @@
 ---
 name: mobile-store-listing
-description: Use when you need mobile store listing in a SkillsForge mobile workflow.
+description: Use when doing mobile store listing work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 license: MIT
 hooks:
   PreToolUse:
@@ -23,7 +23,7 @@ Deliver a trustworthy, repeatable outcome for Mobile Store Listing without copyi
 
 ## When to Use
 
-- Use when you need mobile store listing in a SkillsForge mobile workflow.
+- Use when doing mobile store listing work and you need bounded mobile-pack steps, stop conditions, and a verification check before shipping.
 - Need mobile store listing with trusted SkillsForge artifacts
 
 ## Phases
