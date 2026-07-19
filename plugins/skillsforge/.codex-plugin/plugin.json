@@ -1,7 +1,7 @@
 {
   "name": "skillsforge",
-  "version": "0.4.0",
-  "description": "Make Agent Skills reviewable, least-privilege, measurable, and tamper-evident before teams run them in Codex.",
+  "version": "0.4.1",
+  "description": "Work OS for productive Agent Skills in Codex — route skills, run workflows, keep a local library, and ship with least-privilege packaging.",
   "author": {
     "name": "Tlkh201313"
   },
@@ -10,20 +10,22 @@
   "license": "MIT",
   "keywords": [
     "skills",
-    "validation",
+    "workflows",
+    "productivity",
     "agent-skills",
     "codex",
-    "trust",
-    "policy"
+    "trust"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "SkillsForge",
-    "shortDescription": "Validate, policy-scan, package, and prove Agent Skills for Codex.",
-    "longDescription": "SkillsForge is a capability and trust engine for portable Agent Skills. It validates packages, scans declared capabilities, packages guarded Codex plugins, and emits reproducible evidence receipts. Hooks are host guardrails, not an OS sandbox.",
+    "shortDescription": "Productive Agent Skills Work OS for Codex — route, workflows, library, guarded package.",
+    "longDescription": "SkillsForge is a productivity Work OS for portable Agent Skills: packs, profiles, workflows, library recommendation, and operator terminals. Trust (validate, capability policy, guarded Codex packaging, evidence receipts) is the safety layer underneath. Hooks are host guardrails, not an OS sandbox.",
     "developerName": "Tlkh201313",
     "category": "Developer Tools",
     "capabilities": [
+      "skill-routing",
+      "workflow-catalog",
       "skill-validation",
       "capability-policy",
       "evidence-receipts",
@@ -31,9 +33,9 @@
     ],
     "websiteURL": "https://github.com/Tlkh201313/SkillsForge",
     "defaultPrompt": [
-      "Validate this Agent Skill package with SkillsForge before installing it.",
-      "Package this skill as a guarded Codex plugin with least-privilege policy.",
-      "Verify the SkillsForge trust receipt for this package."
+      "Recommend the best SkillsForge skill and workflow for this task.",
+      "Update my local SkillsForge library and recommend skills for this session.",
+      "Package this skill as a guarded Codex plugin with least-privilege policy."
     ]
   }
 }

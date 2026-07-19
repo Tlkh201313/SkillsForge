@@ -98,7 +98,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: skillsforge-v0.3-release-evidence
+          name: skillsforge-v0.4-release-evidence
           if-no-files-found: warn
           path: |
             artifacts/evaluation/routing-report.json

@@ -1,6 +1,6 @@
 # SkillsForge architecture (v0.4)
 
-SkillsForge is a capability / trust engine for portable Agent Skills. Canonical IR is `SKILL.md` + `skillsforge.json`. **Codex** is the primary native plugin target with guarded per-skill packaging and PreToolUse policy hooks. Claude Code remains the second full-fidelity host. Other AI CLIs receive package-fidelity installs unless they run equivalent hooks.
+SkillsForge is a **productivity Work OS** for portable Agent Skills (catalog, routing, workflows, library, operator terminals), with a **trust safety layer** underneath (validate, package, hooks, receipts). Canonical IR is `SKILL.md` + `skillsforge.json`. **Codex** is the primary native plugin target with guarded per-skill packaging and PreToolUse policy hooks. Claude Code remains the second full-fidelity host. Other AI CLIs receive package-fidelity installs unless they run equivalent hooks.
 
 ## Surfaces
 

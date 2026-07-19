@@ -2,6 +2,16 @@
 
 All notable changes to SkillsForge are recorded here.
 
+## [0.4.1] - 2026-07-19
+
+### Changed — Productivity-first framing
+
+- README, plugin manifests, marketplace, architecture, and banners now lead with the **Work OS** story (skills, packs, workflows, library, auto, wb) — trust validate/package/hooks/receipts is the safety layer underneath.
+- Demo artifact renamed to `artifacts/demo-evidence/demo-scoreboard.json` (package-tree hash; not a full trust receipt).
+- Judge docs drop dead `npx skillsforge` CTAs; submit docs retarget `main`.
+- Threat/eval titles and CI evidence artifact bumped to v0.4; Codex `isMcpTool` matches `^mcp__` only.
+- Full inventory doc: `docs/features.md` (+ `scripts/gen-features-md.mjs`).
+
 ## [0.4.0] - 2026-07-18
 
 ### Added - Workbench, Library, And Workflow Routing
@@ -21,7 +31,7 @@ All notable changes to SkillsForge are recorded here.
 ### Changed
 
 - Default `route` only considers `routing.mode: auto` (or unset legacy) skills; use `--pack` / `--include-explicit` for domain packs.
-- README leads with the trust-engine thesis, verified local inventory, demo poster, packaged MP4, universal host boundaries, and local workflow/library commands.
+- README inventory, demo poster, packaged MP4, universal host boundaries, and local workflow/library commands.
 
 ## [0.3.0] - 2026-07-13
 

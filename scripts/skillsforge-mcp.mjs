@@ -204,7 +204,7 @@ async function handleMessage(msg) {
     if (method === 'initialize') {
       respond(id, {
         protocolVersion: '2024-11-05',
-        serverInfo: { name: 'skillsforge', version: '0.4.0' },
+        serverInfo: { name: 'skillsforge', version: '0.4.1' },
         capabilities: { tools: {} }
       });
       return;

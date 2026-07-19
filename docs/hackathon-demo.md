@@ -27,7 +27,7 @@ Criteria map:
 | 0:00–0:20 | Thesis | *Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, and tamper-evident.* A release helper can hide undeclared shell + network. |
 | 0:20-0:50 | Unsafe deny | `node plugins/skillsforge/bin/skillsforge.mjs demo` **or** `node plugins/skillsforge/bin/skillsforge.mjs validate examples/codex-unsafe-release` -> blocking findings, exit non-zero. Say: rejected **without executing** the skill. |
 | 0:50-1:20 | Safe package | Same demo packages `examples/codex-safe-release` -> native Codex plugin tree. Show sidecar capabilities + hooks. |
-| 1:20-1:50 | Receipt | Show receipt hash and `artifacts/demo-evidence/trust-receipt.json`. Optional: `compare-skill` unsafe vs safe. |
+| 1:20-1:50 | Scoreboard | Show package-tree hash and `artifacts/demo-evidence/demo-scoreboard.json`. Optional: `compare-skill` unsafe vs safe. |
 | 1:50-2:20 | Runtime deny (optional live) | Feed PreToolUse stdin for undeclared Bash -> `permissionDecision: deny`. Say aloud: hook is not an OS sandbox. |
 | 2:20-2:40 | Agent workbench | `wb status --json`, `workflows recommend --query "safe refactor code"`, and `auto run --read-only --query "audit README claims"` show token-efficient routing without writes. |
 | 2:40-2:55 | Local library | `lib update --session-host codex` creates `skillsforge-library.html` and `skillsforge-ai-index.html`; `lib recommend --query "audit README claims"` proves session-aware selection; `ps export` creates Windows helper commands. |

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="520" viewBox="0 0 1280 520" role="img" aria-labelledby="title desc">
   <title id="title">SkillsForge universal host fanout</title>
-  <desc id="desc">One Agent Skill flows through SkillsForge validation, routing, packaging, and receipt steps before being installed into Codex, Claude Code, package-fidelity hosts, or a custom host.</desc>
+  <desc id="desc">One Agent Skill flows through SkillsForge routing, library, packaging, and optional trust checks before install into Codex, Claude Code, package-fidelity hosts, or a custom host.</desc>
   <defs>
     <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#172033" flood-opacity="0.16"/>
@@ -24,13 +24,13 @@
   <g filter="url(#soft-shadow)">
     <rect x="426" y="108" width="326" height="304" rx="18" fill="#f9fafb" stroke="#bfdbfe" stroke-width="2"/>
     <text x="589" y="156" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800" fill="#0f172a">SkillsForge</text>
-    <text x="589" y="190" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" fill="#334155">trust and routing layer</text>
-    <rect x="469" y="223" width="240" height="42" rx="10" fill="#e0f2fe" stroke="#7dd3fc"/>
-    <text x="589" y="250" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#075985">validate capabilities</text>
-    <rect x="469" y="278" width="240" height="42" rx="10" fill="#ecfdf5" stroke="#86efac"/>
-    <text x="589" y="305" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#166534">route by sidecar evidence</text>
+    <text x="589" y="190" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" fill="#334155">productivity Work OS</text>
+    <rect x="469" y="223" width="240" height="42" rx="10" fill="#ecfdf5" stroke="#86efac"/>
+    <text x="589" y="250" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#166534">route · lib · workflows</text>
+    <rect x="469" y="278" width="240" height="42" rx="10" fill="#e0f2fe" stroke="#7dd3fc"/>
+    <text x="589" y="305" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#075985">validate (safety layer)</text>
     <rect x="469" y="333" width="240" height="42" rx="10" fill="#fff7ed" stroke="#fdba74"/>
-    <text x="589" y="360" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#9a3412">package + receipt</text>
+    <text x="589" y="360" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#9a3412">package + multi-host ship</text>
   </g>
 
   <line x1="756" y1="260" x2="835" y2="260" stroke="#30445f" stroke-width="4" marker-end="url(#arrow)"/>

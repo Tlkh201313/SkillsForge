@@ -1,15 +1,15 @@
 # SkillsForge next-wave roadmap
 
-Post-hackathon hardening. Trust pipeline stays the product. Scale is supporting context, not proof by itself.
+Post-hackathon hardening. **Productivity Work OS** stays the product; trust pipeline is the safety layer. Scale is supporting context, not proof by itself.
 
 ## P0 — Human Stage One (blocking submit)
 
 | Item | Owner | Notes |
 |------|-------|-------|
-| Video check | Human | Verify README inline MP4 and script in `docs/hackathon-demo.md` |
-| Push PR + CI green | Human | Use the current hardening branch |
+| Video check | Human | Verify README poster/MP4 and script in `docs/hackathon-demo.md` |
+| Push PR + CI green | Human | `docs/pre-submit-polish` → `main` (0.4.1) |
 | Devpost | Human | Developer Tools + limitations + free access |
-| Tag after merge | Human | Suggested `v0.4.0-buildweek` |
+| Tag after merge | Human | Suggested `v0.4.1-buildweek` |
 
 ## P1 — Product (same release train)
 

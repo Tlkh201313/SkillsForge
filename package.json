@@ -1,7 +1,7 @@
 {
   "name": "skillsforge",
-  "version": "0.4.0",
-  "description": "Trusted Agent Skills pipeline: validate, route, package, enforce, and verify portable Agent Skills.",
+  "version": "0.4.1",
+  "description": "Work OS for productive Agent Skills: route, workflows, library, multi-host install — with validate/package/receipts as the safety layer.",
   "type": "module",
   "bin": {
     "skillsforge": "./plugins/skillsforge/bin/skillsforge.mjs",
