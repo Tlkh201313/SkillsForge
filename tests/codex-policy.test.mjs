@@ -176,7 +176,8 @@ test('apply_patch checks Delete File and Move to paths', () => {
 
 test('MCP tools deny-by-default unless declared', () => {
   assert.equal(isMcpTool('mcp__github__list'), true);
-  assert.equal(isMcpTool('SomeMCPTool'), true);
+  assert.equal(isMcpTool('SomeMCPTool'), false);
+  assert.equal(isMcpTool('mcp__server__tool'), true);
 
   const denied = enforceCodexPolicy(
     { tool_name: 'mcp__github__list', tool_input: {} },
