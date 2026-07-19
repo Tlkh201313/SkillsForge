@@ -20833,8 +20833,8 @@ function detectSourcePlugin(root, directory, homeOption) {
     if (pluginsIndex >= 0 && parts[pluginsIndex + 1]) return parts[pluginsIndex + 1];
   }
   const normalized = resolve16(directory).replaceAll("\\", "/");
-  const home = homeOption ? resolve16(homeOption).replaceAll("\\", "/") : process.env.USERPROFILE ? resolve16(process.env.USERPROFILE).replaceAll("\\", "/") : null;
-  const homeRel = home && normalized.startsWith(`${home}/`) ? normalized.slice(home.length + 1) : normalized;
+  const home = homeOption ? resolve16(homeOption) : process.env.USERPROFILE ? resolve16(process.env.USERPROFILE) : null;
+  const homeRel = home ? relativeDisplayPath(home, directory) ?? normalized : normalized;
   const cacheParts = homeRel.split("/");
   const cacheIndex = cacheParts.findIndex((part, index) => part === "cache" && cacheParts[index - 1] === "plugins");
   if (cacheIndex >= 0 && cacheParts[cacheIndex + 1] && cacheParts[cacheIndex + 2]) {
@@ -20853,9 +20853,20 @@ function detectSourcePlugin(root, directory, homeOption) {
 }
 function displayPath(root, directory, home) {
   const resolved = resolve16(directory);
-  if (isInside8(root, resolved)) return relative10(root, resolved).replaceAll("\\", "/");
-  if (home && isInside8(home, resolved)) return `~/${relative10(home, resolved).replaceAll("\\", "/")}`;
+  const rootRel = relativeDisplayPath(root, resolved);
+  if (rootRel !== null) return rootRel;
+  const homeRel = home ? relativeDisplayPath(home, resolved) : null;
+  if (homeRel !== null) return `~/${homeRel}`;
   return resolved.replaceAll("\\", "/");
+}
+function relativeDisplayPath(parent, child) {
+  const parentPath = resolve16(parent).replaceAll("\\", "/").replace(/\/+$/, "");
+  const childPath = resolve16(child).replaceAll("\\", "/");
+  const parentKey = process.platform === "win32" ? parentPath.toLowerCase() : parentPath;
+  const childKey = process.platform === "win32" ? childPath.toLowerCase() : childPath;
+  if (childKey === parentKey) return "";
+  const prefix = `${parentKey}/`;
+  return childKey.startsWith(prefix) ? childPath.slice(parentPath.length + 1) : null;
 }
 function assignRecordKey() {
   const seen = /* @__PURE__ */ new Map();
