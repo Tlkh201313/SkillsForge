@@ -3,7 +3,7 @@
 **Category:** Developer Tools  
 **Repo:** https://github.com/Tlkh201313/SkillsForge  
 **Branch:** `main`  
-**Thesis:** SkillsForge is the Work OS that makes Agent Skills productive - route, workflows, library, multi-host install - with validate/package/hooks/receipts as the safety layer. Prove it in &lt;90s with `demo`.
+**Thesis:** SkillsForge is the Work OS that makes Agent Skills productive - route, workflows, library, multi-host install - with validate/package/hooks/receipts as the safety layer. Prove it in under 2 minutes with `demo`.
 
 ## Automated gates (done)
 
@@ -23,7 +23,7 @@
 - [ ] Start a **Codex + GPT-5.6** qualifying session after build-window start
 - [ ] Run `/feedback` in that thread; paste Session ID into `BUILD_WEEK.md` (replace `REPLACE_WITH_CODEX_FEEDBACK_SESSION_ID`)
 - [ ] Commit: `docs: record Build Week Codex Session ID`
-- [ ] Record/upload public YouTube demo **under 3 minutes** (see [video.md](video.md) / [hackathon-demo.md](hackathon-demo.md))
+- [ ] Upload the committed 1:58 YouTube demo as public/unlisted **under 3 minutes** (see [video.md](video.md) / [hackathon-demo.md](hackathon-demo.md))
 - [ ] Push; confirm CI green on `main`
 - [ ] Devpost: category Developer Tools, repo, Session ID, video, limitations, free access through judging
 - [ ] Tag release (suggested: `v0.4.2-buildweek`)

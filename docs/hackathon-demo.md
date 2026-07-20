@@ -2,7 +2,7 @@
 
 Target: prove the trust thesis: **unsafe skill denied -> safe skill packaged -> evidence receipt**. Then show verified local inventory.
 
-Offline: `node plugins/skillsforge/bin/skillsforge.mjs demo` (deterministic, &lt;90s). Live video uses the beats below.
+Offline: `node plugins/skillsforge/bin/skillsforge.mjs demo` (deterministic, &lt;90s). The committed YouTube/Devpost MP4 is the 1:58 cut in [video.md](video.md). The longer beats below are a fallback for a live presentation slot.
 
 ## Judge framing
 

@@ -32,15 +32,18 @@ Full surface map: **[docs/features.md](docs/features.md)**.
 
 ![SkillsForge demo poster](assets/skillsforge-demo-poster.png)
 
-Packaged MP4: [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-demo.mp4). GitHub README playback for committed MP4s is unreliable, so the poster stays visible. For judging, upload the same H.264 MP4 to a GitHub issue/PR comment and paste the `github.com/user-attachments/assets/...` URL here (or YouTube). See [GitHub attaching files](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files).
+Browser preview: **[docs/demo-video.html](docs/demo-video.html)**.
+
+Packaged MP4: [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-demo.mp4). The committed cut is 1:58, H.264/AAC, with English voiceover, original procedural background music, light UI sound effects, and burned-in captions. GitHub README playback for committed MP4s is unreliable, so the poster stays visible. For judging, upload the same MP4 to YouTube as public/unlisted and paste the URL into Devpost.
 
 | Beat | What you'll see |
 |---|---|
-| Thesis | Agent work gets productive when skills + workflows are discoverable and runnable |
-| Scale | 499 skills / 28 packs / 98 agents / 135 command shims / 100 workflows |
-| Operator path | `vibe` - `lib recommend` - `workflows recommend` - `auto run --read-only` - `wb status` - `map` - `slim` - `tokens` / `digest` / `next` |
-| Safety beat | Unsafe example denied -> safe example packaged -> **demo scoreboard** (package-tree hash) |
-| CTA | Clone + `node plugins/skillsforge/bin/skillsforge.mjs demo` |
+| Thesis | Agent skills need routing, validation, packaging, and evidence |
+| AI use | Codex accelerated implementation/video/verification; GPT-5.6 helped reason through claims and review quality |
+| Scale | 499 skills / 28 packs / 11 profiles / 100 workflows / 98 agents / 135 command shims |
+| Operator path | `vibe` -> route request -> deny unsafe behavior -> package safe skill |
+| Safety beat | Unsafe deny PASS -> safe validate PASS -> packaged PASS -> false-allow 0 |
+| CTA | Free local test: `node plugins/skillsforge/bin/skillsforge.mjs demo` |
 
 ---
 
@@ -67,6 +70,12 @@ SkillsForge is that layer:
 5. **Safety underneath** - `skillsforge.json` sidecars, validate/package, PreToolUse guards, unsigned receipts
 
 ![Trust safety layer under the Work OS](assets/skillsforge-trust-pipeline.svg)
+
+## Codex + GPT-5.6 collaboration
+
+This Build Week work used Codex and GPT-5.6 as implementation and review accelerators. Codex helped navigate the repository, produce the Remotion demo video, generate audio assets, update docs, and run verification commands. GPT-5.6 helped reason through product claims, edge cases, timing, and review quality.
+
+Human decisions stayed human: product scope, claim boundaries, what not to overstate, and what evidence was strong enough for submission. The video says this explicitly.
 
 ```mermaid
 flowchart LR

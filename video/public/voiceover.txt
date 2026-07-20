@@ -1,0 +1,15 @@
+Most agent skill systems look useful until they become powerful. Then the hard question is trust. Which skill is running? Who wrote it? What can it touch? And can a judge test it without signing up for anything?
+
+SkillsForge is a local trust and routing layer for agent skills. It turns a messy skill folder into a catalog that can be validated, searched, routed, packaged, and checked.
+
+This Build Week version was made with Codex and GPT-5.6 in the loop. Codex accelerated the implementation, repo navigation, video production work, and verification passes. GPT-5.6 helped reason through product claims, edge cases, and review quality. The human decisions stayed human: what to build, what not to claim, and what evidence was strong enough for submission.
+
+Here is the local magical moment. One command loads the SkillsForge catalog: four hundred ninety-nine skills, twenty-eight packs, and eleven profiles.
+
+Now a user asks for help. SkillsForge routes the request to the right skill surface instead of dumping every instruction into the context window.
+
+The trust gate is the core. Unsafe behavior is denied before execution. Safe skills can be validated and packaged for real agent hosts, including Codex.
+
+The judge demo finishes with a scoreboard: unsafe deny passes, safe validation passes, packaging passes, false allows are zero, and the run emits a receipt hash.
+
+SkillsForge is free to test locally. No account is needed. Clone the repo, install dependencies, and run the demo command shown here.
