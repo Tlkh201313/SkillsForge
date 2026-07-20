@@ -661,8 +661,9 @@ Thin stdio NDJSON server: `scripts/skillsforge-mcp.mjs`. Read-only defaults; no 
 | --- | --- |
 | `assets/skillsforge-banner.svg` | README hero with current inventory |
 | `assets/skillsforge-library-preview.png` | Generated local library / workflow preview; no embedded text claims |
-| `assets/skillsforge-demo-poster.png` | Visible poster for committed demo MP4 |
-| `assets/video/skillsforge-demo.mp4` | Packaged H.264 demo video |
+| `assets/video/skillsforge-demo.mp4` | Primary README video player source and packaged H.264 demo video |
+| `assets/skillsforge-demo-preview.gif` | Animated fallback when a renderer refuses inline MP4 playback |
+| `assets/skillsforge-demo-poster.png` | Poster frame for README/browser players |
 | `assets/skillsforge-universal-fanout.svg` | Multi-host install boundary map |
 | `assets/skillsforge-star-map.svg` | Current inventory relationship map |
 | `assets/skillsforge-trust-pipeline.svg` | Safety layer under the Work OS |

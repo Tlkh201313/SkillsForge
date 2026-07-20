@@ -14,6 +14,10 @@ The rendered MP4 lives at:
 
 Poster still (when present): `assets/skillsforge-demo-poster.png`
 
+README player source: `assets/video/skillsforge-demo.mp4`
+
+Fallback animated preview: `assets/skillsforge-demo-preview.gif`
+
 Browser preview: `docs/demo-video.html`
 
 The Remotion source lives under `video/`. Generated audio/caption assets and `video/node_modules/` stay ignored. The generated MP4 and poster remain normal committed assets.
@@ -43,7 +47,9 @@ Use these committed visuals in this order:
 |------|-----|
 | `assets/skillsforge-banner.svg` | GitHub README hero |
 | `assets/skillsforge-library-preview.png` | Product preview for local library / workflows / trust pipeline |
-| `assets/skillsforge-demo-poster.png` | Visible fallback when GitHub does not play committed MP4 inline |
+| `assets/video/skillsforge-demo.mp4` | Primary README `<video>` source and Devpost upload asset |
+| `assets/skillsforge-demo-preview.gif` | Animated fallback when a GitHub renderer refuses repo MP4 playback |
+| `assets/skillsforge-demo-poster.png` | Poster frame for the README/browser player |
 | `assets/skillsforge-universal-fanout.svg` | Host support and package-fidelity boundary |
 | `assets/skillsforge-star-map.svg` | Current 511 / 28 / 11 / 100 / 98 / 140 / 15 inventory map |
 | `assets/skillsforge-trust-pipeline.svg` | Safety layer explanation |
@@ -55,7 +61,7 @@ The generated preview image intentionally has no embedded text claims; keep exac
 1. Use the committed MP4 (or a locally re-rendered replacement under 3 minutes).
 2. Upload to YouTube (unlisted/public).
 3. Paste URL into Devpost + `docs/submission.md`.
-4. Optional: attach `skillsforge-demo.mp4` / poster as GitHub release assets; paste `user-attachments` URL into README.
+4. Optional for the most reliable GitHub README player: drag `skillsforge-demo.mp4` into the GitHub README editor to get a `github.com/user-attachments/assets/...` URL, then use that URL as the README `<source src="...">`.
 
 ## Beats (2:22)
 

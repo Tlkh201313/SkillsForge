@@ -30,11 +30,18 @@ Full surface map: **[docs/features.md](docs/features.md)**.
 
 ## Demo video
 
-![SkillsForge demo poster](assets/skillsforge-demo-poster.png)
+<p align="center">
+  <video controls preload="metadata" width="100%" poster="assets/skillsforge-demo-poster.png">
+    <source src="assets/video/skillsforge-demo.mp4" type="video/mp4">
+    <a href="assets/video/skillsforge-demo.mp4">Open the SkillsForge demo MP4</a>
+  </video>
+</p>
 
 Browser preview: **[docs/demo-video.html](docs/demo-video.html)**.
 
-Packaged MP4: [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-demo.mp4). The committed cut is 2:22, H.264/AAC, with English voiceover, original procedural background music, light UI sound effects, and burned-in captions. GitHub README playback for committed MP4s is unreliable, so the poster stays visible. For judging, upload the same MP4 to YouTube as public/unlisted and paste the URL into Devpost.
+Fallback animated preview: [`assets/skillsforge-demo-preview.gif`](assets/skillsforge-demo-preview.gif). If GitHub does not render the repository MP4 as an inline player in your browser, open the browser preview above or replace the `<source>` URL with a GitHub `user-attachments` video URL after uploading the same MP4 through the GitHub editor.
+
+Packaged MP4: [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-demo.mp4). The committed cut is 2:22, H.264/AAC, with English voiceover, original procedural background music, light UI sound effects, and burned-in captions. For judging, upload the same MP4 to YouTube as public/unlisted and paste the URL into Devpost.
 
 | Beat | What you'll see |
 |---|---|
