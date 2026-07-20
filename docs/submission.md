@@ -15,6 +15,7 @@
 - [x] `skillsforge evidence` + `skillsforge demo` (unsafe deny -> safe package -> scoreboard)
 - [x] Path confinement + routing honesty (eight auto heroes) + thin read-only MCP
 - [x] Codex-first README / demo / safe-unsafe examples
+- [x] README graphics updated: banner, generated library preview, star map, host fanout, visible poster, packaged MP4
 - [ ] Local `npm run check` green (re-run before submit)
 
 ## Human / Stage One blockers (you execute)
@@ -28,6 +29,17 @@
 - [ ] Tag release (suggested: `v0.4.2-buildweek`)
 
 See also: [submit-checklist.md](submit-checklist.md), [roadmap-next.md](roadmap-next.md), [features.md](features.md).
+
+## Visual / media assets
+
+| Asset | Purpose |
+| --- | --- |
+| `assets/skillsforge-banner.svg` | README hero with current repo inventory |
+| `assets/skillsforge-library-preview.png` | Product preview; generated image, no embedded text claims |
+| `assets/skillsforge-demo-poster.png` | Always-visible fallback for GitHub README |
+| `assets/video/skillsforge-demo.mp4` | Packaged demo MP4 for upload / release assets |
+| `assets/skillsforge-star-map.svg` | Static inventory map |
+| `assets/skillsforge-universal-fanout.svg` | Host boundary map |
 
 ## Judge install / test path
 

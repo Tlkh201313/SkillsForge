@@ -8,7 +8,7 @@ SkillsForge hardening is code-complete. Remaining items are **human-only** - do 
 |---|---|---|
 | 1 | Codex GPT-5.6 session -> `/feedback` -> paste Session ID into `BUILD_WEEK.md` | Open |
 | 2 | Upload demo video (`docs/video.md`) to YouTube &lt;3min | Open (committed MP4 at `assets/video/skillsforge-demo.mp4`) |
-| 3 | Commit + push polish; CI green on `main` | In progress (0.4.2 vibe-coder expansion) |
+| 3 | Commit + push polish; CI green on `main` | In progress (0.4.2 docs + graphics polish) |
 | 4 | Devpost: Developer Tools, repo, Session ID, video, limitations, free access | Open |
 | 5 | Tag `v0.4.2-buildweek` after Session ID + video | Open |
 
@@ -17,6 +17,7 @@ SkillsForge hardening is code-complete. Remaining items are **human-only** - do 
 ```bash
 node plugins/skillsforge/bin/skillsforge.mjs demo
 npm run check
+npm pack --dry-run --json
 ```
 
 > Not on npm - do **not** use `npx skillsforge`.

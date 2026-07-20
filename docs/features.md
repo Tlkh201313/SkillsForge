@@ -141,32 +141,27 @@ Install: `skillsforge hosts`, `skillsforge install --hosts ...`, optional `--cus
 
 | Profile | Packs | Description |
 | --- | --- | --- |
-| `core` | `trust`, `browse-catalog`, `lifecycle`, `methodology`, `roles`, `eng`, `design`, `os` | Default install for vibecoders |
-| `design` | `trust`, `design`, `roles`, `content` | Design focus |
-| `eng` | `trust`, `methodology`, `eng`, `testing`, `lang`, `framework` | Engineering focus |
-| `full` | `trust`, `browse-catalog`, `methodology`, `roles`, `lifecycle`, `eng`, `design`, `product`, `growth`, `research`, `docs`, `security`, `ops`, `os`, `agentic`, `lang`, `framework`, `data`, `testing`, `media`, `mobile`, `enterprise`, `content`, `legal-lite`, `finance-lite`, `cloud-devops` | Everything -- broad trusted skill surface |
-| `growth` | `trust`, `growth`, `content`, `media` | Growth focus |
-| `methodology` | `trust`, `methodology` | Discipline only |
-| `ops` | `trust`, `ops`, `os`, `security`, `cloud-devops` | Ops focus |
-| `product` | `trust`, `product`, `research`, `growth` | Product focus |
-| `roles` | `trust`, `roles` | Role lenses |
 | `vibe` | `trust`, `browse-catalog`, `lifecycle` | Magical moment - trust + lifecycle + browse |
+| `core` | `trust`, `browse-catalog`, `lifecycle`, `methodology`, `roles`, `eng`, `design`, `os` | Default install for vibecoders |
+| `full` | `trust`, `browse-catalog`, `builder`, `validation`, `methodology`, `roles`, `lifecycle`, `eng`, `design`, `product`, `growth`, `research`, `docs`, `security`, `ops`, `os`, `agentic`, `lang`, `framework`, `data`, `testing`, `media`, `mobile`, `enterprise`, `content`, `legal-lite`, `finance-lite`, `cloud-devops` | Everything -- broad trusted skill surface |
+| `vibecoder` | `trust`, `browse-catalog`, `lifecycle`, `builder`, `validation`, `design`, `product`, `growth`, `eng`, `ops` | Vibe-coder builder surface for plugins, MCPs, proof, launch, and full-stack app work |
+| `eng` | `trust`, `methodology`, `eng`, `testing`, `lang`, `framework` | Engineering focus |
+| `design` | `trust`, `design`, `roles`, `content` | Design focus |
+| `product` | `trust`, `product`, `research`, `growth` | Product focus |
+| `growth` | `trust`, `growth`, `content`, `media` | Growth focus |
+| `ops` | `trust`, `ops`, `os`, `security`, `cloud-devops` | Ops focus |
+| `methodology` | `trust`, `methodology` | Discipline only |
+| `roles` | `trust`, `roles` | Role lenses |
 
 ## Packs
 
 **28 packs / 499 skills.** Trust + lifecycle + methodology are the production-depth spine; builder, validation, and domain packs are contract-backed SkillsForge skills.
 
-### `agentic` (14)
+### `trust` (5)
 
-Agentic workflows and crew patterns
+SkillsForge trust spine (validate, forge, route, verify)
 
-| | | |
-| --- | --- | --- |
-| `agent-crew` | `agent-fanout` | `agent-babysit` |
-| `agent-context` | `agent-eval-loop` | `agent-handoff` |
-| `agent-tool-policy` | `agent-prompt-budget` | `agent-memory-lite` |
-| `agent-parallel` | `agent-stop-gates` | `agent-critique` |
-| `agent-replay` | `agent-sandbox` |  |
+`using-skillsforge`, `author-capability`, `route-capability`, `validate-agent-skill`, `verify-capability`
 
 ### `browse-catalog` (2)
 
@@ -174,67 +169,69 @@ Discover SkillsForge packs and profiles
 
 `browse-catalog`, `update-skill-library`
 
-### `cloud-devops` (14)
+### `builder` (18)
 
-Cloud and DevOps basics
-
-| | | |
-| --- | --- | --- |
-| `cloud-docker` | `cloud-k8s-basics` | `cloud-ci-providers` |
-| `cloud-iac` | `cloud-secrets-mgr` | `cloud-networking` |
-| `cloud-cdn` | `cloud-observability` | `cloud-cost-tags` |
-| `cloud-iam` | `cloud-serverless` | `cloud-queues` |
-| `cloud-storage` | `cloud-dns` |  |
-
-### `content` (12)
-
-Content production
+AI CLI SDK, plugin, MCP, and full-stack builder workflows
 
 | | | |
 | --- | --- | --- |
-| `content-longform` | `content-social` | `content-newsletter` |
-| `content-blog` | `content-docs-voice` | `content-case-study` |
-| `content-script` | `content-edit` | `content-seo-draft` |
-| `content-repurpose` | `content-calendar` | `content-cta` |
+| `build-codex-plugin` | `build-claude-code-plugin` | `build-cursor-skill` |
+| `build-opencode-pack` | `build-zcode-pack` | `build-hermes-agent-pack` |
+| `build-mcp-server` | `build-mcp-tool-contract` | `build-agent-skill` |
+| `build-ai-cli-sdk-project` | `build-plugin-marketplace-entry` | `build-skill-library-index` |
+| `build-localhost-tool-ui` | `build-powershell-agent-helper` | `build-fullstack-saas` |
+| `build-fullstack-crud` | `build-fullstack-auth` | `build-fullstack-admin` |
 
-### `data` (16)
+### `validation` (18)
 
-Data and analytics planning
-
-| | | |
-| --- | --- | --- |
-| `data-schema` | `data-etl` | `data-warehouse` |
-| `data-analytics-plan` | `data-quality` | `data-lineage` |
-| `data-privacy` | `data-metrics-dict` | `data-experiment-design` |
-| `data-dashboard` | `data-sql-review` | `data-pipelines` |
-| `data-streaming` | `data-backfill` | `data-contracts` |
-| `data-governance` |  |  |
-
-### `design` (18)
-
-Product design and UI craft
+Real-task proof, claim audit, launch readiness, and anti-slop gates
 
 | | | |
 | --- | --- | --- |
-| `design-anti-slop` | `design-a11y` | `design-motion` |
-| `design-brand` | `design-critique` | `design-system` |
-| `design-typography` | `design-color` | `design-layout` |
-| `design-forms` | `design-empty-states` | `design-responsive` |
-| `design-dark-mode` | `design-icons` | `design-prototype` |
-| `design-handoff` | `design-tokens` | `design-content` |
+| `validate-real-task` | `validate-feature-claim` | `validate-readme-claims` |
+| `validate-demo-path` | `validate-plugin-package` | `validate-mcp-contract` |
+| `validate-cli-help` | `validate-host-install` | `validate-workflow-runbook` |
+| `validate-ui-screenshot` | `validate-mobile-layout` | `validate-accessibility-proof` |
+| `validate-security-boundary` | `validate-performance-budget` | `validate-release-readiness` |
+| `validate-no-fake-stats` | `validate-generated-artifacts` | `validate-evidence-bundle` |
 
-### `docs` (12)
+### `methodology` (12)
 
-Documentation and developer writing
+Discipline iron laws - brainstorm, plan, TDD, verify (original)
 
 | | | |
 | --- | --- | --- |
-| `docs-readme` | `docs-quickstart` | `docs-adr` |
-| `docs-runbook` | `docs-llms-txt` | `docs-api-ref` |
-| `docs-changelog` | `docs-contributing` | `docs-migration` |
-| `docs-faq` | `docs-troubleshooting` | `docs-examples` |
+| `brainstorm-first` | `write-plan` | `tdd-first` |
+| `verify-before-done` | `design-before-code` | `subagent-driven-dev` |
+| `executing-plans` | `no-rationalize` | `pressure-test-skill` |
+| `cso-skill-description` | `completeness-over-shortcut` | `finish-with-evidence` |
 
-### `eng` (28)
+### `roles` (16)
+
+Role lenses for product, eng, design, QA, security, ship
+
+| | | |
+| --- | --- | --- |
+| `role-ceo-review` | `role-eng-review` | `role-design-review` |
+| `role-devex-review` | `role-qa-lead` | `role-security-officer` |
+| `role-shipper` | `role-growth-lead` | `role-researcher` |
+| `role-pm` | `role-tech-writer` | `role-sre` |
+| `role-support` | `role-data-analyst` | `role-founder` |
+| `role-crew-coordinator` |  |  |
+
+### `lifecycle` (14)
+
+Work OS spine from shape to prove and learn
+
+| | | |
+| --- | --- | --- |
+| `shape-intent` | `plan-work` | `lock-design` |
+| `run-build` | `review-diff` | `debug-issue` |
+| `qa-flow` | `crew-handoff` | `ship-release` |
+| `prove-outcome` | `capture-learning` | `triage-inbox` |
+| `spike-explore` | `retro-improve` |  |
+
+### `eng` (44)
 
 Software engineering patterns
 
@@ -249,43 +246,57 @@ Software engineering patterns
 | `eng-config-hygiene` | `eng-secrets-handling` | `eng-rate-limits` |
 | `eng-pagination` | `eng-webhooks` | `eng-background-jobs` |
 | `eng-observability` | `eng-rollback` | `eng-hotfixes` |
-| `eng-tech-debt` |  |  |
+| `eng-tech-debt` | `fullstack-repo-map` | `fullstack-architecture-plan` |
+| `fullstack-db-schema` | `fullstack-api-contract` | `fullstack-auth-flow` |
+| `fullstack-file-upload` | `fullstack-background-jobs` | `fullstack-observability` |
+| `fullstack-deploy-plan` | `fullstack-test-plan` | `eng-ai-generated-diff-review` |
+| `eng-context-budget` | `eng-safe-codegen` | `eng-library-choice` |
+| `eng-monorepo-map` | `eng-production-checklist` |  |
 
-### `enterprise` (12)
+### `design` (60)
 
-Enterprise stakeholder and process lite
-
-| | | |
-| --- | --- | --- |
-| `ent-stakeholder-brief` | `ent-raci` | `ent-compliance-lite` |
-| `ent-procurement` | `ent-sla` | `ent-change-mgmt` |
-| `ent-vendor` | `ent-security-review` | `ent-audit-prep` |
-| `ent-training` | `ent-support-tiers` | `ent-roadmap-align` |
-
-### `finance-lite` (8)
-
-Lightweight finance notes for builders
-
-`fin-unit-econ`, `fin-pricing-table`, `fin-runway`, `fin-budget`, `fin-invoice-hygiene`, `fin-mrr`, `fin-burn`, `fin-forecast-lite`
-
-### `framework` (28)
-
-Framework lean patterns (original)
+Product design and UI craft
 
 | | | |
 | --- | --- | --- |
-| `fw-react` | `fw-next` | `fw-vue` |
-| `fw-svelte` | `fw-angular` | `fw-django` |
-| `fw-fastapi` | `fw-flask` | `fw-rails` |
-| `fw-laravel` | `fw-spring` | `fw-express` |
-| `fw-nest` | `fw-hono` | `fw-remix` |
-| `fw-astro` | `fw-flutter` | `fw-rn` |
-| `fw-electron` | `fw-tauri` | `fw-prisma` |
-| `fw-drizzle` | `fw-tailwind` | `fw-vitest` |
-| `fw-playwright` | `fw-jest` | `fw-pytest` |
-| `fw-docker` |  |  |
+| `design-anti-slop` | `design-a11y` | `design-motion` |
+| `design-brand` | `design-critique` | `design-system` |
+| `design-typography` | `design-color` | `design-layout` |
+| `design-forms` | `design-empty-states` | `design-responsive` |
+| `design-dark-mode` | `design-icons` | `design-prototype` |
+| `design-handoff` | `design-tokens` | `design-content` |
+| `design-dashboard-density` | `design-data-table` | `design-command-palette` |
+| `design-settings-panel` | `design-navigation` | `design-sidebar` |
+| `design-wizard-flow` | `design-pricing-page` | `design-onboarding-flow` |
+| `design-search-filter` | `design-notifications` | `design-error-recovery` |
+| `design-loading-states` | `design-focus-management` | `design-copy-hierarchy` |
+| `design-visual-hierarchy` | `design-component-states` | `design-mobile-touch` |
+| `design-product-dashboard` | `design-admin-console` | `design-crud-flow` |
+| `design-calendar-ui` | `design-kanban-ui` | `design-chart-ui` |
+| `design-figma-handoff` | `design-prototype-flow` | `design-density-audit` |
+| `design-saas-workbench` | `design-accessible-motion` | `design-responsive-proof` |
+| `design-design-qa` | `design-page-structure` | `design-openrouter-style-catalog` |
+| `design-command-center` | `design-comparison-table` | `design-proof-dashboard` |
+| `design-builder-wizard` | `design-launch-page` | `design-saas-empty-states` |
+| `design-mobile-agent-ui` | `design-data-dense-filtering` | `design-ui-polish-pass` |
 
-### `growth` (16)
+### `product` (26)
+
+Product management and discovery
+
+| | | |
+| --- | --- | --- |
+| `product-jtbd` | `product-rice` | `product-prd` |
+| `product-launch` | `product-postmortem` | `product-roadmap` |
+| `product-metrics` | `product-experiment` | `product-persona` |
+| `product-onboarding` | `product-pricing-signal` | `product-feedback` |
+| `product-scope-cut` | `product-north-star` | `startup-idea-filter` |
+| `startup-mvp-scope` | `startup-landing-offer` | `startup-user-interview` |
+| `startup-waitlist-loop` | `startup-pricing-test` | `startup-founder-brief` |
+| `startup-demo-script` | `product-onboarding-audit` | `product-retention-loop` |
+| `product-activation-map` | `product-paywall-fit` |  |
+
+### `growth` (22)
 
 Growth, SEO, retention, launch
 
@@ -296,7 +307,79 @@ Growth, SEO, retention, launch
 | `growth-landing` | `growth-email` | `growth-analytics` |
 | `growth-activation` | `growth-churn` | `growth-viral` |
 | `growth-content-engine` | `growth-waitlist` | `growth-partnerships` |
-| `growth-positioning` |  |  |
+| `growth-positioning` | `growth-seo-cluster` | `growth-launch-plan` |
+| `growth-social-proof` | `growth-email-sequence` | `growth-referral-loop` |
+| `growth-analytics-proof` |  |  |
+
+### `research` (24)
+
+Research and competitive teardown
+
+| | | |
+| --- | --- | --- |
+| `research-question` | `research-sources` | `research-teardown` |
+| `research-synth` | `research-interview` | `research-survey` |
+| `research-desk` | `research-market` | `research-user-journey` |
+| `research-assumptions` | `research-evidence-grade` | `research-contradictions` |
+| `research-competitor-map` | `research-github-patterns` | `research-docs-first` |
+| `research-user-pain` | `research-market-gap` | `research-technical-feasibility` |
+| `research-api-surface` | `research-pricing-signal` | `research-launch-channel` |
+| `research-open-source-license` | `research-benchmark-method` | `research-source-trust` |
+
+### `docs` (13)
+
+Documentation and developer writing
+
+| | | |
+| --- | --- | --- |
+| `docs-readme` | `docs-quickstart` | `docs-adr` |
+| `docs-runbook` | `docs-llms-txt` | `docs-api-ref` |
+| `docs-changelog` | `docs-contributing` | `docs-migration` |
+| `docs-faq` | `docs-troubleshooting` | `docs-examples` |
+| `docs-agent-facing-guide` |  |  |
+
+### `security` (15)
+
+Security and privacy practices
+
+| | | |
+| --- | --- | --- |
+| `sec-threat-model` | `sec-secrets` | `sec-authz` |
+| `sec-deps` | `sec-incident` | `sec-privacy` |
+| `sec-owasp` | `sec-supply-chain` | `sec-input-validation` |
+| `sec-session` | `sec-crypto-hygiene` | `sec-audit-log` |
+| `sec-pentest-prep` | `sec-disclosure` | `security-agent-permission-review` |
+
+### `ops` (14)
+
+Operations and reliability
+
+| | | |
+| --- | --- | --- |
+| `ops-deploy` | `ops-health` | `ops-oncall` |
+| `ops-cost` | `ops-env-parity` | `ops-backup` |
+| `ops-capacity` | `ops-slos` | `ops-incident-comms` |
+| `ops-runbook-drill` | `ops-feature-freeze` | `ops-canary` |
+| `ops-env-bootstrap` | `ops-ci-failure-router` |  |
+
+### `os` (8)
+
+Cross-platform OS helpers for agentic workstations
+
+`os-command-router`, `os-file-ops-safe`, `os-process-port-doctor`, `os-env-doctor`, `os-shell-modernize`, `os-app-launcher`, `os-path-cleanup`, `os-agent-terminal`
+
+### `agentic` (16)
+
+Agentic workflows and crew patterns
+
+| | | |
+| --- | --- | --- |
+| `agent-crew` | `agent-fanout` | `agent-babysit` |
+| `agent-context` | `agent-eval-loop` | `agent-handoff` |
+| `agent-tool-policy` | `agent-prompt-budget` | `agent-memory-lite` |
+| `agent-parallel` | `agent-stop-gates` | `agent-critique` |
+| `agent-replay` | `agent-sandbox` | `agentic-orchestrator-plan` |
+| `agentic-workflow-replay` |  |  |
 
 ### `lang` (30)
 
@@ -315,123 +398,35 @@ Language-specific lean patterns (original)
 | `lang-wasm` | `lang-terraform` | `lang-yaml` |
 | `lang-json-schema` | `lang-markdown` | `lang-regex` |
 
-### `legal-lite` (8)
+### `framework` (28)
 
-Non-advice legal awareness helpers
-
-`legal-nda-skim`, `legal-clause-risk`, `legal-license-pick`, `legal-tos-outline`, `legal-privacy-outline`, `legal-disclaimer`, `legal-oss-notice`, `legal-data-processing`
-
-### `lifecycle` (14)
-
-Work OS spine from shape to prove and learn
+Framework lean patterns (original)
 
 | | | |
 | --- | --- | --- |
-| `shape-intent` | `plan-work` | `lock-design` |
-| `run-build` | `review-diff` | `debug-issue` |
-| `qa-flow` | `crew-handoff` | `ship-release` |
-| `prove-outcome` | `capture-learning` | `triage-inbox` |
-| `spike-explore` | `retro-improve` |  |
+| `fw-react` | `fw-next` | `fw-vue` |
+| `fw-svelte` | `fw-angular` | `fw-django` |
+| `fw-fastapi` | `fw-flask` | `fw-rails` |
+| `fw-laravel` | `fw-spring` | `fw-express` |
+| `fw-nest` | `fw-hono` | `fw-remix` |
+| `fw-astro` | `fw-flutter` | `fw-rn` |
+| `fw-electron` | `fw-tauri` | `fw-prisma` |
+| `fw-drizzle` | `fw-tailwind` | `fw-vitest` |
+| `fw-playwright` | `fw-jest` | `fw-pytest` |
+| `fw-docker` |  |  |
 
-### `media` (16)
+### `data` (17)
 
-Media and creative briefs
-
-| | | |
-| --- | --- | --- |
-| `media-image-brief` | `media-video-script` | `media-brand-asset` |
-| `media-podcast` | `media-thumbnail` | `media-storyboard` |
-| `media-alt-text` | `media-compression` | `media-style-guide` |
-| `media-ugc` | `media-localization` | `media-accessibility` |
-| `media-video-watch` | `media-frame-sampling` | `media-video-plan` |
-| `media-caption-qc` |  |  |
-
-### `methodology` (12)
-
-Discipline iron laws - brainstorm, plan, TDD, verify (original)
+Data and analytics planning
 
 | | | |
 | --- | --- | --- |
-| `brainstorm-first` | `write-plan` | `tdd-first` |
-| `verify-before-done` | `design-before-code` | `subagent-driven-dev` |
-| `executing-plans` | `no-rationalize` | `pressure-test-skill` |
-| `cso-skill-description` | `completeness-over-shortcut` | `finish-with-evidence` |
-
-### `mobile` (10)
-
-Mobile release and store
-
-| | | |
-| --- | --- | --- |
-| `mobile-ios-release` | `mobile-android-release` | `mobile-store-listing` |
-| `mobile-push` | `mobile-offline` | `mobile-perf` |
-| `mobile-deep-links` | `mobile-permissions` | `mobile-crash` |
-| `mobile-beta` |  |  |
-
-### `ops` (12)
-
-Operations and reliability
-
-| | | |
-| --- | --- | --- |
-| `ops-deploy` | `ops-health` | `ops-oncall` |
-| `ops-cost` | `ops-env-parity` | `ops-backup` |
-| `ops-capacity` | `ops-slos` | `ops-incident-comms` |
-| `ops-runbook-drill` | `ops-feature-freeze` | `ops-canary` |
-
-### `os` (8)
-
-Cross-platform OS helpers for agentic workstations
-
-`os-command-router`, `os-file-ops-safe`, `os-process-port-doctor`, `os-env-doctor`, `os-shell-modernize`, `os-app-launcher`, `os-path-cleanup`, `os-agent-terminal`
-
-### `product` (14)
-
-Product management and discovery
-
-| | | |
-| --- | --- | --- |
-| `product-jtbd` | `product-rice` | `product-prd` |
-| `product-launch` | `product-postmortem` | `product-roadmap` |
-| `product-metrics` | `product-experiment` | `product-persona` |
-| `product-onboarding` | `product-pricing-signal` | `product-feedback` |
-| `product-scope-cut` | `product-north-star` |  |
-
-### `research` (12)
-
-Research and competitive teardown
-
-| | | |
-| --- | --- | --- |
-| `research-question` | `research-sources` | `research-teardown` |
-| `research-synth` | `research-interview` | `research-survey` |
-| `research-desk` | `research-market` | `research-user-journey` |
-| `research-assumptions` | `research-evidence-grade` | `research-contradictions` |
-
-### `roles` (16)
-
-Role lenses for product, eng, design, QA, security, ship
-
-| | | |
-| --- | --- | --- |
-| `role-ceo-review` | `role-eng-review` | `role-design-review` |
-| `role-devex-review` | `role-qa-lead` | `role-security-officer` |
-| `role-shipper` | `role-growth-lead` | `role-researcher` |
-| `role-pm` | `role-tech-writer` | `role-sre` |
-| `role-support` | `role-data-analyst` | `role-founder` |
-| `role-crew-coordinator` |  |  |
-
-### `security` (14)
-
-Security and privacy practices
-
-| | | |
-| --- | --- | --- |
-| `sec-threat-model` | `sec-secrets` | `sec-authz` |
-| `sec-deps` | `sec-incident` | `sec-privacy` |
-| `sec-owasp` | `sec-supply-chain` | `sec-input-validation` |
-| `sec-session` | `sec-crypto-hygiene` | `sec-audit-log` |
-| `sec-pentest-prep` | `sec-disclosure` |  |
+| `data-schema` | `data-etl` | `data-warehouse` |
+| `data-analytics-plan` | `data-quality` | `data-lineage` |
+| `data-privacy` | `data-metrics-dict` | `data-experiment-design` |
+| `data-dashboard` | `data-sql-review` | `data-pipelines` |
+| `data-streaming` | `data-backfill` | `data-contracts` |
+| `data-governance` | `data-event-tracking-plan` |  |
 
 ### `testing` (16)
 
@@ -446,74 +441,178 @@ Testing strategies
 | `test-a11y` | `test-visual` | `test-security` |
 | `test-chaos` |  |  |
 
-### `trust` (5)
+### `media` (17)
 
-SkillsForge trust spine (validate, forge, route, verify)
+Media and creative briefs
 
-`using-skillsforge`, `author-capability`, `route-capability`, `validate-agent-skill`, `verify-capability`
+| | | |
+| --- | --- | --- |
+| `media-image-brief` | `media-video-script` | `media-brand-asset` |
+| `media-podcast` | `media-thumbnail` | `media-storyboard` |
+| `media-alt-text` | `media-compression` | `media-style-guide` |
+| `media-ugc` | `media-localization` | `media-accessibility` |
+| `media-video-watch` | `media-frame-sampling` | `media-video-plan` |
+| `media-caption-qc` | `media-demo-proof-pack` |  |
+
+### `mobile` (10)
+
+Mobile release and store
+
+`mobile-ios-release`, `mobile-android-release`, `mobile-store-listing`, `mobile-push`, `mobile-offline`, `mobile-perf`, `mobile-deep-links`, `mobile-permissions`, `mobile-crash`, `mobile-beta`
+
+### `enterprise` (12)
+
+Enterprise stakeholder and process lite
+
+| | | |
+| --- | --- | --- |
+| `ent-stakeholder-brief` | `ent-raci` | `ent-compliance-lite` |
+| `ent-procurement` | `ent-sla` | `ent-change-mgmt` |
+| `ent-vendor` | `ent-security-review` | `ent-audit-prep` |
+| `ent-training` | `ent-support-tiers` | `ent-roadmap-align` |
+
+### `content` (12)
+
+Content production
+
+| | | |
+| --- | --- | --- |
+| `content-longform` | `content-social` | `content-newsletter` |
+| `content-blog` | `content-docs-voice` | `content-case-study` |
+| `content-script` | `content-edit` | `content-seo-draft` |
+| `content-repurpose` | `content-calendar` | `content-cta` |
+
+### `legal-lite` (8)
+
+Non-advice legal awareness helpers
+
+`legal-nda-skim`, `legal-clause-risk`, `legal-license-pick`, `legal-tos-outline`, `legal-privacy-outline`, `legal-disclaimer`, `legal-oss-notice`, `legal-data-processing`
+
+### `finance-lite` (8)
+
+Lightweight finance notes for builders
+
+`fin-unit-econ`, `fin-pricing-table`, `fin-runway`, `fin-budget`, `fin-invoice-hygiene`, `fin-mrr`, `fin-burn`, `fin-forecast-lite`
+
+### `cloud-devops` (14)
+
+Cloud and DevOps basics
+
+| | | |
+| --- | --- | --- |
+| `cloud-docker` | `cloud-k8s-basics` | `cloud-ci-providers` |
+| `cloud-iac` | `cloud-secrets-mgr` | `cloud-networking` |
+| `cloud-cdn` | `cloud-observability` | `cloud-cost-tags` |
+| `cloud-iam` | `cloud-serverless` | `cloud-queues` |
+| `cloud-storage` | `cloud-dns` |  |
 
 ## Agents
 
-**98 agents** under `plugins/skillsforge/agents/`, grouped by role prefix:
+**98 agents** under `plugins/skillsforge/agents/`. They are role files for humans or hosts to pick explicitly; SkillsForge does not auto-spawn subagents.
 
-### Trust & quality (12)
-
-`bench-runner`, `eval-engineer`, `hackathon-judge-reviewer`, `package-auditor`, `policy-engineer`, `policy-tester`, `pressure-tester`, `quality-gate`, `readme-claim-auditor`, `skillshield-auditor`, `trust-engineer`, `validator`
-
-### Host specialists (7)
-
-`claude-specialist`, `codex-specialist`, `cursor-specialist`, `gemini-specialist`, `host-adapter`, `install-helper`, `opencode-specialist`
-
-### Engineering (14)
-
-`api-designer`, `backend-dev`, `builder`, `cli-workbench-engineer`, `debugger`, `dependency-upgrade-surgeon`, `eng-reviewer`, `framework-coach`, `frontend-dev`, `fullstack-dev`, `language-coach`, `mobile-dev`, `perf-engineer`, `powershell-workbench-engineer`
-
-### Design & product (9)
-
-`ceo-reviewer`, `design-reviewer`, `designer`, `founder`, `local-ui-builder`, `motion-qa`, `pm`, `star-map-designer`, `ui-systems-designer`
-
-### Data & ops (12)
-
-`ci-diagnostician`, `cost-optimizer`, `data-analyst`, `data-engineer`, `data-governance-auditor`, `data-quality-auditor`, `devops-engineer`, `incident-commander`, `ml-lite`, `oncall-lead`, `release-manager`, `sre`
-
-### Growth & content (9)
-
-`content-lead`, `docs-engineer`, `documentarian`, `growth-experimenter`, `growth-lead`, `media-producer`, `seo-specialist`, `tech-writer`, `video-workflow-producer`
-
-### Security & compliance (6)
-
-`enterprise-liaison`, `finance-lite`, `legal-lite`, `privacy-officer`, `security-engineer`, `security-officer`
-
-### Workflow & library (14)
-
-`agent-terminal-operator`, `capture-miner`, `catalog-curator`, `compose-orchestrator`, `crew-coordinator`, `handoff-compressor`, `library-librarian`, `llm-index-librarian`, `mcp-interface-engineer`, `repo-map-specialist`, `safe-removal-operator`, `terminal-output-compressor`, `token-budget-controller`, `workflow-curator`
-
-### Other roles (15)
-
-`devex-reviewer`, `mobile-releaser`, `os-workstation-helper`, `planner`, `prompt-engineer`, `qa-lead`, `research-synthesizer`, `researcher`, `retro-facilitator`, `reviewer`, `shipper`, `skill-author`, `skill-pack-architect`, `support`, `test-automator`
+| | | |
+| --- | --- | --- |
+| `agent-terminal-operator` | `api-designer` | `backend-dev` |
+| `bench-runner` | `builder` | `capture-miner` |
+| `catalog-curator` | `ceo-reviewer` | `ci-diagnostician` |
+| `claude-specialist` | `cli-workbench-engineer` | `codex-specialist` |
+| `compose-orchestrator` | `content-lead` | `cost-optimizer` |
+| `crew-coordinator` | `cursor-specialist` | `data-analyst` |
+| `data-engineer` | `data-governance-auditor` | `data-quality-auditor` |
+| `debugger` | `dependency-upgrade-surgeon` | `design-reviewer` |
+| `designer` | `devex-reviewer` | `devops-engineer` |
+| `docs-engineer` | `documentarian` | `eng-reviewer` |
+| `enterprise-liaison` | `eval-engineer` | `finance-lite` |
+| `founder` | `framework-coach` | `frontend-dev` |
+| `fullstack-dev` | `gemini-specialist` | `growth-experimenter` |
+| `growth-lead` | `hackathon-judge-reviewer` | `handoff-compressor` |
+| `host-adapter` | `incident-commander` | `install-helper` |
+| `language-coach` | `legal-lite` | `library-librarian` |
+| `llm-index-librarian` | `local-ui-builder` | `mcp-interface-engineer` |
+| `media-producer` | `ml-lite` | `mobile-dev` |
+| `mobile-releaser` | `motion-qa` | `oncall-lead` |
+| `opencode-specialist` | `os-workstation-helper` | `package-auditor` |
+| `perf-engineer` | `planner` | `pm` |
+| `policy-engineer` | `policy-tester` | `powershell-workbench-engineer` |
+| `pressure-tester` | `privacy-officer` | `prompt-engineer` |
+| `qa-lead` | `quality-gate` | `readme-claim-auditor` |
+| `release-manager` | `repo-map-specialist` | `research-synthesizer` |
+| `researcher` | `retro-facilitator` | `reviewer` |
+| `safe-removal-operator` | `security-engineer` | `security-officer` |
+| `seo-specialist` | `shipper` | `skill-author` |
+| `skill-pack-architect` | `skillshield-auditor` | `sre` |
+| `star-map-designer` | `support` | `tech-writer` |
+| `terminal-output-compressor` | `test-automator` | `token-budget-controller` |
+| `trust-engineer` | `ui-systems-designer` | `validator` |
+| `video-workflow-producer` | `workflow-curator` |  |
 
 ## Commands
 
-**135 slash commands** in `plugins/skillsforge/commands/`.
-
-Classification is on-disk: files containing `generated thin command` are thin pack/domain shims.
-CLI-only surfaces (no slash file) such as `demo` and `hosts` live under **Trust & judge CLI** above.
+**135 slash commands** in `plugins/skillsforge/commands/`. Classification is on-disk: files containing `generated thin command` are thin pack/domain shims. CLI-only surfaces such as `demo` and `hosts` live in the native CLI help.
 
 ### Trust / upgraded entry commands
 
-Hand-authored or native CLI shims (**25**). Prefer these for trust-critical and operator flows:
+Hand-authored or native CLI shims (**29**). Prefer these for trust-critical and operator flows:
 
-`auto`, `build`, `catalog`, `debug`, `doctor`, `evidence`, `forge`, `lib`, `plan`, `pressure`, `prove`, `ps`, `qa`, `quality`, `review`, `route`, `scaffold`, `shape`, `ship`, `skillshield`, `validate`, `verify-receipt`, `vibe`, `wb`, `workflows`
+| | | |
+| --- | --- | --- |
+| `auto` | `build` | `catalog` |
+| `debug` | `digest` | `doctor` |
+| `evidence` | `forge` | `lib` |
+| `map` | `next` | `plan` |
+| `pressure` | `prove` | `ps` |
+| `qa` | `quality` | `review` |
+| `route` | `scaffold` | `shape` |
+| `ship` | `skillshield` | `slim` |
+| `tokens` | `validate` | `verify-receipt` |
+| `wb` | `workflows` |  |
 
 ### Generated thin commands
 
-Pack/domain shims (**99**) that mostly `route --query "..."`. Prefer upgraded entries for trust work:
+Pack/domain shims (**106**) that mostly route into SkillsForge. Prefer upgraded entries for trust work:
 
-`a11y`, `adr`, `agent-terminal`, `agentic`, `anti-slop`, `batch`, `bench`, `brainstorm`, `browse`, `capture`, `ceo`, `ci`, `cloud`, `compare`, `compose`, `content`, `copy`, `crew`, `data`, `deploy`, `design-first`, `design-review`, `devex`, `docker`, `docs`, `e2e`, `enforce`, `eng`, `eng-review`, `enterprise`, `eval`, `export-agents`, `finance`, `flags`, `forge-from-capture`, `framework`, `growth`, `incident`, `install`, `jtbd`, `k8s`, `lang`, `launch`, `learn`, `legal`, `lint-skill`, `load-test`, `lock-design`, `media`, `migrations`, `mobile`, `next`, `no-rationalize`, `oncall`, `ops`, `os-clean`, `os-copy-path`, `os-env`, `os-find`, `os-open`, `os-ports`, `os-run`, `pack-author`, `pack-lifecycle`, `pack-methodology`, `pack-roles`, `package`, `perf`, `prd`, `privacy`, `quickstart`, `readme`, `receipt`, `refactor`, `research`, `retention`, `retro`, `rice`, `runbook`, `scorecard`, `secrets`, `security`, `seo`, `skill-generate`, `spike`, `status`, `stocktake`, `tdd`, `testing`, `threat-model`, `triage`, `unit-test`, `verify`, `video-frames`, `video-watch`, `watch`, `work-brief`, `work-plan`, `work-proof`
+| | | |
+| --- | --- | --- |
+| `a11y` | `adr` | `agent-terminal` |
+| `agentic` | `anti-slop` | `batch` |
+| `bench` | `brainstorm` | `browse` |
+| `builder` | `capture` | `ceo` |
+| `ci` | `claim-proof` | `cloud` |
+| `compare` | `compose` | `content` |
+| `copy` | `crew` | `data` |
+| `deploy` | `design-first` | `design-review` |
+| `devex` | `docker` | `docs` |
+| `e2e` | `enforce` | `eng-review` |
+| `eng` | `enterprise` | `eval` |
+| `export-agents` | `finance` | `flags` |
+| `forge-from-capture` | `framework` | `growth` |
+| `incident` | `install` | `jtbd` |
+| `k8s` | `lang` | `launch` |
+| `learn` | `legal` | `lint-skill` |
+| `load-test` | `lock-design` | `mcp-build` |
+| `media` | `migrations` | `mobile` |
+| `no-rationalize` | `oncall` | `ops` |
+| `os-clean` | `os-copy-path` | `os-env` |
+| `os-find` | `os-open` | `os-ports` |
+| `os-run` | `pack-author` | `pack-lifecycle` |
+| `pack-methodology` | `pack-roles` | `package` |
+| `perf` | `plugin-build` | `prd` |
+| `privacy` | `quickstart` | `readme` |
+| `real-task-proof` | `receipt` | `refactor` |
+| `research` | `retention` | `retro` |
+| `rice` | `runbook` | `scorecard` |
+| `secrets` | `security` | `seo` |
+| `skill-generate` | `spike` | `status` |
+| `stocktake` | `tdd` | `testing` |
+| `threat-model` | `triage` | `unit-test` |
+| `validation` | `verify` | `vibe` |
+| `vibecoder` | `video-frames` | `video-watch` |
+| `watch` | `work-brief` | `work-plan` |
+| `work-proof` |  |  |
 
 ## Workflows by category
 
-**100 workflows** across **10** categories:
+**100 workflows** across **10** categories. Workflow `run` remains dry-run by default.
 
 | Category | Count | Workflow ids |
 | --- | ---: | --- |
@@ -530,17 +629,37 @@ Pack/domain shims (**99**) that mostly `route --query "..."`. Prefer upgraded en
 
 ## MCP tools
 
-Thin stdio NDJSON server: `scripts/skillsforge-mcp.mjs`. Read-only; no swarm / AgentDB / default writes.
+Thin stdio NDJSON server: `scripts/skillsforge-mcp.mjs`. Read-only defaults; no swarm / AgentDB / default writes.
 
 | Tool | Description |
 | --- | --- |
 | `validate` | Validate an Agent Skill directory (structure + capability policy) |
 | `route` | Explainable skill routing for a natural-language query |
 | `skillshield` | Best-effort skill-body scanner for unsafe patterns |
-| `library_index` | Read-only installed skill library index |
-| `recommend_skill` | Read-only session-aware skill recommendation |
-| `recommend_workflow` | Read-only workflow recommendation |
+| `library_index` | Read-only installed skill library index for routing and host awareness |
+| `recommend_skill` | Read-only session-aware skill recommendation for a natural-language task |
+| `recommend_workflow` | Read-only workflow recommendation for a natural-language task |
 | `workflow_show` | Read-only workflow detail by id |
+| `settings_show` | Read-only resolved SkillsForge settings |
+| `quality_skill` | Read-only skill quality score and checks |
+| `skill_contract` | Read-only extracted skill output contract sections |
+| `map` | ForgeMap: lean JS/TS structural lookup (prefer over grep+multi-read to save tokens) |
+| `slim` | ForgeSlim: compress git/test/rg output before it hits the model |
+| `digest` | One-shot briefing: status + recommend + token cost + next commands (token-friendly task start) |
+| `next` | Suggest next productive SkillsForge commands from repo state |
+| `tokens` | Estimate context tokens (chars/4). Default catalog = repo skills only. |
+
+## Visual artifacts
+
+| Asset | Role |
+| --- | --- |
+| `assets/skillsforge-banner.svg` | README hero with current inventory |
+| `assets/skillsforge-library-preview.png` | Generated local library / workflow preview; no embedded text claims |
+| `assets/skillsforge-demo-poster.png` | Visible poster for committed demo MP4 |
+| `assets/video/skillsforge-demo.mp4` | Packaged H.264 demo video |
+| `assets/skillsforge-universal-fanout.svg` | Multi-host install boundary map |
+| `assets/skillsforge-star-map.svg` | Current inventory relationship map |
+| `assets/skillsforge-trust-pipeline.svg` | Safety layer under the Work OS |
 
 ## Examples
 

@@ -9,6 +9,10 @@
 
 Current inventory: **499** skills - **28** packs - **11** profiles - **100** workflows - **98** agents - **135** command shims.
 
+![SkillsForge local library command center](assets/skillsforge-library-preview.png)
+
+The preview is an illustrative product visual with no embedded text claims. Source-backed counts, commands, and trust boundaries are listed below.
+
 ---
 
 ## What judges should understand in 30 seconds
@@ -30,10 +34,6 @@ Full surface map: **[docs/features.md](docs/features.md)**.
 
 Packaged MP4: [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-demo.mp4). GitHub README playback for committed MP4s is unreliable, so the poster stays visible. For judging, upload the same H.264 MP4 to a GitHub issue/PR comment and paste the `github.com/user-attachments/assets/...` URL here (or YouTube). See [GitHub attaching files](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files).
 
-![SkillsForge universal host fanout](assets/skillsforge-universal-fanout.svg)
-
-![SkillsForge star map](assets/skillsforge-star-map.svg)
-
 | Beat | What you'll see |
 |---|---|
 | Thesis | Agent work gets productive when skills + workflows are discoverable and runnable |
@@ -41,6 +41,16 @@ Packaged MP4: [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-dem
 | Operator path | `vibe` - `lib recommend` - `workflows recommend` - `auto run --read-only` - `wb status` - `map` - `slim` - `tokens` / `digest` / `next` |
 | Safety beat | Unsafe example denied -> safe example packaged -> **demo scoreboard** (package-tree hash) |
 | CTA | Clone + `node plugins/skillsforge/bin/skillsforge.mjs demo` |
+
+---
+
+## System maps
+
+![SkillsForge universal host fanout](assets/skillsforge-universal-fanout.svg)
+
+![SkillsForge star map](assets/skillsforge-star-map.svg)
+
+These maps are committed static assets. They show package-fidelity host boundaries, current inventory, local library outputs, and the trust gates without relying on generated numbers.
 
 ---
 

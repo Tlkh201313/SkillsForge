@@ -1,47 +1,104 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="title description">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" role="img" aria-labelledby="title description">
   <title id="title">SkillsForge</title>
-  <desc id="description">SkillsForge banner: Work OS for productive Agent Skills - route, workflows, library, multi-host ship; trust as the safety layer.</desc>
+  <desc id="description">SkillsForge banner showing a productivity Work OS for Agent Skills with library, workflows, routing, hosts, and trust gates.</desc>
   <defs>
-    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#080b18"/>
-      <stop offset="0.52" stop-color="#111936"/>
-      <stop offset="1" stop-color="#17102f"/>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="0.55" stop-color="#eef6ff"/>
+      <stop offset="1" stop-color="#f7f3ff"/>
     </linearGradient>
-    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#67e8f9"/>
-      <stop offset="0.48" stop-color="#818cf8"/>
-      <stop offset="1" stop-color="#c084fc"/>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0ea5e9"/>
+      <stop offset="0.45" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#7c3aed"/>
     </linearGradient>
-    <linearGradient id="spark" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#fb7185"/>
-      <stop offset="1" stop-color="#fbbf24"/>
+    <linearGradient id="ok" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#22c55e"/>
     </linearGradient>
-    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="10" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#0f172a" flood-opacity="0.14"/>
     </filter>
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M40 0H0V40" fill="none" stroke="#94a3b8" stroke-opacity="0.08"/>
-    </pattern>
+    <style>
+      .sans{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+      .mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+      .ink{fill:#0f172a}
+      .muted{fill:#475569}
+      .soft{fill:#64748b}
+      .panel{fill:#ffffff;stroke:#dbe3ee;stroke-width:1.4}
+      .rule{stroke:#e2e8f0;stroke-width:1.2}
+      .chip{fill:#f8fafc;stroke:#dbe3ee;stroke-width:1}
+    </style>
   </defs>
-  <rect width="1200" height="320" rx="24" fill="url(#background)"/>
-  <rect width="1200" height="320" rx="24" fill="url(#grid)"/>
-  <circle cx="1035" cy="32" r="180" fill="#7c3aed" opacity="0.10"/>
-  <circle cx="70" cy="300" r="170" fill="#06b6d4" opacity="0.08"/>
 
-  <g transform="translate(86 59)" filter="url(#glow)">
-    <path d="M100 0 187 50v100l-87 50-87-50V50Z" fill="#0b1126" stroke="url(#metal)" stroke-width="7"/>
-    <path d="m55 100 29 29 61-66" fill="none" stroke="url(#metal)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M168 17l10-16m8 34 19-5m-24 27 14 12" fill="none" stroke="url(#spark)" stroke-width="5" stroke-linecap="round"/>
+  <rect width="1280" height="420" rx="0" fill="url(#page)"/>
+  <g opacity="0.48">
+    <path d="M0 330 C170 286 314 362 482 310 C636 262 760 276 918 314 C1084 354 1182 304 1280 284" fill="none" stroke="#bfdbfe" stroke-width="2"/>
+    <path d="M0 86 C198 130 340 64 514 98 C684 132 808 82 996 76 C1118 72 1208 106 1280 126" fill="none" stroke="#ddd6fe" stroke-width="2"/>
   </g>
 
-  <g fill="#f8fafc" font-family="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif">
-    <text x="330" y="132" font-size="72" font-weight="760" letter-spacing="-2">SkillsForge</text>
-    <text x="334" y="182" font-size="24" font-weight="500" fill="#cbd5e1">Work OS for productive Agent Skills</text>
-    <text x="334" y="222" font-size="17" fill="#94a3b8">Skills -> route -> workflows -> library -> ship across AI CLIs</text>
-    <text x="334" y="255" font-size="15" fill="#64748b">367 skills - 100 workflows - trust safety layer built in</text>
+  <rect x="42" y="38" width="1196" height="344" rx="28" fill="#ffffff" stroke="#dbe3ee" filter="url(#shadow)"/>
+
+  <g transform="translate(82 78)">
+    <rect x="0" y="0" width="102" height="102" rx="24" fill="#0f172a"/>
+    <path d="M51 16 82 34v36L51 88 20 70V34Z" fill="none" stroke="url(#brand)" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M32 53 45 66 72 36" fill="none" stroke="#67e8f9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="84" cy="20" r="7" fill="#22c55e"/>
   </g>
-  <rect x="334" y="275" width="92" height="3" rx="2" fill="#67e8f9"/>
-  <rect x="434" y="275" width="58" height="3" rx="2" fill="#818cf8"/>
-  <rect x="500" y="275" width="32" height="3" rx="2" fill="#c084fc"/>
+
+  <g class="sans">
+    <text x="214" y="112" class="ink" font-size="58" font-weight="820">SkillsForge</text>
+    <text x="216" y="153" class="muted" font-size="22" font-weight="600">Work OS for productive Agent Skills</text>
+    <text x="216" y="188" class="soft" font-size="17">Route the right skill, run the right workflow, keep a local library, and ship across AI CLIs.</text>
+  </g>
+
+  <g class="sans" font-size="15" font-weight="760">
+    <rect class="chip" x="216" y="220" width="118" height="42" rx="12"/>
+    <text x="275" y="247" text-anchor="middle" fill="#0f172a">499 skills</text>
+    <rect class="chip" x="346" y="220" width="108" height="42" rx="12"/>
+    <text x="400" y="247" text-anchor="middle" fill="#0f172a">28 packs</text>
+    <rect class="chip" x="466" y="220" width="128" height="42" rx="12"/>
+    <text x="530" y="247" text-anchor="middle" fill="#0f172a">100 workflows</text>
+    <rect class="chip" x="606" y="220" width="112" height="42" rx="12"/>
+    <text x="662" y="247" text-anchor="middle" fill="#0f172a">98 agents</text>
+  </g>
+
+  <g transform="translate(216 292)" class="sans">
+    <rect x="0" y="0" width="520" height="50" rx="15" fill="#ecfdf5" stroke="#bbf7d0"/>
+    <circle cx="28" cy="25" r="11" fill="url(#ok)"/>
+    <path d="M23 25l4 4 8-9" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="52" y="22" fill="#14532d" font-size="15" font-weight="800">trust gates stay underneath the Work OS</text>
+    <text x="52" y="39" fill="#166534" font-size="12">validate - package - hooks where supported - receipts</text>
+  </g>
+
+  <g transform="translate(798 76)" class="sans">
+    <rect class="panel" x="0" y="0" width="382" height="248" rx="22"/>
+    <rect x="20" y="18" width="342" height="34" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+    <circle cx="42" cy="35" r="6" fill="#2563eb"/>
+    <rect x="61" y="29" width="104" height="11" rx="5.5" fill="#cbd5e1"/>
+    <rect x="248" y="27" width="88" height="16" rx="8" fill="#e0f2fe"/>
+    <text x="292" y="39" text-anchor="middle" fill="#075985" font-size="11" font-weight="800">local</text>
+
+    <g transform="translate(20 72)">
+      <rect x="0" y="0" width="342" height="38" rx="11" fill="#ffffff" stroke="#e2e8f0"/>
+      <rect x="16" y="12" width="64" height="8" rx="4" fill="#94a3b8"/>
+      <rect x="106" y="12" width="50" height="8" rx="4" fill="#22c55e"/>
+      <rect x="186" y="12" width="58" height="8" rx="4" fill="#a78bfa"/>
+      <circle cx="300" cy="19" r="7" fill="#22c55e"/>
+    </g>
+    <g transform="translate(20 120)">
+      <rect x="0" y="0" width="342" height="38" rx="11" fill="#ffffff" stroke="#e2e8f0"/>
+      <rect x="16" y="12" width="80" height="8" rx="4" fill="#94a3b8"/>
+      <rect x="122" y="12" width="42" height="8" rx="4" fill="#38bdf8"/>
+      <rect x="186" y="12" width="72" height="8" rx="4" fill="#f59e0b"/>
+      <circle cx="300" cy="19" r="7" fill="#2563eb"/>
+    </g>
+    <g transform="translate(20 168)">
+      <rect x="0" y="0" width="342" height="44" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+      <rect x="16" y="14" width="94" height="9" rx="4.5" fill="#64748b"/>
+      <path d="M146 21h38m-8-8 8 8-8 8" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="222" y="12" width="80" height="20" rx="10" fill="#ede9fe"/>
+      <text x="262" y="26" text-anchor="middle" fill="#5b21b6" font-size="11" font-weight="800">dry-run</text>
+    </g>
+  </g>
 </svg>

@@ -42,4 +42,4 @@ Post-hackathon hardening. **Productivity Work OS** stays the product; trust pipe
 | Holdout P/R | >=0.95 / >=0.90 |
 | Auto-route set | <=8 |
 | Hero depth | Stable skills clearly marked; domain skills keep contract-backed sections instead of inflated claims |
-| Video | README poster is visible; MP4 is committed at `assets/video/skillsforge-demo.mp4`; final attachment URL added before judging |
+| Video / gallery | README banner, product preview, poster, star map, and MP4 are committed; final hosted video URL added before judging |
