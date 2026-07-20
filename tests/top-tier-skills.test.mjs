@@ -14,6 +14,21 @@ import { VIBE_CODER_PACKS, VIBE_CODER_PROFILE_PACKS, VIBE_CODER_SKILLS } from '.
 const root = process.cwd();
 const cli = join(root, 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
 
+const VIDEO_MEDIA_SKILLS = [
+  'media-remotion-video-plan',
+  'media-remotion-composition-audit',
+  'media-remotion-render-proof',
+  'media-video-design-taste',
+  'media-video-quality-gate',
+  'media-video-rating-rubric',
+  'media-video-read-brief',
+  'media-video-frame-read',
+  'media-video-audio-caption-qc',
+  'media-video-story-pacing',
+  'media-video-hook-retention',
+  'media-video-asset-license-check'
+];
+
 test('vibe-coder expansion ships exactly 100 planned skills and resolves new packs/profile', async () => {
   const { catalog } = await loadCatalog(root);
   assert.equal(new Set(VIBE_CODER_SKILLS).size, 100);
@@ -51,7 +66,7 @@ test('design pack has at least 60 real design skills with shipped files and desi
 test('every shipped skill has deterministic output contract, verification, and failure modes', async () => {
   const skillRoot = join(root, 'plugins', 'skillsforge', 'skills');
   const dirs = (await readdir(skillRoot, { withFileTypes: true })).filter((entry) => entry.isDirectory());
-  assert.ok(dirs.length >= 499);
+  assert.ok(dirs.length >= 511);
   const missing = [];
   for (const dir of dirs) {
     const source = await readFile(join(skillRoot, dir.name, 'SKILL.md'), 'utf8');
@@ -90,6 +105,46 @@ test('all 100 vibe-coder skills have concrete pressure prompts and sidecar routi
   }
   assert.deepEqual(missing, []);
   assert.deepEqual(weak, []);
+});
+
+test('media pack ships token-efficient video, Remotion, rating, and reading skills', async () => {
+  const { catalog } = await loadCatalog(root);
+  const mediaSkills = catalog.packs.media.skills;
+  assert.ok(mediaSkills.length >= 29, `expected >=29 media skills, got ${mediaSkills.length}`);
+  for (const id of VIDEO_MEDIA_SKILLS) {
+    assert.ok(mediaSkills.includes(id), `missing media skill ${id}`);
+    const skillDir = join(root, 'plugins', 'skillsforge', 'skills', id);
+    const source = await readFile(join(skillDir, 'SKILL.md'), 'utf8');
+    const sidecar = JSON.parse(await readFile(join(skillDir, 'skillsforge.json'), 'utf8'));
+    assert.equal(sidecar.routing.pack, 'media', id);
+    assert.match(source, /video|Remotion|frame|audio|caption|rating|timestamp/i, id);
+    assert.match(source, /MP4 metadata|frame samples|transcript text|render logs/i, id);
+    assert.match(source, /smallest render or inspection command/i, id);
+    assert.match(source, /invent video contents|claim audio quality without checking/i, id);
+  }
+});
+
+test('video media skills route from natural agent requests', () => {
+  for (const [query, expected] of [
+    ['read this video and produce a compact timestamped brief', 'media-video-read-brief'],
+    ['timestamped frame sample read for video composition artifacts', 'media-video-frame-read'],
+    ['review video audio captions and subtitle sync', 'media-video-audio-caption-qc'],
+    ['improve video design taste for a demo', 'media-video-design-taste'],
+    ['rate demo video quality with a compact rubric', 'media-video-rating-rubric'],
+    ['make a remotion render proof before the full export', 'media-remotion-render-proof']
+  ]) {
+    const result = spawnSync(process.execPath, [
+      cli,
+      'route',
+      '--query',
+      query,
+      '--include-explicit',
+      '--json'
+    ], { cwd: root, encoding: 'utf8' });
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    const payload = JSON.parse(result.stdout);
+    assert.equal(payload.selected, expected, query);
+  }
 });
 
 test('quality scoring rejects scaffold-like skills and reports output-contract checks', async (context) => {

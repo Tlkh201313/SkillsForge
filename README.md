@@ -7,7 +7,7 @@
 
 **SkillsForge is the Work OS that makes Agent Skills productive** - route the right skill, run the right workflow, keep a local library, and ship across AI CLIs. Trust (validate -> package -> hooks -> receipts) is built in so you can run that catalog safely.
 
-Current inventory: **499** skills - **28** packs - **11** profiles - **100** workflows - **98** agents - **135** command shims.
+Current inventory: **511** skills - **28** packs - **11** profiles - **100** workflows - **98** agents - **136** command shims.
 
 ![SkillsForge local library command center](assets/skillsforge-library-preview.png)
 
@@ -34,13 +34,13 @@ Full surface map: **[docs/features.md](docs/features.md)**.
 
 Browser preview: **[docs/demo-video.html](docs/demo-video.html)**.
 
-Packaged MP4: [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-demo.mp4). The committed cut is 2:19, H.264/AAC, with English voiceover, original procedural background music, light UI sound effects, and burned-in captions. GitHub README playback for committed MP4s is unreliable, so the poster stays visible. For judging, upload the same MP4 to YouTube as public/unlisted and paste the URL into Devpost.
+Packaged MP4: [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-demo.mp4). The committed cut is 2:22, H.264/AAC, with English voiceover, original procedural background music, light UI sound effects, and burned-in captions. GitHub README playback for committed MP4s is unreliable, so the poster stays visible. For judging, upload the same MP4 to YouTube as public/unlisted and paste the URL into Devpost.
 
 | Beat | What you'll see |
 |---|---|
 | Thesis | Vibe coding needs a development plugin layer: skills, commands, workflows, indexes, routing |
 | AI use | Codex accelerated implementation/video/verification; GPT-5.6 helped reason through claims and review quality |
-| Scale | 499 skills / 28 packs / 11 profiles / 100 workflows / 98 agents / 135 command shims |
+| Scale | 511 skills / 28 packs / 11 profiles / 100 workflows / 98 agents / 136 command shims |
 | Operator path | `vibe` -> `catalog` / `lib` -> `route` / `workflows` -> `map` / `slim` / `digest` |
 | Safety layer | Validation, packaging, receipts, and guardrails sit underneath the productivity surface |
 | CTA | Free local test: `node plugins/skillsforge/bin/skillsforge.mjs vibe` |
@@ -101,7 +101,7 @@ Honest differentiation: [docs/competitive-matrix.md](docs/competitive-matrix.md)
 | Dimension | Local evidence |
 |---|---|
 | Core pitch | Productivity Work OS for Agent Skills |
-| Catalog | 499/499 skills ship `skillsforge.json`; design pack has 60 skills |
+| Catalog | 511/511 skills ship `skillsforge.json`; design pack has 60 skills |
 | Operator CLI | `vibe`, `lib`, `workflows`, `auto`, `wb`, `ps`, `demo` |
 | Safety layer | validate -> package -> PreToolUse -> receipt |
 | SkillShield | Best-effort skill-body scanner |
@@ -150,9 +150,9 @@ Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/r
 | Surface | Actual implementation |
 |---|---|
 | One plugin | `skillsforge` (Claude + Codex manifests) |
-| Productivity catalog | **499** skills, **28** packs, **11** profiles |
+| Productivity catalog | **511** skills, **28** packs, **11** profiles |
 | Workflows | **100** dry-run definitions under `plugins/skillsforge/workflows/` |
-| Agents / commands | **98** agents - **135** command shims |
+| Agents / commands | **98** agents - **136** command shims |
 | Project OS | `init`, `settings`, `session` - config, compact usage memory, AI-facing links |
 | Library | `lib build|update|serve|recommend|select|unselect|selected|open` - local HTML + AI index + project selection |
 | Auto router | `auto plan`, `auto run --read-only` |

@@ -39,6 +39,9 @@
   "recommendedSkills": [
     "media-frame-sampling",
     "media-video-watch",
+    "media-video-read-brief",
+    "media-video-frame-read",
+    "media-video-story-pacing",
     "test-visual"
   ],
   "recommendedAgents": [

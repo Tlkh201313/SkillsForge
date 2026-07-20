@@ -37,7 +37,7 @@ Short aliases: `sf` = `skillsforge` after `npm link`. MCP hosts can call tools `
 
 ## Catalog
 
-SkillsForge catalog: **499** catalog entries, **28** packs, **11** profiles.
+SkillsForge catalog: **511** catalog entries, **28** packs, **11** profiles.
 
 Hero depth: trust spine + lifecycle + methodology skills are production-depth; domain packs are contract-backed SkillsForge skills.
 
@@ -71,7 +71,7 @@ Hero depth: trust spine + lifecycle + methodology skills are production-depth; d
 - `lang` (30): Language-specific lean patterns (original)
 - `legal-lite` (8): Non-advice legal awareness helpers
 - `lifecycle` (14): Work OS spine from shape to prove and learn
-- `media` (17): Media and creative briefs
+- `media` (29): Media and creative briefs
 - `methodology` (12): Discipline iron laws - brainstorm, plan, TDD, verify (original)
 - `mobile` (10): Mobile release and store
 - `ops` (14): Operations and reliability

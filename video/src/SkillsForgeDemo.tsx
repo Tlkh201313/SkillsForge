@@ -102,6 +102,9 @@ export const SkillsForgeDemo: React.FC<SkillsForgeDemoProps> = ({
         <EcosystemScene />
       </SceneLayer>
       <SceneLayer from={scenes[8].from} duration={scenes[8].duration}>
+        <BuildWeekScene />
+      </SceneLayer>
+      <SceneLayer from={scenes[9].from} duration={scenes[9].duration}>
         <CtaScene />
       </SceneLayer>
       {showCaptions ? <Captions /> : null}
@@ -648,6 +651,71 @@ const EcosystemScene: React.FC = () => {
             <Terminal lines={demoLines} activeLine={6} />
           </div>
         </Panel>
+      </div>
+    </SceneFrame>
+  );
+};
+
+const BuildWeekScene: React.FC = () => {
+  const cards = [
+    {
+      pill: "Codex + GPT-5.6",
+      tone: "green" as const,
+      title: "Accelerated implementation, review, video production, and verification.",
+    },
+    {
+      pill: "human product direction",
+      tone: "blue" as const,
+      title: "The core choice stayed human: build a development plugin, not another prompt dump.",
+    },
+    {
+      pill: "competitive target",
+      tone: "amber" as const,
+      title: "Compete with the best AI CLI ecosystems through structure, locality, and token efficiency.",
+    },
+  ];
+
+  return (
+    <SceneFrame>
+      <div style={{ display: "grid", gridTemplateColumns: "0.82fr 1.18fr", gap: 58, flex: 1 }}>
+        <div style={{ paddingTop: 48 }}>
+          <SceneTitle eyebrow="Build Week execution" title="Codex + GPT-5.6 accelerated the build" />
+          <div
+            style={{
+              marginTop: 34,
+              color: theme.colors.textMuted,
+              fontSize: 30,
+              lineHeight: 1.38,
+              fontWeight: 650,
+            }}
+          >
+            The demo is explicit about the collaboration: AI helped ship faster, while the product
+            call stayed focused on the vibe-coding developer community.
+          </div>
+          <div style={{ marginTop: 38, display: "flex", gap: 14, flexWrap: "wrap" }}>
+            <Pill tone="green">Codex</Pill>
+            <Pill tone="blue">GPT-5.6</Pill>
+            <Pill tone="amber">human-led direction</Pill>
+          </div>
+        </div>
+        <div style={{ display: "grid", gap: 20, alignContent: "center" }}>
+          {cards.map((card, index) => (
+            <Panel key={card.pill} delay={0.18 + index * 0.14} style={{ padding: 30 }}>
+              <Pill tone={card.tone}>{card.pill}</Pill>
+              <div
+                style={{
+                  marginTop: 22,
+                  color: theme.colors.text,
+                  fontSize: 34,
+                  lineHeight: 1.16,
+                  fontWeight: 850,
+                }}
+              >
+                {card.title}
+              </div>
+            </Panel>
+          ))}
+        </div>
       </div>
     </SceneFrame>
   );

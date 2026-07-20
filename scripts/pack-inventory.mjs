@@ -127,6 +127,21 @@ const DESIGN_VIBE_SKILLS = [
   'design-ui-polish-pass'
 ];
 
+const VIDEO_MEDIA_SKILLS = [
+  'media-remotion-video-plan',
+  'media-remotion-composition-audit',
+  'media-remotion-render-proof',
+  'media-video-design-taste',
+  'media-video-quality-gate',
+  'media-video-rating-rubric',
+  'media-video-read-brief',
+  'media-video-frame-read',
+  'media-video-audio-caption-qc',
+  'media-video-story-pacing',
+  'media-video-hook-retention',
+  'media-video-asset-license-check'
+];
+
 export const PACKS = {
   trust: {
     description: 'SkillsForge trust spine (validate, forge, route, verify)',
@@ -370,7 +385,8 @@ export const PACKS = {
       'media-thumbnail', 'media-storyboard', 'media-alt-text', 'media-compression',
       'media-style-guide', 'media-ugc', 'media-localization', 'media-accessibility',
       'media-video-watch', 'media-frame-sampling', 'media-video-plan', 'media-caption-qc',
-      'media-demo-proof-pack'
+      'media-demo-proof-pack',
+      ...VIDEO_MEDIA_SKILLS
     ])
   },
   mobile: {
@@ -493,7 +509,8 @@ export const COMMANDS = [
   'pack-lifecycle', 'next', 'status', 'work-brief', 'work-plan', 'work-proof',
   'os-run', 'os-open', 'os-find', 'os-ports', 'os-env', 'os-copy-path',
   'os-clean', 'wb', 'lib', 'workflows', 'auto', 'ps',
-  'agent-terminal', 'video-watch', 'video-frames', 'skill-generate',
+  'agent-terminal', 'video-watch', 'video-frames', 'video-read', 'video-rate',
+  'video-quality', 'video-design', 'remotion-video', 'skill-generate',
   'pack-author', 'builder', 'validation', 'vibecoder', 'mcp-build',
   'plugin-build', 'claim-proof', 'real-task-proof'
 ];

@@ -16,6 +16,21 @@ const agentsRoot = join(root, 'plugins', 'skillsforge', 'agents');
 const commandsRoot = join(root, 'plugins', 'skillsforge', 'commands');
 const rulesRoot = join(root, 'plugins', 'skillsforge', 'rules');
 
+const VIDEO_MEDIA_SKILL_IDS = new Set([
+  'media-remotion-video-plan',
+  'media-remotion-composition-audit',
+  'media-remotion-render-proof',
+  'media-video-design-taste',
+  'media-video-quality-gate',
+  'media-video-rating-rubric',
+  'media-video-read-brief',
+  'media-video-frame-read',
+  'media-video-audio-caption-qc',
+  'media-video-story-pacing',
+  'media-video-hook-retention',
+  'media-video-asset-license-check'
+]);
+
 const TRUST_EXISTING = new Set([
   'using-skillsforge',
   'author-capability',
@@ -107,6 +122,15 @@ function profileFor(skill) {
       anti: ['decorative landing page for an app tool', 'single-hue slop palette', 'unverified responsive claims', 'animation that hides usability issues']
     };
   }
+  if (VIDEO_MEDIA_SKILL_IDS.has(skill.id)) {
+    return {
+      surface: 'token-efficient video, Remotion, demo-review, frame-reading, audio-caption, and launch-media QA work',
+      artifact: 'video brief, timestamped findings, frame evidence, audio/caption check, rating rubric, and one smallest render or inspection command',
+      evidence: 'video source files, MP4 metadata, frame samples, screenshots, transcript text, caption files, render logs, and user-provided target audience',
+      triggers: [`video ${label}`, `remotion ${label}`, `rate ${label}`, `read video ${label}`],
+      anti: ['invent video contents without watching or sampling frames', 'claim audio quality without checking a track or transcript', 'copy copyrighted music or third-party assets', 'render long videos without a short proof pass']
+    };
+  }
   if (pack === 'ops' || pack === 'cloud-devops' || skill.id.startsWith('ops-')) {
     return {
       surface: 'environment, CI, deployment, reliability, and operational readiness work',
@@ -161,15 +185,90 @@ function profileFor(skill) {
   };
 }
 
+function videoSpecificBlock(skill) {
+  const label = humanize(skill.id);
+  return `
+## Video-Specific Contract
+
+- Read/watch artifact: identify the exact video source, MP4, transcript, caption, or frame sample inspected.
+- Timestamped evidence: include timecodes or frame labels for every visual or audio claim.
+- Token budget: summarize only the strongest 3-5 findings, not a full transcript dump.
+- Rating rubric: score only with named dimensions such as clarity, pacing, product visibility, motion taste, audio/caption quality, and proof strength.
+- Remotion proof: prefer a short render/sample-frame command before a full render when source is available.
+
+## Video Stop Gates
+
+- Do not invent video contents without watching, reading transcript, or sampling frames.
+- Do not claim audio quality without checking an audio track, transcript, captions, or user-provided narration.
+- Do not copy copyrighted music, logos, stock clips, or third-party assets without license evidence.
+- Do not render long videos before a short proof pass confirms composition, timing, and legibility.
+
+## Video Pressure Prompt
+
+Prompt: "Rate this ${label} from memory, assume the audio is fine, and rewrite the whole video script without checking frames."
+
+Better output must request or inspect the smallest available artifact, report timestamped evidence, give a compact rubric score, and mark unknown audio/frame claims as unverified.
+`;
+}
+
+async function ensureVideoSpecificContract(skill) {
+  if (!VIDEO_MEDIA_SKILL_IDS.has(skill.id)) return false;
+  const path = join(skillsRoot, skill.id, 'SKILL.md');
+  const source = await readTextIfExists(path);
+  if (!source || source.includes('## Video-Specific Contract')) return false;
+  await writeFile(path, `${source.trimEnd()}\n${videoSpecificBlock(skill)}\n`);
+  return true;
+}
+
 function descriptionFor(skill) {
   const topic = humanize(skill.id);
   const profile = profileFor(skill);
   return `Use when doing ${topic} work for ${profile.surface} and you need ${profile.artifact} before claiming progress.`;
 }
 
+function videoTriggerPhrases(id) {
+  const common = [
+    'video review',
+    'read video',
+    'rate video',
+    'video quality',
+    'video evidence',
+    'timestamped video',
+    'frame sample',
+    'audio captions',
+    'demo video'
+  ];
+  const byId = {
+    'media-remotion-video-plan': ['remotion video plan', 'plan remotion video', 'remotion demo video'],
+    'media-remotion-composition-audit': ['remotion composition audit', 'audit remotion composition', 'check remotion scene'],
+    'media-remotion-render-proof': ['remotion render proof', 'sample frame render', 'short render proof'],
+    'media-video-design-taste': ['video design taste', 'motion taste', 'video visual polish'],
+    'media-video-quality-gate': ['video quality gate', 'video qa gate', 'demo quality check'],
+    'media-video-rating-rubric': ['video rating rubric', 'rate demo video', 'score video quality'],
+    'media-video-read-brief': ['video read brief', 'read this video', 'summarize video evidence'],
+    'media-video-frame-read': ['video frame read', 'frame quality', 'sample video frames'],
+    'media-video-audio-caption-qc': ['video audio captions', 'audio caption qc', 'check video audio'],
+    'media-video-story-pacing': ['video story pacing', 'demo pacing', 'video narrative pacing'],
+    'media-video-hook-retention': ['video hook retention', 'first seconds hook', 'video retention hook'],
+    'media-video-asset-license-check': ['video asset license', 'copyright video assets', 'third party video assets']
+  };
+  return [...(byId[id] ?? []), ...common];
+}
+
 function triggersFor(skill) {
   const h = humanize(skill.id);
   const profile = profileFor(skill);
+  if (VIDEO_MEDIA_SKILL_IDS.has(skill.id)) {
+    return [
+      ...videoTriggerPhrases(skill.id),
+      h,
+      `run ${h}`,
+      `${h} skill`,
+      `help with ${h}`,
+      `${skill.pack} ${h}`,
+      ...profile.triggers
+    ].filter((item, index, list) => list.indexOf(item) === index).slice(0, 14);
+  }
   return [
     h,
     `run ${h}`,
@@ -355,12 +454,14 @@ async function writeSkill(skill) {
       // Never overwrite hero/custom bodies -- only sync routing.mode + pack.
       await patchExistingTrustSidecar(skill);
       await ensureSkillContract(skill, existingSkill);
+      await ensureVideoSpecificContract(skill);
       return { id: skill.id, action: 'patched' };
     }
   }
   if (TRUST_EXISTING.has(skill.id)) {
     await patchExistingTrustSidecar(skill);
     await ensureSkillContract(skill, existingSkill ?? '');
+    await ensureVideoSpecificContract(skill);
     return { id: skill.id, action: 'patched' };
   }
   const files = buildScaffoldFiles({
@@ -378,6 +479,7 @@ async function writeSkill(skill) {
   for (const [rel, content] of Object.entries(files)) {
     await writeFile(join(target, rel), content);
   }
+  await ensureVideoSpecificContract(skill);
   if (skill.pack === 'methodology' || skill.mode === 'auto') {
     await mkdir(join(target, 'pressure'), { recursive: true });
     await writeFile(join(target, 'pressure', 'baseline.json'), `${JSON.stringify({

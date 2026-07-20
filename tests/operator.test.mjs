@@ -22,7 +22,7 @@ test('tokens --catalog ranks heaviest skills', async () => {
   assert.equal(result.ok, true);
   assert.equal(result.method, 'approx-chars/4');
   assert.equal(result.catalog.scope, 'repo');
-  assert.ok(result.catalog.skills >= 499);
+  assert.ok(result.catalog.skills >= 511);
   assert.ok(result.catalog.skills < 600, 'default catalog should not include all host-installed skills');
   assert.ok(result.catalog.totalTokens > 0);
   assert.equal(result.catalog.heaviest.length, 5);

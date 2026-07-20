@@ -23,7 +23,7 @@ Hackathon judges who will spend less than three minutes on the video. The video 
 
 - Use only current repository evidence for counts and command output.
 - It is safe to show:
-  - `499` skills
+  - `511` skills
   - `28` packs
   - `11` profiles
   - `node plugins/skillsforge/bin/skillsforge.mjs vibe`
@@ -59,10 +59,10 @@ Motion rules:
 
 | Time | Scene | Purpose |
 | --- | --- | --- |
-| 0-6s | Cold open: SkillsForge title, 499 skills, trust spine forming | Hook judges immediately |
+| 0-6s | Cold open: SkillsForge title, 511 skills, trust spine forming | Hook judges immediately |
 | 6-18s | Problem: scattered skills, unsafe actions, unclear provenance | Establish why this matters |
 | 18-30s | Codex + GPT-5.6 collaboration: human decisions, AI implementation/review acceleration | Satisfy hackathon AI-use requirement |
-| 30-45s | Real CLI `vibe`: 499 skills, 28 packs, 11 profiles, quality sample | Show the product working |
+| 30-45s | Real CLI `vibe`: 511 skills, 28 packs, 11 profiles, quality sample | Show the product working |
 | 45-62s | Route/library workflow: query becomes skill selection and work artifact | Show the useful workflow |
 | 62-78s | Trust gate: unsafe skill denied before execution | Show safety value |
 | 78-94s | Safe package: validated skill becomes Codex plugin/package output | Show portability and testability |
@@ -77,7 +77,7 @@ SkillsForge is a local trust and routing layer for agent skills. It turns a mess
 
 This Build Week version was made with Codex and GPT-5.6 in the loop. Codex accelerated the implementation, repo navigation, video production work, and verification passes. GPT-5.6 helped reason through product claims, edge cases, and review quality. The human decisions stayed human: what to build, what not to claim, and what evidence was strong enough for submission.
 
-Here is the local magical moment. One command loads the SkillsForge catalog: 499 skills, 28 packs, and 11 profiles.
+Here is the local magical moment. One command loads the SkillsForge catalog: 511 skills, 28 packs, and 11 profiles.
 
 Now a user asks for help. SkillsForge routes the request to the right skill surface instead of dumping every instruction into the context window.
 

@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Video Audio Caption Qc
+  short_description: Use when doing media video audio caption qc work for token-efficient video, Remotion, demo-review, frame-reading, audio-caption, and launch-media QA work and you need video brief, timestamped findings
+  default_prompt: Use the media-video-audio-caption-qc skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -54,7 +54,7 @@
 
   <g class="sans" font-size="15" font-weight="760">
     <rect class="chip" x="216" y="220" width="118" height="42" rx="12"/>
-    <text x="275" y="247" text-anchor="middle" fill="#0f172a">499 skills</text>
+    <text x="275" y="247" text-anchor="middle" fill="#0f172a">511 skills</text>
     <rect class="chip" x="346" y="220" width="108" height="42" rx="12"/>
     <text x="400" y="247" text-anchor="middle" fill="#0f172a">28 packs</text>
     <rect class="chip" x="466" y="220" width="128" height="42" rx="12"/>

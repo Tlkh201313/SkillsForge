@@ -33,12 +33,12 @@ Counts are live from catalog, plugin trees, CLI help, and capability registries 
 
 | Surface | Count | Source |
 | --- | ---: | --- |
-| Catalog skills | 499 | `catalog/skillsforge.catalog.yaml` packs |
-| Skill packages with `SKILL.md` | 499 | `plugins/skillsforge/skills/*/SKILL.md` |
+| Catalog skills | 511 | `catalog/skillsforge.catalog.yaml` packs |
+| Skill packages with `SKILL.md` | 511 | `plugins/skillsforge/skills/*/SKILL.md` |
 | Packs | 28 | catalog packs |
 | Profiles | 11 | catalog profiles |
 | Agents | 98 | `plugins/skillsforge/agents/*.md` |
-| Slash commands | 135 | `plugins/skillsforge/commands/*.*` |
+| Slash commands | 136 | `plugins/skillsforge/commands/*.*` |
 | Workflows | 100 | `plugins/skillsforge/workflows/**/*.json` (10 categories) |
 | Hosts | 7 | `HOST_REGISTRY` in `lib/capabilities/hosts.mjs` |
 | PowerShell helpers | 22 | `POWERSHELL_HELPERS` in `lib/capabilities/powershell.mjs` |
@@ -157,7 +157,7 @@ Install: `skillsforge hosts`, `skillsforge install --hosts ...`, optional `--cus
 
 ## Packs
 
-**28 packs / 499 skills.** Trust + lifecycle + methodology are the production-depth spine; builder, validation, and domain packs are contract-backed SkillsForge skills.
+**28 packs / 511 skills.** Trust + lifecycle + methodology are the production-depth spine; builder, validation, and domain packs are contract-backed SkillsForge skills.
 
 ### `trust` (5)
 
@@ -443,7 +443,7 @@ Testing strategies
 | `test-a11y` | `test-visual` | `test-security` |
 | `test-chaos` |  |  |
 
-### `media` (17)
+### `media` (29)
 
 Media and creative briefs
 
@@ -454,7 +454,11 @@ Media and creative briefs
 | `media-alt-text` | `media-compression` | `media-style-guide` |
 | `media-ugc` | `media-localization` | `media-accessibility` |
 | `media-video-watch` | `media-frame-sampling` | `media-video-plan` |
-| `media-caption-qc` | `media-demo-proof-pack` |  |
+| `media-caption-qc` | `media-demo-proof-pack` | `media-remotion-video-plan` |
+| `media-remotion-composition-audit` | `media-remotion-render-proof` | `media-video-design-taste` |
+| `media-video-quality-gate` | `media-video-rating-rubric` | `media-video-read-brief` |
+| `media-video-frame-read` | `media-video-audio-caption-qc` | `media-video-story-pacing` |
+| `media-video-hook-retention` | `media-video-asset-license-check` |  |
 
 ### `mobile` (10)
 
@@ -550,7 +554,7 @@ Cloud and DevOps basics
 
 ## Commands
 
-**135 slash commands** in `plugins/skillsforge/commands/`. Classification is on-disk: files containing `generated thin command` are thin pack/domain shims. CLI-only surfaces such as `demo` and `hosts` live in the native CLI help.
+**136 slash commands** in `plugins/skillsforge/commands/`. Classification is on-disk: files containing `generated thin command` are thin pack/domain shims. CLI-only surfaces such as `demo` and `hosts` live in the native CLI help.
 
 ### Trust / upgraded entry commands
 
@@ -675,4 +679,4 @@ Run the bundled judge path: `node plugins/skillsforge/bin/skillsforge.mjs demo`.
 
 ---
 
-*Generated from live inventory. Snapshot counts: skills 499, packs 28, profiles 11, agents 98, command shims 135, workflows 100, hosts 7, PowerShell helpers 22, MCP tools 15, auto heroes 8.*
+*Generated from live inventory. Snapshot counts: skills 511, packs 28, profiles 11, agents 98, command shims 136, workflows 100, hosts 7, PowerShell helpers 22, MCP tools 15, auto heroes 8.*

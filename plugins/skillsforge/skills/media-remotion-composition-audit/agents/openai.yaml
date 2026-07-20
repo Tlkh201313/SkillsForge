@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Remotion Composition Audit
+  short_description: Use when doing media remotion composition audit work for token-efficient video, Remotion, demo-review, frame-reading, audio-caption, and launch-media QA work and you need video brief, timestamped find
+  default_prompt: Use the media-remotion-composition-audit skill for this task.
+policy:
+  allow_implicit_invocation: false

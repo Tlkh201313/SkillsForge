@@ -501,6 +501,18 @@ packs:
     - media-video-plan
     - media-caption-qc
     - media-demo-proof-pack
+    - media-remotion-video-plan
+    - media-remotion-composition-audit
+    - media-remotion-render-proof
+    - media-video-design-taste
+    - media-video-quality-gate
+    - media-video-rating-rubric
+    - media-video-read-brief
+    - media-video-frame-read
+    - media-video-audio-caption-qc
+    - media-video-story-pacing
+    - media-video-hook-retention
+    - media-video-asset-license-check
   mobile:
     description: "Mobile release and store"
     skills:
