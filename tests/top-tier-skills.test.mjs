@@ -221,6 +221,10 @@ test('library HTML exposes settings and local-only recommendation policy', async
   assert.match(html, /problemsPanel/);
   assert.match(html, /themeSelect/);
   assert.match(html, /refreshBtn/);
+  assert.match(html, /selectedPanel/);
+  assert.match(html, /bindProjectSelection/);
+  assert.match(html, /bindWorkflowUse/);
+  assert.match(html, /Use this workflow/);
   assert.match(html, /windowedRender/);
   assert.match(html, /sourceDetails/);
   assert.match(html, /viewModeList/);
@@ -233,6 +237,8 @@ test('library HTML exposes settings and local-only recommendation policy', async
   assert.doesNotMatch(html, /"capabilities":/);
   assert.match(ai, /sourceDetails/);
   assert.match(ai, /selectionRules/);
+  assert.match(ai, /projectSelected/);
+  assert.match(ai, /sessionSummary/);
   assert.match(ai, /smallest matching skill/);
   assert.doesNotMatch(html, /https?:\/\//);
 });

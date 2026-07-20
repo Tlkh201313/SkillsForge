@@ -2,8 +2,8 @@
 
 **Category:** Developer Tools  
 **Repo:** https://github.com/Tlkh201313/SkillsForge  
-**Branch:** `main`  
-**Thesis:** SkillsForge is the Work OS that makes Agent Skills productive - route, workflows, library, multi-host install - with validate/package/hooks/receipts as the safety layer. Prove it in under 2 minutes with `demo`.
+**PR branch:** `upgrade/work-os-quality`
+**Thesis:** SkillsForge is an AI CLI development plugin / Work OS for vibe coders - skill packs, custom commands, local HTML indexing, routing, workflows, token-efficient operator tools, and multi-host installs - with validate/package/hooks/receipts as the safety layer.
 
 ## Automated gates (done)
 
@@ -12,18 +12,18 @@
 - [x] Productivity surfaces: catalog, lib, workflows, auto, wb, ps helpers
 - [x] `skillsforge package --host codex` (one guarded skill -> one plugin)
 - [x] Codex PreToolUse policy hooks
-- [x] `skillsforge evidence` + `skillsforge demo` (unsafe deny -> safe package -> scoreboard)
+- [x] Trust-layer proof: `skillsforge evidence` + `skillsforge demo` (unsafe deny -> safe package -> scoreboard)
 - [x] Path confinement + routing honesty (eight auto heroes) + thin read-only MCP
-- [x] Codex-first README / demo / safe-unsafe examples
+- [x] AI CLI-first README / demo / safe-unsafe examples
 - [x] README graphics updated: banner, generated library preview, star map, host fanout, visible poster, packaged MP4
-- [ ] Local `npm run check` green (re-run before submit)
+- [x] Local `npm run check` green (re-run before submit)
 
 ## Human / Stage One blockers (you execute)
 
 - [ ] Start a **Codex + GPT-5.6** qualifying session after build-window start
 - [ ] Run `/feedback` in that thread; paste Session ID into `BUILD_WEEK.md` (replace `REPLACE_WITH_CODEX_FEEDBACK_SESSION_ID`)
 - [ ] Commit: `docs: record Build Week Codex Session ID`
-- [ ] Upload the committed 1:58 YouTube demo as public/unlisted **under 3 minutes** (see [video.md](video.md) / [hackathon-demo.md](hackathon-demo.md))
+- [ ] Upload the committed 2:19 YouTube demo as public/unlisted **under 3 minutes** (see [video.md](video.md) / [hackathon-demo.md](hackathon-demo.md))
 - [ ] Push; confirm CI green on `main`
 - [ ] Devpost: category Developer Tools, repo, Session ID, video, limitations, free access through judging
 - [ ] Tag release (suggested: `v0.4.2-buildweek`)

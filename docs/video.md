@@ -1,8 +1,8 @@
 # SkillsForge demo video
 
-Judge-facing demo video for GitHub / Devpost (1:58). Mirrors:
+Judge-facing demo video for GitHub / Devpost (2:19). Focus:
 
-`node plugins/skillsforge/bin/skillsforge.mjs demo`
+SkillsForge as an AI CLI development plugin: skill packs, custom commands, local HTML indexing, routing, token-efficient operator tools, reusable workflows, and multi-host AI CLI strategy. Trust validation remains the safety layer, not the headline.
 
 (Not published to npm - do not use `npx skillsforge`.)
 
@@ -16,14 +16,14 @@ Poster still (when present): `assets/skillsforge-demo-poster.png`
 
 Browser preview: `docs/demo-video.html`
 
-The Remotion source lives under `video/`. The directory is ignored by default to keep `video/node_modules/` out of commits, so add source files with `git add -f video/<path>` when updating the video pipeline. The generated MP4 and poster remain normal committed assets.
+The Remotion source lives under `video/`. Generated audio/caption assets and `video/node_modules/` stay ignored. The generated MP4 and poster remain normal committed assets.
 
 Regenerate from the repository root:
 
 ```sh
 cd video
 npm run audio
-python scripts/synthesize_voice.py --text public/voiceover.txt --media public/voiceover.mp3 --srt public/voiceover.srt --voice en-US-JennyNeural --rate +7% --pitch +0Hz
+python scripts/synthesize_voice.py --text public/voiceover.txt --media public/voiceover.mp3 --srt public/voiceover.srt --voice en-US-JennyNeural --rate +18% --pitch +0Hz
 npm run captions
 npm run still
 npm run render
@@ -57,18 +57,18 @@ The generated preview image intentionally has no embedded text claims; keep exac
 3. Paste URL into Devpost + `docs/submission.md`.
 4. Optional: attach `skillsforge-demo.mp4` / poster as GitHub release assets; paste `user-attachments` URL into README.
 
-## Beats (1:58)
+## Beats (2:19)
 
 | Time | Scene |
 |------|--------|
-| 0:00 | Thesis: Work OS for productive Agent Skills |
-| 0:15 | Problem: powerful skills need provenance |
-| 0:26 | Codex + GPT-5.6 collaboration and human decision boundaries |
-| 0:51 | Local `vibe`: 499 skills / 28 packs / 11 profiles |
-| 1:00 | Route a request to the right skill/workflow surface |
-| 1:09 | Unsafe example denied |
-| 1:14 | Safe skill validates and packages for hosts |
-| 1:20 | Demo scoreboard / package-tree hash |
-| 1:30 | CTA: clone + `node plugins/skillsforge/bin/skillsforge.mjs demo` |
+| 0:00 | Thesis: AI CLI development plugin for vibe coders |
+| 0:13 | Problem: prompt sprawl, one-off scripts, context bloat, no routing |
+| 0:25 | Architecture: skill packs + custom commands + workflow OS |
+| 0:42 | Operator surface: `skillsforge vibe` and compact custom commands |
+| 0:58 | Local HTML index: searchable skill library and source details |
+| 1:15 | Routing/token efficiency: pick 1-3 skills, use `map` and `slim` |
+| 1:34 | Workflows: repeatable development playbooks and role handoffs |
+| 1:52 | Host strategy: Codex, Claude Code, Cursor, OpenCode, Gemini, custom CLIs |
+| 2:08 | CTA: clone + `node plugins/skillsforge/bin/skillsforge.mjs vibe` |
 
 Do not invent Session IDs in the video. Keep claim boundaries (hooks != sandbox; receipts unsigned; demo scoreboard != full trust receipt).

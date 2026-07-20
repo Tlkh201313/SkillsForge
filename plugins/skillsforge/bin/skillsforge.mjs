@@ -3785,7 +3785,7 @@ ${pointer}
 var require_resolve_props = __commonJS({
   "node_modules/yaml/dist/compose/resolve-props.js"(exports) {
     "use strict";
-    function resolveProps(tokens, { flow, indicator, next, offset, onError, parentIndent, startOnNewline }) {
+    function resolveProps(tokens2, { flow, indicator, next, offset, onError, parentIndent, startOnNewline }) {
       let spaceBefore = false;
       let atNewline = startOnNewline;
       let hasSpace = startOnNewline;
@@ -3800,7 +3800,7 @@ var require_resolve_props = __commonJS({
       let comma = null;
       let found = null;
       let start = null;
-      for (const token of tokens) {
+      for (const token of tokens2) {
         if (reqSpace) {
           if (token.type !== "space" && token.type !== "newline" && token.type !== "comma")
             onError(token.offset, "MISSING_CHAR", "Tags and anchors must be separated from the next token by white space");
@@ -3891,7 +3891,7 @@ var require_resolve_props = __commonJS({
             hasSpace = false;
         }
       }
-      const last = tokens[tokens.length - 1];
+      const last = tokens2[tokens2.length - 1];
       const end = last ? last.offset + last.source.length : offset;
       if (reqSpace && next && next.type !== "space" && next.type !== "newline" && next.type !== "comma" && (next.type !== "scalar" || next.source !== "")) {
         onError(next.offset, "MISSING_CHAR", "Tags and anchors must be separated from the next token by white space");
@@ -4010,10 +4010,10 @@ var require_resolve_block_map = __commonJS({
       let offset = bm.offset;
       let commentEnd = null;
       for (const collItem of bm.items) {
-        const { start, key, sep: sep11, value } = collItem;
+        const { start, key, sep: sep12, value } = collItem;
         const keyProps = resolveProps.resolveProps(start, {
           indicator: "explicit-key-ind",
-          next: key ?? sep11?.[0],
+          next: key ?? sep12?.[0],
           offset,
           onError,
           parentIndent: bm.indent,
@@ -4027,7 +4027,7 @@ var require_resolve_block_map = __commonJS({
             else if ("indent" in key && key.indent !== bm.indent)
               onError(offset, "BAD_INDENT", startColMsg);
           }
-          if (!keyProps.anchor && !keyProps.tag && !sep11) {
+          if (!keyProps.anchor && !keyProps.tag && !sep12) {
             commentEnd = keyProps.end;
             if (keyProps.comment) {
               if (map.comment)
@@ -4051,7 +4051,7 @@ var require_resolve_block_map = __commonJS({
         ctx.atKey = false;
         if (utilMapIncludes.mapIncludes(ctx, map.items, keyNode))
           onError(keyStart, "DUPLICATE_KEY", "Map keys must be unique");
-        const valueProps = resolveProps.resolveProps(sep11 ?? [], {
+        const valueProps = resolveProps.resolveProps(sep12 ?? [], {
           indicator: "map-value-ind",
           next: value,
           offset: keyNode.range[2],
@@ -4067,7 +4067,7 @@ var require_resolve_block_map = __commonJS({
             if (ctx.options.strict && keyProps.start < valueProps.found.offset - 1024)
               onError(keyNode.range, "KEY_OVER_1024_CHARS", "The : indicator must be at most 1024 chars after the start of an implicit block mapping key");
           }
-          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep11, null, valueProps, onError);
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep12, null, valueProps, onError);
           if (ctx.schema.compat)
             utilFlowIndentCheck.flowIndentCheck(bm.indent, value, onError);
           offset = valueNode.range[2];
@@ -4158,7 +4158,7 @@ var require_resolve_end = __commonJS({
       let comment = "";
       if (end) {
         let hasSpace = false;
-        let sep11 = "";
+        let sep12 = "";
         for (const token of end) {
           const { source, type } = token;
           switch (type) {
@@ -4172,13 +4172,13 @@ var require_resolve_end = __commonJS({
               if (!comment)
                 comment = cb;
               else
-                comment += sep11 + cb;
-              sep11 = "";
+                comment += sep12 + cb;
+              sep12 = "";
               break;
             }
             case "newline":
               if (comment)
-                sep11 += source;
+                sep12 += source;
               hasSpace = true;
               break;
             default:
@@ -4221,18 +4221,18 @@ var require_resolve_flow_collection = __commonJS({
       let offset = fc.offset + fc.start.source.length;
       for (let i = 0; i < fc.items.length; ++i) {
         const collItem = fc.items[i];
-        const { start, key, sep: sep11, value } = collItem;
+        const { start, key, sep: sep12, value } = collItem;
         const props = resolveProps.resolveProps(start, {
           flow: fcName,
           indicator: "explicit-key-ind",
-          next: key ?? sep11?.[0],
+          next: key ?? sep12?.[0],
           offset,
           onError,
           parentIndent: fc.indent,
           startOnNewline: false
         });
         if (!props.found) {
-          if (!props.anchor && !props.tag && !sep11 && !value) {
+          if (!props.anchor && !props.tag && !sep12 && !value) {
             if (i === 0 && props.comma)
               onError(props.comma, "UNEXPECTED_TOKEN", `Unexpected , in ${fcName}`);
             else if (i < fc.items.length - 1)
@@ -4286,8 +4286,8 @@ var require_resolve_flow_collection = __commonJS({
             }
           }
         }
-        if (!isMap && !sep11 && !props.found) {
-          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep11, null, props, onError);
+        if (!isMap && !sep12 && !props.found) {
+          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep12, null, props, onError);
           coll.items.push(valueNode);
           offset = valueNode.range[2];
           if (isBlock(value))
@@ -4299,7 +4299,7 @@ var require_resolve_flow_collection = __commonJS({
           if (isBlock(key))
             onError(keyNode.range, "BLOCK_IN_FLOW", blockMsg);
           ctx.atKey = false;
-          const valueProps = resolveProps.resolveProps(sep11 ?? [], {
+          const valueProps = resolveProps.resolveProps(sep12 ?? [], {
             flow: fcName,
             indicator: "map-value-ind",
             next: value,
@@ -4310,8 +4310,8 @@ var require_resolve_flow_collection = __commonJS({
           });
           if (valueProps.found) {
             if (!isMap && !props.found && ctx.options.strict) {
-              if (sep11)
-                for (const st of sep11) {
+              if (sep12)
+                for (const st of sep12) {
                   if (st === valueProps.found)
                     break;
                   if (st.type === "newline") {
@@ -4328,7 +4328,7 @@ var require_resolve_flow_collection = __commonJS({
             else
               onError(valueProps.start, "MISSING_CHAR", `Missing , or : between ${fcName} items`);
           }
-          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep11, null, valueProps, onError) : null;
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep12, null, valueProps, onError) : null;
           if (valueNode) {
             if (isBlock(value))
               onError(valueNode.range, "BLOCK_IN_FLOW", blockMsg);
@@ -4508,7 +4508,7 @@ var require_resolve_block_scalar = __commonJS({
           chompStart = i + 1;
       }
       let value = "";
-      let sep11 = "";
+      let sep12 = "";
       let prevMoreIndented = false;
       for (let i = 0; i < contentStart; ++i)
         value += lines[i][0].slice(trimIndent) + "\n";
@@ -4525,24 +4525,24 @@ var require_resolve_block_scalar = __commonJS({
           indent = "";
         }
         if (type === Scalar.Scalar.BLOCK_LITERAL) {
-          value += sep11 + indent.slice(trimIndent) + content;
-          sep11 = "\n";
+          value += sep12 + indent.slice(trimIndent) + content;
+          sep12 = "\n";
         } else if (indent.length > trimIndent || content[0] === "	") {
-          if (sep11 === " ")
-            sep11 = "\n";
-          else if (!prevMoreIndented && sep11 === "\n")
-            sep11 = "\n\n";
-          value += sep11 + indent.slice(trimIndent) + content;
-          sep11 = "\n";
+          if (sep12 === " ")
+            sep12 = "\n";
+          else if (!prevMoreIndented && sep12 === "\n")
+            sep12 = "\n\n";
+          value += sep12 + indent.slice(trimIndent) + content;
+          sep12 = "\n";
           prevMoreIndented = true;
         } else if (content === "") {
-          if (sep11 === "\n")
+          if (sep12 === "\n")
             value += "\n";
           else
-            sep11 = "\n";
+            sep12 = "\n";
         } else {
-          value += sep11 + content;
-          sep11 = " ";
+          value += sep12 + content;
+          sep12 = " ";
           prevMoreIndented = false;
         }
       }
@@ -4724,25 +4724,25 @@ var require_resolve_flow_scalar = __commonJS({
       if (!match)
         return source;
       let res = match[1];
-      let sep11 = " ";
+      let sep12 = " ";
       let pos = first.lastIndex;
       line.lastIndex = pos;
       while (match = line.exec(source)) {
         if (match[1] === "") {
-          if (sep11 === "\n")
-            res += sep11;
+          if (sep12 === "\n")
+            res += sep12;
           else
-            sep11 = "\n";
+            sep12 = "\n";
         } else {
-          res += sep11 + match[1];
-          sep11 = " ";
+          res += sep12 + match[1];
+          sep12 = " ";
         }
         pos = line.lastIndex;
       }
       const last = /[ \t]*(.*)/sy;
       last.lastIndex = pos;
       match = last.exec(source);
-      return res + sep11 + (match?.[1] ?? "");
+      return res + sep12 + (match?.[1] ?? "");
     }
     function doubleQuotedValue(source, onError) {
       let res = "";
@@ -5230,8 +5230,8 @@ ${cb}` : comment;
        * @param forceDoc - If the stream contains no document, still emit a final document including any comments and directives that would be applied to a subsequent document.
        * @param endOffset - Should be set if `forceDoc` is also set, to set the document range end and to indicate errors correctly.
        */
-      *compose(tokens, forceDoc = false, endOffset = -1) {
-        for (const token of tokens)
+      *compose(tokens2, forceDoc = false, endOffset = -1) {
+        for (const token of tokens2)
           yield* this.next(token);
         yield* this.end(forceDoc, endOffset);
       }
@@ -5552,14 +5552,14 @@ var require_cst_stringify = __commonJS({
         }
       }
     }
-    function stringifyItem({ start, key, sep: sep11, value }) {
+    function stringifyItem({ start, key, sep: sep12, value }) {
       let res = "";
       for (const st of start)
         res += st.source;
       if (key)
         res += stringifyToken(key);
-      if (sep11)
-        for (const st of sep11)
+      if (sep12)
+        for (const st of sep12)
           res += st.source;
       if (value)
         res += stringifyToken(value);
@@ -6726,18 +6726,18 @@ var require_parser = __commonJS({
         if (this.type === "map-value-ind") {
           const prev = getPrevProps(this.peek(2));
           const start = getFirstKeyStartProps(prev);
-          let sep11;
+          let sep12;
           if (scalar.end) {
-            sep11 = scalar.end;
-            sep11.push(this.sourceToken);
+            sep12 = scalar.end;
+            sep12.push(this.sourceToken);
             delete scalar.end;
           } else
-            sep11 = [this.sourceToken];
+            sep12 = [this.sourceToken];
           const map = {
             type: "block-map",
             offset: scalar.offset,
             indent: scalar.indent,
-            items: [{ start, key: scalar, sep: sep11 }]
+            items: [{ start, key: scalar, sep: sep12 }]
           };
           this.onKeyLine = true;
           this.stack[this.stack.length - 1] = map;
@@ -6890,15 +6890,15 @@ var require_parser = __commonJS({
                 } else if (isFlowToken(it.key) && !includesToken(it.sep, "newline")) {
                   const start2 = getFirstKeyStartProps(it.start);
                   const key = it.key;
-                  const sep11 = it.sep;
-                  sep11.push(this.sourceToken);
+                  const sep12 = it.sep;
+                  sep12.push(this.sourceToken);
                   delete it.key;
                   delete it.sep;
                   this.stack.push({
                     type: "block-map",
                     offset: this.offset,
                     indent: this.indent,
-                    items: [{ start: start2, key, sep: sep11 }]
+                    items: [{ start: start2, key, sep: sep12 }]
                   });
                 } else if (start.length > 0) {
                   it.sep = it.sep.concat(start, this.sourceToken);
@@ -7092,13 +7092,13 @@ var require_parser = __commonJS({
             const prev = getPrevProps(parent);
             const start = getFirstKeyStartProps(prev);
             fixFlowSeqItems(fc);
-            const sep11 = fc.end.splice(1, fc.end.length);
-            sep11.push(this.sourceToken);
+            const sep12 = fc.end.splice(1, fc.end.length);
+            sep12.push(this.sourceToken);
             const map = {
               type: "block-map",
               offset: fc.offset,
               indent: fc.indent,
-              items: [{ start, key: fc, sep: sep11 }]
+              items: [{ start, key: fc, sep: sep12 }]
             };
             this.onKeyLine = true;
             this.stack[this.stack.length - 1] = map;
@@ -7454,7 +7454,7 @@ function hasShellControlSyntax(command) {
   return SHELL_CONTROL_SYNTAX.test(String(command ?? ""));
 }
 function tokenizeCommand(command) {
-  const tokens = [];
+  const tokens2 = [];
   const source = String(command ?? "").trim();
   let current = "";
   let quote = null;
@@ -7477,7 +7477,7 @@ function tokenizeCommand(command) {
     }
     if (/\s/.test(ch)) {
       if (current) {
-        tokens.push(current);
+        tokens2.push(current);
         current = "";
       }
       continue;
@@ -7485,8 +7485,8 @@ function tokenizeCommand(command) {
     current += ch;
   }
   if (quote) return null;
-  if (current) tokens.push(current);
-  return tokens;
+  if (current) tokens2.push(current);
+  return tokens2;
 }
 function argHasMetacharacters(arg) {
   return /[;&|`$<>\\]/.test(String(arg ?? "")) || /\$\(/.test(String(arg ?? ""));
@@ -7527,19 +7527,19 @@ function shellImpliesNetwork(command) {
 }
 function shellImpliesWrite(command) {
   const text = String(command ?? "");
-  const tokens = tokenizeCommand(text);
-  if (!tokens || tokens.length === 0) return true;
-  const commandName = tokens[0].split(/[\\/]/).pop().toLowerCase();
+  const tokens2 = tokenizeCommand(text);
+  if (!tokens2 || tokens2.length === 0) return true;
+  const commandName = tokens2[0].split(/[\\/]/).pop().toLowerCase();
   if (SHELL_WRITE_COMMANDS.has(commandName)) {
     if (commandName === "git") {
-      return /^(add|am|apply|checkout|clean|commit|merge|mv|pull|push|rebase|reset|restore|rm|stash|switch)\b/i.test(tokens[1] ?? "");
+      return /^(add|am|apply|checkout|clean|commit|merge|mv|pull|push|rebase|reset|restore|rm|stash|switch)\b/i.test(tokens2[1] ?? "");
     }
     if (["npm", "pnpm", "yarn"].includes(commandName)) {
-      return /^(add|ci|install|link|pack|publish|remove|run|uninstall)\b/i.test(tokens[1] ?? "");
+      return /^(add|ci|install|link|pack|publish|remove|run|uninstall)\b/i.test(tokens2[1] ?? "");
     }
     return true;
   }
-  if (tokens.some((token) => SHELL_WRITE_FLAGS.has(token.toLowerCase()))) return true;
+  if (tokens2.some((token) => SHELL_WRITE_FLAGS.has(token.toLowerCase()))) return true;
   if (INLINE_WRITE_PATTERNS.some((pattern) => pattern.test(text))) return true;
   return false;
 }
@@ -10559,7 +10559,7 @@ var require_compile = __commonJS({
       const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve30.call(this, root, ref);
+      let _sch = resolve32.call(this, root, ref);
       if (_sch === void 0) {
         const schema = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
         const { schemaId } = this.opts;
@@ -10586,7 +10586,7 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve30(root, ref) {
+    function resolve32(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
@@ -11217,55 +11217,55 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve30(baseURI, relativeURI, options) {
+    function resolve32(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const resolved = resolveComponent(parse(baseURI, schemelessOptions), parse(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
       return serialize(resolved, schemelessOptions);
     }
-    function resolveComponent(base, relative17, options, skipNormalization) {
+    function resolveComponent(base, relative18, options, skipNormalization) {
       const target = {};
       if (!skipNormalization) {
         base = parse(serialize(base, options), options);
-        relative17 = parse(serialize(relative17, options), options);
+        relative18 = parse(serialize(relative18, options), options);
       }
       options = options || {};
-      if (!options.tolerant && relative17.scheme) {
-        target.scheme = relative17.scheme;
-        target.userinfo = relative17.userinfo;
-        target.host = relative17.host;
-        target.port = relative17.port;
-        target.path = removeDotSegments(relative17.path || "");
-        target.query = relative17.query;
+      if (!options.tolerant && relative18.scheme) {
+        target.scheme = relative18.scheme;
+        target.userinfo = relative18.userinfo;
+        target.host = relative18.host;
+        target.port = relative18.port;
+        target.path = removeDotSegments(relative18.path || "");
+        target.query = relative18.query;
       } else {
-        if (relative17.userinfo !== void 0 || relative17.host !== void 0 || relative17.port !== void 0) {
-          target.userinfo = relative17.userinfo;
-          target.host = relative17.host;
-          target.port = relative17.port;
-          target.path = removeDotSegments(relative17.path || "");
-          target.query = relative17.query;
+        if (relative18.userinfo !== void 0 || relative18.host !== void 0 || relative18.port !== void 0) {
+          target.userinfo = relative18.userinfo;
+          target.host = relative18.host;
+          target.port = relative18.port;
+          target.path = removeDotSegments(relative18.path || "");
+          target.query = relative18.query;
         } else {
-          if (!relative17.path) {
+          if (!relative18.path) {
             target.path = base.path;
-            if (relative17.query !== void 0) {
-              target.query = relative17.query;
+            if (relative18.query !== void 0) {
+              target.query = relative18.query;
             } else {
               target.query = base.query;
             }
           } else {
-            if (relative17.path[0] === "/") {
-              target.path = removeDotSegments(relative17.path);
+            if (relative18.path[0] === "/") {
+              target.path = removeDotSegments(relative18.path);
             } else {
               if ((base.userinfo !== void 0 || base.host !== void 0 || base.port !== void 0) && !base.path) {
-                target.path = "/" + relative17.path;
+                target.path = "/" + relative18.path;
               } else if (!base.path) {
-                target.path = relative17.path;
+                target.path = relative18.path;
               } else {
-                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative17.path;
+                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative18.path;
               }
               target.path = removeDotSegments(target.path);
             }
-            target.query = relative17.query;
+            target.query = relative18.query;
           }
           target.userinfo = base.userinfo;
           target.host = base.host;
@@ -11273,7 +11273,7 @@ var require_fast_uri = __commonJS({
         }
         target.scheme = base.scheme;
       }
-      target.fragment = relative17.fragment;
+      target.fragment = relative18.fragment;
       return target;
     }
     function equal(uriA, uriB, options) {
@@ -11475,7 +11475,7 @@ var require_fast_uri = __commonJS({
     var fastUri = {
       SCHEMES,
       normalize: normalize2,
-      resolve: resolve30,
+      resolve: resolve32,
       resolveComponent,
       equal,
       serialize,
@@ -15553,6 +15553,55 @@ var init_schemas_generated = __esm({
               }
             }
           },
+          "project": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "selectedSkills": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "default": []
+              },
+              "defaultWorkflows": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "default": []
+              }
+            }
+          },
+          "session": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": true
+              },
+              "outDir": {
+                "type": "string",
+                "minLength": 1,
+                "default": "artifacts/skillsforge-session"
+              },
+              "maxEntries": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5e3,
+                "default": 200
+              },
+              "tokenBudget": {
+                "type": "integer",
+                "minimum": 200,
+                "maximum": 1e4,
+                "default": 1200
+              }
+            }
+          },
           "mutations": {
             "type": "object",
             "additionalProperties": false,
@@ -18019,12 +18068,6 @@ async function collectReceiptEvidence(root, options) {
   const evaluationPath = resolve16(
     options.evaluationPath ?? join15(root, "artifacts", "evaluation", "routing-report.json")
   );
-  const packageReady = await pathExists6(join15(packageRoot, ".claude-plugin", "plugin.json"));
-  const receiptReady = await pathExists6(receiptPath);
-  if (!packageReady || !receiptReady) {
-    return await synthesizeReceiptProof(root, options);
-  }
-  const skills = await loadAllSkills(packageRoot);
   const verifyOptions = {
     packageRoot,
     packageOnly: false,
@@ -18033,8 +18076,18 @@ async function collectReceiptEvidence(root, options) {
   if (await pathExists6(evaluationPath)) {
     verifyOptions.evaluationPath = evaluationPath;
   }
-  const verify = await verifyReceipt(receiptPath, skills, verifyOptions);
-  const tamper = await verifyOneByteTamper(receiptPath, skills, verifyOptions);
+  let skills;
+  let verify;
+  let tamper;
+  try {
+    await access9(join15(packageRoot, ".claude-plugin", "plugin.json"));
+    await access9(receiptPath);
+    skills = await loadAllSkills(packageRoot);
+    verify = await verifyReceipt(receiptPath, skills, verifyOptions);
+    tamper = await verifyOneByteTamper(receiptPath, skills, verifyOptions);
+  } catch {
+    return await synthesizeReceiptProof(root, options);
+  }
   return {
     receiptPath: toPosix(root, receiptPath),
     packageRoot: toPosix(root, packageRoot),
@@ -18277,7 +18330,7 @@ var init_evidence = __esm({
 
 // scripts/skillsforge-cli.mjs
 import { realpathSync as realpathSync2 } from "node:fs";
-import { resolve as resolve29 } from "node:path";
+import { resolve as resolve31 } from "node:path";
 import { fileURLToPath as fileURLToPath6 } from "node:url";
 
 // lib/capabilities/claude-policy-compiler.mjs
@@ -19591,8 +19644,8 @@ async function runJudgeDemo(root, options = {}) {
     };
   } finally {
     if (!options.keepWork) {
-      const { rm: rm5 } = await import("node:fs/promises");
-      await rm5(work, { recursive: true, force: true });
+      const { rm: rm6 } = await import("node:fs/promises");
+      await rm6(work, { recursive: true, force: true });
     }
   }
 }
@@ -21496,15 +21549,15 @@ async function runInstall(argv, options) {
 }
 
 // scripts/cli/commands/library.mjs
-import { resolve as resolve23 } from "node:path";
+import { resolve as resolve24 } from "node:path";
 
 // lib/capabilities/library.mjs
 init_skill_loader();
 init_hosts();
 init_catalog();
-import { access as access15, mkdir as mkdir13, readFile as readFile20, readdir as readdir11, rm as rm4, writeFile as writeFile13 } from "node:fs/promises";
+import { access as access16, mkdir as mkdir14, readFile as readFile21, readdir as readdir11, rm as rm5, writeFile as writeFile14 } from "node:fs/promises";
 import { createServer } from "node:http";
-import { basename as basename6, dirname as dirname12, isAbsolute as isAbsolute8, join as join24, relative as relative12, resolve as resolve22, sep as sep10 } from "node:path";
+import { basename as basename6, dirname as dirname13, isAbsolute as isAbsolute9, join as join25, relative as relative13, resolve as resolve23, sep as sep11 } from "node:path";
 
 // lib/capabilities/workflows.mjs
 init_skill_loader();
@@ -21826,6 +21879,11 @@ function isInside5(parent, candidate) {
   return path === "" || !path.startsWith(`..${sep9}`) && path !== "..";
 }
 
+// lib/capabilities/session.mjs
+import { createHash as createHash4 } from "node:crypto";
+import { access as access15, mkdir as mkdir13, readFile as readFile20, rm as rm4, writeFile as writeFile13 } from "node:fs/promises";
+import { dirname as dirname12, isAbsolute as isAbsolute8, join as join24, relative as relative12, resolve as resolve22, sep as sep10 } from "node:path";
+
 // lib/capabilities/settings.mjs
 init_hosts();
 import { access as access14, readFile as readFile19, rm as rm3, writeFile as writeFile12 } from "node:fs/promises";
@@ -21840,6 +21898,16 @@ var DEFAULT_SETTINGS = Object.freeze({
     outDir: "artifacts/skillsforge-library",
     cacheHostChecks: true,
     extraSkillRoots: Object.freeze([])
+  }),
+  project: Object.freeze({
+    selectedSkills: Object.freeze([]),
+    defaultWorkflows: Object.freeze([])
+  }),
+  session: Object.freeze({
+    enabled: true,
+    outDir: "artifacts/skillsforge-session",
+    maxEntries: 200,
+    tokenBudget: 1200
   }),
   mutations: Object.freeze({
     allowByDefault: false
@@ -21909,6 +21977,16 @@ async function resetSettings(root, options = {}) {
 `);
   return { ok: true, path, deleted: false, settings, errors: [] };
 }
+async function saveSettings(root, settings, options = {}) {
+  const path = resolveSettingsPath(root, options.config);
+  const next = materializeSettings(settings);
+  const errors = validateSettings(next);
+  if (errors.length) return { ok: false, path, settings: next, errors };
+  await mkdir12(dirname11(path), { recursive: true });
+  await writeFile12(path, `${JSON.stringify(next, null, 2)}
+`);
+  return { ok: true, path, settings: next, errors: [] };
+}
 function materializeSettings(value = {}) {
   return {
     recommendThreshold: value.recommendThreshold ?? DEFAULT_SETTINGS.recommendThreshold,
@@ -21918,6 +21996,16 @@ function materializeSettings(value = {}) {
       outDir: value.library?.outDir ?? DEFAULT_SETTINGS.library.outDir,
       cacheHostChecks: value.library?.cacheHostChecks ?? DEFAULT_SETTINGS.library.cacheHostChecks,
       extraSkillRoots: value.library?.extraSkillRoots ?? DEFAULT_SETTINGS.library.extraSkillRoots
+    },
+    project: {
+      selectedSkills: value.project?.selectedSkills ?? DEFAULT_SETTINGS.project.selectedSkills,
+      defaultWorkflows: value.project?.defaultWorkflows ?? DEFAULT_SETTINGS.project.defaultWorkflows
+    },
+    session: {
+      enabled: value.session?.enabled ?? DEFAULT_SETTINGS.session.enabled,
+      outDir: value.session?.outDir ?? DEFAULT_SETTINGS.session.outDir,
+      maxEntries: value.session?.maxEntries ?? DEFAULT_SETTINGS.session.maxEntries,
+      tokenBudget: value.session?.tokenBudget ?? DEFAULT_SETTINGS.session.tokenBudget
     },
     mutations: {
       allowByDefault: value.mutations?.allowByDefault ?? DEFAULT_SETTINGS.mutations.allowByDefault
@@ -21946,6 +22034,26 @@ function validateSettings(settings) {
   if (!Array.isArray(settings.library.extraSkillRoots) || settings.library.extraSkillRoots.some((item) => typeof item !== "string" || item.trim() === "")) {
     errors.push("library.extraSkillRoots must be an array of non-empty strings");
   }
+  if (!Array.isArray(settings.project.selectedSkills) || settings.project.selectedSkills.some((item) => typeof item !== "string" || item.trim() === "")) {
+    errors.push("project.selectedSkills must be an array of non-empty strings");
+  }
+  if (!Array.isArray(settings.project.defaultWorkflows) || settings.project.defaultWorkflows.some((item) => typeof item !== "string" || item.trim() === "")) {
+    errors.push("project.defaultWorkflows must be an array of non-empty strings");
+  }
+  if (typeof settings.session.enabled !== "boolean") {
+    errors.push("session.enabled must be boolean");
+  }
+  if (typeof settings.session.outDir !== "string" || settings.session.outDir.trim() === "") {
+    errors.push("session.outDir must be a non-empty string");
+  } else if (isAbsolute7(settings.session.outDir)) {
+    errors.push("session.outDir must be relative to the repository root");
+  }
+  if (!Number.isInteger(settings.session.maxEntries) || settings.session.maxEntries < 1 || settings.session.maxEntries > 5e3) {
+    errors.push("session.maxEntries must be an integer from 1 to 5000");
+  }
+  if (!Number.isInteger(settings.session.tokenBudget) || settings.session.tokenBudget < 200 || settings.session.tokenBudget > 1e4) {
+    errors.push("session.tokenBudget must be an integer from 200 to 10000");
+  }
   if (typeof settings.mutations.allowByDefault !== "boolean") {
     errors.push("mutations.allowByDefault must be boolean");
   }
@@ -21957,12 +22065,13 @@ function resolveSettingsPath(root, config) {
 function parseSettingValue(key, value) {
   if (key === "recommendThreshold") return Number(value);
   if (key === "defaultHost") return value === "null" ? null : String(value);
-  if (key === "library.cacheHostChecks" || key === "mutations.allowByDefault") {
+  if (key === "library.cacheHostChecks" || key === "mutations.allowByDefault" || key === "session.enabled") {
     if (value === "true") return true;
     if (value === "false") return false;
     return value;
   }
-  if (key === "library.extraSkillRoots") {
+  if (key === "session.maxEntries" || key === "session.tokenBudget") return Number(value);
+  if (key === "library.extraSkillRoots" || key === "project.selectedSkills" || key === "project.defaultWorkflows") {
     const text = String(value ?? "").trim();
     if (text.startsWith("[")) return JSON.parse(text);
     return text.split(/[;,]/).map((item) => item.trim()).filter(Boolean);
@@ -21978,6 +22087,12 @@ function setNested(target, key, value) {
     "library.outDir",
     "library.cacheHostChecks",
     "library.extraSkillRoots",
+    "project.selectedSkills",
+    "project.defaultWorkflows",
+    "session.enabled",
+    "session.outDir",
+    "session.maxEntries",
+    "session.tokenBudget",
     "mutations.allowByDefault"
   ].includes(key)) {
     throw new Error(`unknown setting: ${key}`);
@@ -21995,10 +22110,305 @@ async function pathExists8(path) {
   }
 }
 
+// lib/capabilities/session.mjs
+var SESSION_OUT_REL = join24("artifacts", "skillsforge-session");
+var SESSION_JSONL = "session.jsonl";
+var SESSION_SUMMARY = "summary.json";
+async function rememberSessionEvent(root, event = {}, options = {}) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const settings = settingsLoaded.settings;
+  if (settings.session.enabled === false) {
+    return { ok: false, disabled: true, error: "session memory is disabled by settings" };
+  }
+  const paths = resolveSessionPaths(root, settings, options);
+  const entry = normalizeSessionEvent(root, event, {
+    host: options.sessionHost ?? settings.defaultHost,
+    projectRootHash: projectHash(root)
+  });
+  const existing = await readSessionEntries(root, options);
+  const maxEntries = settings.session.maxEntries;
+  const nextEntries = [...existing, entry].slice(-maxEntries);
+  await mkdir13(dirname12(paths.jsonl), { recursive: true });
+  await writeFile13(paths.jsonl, `${nextEntries.map((item) => JSON.stringify(item)).join("\n")}
+`);
+  const summary = summarizeSession(root, nextEntries, { settings });
+  await writeFile13(paths.summary, `${JSON.stringify(summary, null, 2)}
+`);
+  return { ok: true, event: entry, summary, files: displaySessionFiles(paths) };
+}
+async function recallSessionMemory(root, options = {}) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const settings = settingsLoaded.settings;
+  const tokenBudget = clampNumber(options.tokenBudget ?? settings.session.tokenBudget, 1200, 200, 1e4);
+  const limit = clampNumber(options.limit ?? 5, 5, 1, 50);
+  const query = String(options.query ?? "").trim();
+  const entries = await readSessionEntries(root, options);
+  const ranked = entries.map((entry) => ({ entry, score: scoreEntry(query, entry) })).filter((item) => !query || item.score > 0).sort((left, right) => right.score - left.score || String(right.entry.timestamp).localeCompare(String(left.entry.timestamp)));
+  const selected = [];
+  let usedTokens = 0;
+  for (const item of ranked.slice(0, limit * 4)) {
+    const compact = compactEntry(item.entry);
+    const tokens2 = estimateTokens(JSON.stringify(compact));
+    if (selected.length >= limit || usedTokens + tokens2 > tokenBudget) break;
+    selected.push({ ...compact, matchScore: item.score, estimatedTokens: tokens2 });
+    usedTokens += tokens2;
+  }
+  return {
+    ok: true,
+    query,
+    tokenBudget,
+    estimatedTokens: usedTokens,
+    count: selected.length,
+    entries: selected,
+    policy: "compact SkillsForge usage memory only; no chat transcript memory is returned"
+  };
+}
+async function readSessionSummary(root, options = {}) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const paths = resolveSessionPaths(root, settingsLoaded.settings, options);
+  try {
+    return JSON.parse(await readFile20(paths.summary, "utf8"));
+  } catch {
+    const entries = await readSessionEntries(root, options);
+    return summarizeSession(root, entries, { settings: settingsLoaded.settings });
+  }
+}
+async function scoreSessionMemory(root, options = {}) {
+  const summary = await readSessionSummary(root, options);
+  return {
+    ok: true,
+    score: summary.score,
+    review: summary.review,
+    totals: summary.totals,
+    topSkills: summary.topSkills,
+    topWorkflows: summary.topWorkflows,
+    policy: "local heuristic score for SkillsForge usage discipline, not model quality proof"
+  };
+}
+async function resetSessionMemory(root, options = {}) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const paths = resolveSessionPaths(root, settingsLoaded.settings, options);
+  await rm4(paths.outDir, { recursive: true, force: true });
+  const summary = summarizeSession(root, [], { settings: settingsLoaded.settings });
+  await mkdir13(paths.outDir, { recursive: true });
+  await writeFile13(paths.summary, `${JSON.stringify(summary, null, 2)}
+`);
+  await writeFile13(paths.jsonl, "");
+  return { ok: true, reset: true, files: displaySessionFiles(paths), summary };
+}
+async function ensureSessionMemory(root, options = {}) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const paths = resolveSessionPaths(root, settingsLoaded.settings, options);
+  await mkdir13(paths.outDir, { recursive: true });
+  const entries = await readSessionEntries(root, options);
+  const summary = summarizeSession(root, entries, { settings: settingsLoaded.settings });
+  if (!await pathExists9(paths.jsonl)) await writeFile13(paths.jsonl, "");
+  await writeFile13(paths.summary, `${JSON.stringify(summary, null, 2)}
+`);
+  return { ok: true, files: displaySessionFiles(paths), summary };
+}
+async function exportSessionMemory(root, options = {}) {
+  const out = options.out;
+  if (!out) throw new Error("--out is required");
+  const target = resolve22(root, out);
+  if (isAbsolute8(out) || !isInside6(root, target)) throw new Error("session export --out must stay inside the repository");
+  const summary = await readSessionSummary(root, options);
+  const recall = await recallSessionMemory(root, {
+    ...options,
+    query: options.query ?? "",
+    limit: options.limit ?? 20,
+    tokenBudget: options.tokenBudget ?? 3e3
+  });
+  const text = renderSessionMarkdown(summary, recall);
+  await mkdir13(dirname12(target), { recursive: true });
+  await writeFile13(target, text);
+  return { ok: true, out: target, summary, entries: recall.entries.length };
+}
+async function readSessionEntries(root, options = {}) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const paths = resolveSessionPaths(root, settingsLoaded.settings, options);
+  try {
+    const text = await readFile20(paths.jsonl, "utf8");
+    return text.split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line)).filter((entry) => entry && typeof entry === "object");
+  } catch {
+    return [];
+  }
+}
+function resolveSessionPaths(root, settings, options = {}) {
+  const outDir = resolve22(root, options.outDir ?? settings.session?.outDir ?? SESSION_OUT_REL);
+  if (!isInside6(root, outDir)) throw new Error(`session outDir escapes repository: ${outDir}`);
+  return {
+    outDir,
+    jsonl: join24(outDir, SESSION_JSONL),
+    summary: join24(outDir, SESSION_SUMMARY)
+  };
+}
+function normalizeSessionEvent(root, event, context) {
+  return {
+    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+    projectRootHash: context.projectRootHash,
+    host: cleanText(event.host ?? context.host ?? null, 60),
+    query: cleanText(event.query ?? "", 240),
+    selectedSkill: cleanText(event.selectedSkill ?? event.skill ?? null, 120),
+    selectedWorkflow: cleanText(event.selectedWorkflow ?? event.workflow ?? null, 160),
+    agentRole: cleanText(event.agentRole ?? event.agent ?? null, 120),
+    score: clampNumber(event.score ?? 0, 0, 0, 100),
+    reasons: cleanList(event.reasons ?? event.reason, 8, 160),
+    commandsSuggested: cleanList(event.commandsSuggested ?? event.command, 8, 220),
+    tokensEstimated: clampNumber(event.tokensEstimated ?? event.tokens ?? 0, 0, 0, 1e6),
+    outcome: cleanText(event.outcome ?? "", 240),
+    verification: cleanText(event.verification ?? "", 240)
+  };
+}
+function summarizeSession(root, entries, { settings }) {
+  const topSkills = topCounts(entries.map((entry) => entry.selectedSkill).filter(Boolean));
+  const topWorkflows = topCounts(entries.map((entry) => entry.selectedWorkflow).filter(Boolean));
+  const topAgents = topCounts(entries.map((entry) => entry.agentRole).filter(Boolean));
+  const verified = entries.filter((entry) => entry.verification).length;
+  const withWorkflow = entries.filter((entry) => entry.selectedWorkflow).length;
+  const score = Math.min(100, Math.round(
+    (entries.length ? 30 : 0) + Math.min(20, topSkills.length * 5) + Math.min(20, withWorkflow * 2) + Math.min(20, verified * 4) + (entries.some((entry) => entry.tokensEstimated > 0) ? 10 : 0)
+  ));
+  return {
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    projectRootHash: projectHash(root),
+    files: {
+      jsonl: SESSION_JSONL,
+      summary: SESSION_SUMMARY
+    },
+    settings: {
+      maxEntries: settings.session.maxEntries,
+      tokenBudget: settings.session.tokenBudget
+    },
+    totals: {
+      events: entries.length,
+      verified,
+      withSkill: entries.filter((entry) => entry.selectedSkill).length,
+      withWorkflow,
+      tokensEstimated: entries.reduce((sum, entry) => sum + (entry.tokensEstimated ?? 0), 0)
+    },
+    score,
+    review: score >= 80 ? "strong SkillsForge usage memory" : score >= 50 ? "useful but needs more verified outcomes" : "thin memory; record skill/workflow/outcome/verification after tasks",
+    topSkills,
+    topWorkflows,
+    topAgents,
+    recent: entries.slice(-8).map(compactEntry)
+  };
+}
+function compactEntry(entry) {
+  return {
+    timestamp: entry.timestamp,
+    host: entry.host,
+    query: entry.query,
+    selectedSkill: entry.selectedSkill,
+    selectedWorkflow: entry.selectedWorkflow,
+    agentRole: entry.agentRole,
+    score: entry.score,
+    reasons: entry.reasons,
+    tokensEstimated: entry.tokensEstimated,
+    outcome: entry.outcome,
+    verification: entry.verification
+  };
+}
+function renderSessionMarkdown(summary, recall) {
+  const lines = [
+    "# SkillsForge Session Memory",
+    "",
+    `Generated: ${summary.generatedAt}`,
+    `Project hash: ${summary.projectRootHash}`,
+    `Score: ${summary.score} - ${summary.review}`,
+    "",
+    "## Totals",
+    "",
+    `- Events: ${summary.totals.events}`,
+    `- Verified events: ${summary.totals.verified}`,
+    `- Skills used: ${summary.totals.withSkill}`,
+    `- Workflows used: ${summary.totals.withWorkflow}`,
+    `- Estimated tokens: ${summary.totals.tokensEstimated}`,
+    "",
+    "## Top Skills",
+    "",
+    ...summary.topSkills.length ? summary.topSkills.map((item) => `- ${item.id}: ${item.count}`) : ["- None recorded"],
+    "",
+    "## Top Workflows",
+    "",
+    ...summary.topWorkflows.length ? summary.topWorkflows.map((item) => `- ${item.id}: ${item.count}`) : ["- None recorded"],
+    "",
+    "## Recent Compact Entries",
+    ""
+  ];
+  for (const entry of recall.entries) {
+    lines.push(`- ${entry.timestamp}: skill=${entry.selectedSkill ?? "none"} workflow=${entry.selectedWorkflow ?? "none"} outcome=${entry.outcome || "none"}`);
+  }
+  lines.push("", "> This export intentionally contains compact SkillsForge usage memory, not chat transcript memory.", "");
+  return `${lines.join("\n")}
+`;
+}
+function topCounts(values) {
+  const counts = /* @__PURE__ */ new Map();
+  for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
+  return [...counts.entries()].map(([id, count]) => ({ id, count })).sort((left, right) => right.count - left.count || left.id.localeCompare(right.id)).slice(0, 10);
+}
+function scoreEntry(query, entry) {
+  if (!query) return 1;
+  const q = new Set(tokens(query));
+  const text = [
+    entry.query,
+    entry.selectedSkill,
+    entry.selectedWorkflow,
+    entry.agentRole,
+    entry.outcome,
+    entry.verification,
+    ...entry.reasons ?? []
+  ].join(" ");
+  return tokens(text).filter((token) => q.has(token)).length;
+}
+function tokens(text) {
+  return String(text ?? "").toLowerCase().match(/[a-z0-9]+/g) ?? [];
+}
+function cleanList(value, limit, maxLength) {
+  const list = Array.isArray(value) ? value : value ? [value] : [];
+  return list.map((item) => cleanText(item, maxLength)).filter(Boolean).slice(0, limit);
+}
+function cleanText(value, maxLength) {
+  if (value == null) return null;
+  return String(value).replace(/\s+/g, " ").trim().slice(0, maxLength);
+}
+function estimateTokens(text) {
+  return Math.ceil([...String(text ?? "")].length / 4);
+}
+function clampNumber(value, fallback, min, max) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return fallback;
+  return Math.min(max, Math.max(min, Math.round(number)));
+}
+function projectHash(root) {
+  return createHash4("sha256").update(resolve22(root)).digest("hex").slice(0, 16);
+}
+function displaySessionFiles(paths) {
+  return {
+    outDir: paths.outDir,
+    jsonl: paths.jsonl,
+    summary: paths.summary
+  };
+}
+async function pathExists9(path) {
+  try {
+    await access15(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function isInside6(parent, candidate) {
+  const path = relative12(resolve22(parent), resolve22(candidate));
+  return path === "" || !path.startsWith(`..${sep10}`) && path !== ".." && !isAbsolute8(path);
+}
+
 // lib/capabilities/library.mjs
-var LIBRARY_OUT_REL = join24("artifacts", "skillsforge-library");
+var LIBRARY_OUT_REL = join25("artifacts", "skillsforge-library");
 async function buildLibraryIndex(root, options = {}) {
-  const absRoot = resolve22(root);
+  const absRoot = resolve23(root);
   const home = options.home;
   const settingsLoaded = await loadSettings(absRoot, { config: options.config });
   const settings = settingsLoaded.settings;
@@ -22032,6 +22442,7 @@ async function buildLibraryIndex(root, options = {}) {
   ];
   const catalog = catalogLoaded?.catalog ?? null;
   const packBySkill = buildPackMap(catalog);
+  const selectedSet = new Set(settings.project?.selectedSkills ?? []);
   const session = detectSession(hosts, {
     ...options,
     sessionHost: options.sessionHost ?? settings.defaultHost
@@ -22044,11 +22455,15 @@ async function buildLibraryIndex(root, options = {}) {
     home,
     session,
     extraSkillRoots
+  })).map((record) => ({
+    ...record,
+    projectSelected: selectedSet.has(record.id)
   })).map(assignRecordKey()).sort((left, right) => left.key.localeCompare(right.key));
   const categories = [...new Set(records.map((skill) => skill.category).filter(Boolean))].sort();
   const sourceDetails = buildSourceDetails(absRoot, records, loadErrors, { home, extraSkillRoots });
   const sources = sourceDetails.map((source) => source.id);
   const ok = skillsLoaded.ok && workflowsLoaded.ok;
+  const sessionSummary = await readSessionSummary(absRoot, { config: options.config });
   return {
     ok: ok && settingsLoaded.ok,
     generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
@@ -22064,10 +22479,16 @@ async function buildLibraryIndex(root, options = {}) {
       detectedHosts: hosts.filter((host) => host.detected).length,
       installedSkills: records.filter((skill) => skill.installedHosts.length > 0).length,
       sessionSkills: session.host ? records.filter((skill) => skill.installedHosts.includes(session.host)).length : 0,
+      selectedSkills: records.filter((skill) => skill.projectSelected).length,
       categories: categories.length,
       sources: sourceDetails.length
     },
     session,
+    sessionSummary,
+    project: {
+      selectedSkills: [...selectedSet].sort(),
+      defaultWorkflows: [...settings.project?.defaultWorkflows ?? []].sort()
+    },
     categories,
     sources,
     sourceDetails,
@@ -22085,9 +22506,12 @@ async function buildLibraryIndex(root, options = {}) {
       id: workflow.id,
       category: workflow.category,
       goal: workflow.goal,
+      inputs: workflow.inputs,
+      steps: workflow.steps,
       recommendedSkills: workflow.recommendedSkills,
       recommendedAgents: workflow.recommendedAgents,
       commands: workflow.commands,
+      stopGates: workflow.stopGates,
       tokenBudget: workflow.tokenBudget,
       qualityGate: workflow.qualityGate,
       risk: workflow.risk,
@@ -22102,19 +22526,19 @@ async function buildLibraryIndex(root, options = {}) {
 async function writeLibraryArtifacts(root, options = {}) {
   const settingsLoaded = await loadSettings(root, { config: options.config });
   const configuredOut = settingsLoaded.settings.library.outDir ?? LIBRARY_OUT_REL;
-  const outDir = resolve22(root, options.outDir ?? configuredOut);
-  if (!options.allowAbsolute && !isInside6(root, outDir)) {
+  const outDir = resolve23(root, options.outDir ?? configuredOut);
+  if (!options.allowAbsolute && !isInside7(root, outDir)) {
     throw new Error(`library output path escapes root: ${outDir}`);
   }
   const index = await buildLibraryIndex(root, options);
-  await mkdir13(outDir, { recursive: true });
-  const jsonPath = join24(outDir, "skillsforge-library.json");
-  const htmlPath = join24(outDir, "skillsforge-library.html");
-  const aiPath = join24(outDir, "skillsforge-ai-index.html");
-  await writeFile13(jsonPath, `${JSON.stringify(index, null, 2)}
+  await mkdir14(outDir, { recursive: true });
+  const jsonPath = join25(outDir, "skillsforge-library.json");
+  const htmlPath = join25(outDir, "skillsforge-library.html");
+  const aiPath = join25(outDir, "skillsforge-ai-index.html");
+  await writeFile14(jsonPath, `${JSON.stringify(index, null, 2)}
 `);
-  await writeFile13(htmlPath, buildLibraryHtml(index, { apiEnabled: false, allowMutations: false }));
-  await writeFile13(aiPath, buildAiIndexHtml(index));
+  await writeFile14(htmlPath, buildLibraryHtml(index, { apiEnabled: false, allowMutations: false }));
+  await writeFile14(aiPath, buildAiIndexHtml(index));
   return {
     ok: index.ok,
     outDir,
@@ -22150,6 +22574,24 @@ async function serveLibrary(root, options = {}) {
         sendJson(response, result);
         return;
       }
+      if (url.pathname === "/api/project/select" || url.pathname === "/api/project/unselect") {
+        const body = await readRequestJson(request);
+        const mutate = url.pathname.endsWith("/select") ? selectProjectSkill : unselectProjectSkill;
+        const result = allowMutations ? await mutate(root, { ...body, home, config: options.config, sessionHost, extraSkillRoots }) : {
+          ok: true,
+          dryRun: true,
+          skill: body?.skill,
+          command: `skillsforge lib ${url.pathname.endsWith("/select") ? "select" : "unselect"} --skill ${body?.skill ?? "<id>"}`
+        };
+        sendJson(response, result);
+        return;
+      }
+      if (url.pathname === "/api/session/remember") {
+        const body = await readRequestJson(request);
+        const result = allowMutations ? await rememberSessionEvent(root, body, { config: options.config, sessionHost }) : { ok: true, dryRun: true, event: body, command: 'skillsforge session remember --query "<task>" --skill <id>' };
+        sendJson(response, result);
+        return;
+      }
       const index = await buildLibraryIndex(root, { home, sessionHost, config: options.config, extraSkillRoots });
       sendHtml(response, buildLibraryHtml(index, { apiEnabled: true, allowMutations }));
     } catch (error) {
@@ -22158,7 +22600,9 @@ async function serveLibrary(root, options = {}) {
     }
   });
   await new Promise((resolveListen) => server.listen(port, host, resolveListen));
-  return { ok: true, host, port, url: `http://${host}:${port}/`, readOnly: !allowMutations, server };
+  const address = server.address();
+  const actualPort = address && typeof address === "object" ? address.port : port;
+  return { ok: true, host, port: actualPort, url: `http://${host}:${actualPort}/`, readOnly: !allowMutations, server };
 }
 async function planSkillRemoval(root, options = {}) {
   const target = await resolveInstalledSkillTarget(options);
@@ -22190,8 +22634,70 @@ async function removeInstalledSkill(root, options = {}) {
   if (!target.exists) {
     return { ok: true, removed: false, host: target.host.id, skill: target.skill, path: target.path, reason: "not installed" };
   }
-  await rm4(target.path, { recursive: true, force: false });
+  await rm5(target.path, { recursive: true, force: false });
   return { ok: true, removed: true, host: target.host.id, skill: target.skill, path: target.path };
+}
+async function listProjectSelection(root, options = {}) {
+  const index = await buildLibraryIndex(root, options);
+  return {
+    ok: index.ok,
+    selectedSkills: index.project.selectedSkills,
+    skills: index.skills.filter((skill) => skill.projectSelected),
+    workflows: index.project.defaultWorkflows,
+    errors: index.errors
+  };
+}
+async function selectProjectSkill(root, options = {}) {
+  const skillId = options.skill ?? options.id;
+  if (!skillId) throw new Error("--skill is required");
+  const index = await buildLibraryIndex(root, options);
+  const record = index.skills.find((skill) => skill.id === skillId || skill.key === skillId);
+  if (!record) return { ok: false, error: `unknown indexed skill: ${skillId}` };
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const selected = new Set(settingsLoaded.settings.project?.selectedSkills ?? []);
+  selected.add(record.id);
+  const next = {
+    ...settingsLoaded.settings,
+    project: {
+      ...settingsLoaded.settings.project,
+      selectedSkills: [...selected].sort()
+    }
+  };
+  const saved = await saveSettings(root, next, { config: options.config });
+  return {
+    ok: saved.ok,
+    selected: true,
+    skill: record.id,
+    selectedSkills: saved.settings.project.selectedSkills,
+    path: saved.path,
+    errors: saved.errors
+  };
+}
+async function unselectProjectSkill(root, options = {}) {
+  const skillId = options.skill ?? options.id;
+  if (!skillId) throw new Error("--skill is required");
+  const index = await buildLibraryIndex(root, options);
+  const record = index.skills.find((skill) => skill.id === skillId || skill.key === skillId);
+  const canonicalId = record?.id ?? skillId;
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const selected = new Set(settingsLoaded.settings.project?.selectedSkills ?? []);
+  selected.delete(canonicalId);
+  const next = {
+    ...settingsLoaded.settings,
+    project: {
+      ...settingsLoaded.settings.project,
+      selectedSkills: [...selected].sort()
+    }
+  };
+  const saved = await saveSettings(root, next, { config: options.config });
+  return {
+    ok: saved.ok,
+    selected: false,
+    skill: canonicalId,
+    selectedSkills: saved.settings.project.selectedSkills,
+    path: saved.path,
+    errors: saved.errors
+  };
 }
 var LIBRARY_RECOMMEND_THRESHOLD = 2;
 function recommendFromLibrary(index, query, options = {}) {
@@ -22205,7 +22711,10 @@ function recommendFromLibrary(index, query, options = {}) {
     id: skill.id,
     category: skill.category,
     sourcePlugin: skill.sourcePlugin,
+    sourceKind: skill.sourceKind,
     installedHosts: skill.installedHosts,
+    sessionInstalled: skill.sessionInstalled,
+    projectSelected: skill.projectSelected,
     description: skill.description,
     riskFlags: skill.riskFlags ?? [],
     maturity: skill.maturity,
@@ -22221,6 +22730,9 @@ function recommendFromLibrary(index, query, options = {}) {
     goal: workflow.goal,
     recommendedSkills: workflow.recommendedSkills,
     recommendedAgents: workflow.recommendedAgents,
+    commands: workflow.commands,
+    tokenBudget: workflow.tokenBudget,
+    qualityGate: workflow.qualityGate,
     risk: workflow.risk,
     score,
     reasons,
@@ -22294,8 +22806,10 @@ function buildLibraryHtml(index, options = {}) {
     </div>
     <div id="settingsPanel" class="panel"><b>Settings</b><div class="meta">recommendThreshold ${index.settings?.recommendThreshold ?? LIBRARY_RECOMMEND_THRESHOLD} / theme ${escStatic(index.settings?.library?.theme ?? "system")}</div><div class="hint">No external assets. Local-only read index.</div><div id="refreshHint" class="hint">Static: run skillsforge lib update after installs.</div></div>
     <div id="vibeBuilderPanel" class="panel vibe-panel"><b>Vibe Builder</b><div class="hint">Build / Validate / Research / Launch</div><div class="metric-grid"><div class="metric"><b>${builderCount}</b><span class="label">build</span></div><div class="metric"><b>${validationCount}</b><span class="label">validate</span></div><div class="metric"><b>${researchCount}</b><span class="label">research</span></div><div class="metric"><b>${launchCount}</b><span class="label">launch</span></div></div></div>
+    <div id="selectedPanel" class="panel"><b>Selected for this project</b><div class="meta">${index.stats.selectedSkills ?? 0} skills / session score ${index.sessionSummary?.score ?? 0}</div><div class="hint">Use localhost mutation mode to add or remove selected project skills.</div></div>
     <nav id="navFilters" class="nav" aria-label="Library navigation">
       <button class="active" data-nav="all"><span>All</span><b>${index.stats.skills}</b></button>
+      <button data-nav="selected"><span>Selected</span><b>${index.stats.selectedSkills ?? 0}</b></button>
       <button data-nav="installed"><span>Installed</span><b>${index.stats.installedSkills}</b></button>
       <button data-nav="session"><span>Session</span><b>${index.stats.sessionSkills}</b></button>
       <button data-nav="workflows"><span>Workflows</span><b>${index.stats.workflows}</b></button>
@@ -22326,7 +22840,7 @@ function buildLibraryHtml(index, options = {}) {
 <script id="skillsforge-data" type="application/json">${data}</script>
 <script>
 function expandRows(rows,fields){if(!Array.isArray(fields))return rows||[];return (rows||[]).map(row=>{if(!Array.isArray(row))return row;const out={};fields.forEach((field,index)=>out[field]=row[index]);return out})}
-function hydratePayload(raw){const data={...raw};data.skills=expandRows(data.skills,data.skillFields).map(s=>({...s,installedHosts:s.installedHosts||[],riskFlags:s.riskFlags||[],recommendedFor:s.recommendedFor||[],notFor:s.notFor||[]}));data.workflows=expandRows(data.workflows,data.workflowFields).map(w=>({...w,recommendedSkills:w.recommendedSkills||[],recommendedAgents:w.recommendedAgents||[],commands:w.commands||[]}));data.hosts=expandRows(data.hosts,data.hostFields).map(h=>({...h,label:h.label||h.id}));data.sourceDetails=expandRows(data.sourceDetails,data.sourceFields).map(s=>({...s,loadErrors:s.loadErrors||[]}));return data}
+function hydratePayload(raw){const data={...raw};data.project=data.project||{selectedSkills:[],defaultWorkflows:[]};data.sessionSummary=data.sessionSummary||{score:0,totals:{events:0},topSkills:[],topWorkflows:[]};data.skills=expandRows(data.skills,data.skillFields).map(s=>({...s,installedHosts:s.installedHosts||[],riskFlags:s.riskFlags||[],recommendedFor:s.recommendedFor||[],notFor:s.notFor||[],projectSelected:Boolean(s.projectSelected)}));data.workflows=expandRows(data.workflows,data.workflowFields).map(w=>({...w,inputs:w.inputs||[],steps:w.steps||[],recommendedSkills:w.recommendedSkills||[],recommendedAgents:w.recommendedAgents||[],commands:w.commands||[],stopGates:w.stopGates||[]}));data.hosts=expandRows(data.hosts,data.hostFields).map(h=>({...h,label:h.label||h.id}));data.sourceDetails=expandRows(data.sourceDetails,data.sourceFields).map(s=>({...s,loadErrors:s.loadErrors||[]}));return data}
 let data=hydratePayload(JSON.parse(document.getElementById('skillsforge-data').textContent));
 let category='all';let source='all';let nav='all';let quick='all';let viewMode='table';let selected=data.skills[0]?.key;let lastRecommendation=null;let windowStart=0;const windowSize=80;
 const q=document.getElementById('q');const rows=document.getElementById('rows');const detail=document.getElementById('detail');const detailBody=document.getElementById('detailBody');const sourceFilter=document.getElementById('sourceFilter');const resultMeta=document.getElementById('resultMeta');
@@ -22338,35 +22852,43 @@ function sourceById(id){return (data.sourceDetails||[]).find(s=>s.id===id)}
 function renderFilters(){const root=document.getElementById('filters');root.innerHTML=['all',...data.categories].map(c=>'<button class="'+(category===c?'active':'')+'" data-cat="'+esc(c)+'">'+esc(c)+'</button>').join('');root.onclick=e=>{if(e.target.dataset.cat){category=e.target.dataset.cat;lastRecommendation=null;windowStart=0;render();renderFilters();}}}
 function renderSources(){sourceFilter.innerHTML=['all',...data.sources].map(s=>{const d=sourceById(s);return '<option value="'+esc(s)+'">'+esc(s)+(d?' ('+d.skillCount+')':'')+'</option>'}).join('');sourceFilter.value=source;sourceFilter.onchange=()=>{source=sourceFilter.value;lastRecommendation=null;windowStart=0;render();};document.getElementById('sourceSummary').innerHTML=(data.sourceDetails||[]).slice(0,5).map(s=>'<div class="panel"><b>'+esc(s.id)+'</b><div class="meta">'+esc(s.kind)+' / '+esc(s.skillCount)+' skills / '+esc(s.loadErrors.length)+' problems</div></div>').join('')}
 function quickMatch(s){if(quick==='build')return s.category==='builder'||s.id.startsWith('build-')||s.id.startsWith('fullstack-')||s.id.includes('mcp')||s.id.includes('plugin');if(quick==='validate')return s.category==='validation'||s.id.startsWith('validate-')||s.id.includes('proof')||s.id.includes('audit');if(quick==='research')return s.category==='research'||s.id.startsWith('research-')||s.id.includes('source');if(quick==='launch')return ['growth','product','media'].includes(s.category)||s.id.startsWith('startup-')||s.id.includes('launch')||s.id.includes('demo');return true}
-function navMatch(s){if(nav==='installed')return s.installedHosts.length>0;if(nav==='session')return s.sessionInstalled;if(nav==='build')return s.category==='builder'||s.id.startsWith('build-')||s.id.startsWith('fullstack-')||s.id.includes('mcp')||s.id.includes('plugin');if(nav==='validate')return s.category==='validation'||s.id.startsWith('validate-')||s.id.includes('proof')||s.id.includes('audit');if(nav==='research')return s.category==='research'||s.id.startsWith('research-')||s.id.includes('source');if(nav==='launch')return ['growth','product','media'].includes(s.category)||s.id.startsWith('startup-')||s.id.includes('launch')||s.id.includes('demo');if(nav==='design')return s.category==='design';return true}
+function navMatch(s){if(nav==='selected')return s.projectSelected;if(nav==='installed')return s.installedHosts.length>0;if(nav==='session')return s.sessionInstalled;if(nav==='build')return s.category==='builder'||s.id.startsWith('build-')||s.id.startsWith('fullstack-')||s.id.includes('mcp')||s.id.includes('plugin');if(nav==='validate')return s.category==='validation'||s.id.startsWith('validate-')||s.id.includes('proof')||s.id.includes('audit');if(nav==='research')return s.category==='research'||s.id.startsWith('research-')||s.id.includes('source');if(nav==='launch')return ['growth','product','media'].includes(s.category)||s.id.startsWith('startup-')||s.id.includes('launch')||s.id.includes('demo');if(nav==='design')return s.category==='design';return true}
 function syncQuick(){document.querySelectorAll('#quickFilters button[data-quick]').forEach(b=>b.classList.toggle('active',b.dataset.quick===quick))}
 function syncView(){rows.className='rows '+(viewMode==='table'?'table-mode':'');document.querySelectorAll('.viewbar button[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===viewMode))}
 function syncNav(){document.querySelectorAll('#navFilters button[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===nav))}
 function riskClass(skill){return skill.riskFlags.length>1?'risk-high':skill.riskFlags.length?'risk-medium':'risk-low'}
 function filtered(){const text=q.value.toLowerCase();return data.skills.filter(s=>navMatch(s)&&quickMatch(s)&&(category==='all'||s.category===category)&&(source==='all'||s.sourcePlugin===source)&&[s.id,s.description,s.category,s.sourcePlugin,s.sourceKind,...(s.recommendedFor||[])].join(' ').toLowerCase().includes(text));}
-function statusChip(s){if(s.sessionInstalled)return '<span class="chip good">current session</span>';if(s.installedHosts.length)return '<span class="chip good">installed</span>';return '<span class="chip">available</span>'}
+function statusChip(s){const selected=s.projectSelected?'<span class="chip good">selected</span>':'';if(s.sessionInstalled)return selected+'<span class="chip good">current session</span>';if(s.installedHosts.length)return selected+'<span class="chip good">installed</span>';return selected+'<span class="chip">available</span>'}
+function refreshSelectedPanel(){const selectedCount=data.skills.filter(s=>s.projectSelected).length;data.stats.selectedSkills=selectedCount;document.getElementById('selectedPanel').innerHTML='<b>Selected for this project</b><div class="meta">'+selectedCount+' skills / session score '+esc(data.sessionSummary?.score??0)+'</div><div class="hint">Use localhost mutation mode to add or remove selected project skills.</div>';document.querySelectorAll('#navFilters button[data-nav="selected"] b').forEach(b=>b.textContent=String(selectedCount))}
 function windowedRender(list){const maxStart=Math.max(0,list.length-windowSize);windowStart=Math.min(windowStart,maxStart);const visible=list.slice(windowStart,windowStart+windowSize);return {visible,start:windowStart,end:Math.min(windowStart+windowSize,list.length),total:list.length}}
-function render(){syncView();syncNav();if(nav==='workflows'){renderWorkflows();return}if(nav==='problems'){renderProblems();return}const list=lastRecommendation?lastRecommendation.skills.map(hit=>data.skills.find(s=>s.key===hit.key)).filter(Boolean):filtered();if(!list.find(s=>s.key===selected))selected=list[0]?.key;const win=windowedRender(list);resultMeta.innerHTML='<span>Showing '+win.start+'-'+win.end+' of '+win.total+' skills</span>'+pagerHtml(win);rows.innerHTML=list.length?(viewMode==='table'?renderSkillTable(win.visible):win.visible.map(renderSkillCard).join('')):'<div class="empty">No skills match the current filters.</div>';bindPager();renderDetail();}
+function render(){syncView();syncNav();refreshSelectedPanel();if(nav==='workflows'){renderWorkflows();return}if(nav==='problems'){renderProblems();return}const list=lastRecommendation?lastRecommendation.skills.map(hit=>data.skills.find(s=>s.key===hit.key)).filter(Boolean):filtered();if(!list.find(s=>s.key===selected))selected=list[0]?.key;const win=windowedRender(list);resultMeta.innerHTML='<span>Showing '+win.start+'-'+win.end+' of '+win.total+' skills</span>'+pagerHtml(win);rows.innerHTML=list.length?(viewMode==='table'?renderSkillTable(win.visible):win.visible.map(renderSkillCard).join('')):'<div class="empty">No skills match the current filters.</div>';bindPager();renderDetail();}
 function renderSkillCard(s){return '<button class="row '+(s.key===selected?'active':'')+'" data-key="'+esc(s.key)+'"><span><div class="title">'+esc(s.id)+'</div><div class="meta">'+esc(s.category)+' / '+esc(s.sourcePlugin)+' / '+esc(s.maturity)+'</div><span class="chips">'+statusChip(s)+s.riskFlags.slice(0,2).map(r=>'<span class="chip warn">'+esc(r)+'</span>').join('')+'</span></span><span class="'+riskClass(s)+'">'+(s.riskFlags.length?'review':'clean')+'</span></button>'}
 function renderSkillTable(list){return '<div class="compare-wrap"><table class="compare"><thead><tr><th>Skill</th><th>Category</th><th>Source</th><th>Hosts</th><th>Risk</th><th>Mode</th><th>Actions</th></tr></thead><tbody>'+list.map(s=>'<tr class="'+(s.key===selected?'active':'')+'" data-key="'+esc(s.key)+'"><td><b>'+esc(s.id)+'</b><div class="hint">'+esc(s.description||'')+'</div></td><td>'+esc(s.category)+'</td><td>'+esc(s.sourcePlugin)+'<div class="hint">'+esc(s.sourceKind||'')+'</div></td><td>'+esc(s.installedHosts.join(', ')||'available')+'</td><td><span class="'+riskClass(s)+'">'+esc(s.riskFlags.length?s.riskFlags.slice(0,2).join(', '):'clean')+'</span></td><td>'+esc(s.routingMode)+'</td><td><button class="smallbtn" data-key="'+esc(s.key)+'">Open</button></td></tr>').join('')+'</tbody></table></div>'}
 function pagerHtml(win){if(win.total<=windowSize)return '';return '<span><button id="prevPage" class="smallbtn" '+(win.start===0?'disabled':'')+'>Prev</button><button id="nextPage" class="smallbtn" '+(win.end>=win.total?'disabled':'')+'>Next</button></span>'}
 function bindPager(){const prev=document.getElementById('prevPage');const next=document.getElementById('nextPage');if(prev)prev.onclick=()=>{windowStart=Math.max(0,windowStart-windowSize);render()};if(next)next.onclick=()=>{windowStart+=windowSize;render()}}
-function renderWorkflows(){const text=q.value.toLowerCase();const list=data.workflows.filter(w=>[w.id,w.category,w.goal,...(w.recommendedSkills||[]),...(w.recommendedAgents||[])].join(' ').toLowerCase().includes(text));const win=windowedRender(list);resultMeta.innerHTML='<span>Showing '+win.start+'-'+win.end+' of '+win.total+' workflows</span>'+pagerHtml(win);rows.innerHTML=win.visible.length?win.visible.map(w=>'<button class="row" data-workflow="'+esc(w.id)+'"><span><div class="title">'+esc(w.id)+'</div><div class="meta">'+esc(w.category)+' / '+esc(w.risk)+'</div><div class="hint">'+esc(w.goal)+'</div></span><span>'+esc((w.recommendedSkills||[]).length)+' skills</span></button>').join(''):'<div class="empty">No workflows match.</div>';bindPager();detailBody.innerHTML='<h2>Workflow Browser</h2><p class="hint">Dry-run workflow commands before using them in an AI CLI.</p>';document.getElementById('problemsPanel').innerHTML=problemSummaryHtml()}
+function renderWorkflows(){const text=q.value.toLowerCase();const list=data.workflows.filter(w=>[w.id,w.category,w.goal,...(w.recommendedSkills||[]),...(w.recommendedAgents||[])].join(' ').toLowerCase().includes(text));const win=windowedRender(list);resultMeta.innerHTML='<span>Showing '+win.start+'-'+win.end+' of '+win.total+' workflows</span>'+pagerHtml(win);rows.innerHTML=win.visible.length?win.visible.map(w=>'<button class="row" data-workflow="'+esc(w.id)+'"><span><div class="title">'+esc(w.id)+'</div><div class="meta">'+esc(w.category)+' / '+esc(w.risk)+'</div><div class="hint">'+esc(w.goal)+'</div></span><span>'+esc((w.recommendedSkills||[]).length)+' skills</span></button>').join(''):'<div class="empty">No workflows match.</div>';bindPager();if(!detailBody.innerHTML||detailBody.textContent.includes('Workflow Browser'))detailBody.innerHTML='<h2>Workflow Browser</h2><p class="hint">Dry-run workflow commands before using them in an AI CLI.</p>';document.getElementById('problemsPanel').innerHTML=problemSummaryHtml()}
 function problemItems(){const direct=(data.errors||[]).map(e=>({source:e.source||'index',file:e.file||'',error:e.error||'',optional:e.optional===true}));const fromSources=(data.sourceDetails||[]).flatMap(s=>(s.loadErrors||[]).map(e=>({source:s.id,file:e.file,error:e.error,optional:e.optional===true})));const seen=new Set();return [...direct,...fromSources].filter(e=>{const key=e.source+'|'+e.file+'|'+e.error;if(seen.has(key))return false;seen.add(key);return true})}
 function problemSummaryHtml(){const items=problemItems();return '<b>Problems</b><div class="meta">'+items.length+' load/config issues</div>'+(items.length?'<div class="hint">Open Problems to inspect optional bad skills, missing frontmatter, and load errors.</div>':'<div class="hint">No library load errors in this index.</div>')}
 function renderProblems(){const list=problemItems();resultMeta.innerHTML='<span>'+list.length+' problems</span>';rows.innerHTML=list.length?list.map(e=>'<div class="panel problem '+(e.optional?'':'bad')+'"><b>'+esc(e.source)+'</b><div class="meta">'+esc(e.optional?'optional':'blocking')+'</div><pre>'+esc(e.file+'\\n'+e.error)+'</pre></div>').join(''):'<div class="empty">No optional bad skills, missing frontmatter, or load errors were found.</div>';document.getElementById('problemsPanel').innerHTML=problemSummaryHtml();detailBody.innerHTML='<h2>Problems Panel</h2><p class="hint">Fix bad installed skills, refresh with skillsforge lib update, then rebuild the HTML.</p>'}
 function hostOptions(s){const installed=new Set(s.installedHosts);const hosts=data.hosts.filter(h=>h.detected||installed.has(h.id));const list=hosts.length?hosts:data.hosts;return list.map(h=>'<option value="'+esc(h.id)+'">'+esc(h.id)+(installed.has(h.id)?' installed':'')+'</option>').join('')}
 function removalCommand(s,host){return 'skillsforge lib remove --host '+host+' --skill '+s.id+' --dry-run'}
 function relatedWorkflows(s){return data.workflows.filter(w=>(w.recommendedSkills||[]).includes(s.id)).slice(0,6)}
-function renderDetail(){const s=data.skills.find(x=>x.key===selected);document.getElementById('problemsPanel').innerHTML=problemSummaryHtml();if(!s){detailBody.innerHTML='<p>No skill selected.</p>';return}const rec=lastRecommendation?lastRecommendation.skills.find(r=>r.key===s.key):null;const src=sourceById(s.sourcePlugin)||{};const workflows=relatedWorkflows(s);detailBody.innerHTML='<h2>'+esc(s.id)+'</h2><p>'+esc(s.description||'No description provided')+'</p><div class="chips"><span class="chip">'+esc(s.category)+'</span><span class="chip">'+esc(s.sourcePlugin)+'</span><span class="chip">'+esc(s.maturity)+'</span>'+statusChip(s)+'</div>'+(rec?'<h2>Why recommended</h2><pre>'+esc(String(rec.score)+'\\n'+rec.reasons.join('\\n'))+'</pre>':'')+'<h2>Minimum skill rules</h2><pre>'+esc(['Prefer session-installed when it directly fits.','Prefer installed before repo/cache.','Use the smallest skill that covers the task.','Use workflows for multi-step work.','Writes, installs, deletes, and shell execution require explicit confirmation.'].join('\\n'))+'</pre><h2>Related workflows</h2><pre>'+esc(workflows.map(w=>w.id+' - '+w.goal).join('\\n')||'No workflow currently recommends this skill')+'</pre><h2>Next commands</h2><pre>'+esc(['skillsforge lib check --skill '+s.id,'skillsforge lib recommend --query "<task>" --json',workflows[0]?'skillsforge workflows show --id '+workflows[0].id:'skillsforge workflows recommend --query "<task>" --json'].join('\\n'))+'</pre><h2>Recommended for</h2><pre>'+esc((s.recommendedFor||[]).join('\\n')||'No triggers')+'</pre><h2>Risk gates</h2><pre>'+esc((s.riskFlags||[]).join('\\n')||'No obvious capability risk flags')+'</pre><h2>Installed hosts</h2><pre>'+esc((s.installedHosts||[]).join('\\n')||'Not installed in detected host roots')+'</pre><h2>Removal check</h2><select id="removeHost" class="select">'+hostOptions(s)+'</select><div class="action-row"><button id="removePreview" class="smallbtn">Dry-run</button><button id="removeConfirm" class="dangerbtn">Remove</button></div><pre id="removeResult"></pre><h2>Source / plugin</h2><pre>'+esc(['id: '+(src.id||s.sourcePlugin),'kind: '+(src.kind||s.sourceKind||'unknown'),'provider: '+(src.provider||'none'),'plugin: '+(src.plugin||'none'),'version: '+(src.version||'none'),'root: '+(src.root||'unknown')].join('\\n'))+'</pre>';bindRemoval(s)}
+function bestReason(s,workflows,rec){const reasons=[];if(s.projectSelected)reasons.push('already selected for this project');if(s.sessionInstalled)reasons.push('installed in the current AI CLI session');else if(s.installedHosts.length)reasons.push('installed in '+s.installedHosts.join(', '));if(rec?.reasons?.length)reasons.push('matched by '+rec.reasons.slice(0,3).join(', '));if(workflows.length)reasons.push('used by '+workflows.length+' workflow(s)');if(s.riskFlags.length)reasons.push('requires review: '+s.riskFlags.slice(0,2).join(', '));return reasons.join(' / ')||'available in the library; select it only when the task matches its triggers'}
+function renderDetail(){const s=data.skills.find(x=>x.key===selected);document.getElementById('problemsPanel').innerHTML=problemSummaryHtml();if(!s){detailBody.innerHTML='<p>No skill selected.</p>';return}const rec=lastRecommendation?lastRecommendation.skills.find(r=>r.key===s.key):null;const src=sourceById(s.sourcePlugin)||{};const workflows=relatedWorkflows(s);detailBody.innerHTML='<h2>'+esc(s.id)+'</h2><p>'+esc(s.description||'No description provided')+'</p><div class="chips"><span class="chip">'+esc(s.category)+'</span><span class="chip">'+esc(s.sourcePlugin)+'</span><span class="chip">'+esc(s.maturity)+'</span>'+statusChip(s)+'</div><div class="panel"><b>Best for this project</b><div class="meta">session score '+esc(data.sessionSummary?.score??0)+' / '+(s.projectSelected?'selected':'not selected')+'</div><div class="hint">'+esc(bestReason(s,workflows,rec))+'</div></div>'+(rec?'<h2>Why recommended</h2><pre>'+esc(String(rec.score)+'\\n'+rec.reasons.join('\\n'))+'</pre>':'')+'<h2>Minimum skill rules</h2><pre>'+esc(['Prefer session-installed when it directly fits.','Prefer selected project skills when they directly fit.','Prefer installed before repo/cache.','Use the smallest skill that covers the task.','Use workflows for multi-step work.','Writes, installs, deletes, and shell execution require explicit confirmation.'].join('\\n'))+'</pre><h2>Related workflows</h2><pre>'+esc(workflows.map(w=>w.id+' - '+w.goal).join('\\n')||'No workflow currently recommends this skill')+'</pre><h2>Next commands</h2><pre>'+esc(['skillsforge lib check --skill '+s.id,'skillsforge lib recommend --query "<task>" --json',workflows[0]?'skillsforge workflows show --id '+workflows[0].id:'skillsforge workflows recommend --query "<task>" --json'].join('\\n'))+'</pre><h2>Recommended for</h2><pre>'+esc((s.recommendedFor||[]).join('\\n')||'No triggers')+'</pre><h2>Risk gates</h2><pre>'+esc((s.riskFlags||[]).join('\\n')||'No obvious capability risk flags')+'</pre><h2>Installed hosts</h2><pre>'+esc((s.installedHosts||[]).join('\\n')||'Not installed in detected host roots')+'</pre><h2>Project selection</h2><div class="action-row"><button id="projectSelect" class="smallbtn primary">'+(s.projectSelected?'Refresh selected':'Add to project')+'</button><button id="projectUnselect" class="smallbtn">Remove from project</button></div><pre id="projectResult"></pre><h2>Removal check</h2><select id="removeHost" class="select">'+hostOptions(s)+'</select><div class="action-row"><button id="removePreview" class="smallbtn">Dry-run</button><button id="removeConfirm" class="dangerbtn">Remove installed skill</button></div><pre id="removeResult"></pre><h2>Source / plugin</h2><pre>'+esc(['id: '+(src.id||s.sourcePlugin),'kind: '+(src.kind||s.sourceKind||'unknown'),'provider: '+(src.provider||'none'),'plugin: '+(src.plugin||'none'),'version: '+(src.version||'none'),'root: '+(src.root||'unknown')].join('\\n'))+'</pre>';bindRemoval(s);bindProjectSelection(s)}
 function bindRemoval(s){const host=document.getElementById('removeHost');const preview=document.getElementById('removePreview');const confirm=document.getElementById('removeConfirm');const out=document.getElementById('removeResult');const ui=data.ui||{};function show(value){out.textContent=typeof value==='string'?value:JSON.stringify(value,null,2)}function plan(){return {dryRun:true,command:removalCommand(s,host.value),apiEnabled:Boolean(ui.apiEnabled),allowMutations:Boolean(ui.allowMutations)}}show(plan());preview.onclick=async()=>{if(!ui.apiEnabled){show(plan());return}const res=await fetch('/api/remove',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({host:host.value,skill:s.id})});show(await res.json())};confirm.disabled=!ui.allowMutations;confirm.onclick=async()=>{if(!ui.allowMutations){show(plan());return}const typed=window.prompt('Type '+s.id+' to remove from '+host.value);if(typed!==s.id){show('confirmation mismatch');return}const res=await fetch('/api/remove',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({host:host.value,skill:s.id,yes:true})});show(await res.json())};host.onchange=()=>show(plan())}
-function scoreSkill(text,s){const q=tokens(text);const qset=new Set(q);const stokens=tokens([s.id,s.description,s.category,s.sourcePlugin,s.origin,...(s.recommendedFor||[]),...(s.notFor||[])].join(' '));const hits=[...new Set(stokens.filter(t=>qset.has(t)))];let score=hits.length;const reasons=hits.slice(0,8).map(t=>'token:'+t);if(phrase(q,s.id)){score+=8;reasons.push('id-match')}if(qset.has(s.category)){score+=3;reasons.push('category-match')}if(data.session.host&&s.installedHosts.includes(data.session.host)){score+=2;reasons.push('session-installed')}else if(s.installedHosts.length){score+=1;reasons.push('installed-host')}if(s.riskFlags.length>1){score-=1;reasons.push('risk-review')}return {key:s.key,id:s.id,category:s.category,sourcePlugin:s.sourcePlugin,installedHosts:s.installedHosts,description:s.description,score,reasons}}
+function projectCommand(s,action){return 'skillsforge lib '+action+' --skill '+s.id}
+function bindProjectSelection(s){const add=document.getElementById('projectSelect');const remove=document.getElementById('projectUnselect');const out=document.getElementById('projectResult');const ui=data.ui||{};function show(value){out.textContent=typeof value==='string'?value:JSON.stringify(value,null,2)}function dry(action){return {dryRun:true,command:projectCommand(s,action),apiEnabled:Boolean(ui.apiEnabled),allowMutations:Boolean(ui.allowMutations)}}async function mutate(action){if(!ui.apiEnabled||!ui.allowMutations){show(dry(action));return}const endpoint=action==='select'?'/api/project/select':'/api/project/unselect';const res=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({skill:s.id})});const json=await res.json();show(json);if(json.ok){s.projectSelected=action==='select';data.project.selectedSkills=json.selectedSkills||data.skills.filter(item=>item.projectSelected).map(item=>item.id);refreshSelectedPanel();render()}}show(s.projectSelected?{selected:true,command:projectCommand(s,'unselect')}:{selected:false,command:projectCommand(s,'select')});add.onclick=()=>mutate('select');remove.onclick=()=>mutate('unselect')}
+function scoreSkill(text,s){const q=tokens(text);const qset=new Set(q);const stokens=tokens([s.id,s.description,s.category,s.sourcePlugin,s.origin,...(s.recommendedFor||[]),...(s.notFor||[])].join(' '));const hits=[...new Set(stokens.filter(t=>qset.has(t)))];let score=hits.length;const reasons=hits.slice(0,8).map(t=>'token:'+t);if(phrase(q,s.id)){score+=8;reasons.push('id-match')}if(qset.has(s.category)){score+=3;reasons.push('category-match')}if(data.session.host&&s.installedHosts.includes(data.session.host)){score+=2;reasons.push('session-installed')}else if(s.installedHosts.length){score+=1;reasons.push('installed-host')}if(s.projectSelected&&score>0){score+=2;reasons.push('project-selected')}if(s.riskFlags.length>1){score-=1;reasons.push('risk-review')}return {key:s.key,id:s.id,category:s.category,sourcePlugin:s.sourcePlugin,sourceKind:s.sourceKind,installedHosts:s.installedHosts,sessionInstalled:s.sessionInstalled,projectSelected:s.projectSelected,description:s.description,score,reasons}}
 function scoreWorkflow(text,w,skillHits){const q=tokens(text);const qset=new Set(q);const wtokens=tokens([w.id,w.category,w.goal,w.qualityGate,...w.recommendedSkills,...w.recommendedAgents,...(w.commands||[])].join(' '));const hits=[...new Set(wtokens.filter(t=>qset.has(t)))];let score=hits.length;const reasons=hits.slice(0,8).map(t=>'token:'+t);if(phrase(q,w.id)){score+=8;reasons.push('id-match')}if(qset.has(w.category)){score+=3;reasons.push('category-match')}const matched=new Set(skillHits.map(s=>s.id));const overlap=w.recommendedSkills.filter(s=>matched.has(s)).length;if(overlap){score+=overlap;reasons.push('skill-overlap:'+overlap)}return {id:w.id,category:w.category,goal:w.goal,recommendedSkills:w.recommendedSkills,recommendedAgents:w.recommendedAgents,risk:w.risk,score,reasons}}
 function localRecommend(text){const threshold=Number(data.settings?.recommendThreshold??${LIBRARY_RECOMMEND_THRESHOLD});const skills=data.skills.map(s=>scoreSkill(text,s)).filter(s=>s.score>=threshold).sort((a,b)=>b.score-a.score||a.key.localeCompare(b.key)).slice(0,8);const workflows=data.workflows.map(w=>scoreWorkflow(text,w,skills)).filter(w=>w.score>=threshold).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id)).slice(0,8);const confidence=!text.trim()||(!skills.length&&!workflows.length)?'none':(skills[0]?.score>=threshold+2||workflows[0]?.score>=threshold+2)?'high':'low';return {ok:true,query:text,sessionHost:data.session.host,confidence,note:confidence==='none'?'no confident match; refine the query or browse catalog':'',skills,workflows,policy:'read-only recommendation'}}
-function renderRecommendation(result){lastRecommendation=result;selected=result.skills[0]?.key||selected;render();if(result.confidence==='none'||(!result.skills.length&&!result.workflows.length)){detailBody.innerHTML='<h2>No confident match</h2><p class="hint">'+esc(result.note||'Refine the query, or use catalog / route with --include-explicit.')+'</p><div class="empty">No skill or workflow cleared the confidence threshold. This is intentional - SkillsForge will not force a recommendation.</div>';return}const blocks=result.workflows.length?result.workflows.map(w=>'<div class="panel"><b>'+esc(w.id)+'</b><p>'+esc(w.goal)+'</p><div class="meta">'+esc(w.category)+' / '+esc(w.risk)+' / score '+esc(w.score)+'</div><pre>'+esc(w.reasons.join('\\n'))+'</pre></div>').join(''):'<div class="empty">No workflow matched this query.</div>';detailBody.innerHTML='<h2>Workflow recommendations</h2><p class="hint">'+esc(result.policy||'read-only recommendation')+' - confidence '+esc(result.confidence||'low')+'</p>'+blocks}
+function workflowStepText(step,index){if(typeof step==='string')return (index+1)+'. '+step;return (index+1)+'. '+(step.id||'step')+' - '+(step.action||step.note||'review')+(step.skill?' / skill '+step.skill:'')+(step.agent?' / agent '+step.agent:'')+(step.command?' / '+step.command:'')}
+function workflowRememberCommand(w){return 'skillsforge session remember --query "<task>" --workflow '+w.id+' --reason "workflow selected from library" --tokens '+(w.tokenBudget||0)}
+function renderWorkflowDetail(w,rec){document.getElementById('problemsPanel').innerHTML=problemSummaryHtml();detailBody.innerHTML='<h2>'+esc(w.id)+'</h2><p>'+esc(w.goal)+'</p><div class="chips"><span class="chip">'+esc(w.category)+'</span><span class="chip '+(w.risk==='low'?'good':'warn')+'">'+esc(w.risk)+'</span><span class="chip">tokens '+esc(w.tokenBudget||0)+'</span></div>'+(rec?'<h2>Why recommended</h2><pre>'+esc(String(rec.score)+'\\n'+(rec.reasons||[]).join('\\n'))+'</pre>':'')+'<h2>Runbook</h2><pre>'+esc((w.steps||[]).map(workflowStepText).join('\\n')||'No steps recorded')+'</pre><h2>Skills</h2><pre>'+esc((w.recommendedSkills||[]).join('\\n')||'No recommended skills')+'</pre><h2>Agents</h2><pre>'+esc((w.recommendedAgents||[]).join('\\n')||'No recommended agents')+'</pre><h2>Commands</h2><pre>'+esc((w.commands||[]).join('\\n')||'No commands')+'</pre><h2>Stop gates</h2><pre>'+esc((w.stopGates||[]).join('\\n')||'No stop gates')+'</pre><h2>Session memory</h2><div class="action-row"><button id="useWorkflow" class="smallbtn primary">Use this workflow</button></div><pre id="workflowResult"></pre>';bindWorkflowUse(w)}
+function bindWorkflowUse(w){const btn=document.getElementById('useWorkflow');const out=document.getElementById('workflowResult');const ui=data.ui||{};function show(value){out.textContent=typeof value==='string'?value:JSON.stringify(value,null,2)}function dry(){return {dryRun:true,command:workflowRememberCommand(w),apiEnabled:Boolean(ui.apiEnabled),allowMutations:Boolean(ui.allowMutations)}}show(dry());btn.onclick=async()=>{if(!ui.apiEnabled||!ui.allowMutations){show(dry());return}const query=document.getElementById('recommendQ').value.trim()||q.value.trim()||w.goal;const res=await fetch('/api/session/remember',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,selectedWorkflow:w.id,agentRole:data.session?.host,score:70,reasons:['workflow selected from library'],commandsSuggested:w.commands,tokensEstimated:w.tokenBudget,outcome:'workflow selected',verification:'pending'})});const json=await res.json();show(json);if(json.summary){data.sessionSummary=json.summary;refreshSelectedPanel()}}}
+function renderRecommendation(result){lastRecommendation=result;selected=result.skills[0]?.key||selected;render();if(result.confidence==='none'||(!result.skills.length&&!result.workflows.length)){detailBody.innerHTML='<h2>No confident match</h2><p class="hint">'+esc(result.note||'Refine the query, or use catalog / route with --include-explicit.')+'</p><div class="empty">No skill or workflow cleared the confidence threshold. This is intentional - SkillsForge will not force a recommendation.</div>';return}const blocks=result.workflows.length?result.workflows.map(w=>'<div class="panel"><b>'+esc(w.id)+'</b><p>'+esc(w.goal)+'</p><div class="meta">'+esc(w.category)+' / '+esc(w.risk)+' / score '+esc(w.score)+'</div><pre>'+esc((w.reasons||[]).join('\\n'))+'</pre><button class="smallbtn" data-rec-workflow="'+esc(w.id)+'">Open workflow</button></div>').join(''):'<div class="empty">No workflow matched this query.</div>';detailBody.innerHTML='<h2>Workflow recommendations</h2><p class="hint">'+esc(result.policy||'read-only recommendation')+' - confidence '+esc(result.confidence||'low')+'</p>'+blocks;detailBody.onclick=e=>{const b=e.target.closest('[data-rec-workflow]');if(!b)return;const workflow=data.workflows.find(item=>item.id===b.dataset.recWorkflow);const rec=result.workflows.find(item=>item.id===b.dataset.recWorkflow);if(workflow)renderWorkflowDetail(workflow,rec)}}
 async function recommend(){const text=document.getElementById('recommendQ').value.trim();if(!text)return;const ui=data.ui||{};if(ui.apiEnabled){const res=await fetch('/api/recommend?query='+encodeURIComponent(text));renderRecommendation(await res.json());return}renderRecommendation(localRecommend(text))}
 async function refreshLibrary(){const ui=data.ui||{};const hint=document.getElementById('refreshHint');if(!ui.apiEnabled){hint.textContent='Static file: run skillsforge lib update, then reopen this HTML.';return}hint.textContent='Refreshing...';const res=await fetch('/skillsforge-library.json');const next=await res.json();data=hydratePayload({...next,ui});selected=data.skills[0]?.key;lastRecommendation=null;windowStart=0;renderAll();hint.textContent='Refreshed from localhost JSON.'}
-rows.onclick=e=>{const b=e.target.closest('[data-key]');if(b){selected=b.dataset.key;render();}const w=e.target.closest('[data-workflow]');if(w){const workflow=data.workflows.find(item=>item.id===w.dataset.workflow);detailBody.innerHTML='<h2>'+esc(workflow.id)+'</h2><p>'+esc(workflow.goal)+'</p><h2>Skills</h2><pre>'+esc((workflow.recommendedSkills||[]).join('\\n'))+'</pre><h2>Commands</h2><pre>'+esc((workflow.commands||[]).join('\\n'))+'</pre>';}};q.oninput=()=>{lastRecommendation=null;windowStart=0;render()};
+rows.onclick=e=>{const b=e.target.closest('[data-key]');if(b){selected=b.dataset.key;render();}const w=e.target.closest('[data-workflow]');if(w){const workflow=data.workflows.find(item=>item.id===w.dataset.workflow);if(workflow)renderWorkflowDetail(workflow);}};q.oninput=()=>{lastRecommendation=null;windowStart=0;render()};
 document.getElementById('hosts').innerHTML=data.hosts.map(h=>'<div class="panel"><b>'+esc(h.id)+'</b><div class="meta">'+(h.detected?'detected':'missing')+' / '+esc(h.fidelity)+'</div><div class="hint">'+esc(h.skillsDir)+'</div></div>').join('');
 document.getElementById('quickFilters').onclick=e=>{if(e.target.dataset.quick){quick=e.target.dataset.quick;lastRecommendation=null;windowStart=0;syncQuick();render();}};
 document.getElementById('navFilters').onclick=e=>{const b=e.target.closest('button[data-nav]');if(b){nav=b.dataset.nav;lastRecommendation=null;windowStart=0;syncNav();render();}};
@@ -22393,6 +22915,7 @@ function buildLibraryUiPayload(index, ui) {
     "sourceKind",
     "installedHosts",
     "sessionInstalled",
+    "projectSelected",
     "origin",
     "maturity",
     "riskFlags",
@@ -22403,9 +22926,13 @@ function buildLibraryUiPayload(index, ui) {
     "id",
     "category",
     "goal",
+    "inputs",
+    "steps",
     "recommendedSkills",
     "recommendedAgents",
     "commands",
+    "stopGates",
+    "tokenBudget",
     "qualityGate",
     "risk"
   ];
@@ -22428,6 +22955,8 @@ function buildLibraryUiPayload(index, ui) {
     settings: index.settings,
     stats: index.stats,
     session: index.session,
+    sessionSummary: index.sessionSummary,
+    project: index.project,
     categories: index.categories,
     sources: index.sources,
     sourceFields,
@@ -22453,11 +22982,15 @@ function buildAiIndexHtml(index) {
     stats: index.stats,
     session: index.session,
     instruction: "Use key, id, recommendedFor, notFor, category, sourcePlugin, sourceDetails, installedHosts, sessionInstalled, and riskFlags to pick the smallest matching skill or workflow for this session. Prefer current-session installed skills when they fit. Do not execute write, remove, install, or shell actions without explicit user confirmation.",
+    project: index.project,
+    sessionSummary: index.sessionSummary,
     selectionRules: [
       "Prefer current-session installed skills when they directly match the task.",
+      "Prefer project.selectedSkills when they directly match this repository task.",
       "Prefer installed host skills before repo/cache skills when quality and fit are equal.",
       "Use the smallest matching skill; do not stack broad packs when one focused skill is enough.",
       "Use workflows for multi-step build, validation, launch, or recovery tasks.",
+      "Record skill/workflow usage with skillsforge session remember after meaningful task turns.",
       "Never perform writes, installs, removals, package publishing, or shell execution without explicit user confirmation."
     ],
     settings: index.settings,
@@ -22485,6 +23018,7 @@ function buildAiIndexHtml(index) {
       sourcePath: skill.sourcePath,
       installedHosts: skill.installedHosts,
       sessionInstalled: skill.sessionInstalled,
+      projectSelected: skill.projectSelected,
       recommendedFor: skill.recommendedFor,
       notFor: skill.notFor,
       riskFlags: skill.riskFlags
@@ -22510,9 +23044,9 @@ async function resolveInstalledSkillTarget(options = {}) {
   if (skill !== options.skill || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(skill)) {
     throw new Error("skill must be a skill id");
   }
-  const target = resolve22(host.skillsDir, skill);
-  if (!isInside6(host.skillsDir, target)) throw new Error("resolved skill path escaped host skills directory");
-  return { host, skill, path: target, exists: await pathExists9(target) };
+  const target = resolve23(host.skillsDir, skill);
+  if (!isInside7(host.skillsDir, target)) throw new Error("resolved skill path escaped host skills directory");
+  return { host, skill, path: target, exists: await pathExists10(target) };
 }
 function summarizeSkill(root, skill, context) {
   const sourceInfo = detectSourceInfo(root, skill.directory, {
@@ -22578,7 +23112,7 @@ async function buildHostInstallIndex(hosts, settings = {}) {
   const useCache = settings.library?.cacheHostChecks !== false;
   const entriesByDir = /* @__PURE__ */ new Map();
   await Promise.all(hosts.map(async (host) => {
-    const key = resolve22(host.skillsDir);
+    const key = resolve23(host.skillsDir);
     let names = entriesByDir.get(key);
     if (!names || !useCache) {
       names = /* @__PURE__ */ new Set();
@@ -22637,7 +23171,7 @@ function buildSourceDetails(root, records, errors, context = {}) {
   for (const error of errors) {
     const errorDir = error.file ?? error.directory ?? "";
     const info = detectSourceInfo(root, errorDir || root, context);
-    const sourceRoot = displayPath(root, dirname12(errorDir || root), context.home);
+    const sourceRoot = displayPath(root, dirname13(errorDir || root), context.home);
     const source = ensure(info, sourceRoot);
     source.loadErrors.push({
       file: displayPath(root, errorDir, context.home),
@@ -22655,8 +23189,8 @@ function buildSourceDetails(root, records, errors, context = {}) {
 function detectSourceInfo(root, directory, options = {}) {
   const homeOption = options.home;
   const extraSkillRoots = normalizeExtraSkillRoots(root, options.extraSkillRoots);
-  if (isInside6(root, directory)) {
-    const rel = relative12(root, directory).replaceAll("\\", "/");
+  if (isInside7(root, directory)) {
+    const rel = relative13(root, directory).replaceAll("\\", "/");
     const parts = rel.split("/");
     const pluginsIndex = parts.indexOf("plugins");
     if (pluginsIndex >= 0 && parts[pluginsIndex + 1]) {
@@ -22672,8 +23206,8 @@ function detectSourceInfo(root, directory, options = {}) {
       return { id: "repo", kind: "repo-root", plugin: null, provider: "repo", version: null };
     }
   }
-  const normalized = resolve22(directory).replaceAll("\\", "/");
-  const home = homeOption ? resolve22(homeOption) : process.env.USERPROFILE ? resolve22(process.env.USERPROFILE) : null;
+  const normalized = resolve23(directory).replaceAll("\\", "/");
+  const home = homeOption ? resolve23(homeOption) : process.env.USERPROFILE ? resolve23(process.env.USERPROFILE) : null;
   const homeRel = home ? relativeDisplayPath(home, directory) ?? normalized : normalized;
   const cacheParts = homeRel.split("/");
   const cacheIndex = cacheParts.findIndex((part, index) => part === "cache" && cacheParts[index - 1] === "plugins");
@@ -22695,7 +23229,7 @@ function detectSourceInfo(root, directory, options = {}) {
   if (homeRel.startsWith(".zcode/skills/")) return userSource("zcode", "zcode");
   if (homeRel.startsWith(".hermes/skills/")) return userSource("hermes", "hermes");
   if (homeRel.startsWith(".gemini/skills/")) return userSource("gemini", "gemini");
-  const extraRoot = extraSkillRoots.find((item) => isInside6(item, directory));
+  const extraRoot = extraSkillRoots.find((item) => isInside7(item, directory));
   if (extraRoot) {
     return {
       id: `extra:${basename6(extraRoot) || "root"}`,
@@ -22715,7 +23249,7 @@ function optionList(value) {
   return value ? [value] : [];
 }
 function displayPath(root, directory, home) {
-  const resolved = resolve22(directory);
+  const resolved = resolve23(directory);
   const rootRel = relativeDisplayPath(root, resolved);
   if (rootRel !== null) return rootRel;
   const homeRel = home ? relativeDisplayPath(home, resolved) : null;
@@ -22723,8 +23257,8 @@ function displayPath(root, directory, home) {
   return resolved.replaceAll("\\", "/");
 }
 function relativeDisplayPath(parent, child) {
-  const parentPath = resolve22(parent).replaceAll("\\", "/").replace(/\/+$/, "");
-  const childPath = resolve22(child).replaceAll("\\", "/");
+  const parentPath = resolve23(parent).replaceAll("\\", "/").replace(/\/+$/, "");
+  const childPath = resolve23(child).replaceAll("\\", "/");
   const parentKey = process.platform === "win32" ? parentPath.toLowerCase() : parentPath;
   const childKey = process.platform === "win32" ? childPath.toLowerCase() : childPath;
   if (childKey === parentKey) return "";
@@ -22799,6 +23333,10 @@ function scoreLibrarySkill(query, skill, context = {}) {
   } else if (skill.installedHosts.length > 0) {
     score += 1;
     reasons.push("installed-host");
+  }
+  if (skill.projectSelected && score > 0) {
+    score += 2;
+    reasons.push("project-selected");
   }
   if (skill.riskFlags.length > 1) {
     score -= 1;
@@ -22896,17 +23434,17 @@ function escStatic(value) {
     '"': "&quot;"
   })[char]);
 }
-async function pathExists9(path) {
+async function pathExists10(path) {
   try {
-    await access15(path);
+    await access16(path);
     return true;
   } catch {
     return false;
   }
 }
-function isInside6(parent, candidate) {
-  const path = relative12(resolve22(parent), resolve22(candidate));
-  return path === "" || !path.startsWith(`..${sep10}`) && path !== ".." && !isAbsolute8(path);
+function isInside7(parent, candidate) {
+  const path = relative13(resolve23(parent), resolve23(candidate));
+  return path === "" || !path.startsWith(`..${sep11}`) && path !== ".." && !isAbsolute9(path);
 }
 function sendJson(response, payload) {
   response.setHeader("content-type", "application/json; charset=utf-8");
@@ -22941,22 +23479,26 @@ async function runLibCommand(argv, options) {
   if (config === null) return usage("--config requires a value");
   if (extraSkillRoots === null) return usage("--extra-skill-root requires a value");
   if (!subcommand || subcommand === "help" || subcommand === "--help") {
-    process.stdout.write(`usage: skillsforge lib <build|update|serve|check|recommend|remove> [options]
+    process.stdout.write(`usage: skillsforge lib <build|update|serve|check|recommend|select|unselect|selected|remove|open> [options]
 
 Library:
   build/update                  Write skillsforge-library.json/html and skillsforge-ai-index.html
   serve                         Serve localhost read-only UI unless --allow-mutations
   check --skill <id>            Show one indexed skill
   recommend --query <text>      Read-only skill/workflow recommendation
+  select --skill <id>           Add an indexed skill to project.selectedSkills
+  unselect --skill <id>         Remove a skill from project.selectedSkills
+  selected                      List selected project skills
   remove --host <id> --skill <id>
                                 Dry-run by default; write requires --allow-mutations --yes
+  open                          Build if needed and open local HTML file
 
 Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --extra-skill-root <dir> --allow-absolute
 `);
     return 0;
   }
   const root = await resolveRuntimeRoot(options);
-  const home = homeOption ? resolve23(homeOption) : options.home;
+  const home = homeOption ? resolve24(homeOption) : options.home;
   if (subcommand === "build" || subcommand === "update") {
     if (hasUnknownOption(args)) return usage(`unknown lib ${subcommand} option: ${hasUnknownOption(args)}`);
     let result;
@@ -23012,6 +23554,23 @@ Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --e
 `);
     return result.ok ? 0 : 1;
   }
+  if (subcommand === "select" || subcommand === "unselect") {
+    const skill = consumeOption(args, "--skill") ?? args.shift();
+    if (skill === null) return usage("--skill requires a value");
+    if (!skill) return usage(`usage: skillsforge lib ${subcommand} --skill <id>`);
+    if (hasUnknownOption(args)) return usage(`unknown lib ${subcommand} option: ${hasUnknownOption(args)}`);
+    const result = subcommand === "select" ? await selectProjectSkill(root, { skill, home, sessionHost: sessionHost ?? void 0, config, extraSkillRoots }) : await unselectProjectSkill(root, { skill, home, sessionHost: sessionHost ?? void 0, config, extraSkillRoots });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (subcommand === "selected") {
+    if (hasUnknownOption(args)) return usage(`unknown lib selected option: ${hasUnknownOption(args)}`);
+    const result = await listProjectSelection(root, { home, sessionHost: sessionHost ?? void 0, config, extraSkillRoots });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
   if (subcommand === "remove") {
     const dryRun = consumeFlag(args, "--dry-run");
     const allowMutations = consumeFlag(args, "--allow-mutations");
@@ -23047,7 +23606,24 @@ Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --e
 `);
     return 0;
   }
-  if (!subcommand) return usage("usage: skillsforge lib <build|update|serve|check|recommend|remove>");
+  if (subcommand === "open") {
+    if (hasUnknownOption(args)) return usage(`unknown lib open option: ${hasUnknownOption(args)}`);
+    const result = await writeLibraryArtifacts(root, {
+      outDir: out ?? void 0,
+      home,
+      allowAbsolute,
+      sessionHost: sessionHost ?? void 0,
+      config,
+      extraSkillRoots
+    });
+    const command = platformOpenCommand(result.files.html);
+    const opened = await runProcess(command.command, command.args, { cwd: root, timeoutMs: 1e4 });
+    const payload = { ...result, opened: opened.status === 0, openError: opened.status === 0 ? void 0 : opened.stderr };
+    process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (!subcommand) return usage("usage: skillsforge lib <build|update|serve|check|recommend|select|unselect|selected|remove|open>");
   return usage(`unknown lib command: ${subcommand}`);
 }
 async function runWorkflowsCommand(argv, options) {
@@ -23145,7 +23721,7 @@ Options: --json --limit <n> --home <dir> --session-host <id> --read-only
   if (!query) return usage("usage: skillsforge auto <plan|run> --query <text>");
   if (hasUnknownOption(args)) return usage(`unknown auto option: ${hasUnknownOption(args)}`);
   const root = await resolveRuntimeRoot(options);
-  const home = homeOption ? resolve23(homeOption) : options.home;
+  const home = homeOption ? resolve24(homeOption) : options.home;
   let result;
   if (subcommand === "plan") {
     result = await planAuto(root, query, {
@@ -23171,7 +23747,7 @@ Options: --json --limit <n> --home <dir> --session-host <id> --read-only
 }
 
 // scripts/cli/commands/os.mjs
-import { join as join25, relative as relative13, resolve as resolve24 } from "node:path";
+import { join as join26, relative as relative14, resolve as resolve25 } from "node:path";
 async function runOsEnvCommand(argv) {
   const args = [...argv];
   const json = consumeFlag(args, "--json");
@@ -23365,11 +23941,11 @@ async function runOsCleanCommand(argv, options) {
   const names = ["node_modules", "dist", "artifacts", "coverage", ".next", ".turbo", "tests/.tmp-runner"];
   const candidates = [];
   for (const name of names) {
-    const path = resolve24(root, name);
+    const path = resolve25(root, name);
     if (await pathExists4(path)) {
       candidates.push({
         path,
-        relativePath: relative13(root, path).replaceAll("\\", "/"),
+        relativePath: relative14(root, path).replaceAll("\\", "/"),
         bytes: await directorySize(path)
       });
     }
@@ -23386,9 +23962,9 @@ async function runOsCleanCommand(argv, options) {
 
 // lib/capabilities/workbench.mjs
 init_skill_loader();
-import { access as access16, readdir as readdir12, stat as stat4 } from "node:fs/promises";
+import { access as access17, readdir as readdir12, stat as stat4 } from "node:fs/promises";
 import { spawn as spawn2 } from "node:child_process";
-import { join as join26, relative as relative14, resolve as resolve25 } from "node:path";
+import { join as join27, relative as relative15, resolve as resolve26 } from "node:path";
 var SKIP = /* @__PURE__ */ new Set([".git", ".codegraph", "node_modules", "dist", "artifacts", ".next", ".turbo"]);
 async function runWorkbench(root, task, options = {}) {
   const full = options.full === true;
@@ -23509,7 +24085,7 @@ async function workbenchBigFiles(root, limit) {
   const files = [];
   await walkFiles(root, async (path) => {
     const info = await stat4(path);
-    files.push({ path: relative14(root, path).replaceAll("\\", "/"), bytes: info.size });
+    files.push({ path: relative15(root, path).replaceAll("\\", "/"), bytes: info.size });
   });
   files.sort((left, right) => right.bytes - left.bytes || left.path.localeCompare(right.path));
   return { ok: true, task: "bigfiles", bigFiles: files.slice(0, limit), limit };
@@ -23531,7 +24107,7 @@ async function workbenchProof(root) {
 async function listFiles(root, limit) {
   const files = [];
   await walkFiles(root, (path) => {
-    if (files.length < limit) files.push(relative14(root, path).replaceAll("\\", "/"));
+    if (files.length < limit) files.push(relative15(root, path).replaceAll("\\", "/"));
   });
   return files;
 }
@@ -23545,12 +24121,12 @@ async function walkFiles(root, onFile) {
     }
     for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
       if (SKIP.has(entry.name)) continue;
-      const path = join26(dir, entry.name);
+      const path = join27(dir, entry.name);
       if (entry.isDirectory()) await walk(path);
       else if (entry.isFile()) await onFile(path);
     }
   }
-  await walk(resolve25(root));
+  await walk(resolve26(root));
 }
 function runProcess2(command, args, options = {}) {
   return new Promise((resolveProcess) => {
@@ -23584,8 +24160,8 @@ function clampLimit3(value, fallback, max = 1e3) {
 
 // lib/capabilities/powershell.mjs
 init_paths();
-import { mkdir as mkdir14, writeFile as writeFile14 } from "node:fs/promises";
-import { join as join27, resolve as resolve26 } from "node:path";
+import { mkdir as mkdir15, writeFile as writeFile15 } from "node:fs/promises";
+import { join as join28, resolve as resolve27 } from "node:path";
 var POWERSHELL_HELPERS = Object.freeze([
   {
     name: "sf",
@@ -23699,16 +24275,16 @@ var POWERSHELL_HELPERS = Object.freeze([
   }
 ]);
 async function exportPowerShellHelpers(root, options = {}) {
-  const outDir = resolve26(root, options.outDir ?? join27("artifacts", "powershell"));
+  const outDir = resolve27(root, options.outDir ?? join28("artifacts", "powershell"));
   if (!options.allowAbsolute && !isInside(root, outDir)) {
     throw new Error(`powershell export path escapes root: ${outDir}`);
   }
-  const cliPath = resolve26(root, "plugins", "skillsforge", "bin", "skillsforge.mjs");
-  await mkdir14(outDir, { recursive: true });
+  const cliPath = resolve27(root, "plugins", "skillsforge", "bin", "skillsforge.mjs");
+  await mkdir15(outDir, { recursive: true });
   const files = [];
   for (const helper of POWERSHELL_HELPERS) {
-    const path = join27(outDir, `${helper.name}.ps1`);
-    await writeFile14(path, renderHelper(helper, cliPath));
+    const path = join28(outDir, `${helper.name}.ps1`);
+    await writeFile15(path, renderHelper(helper, cliPath));
     files.push({ name: helper.name, path, description: helper.description });
   }
   const manifest = {
@@ -23717,9 +24293,9 @@ async function exportPowerShellHelpers(root, options = {}) {
     cli: cliPath,
     helpers: files
   };
-  await writeFile14(join27(outDir, "skillsforge-powershell.json"), `${JSON.stringify(manifest, null, 2)}
+  await writeFile15(join28(outDir, "skillsforge-powershell.json"), `${JSON.stringify(manifest, null, 2)}
 `);
-  return { ok: true, outDir, files, manifest: join27(outDir, "skillsforge-powershell.json") };
+  return { ok: true, outDir, files, manifest: join28(outDir, "skillsforge-powershell.json") };
 }
 function renderHelper(helper, cliPath) {
   const baseArgs = helper.args.map((arg) => `'${escapeSingle(arg)}'`).join(", ");
@@ -23803,15 +24379,15 @@ Helpers include status, tree, find, grep, diff, errors, bigfiles, recent, proof,
 
 // lib/capabilities/operator.mjs
 init_skill_loader();
-import { access as access17, mkdir as mkdir15, readFile as readFile21, writeFile as writeFile15 } from "node:fs/promises";
-import { basename as basename7, join as join28, relative as relative15, resolve as resolve27 } from "node:path";
-var TOKEN_SESSION_REL = join28("artifacts", "skillsforge-token-session.json");
-function estimateTokens(text) {
+import { access as access18, mkdir as mkdir16, readFile as readFile22, writeFile as writeFile16 } from "node:fs/promises";
+import { basename as basename7, join as join29, relative as relative16, resolve as resolve28 } from "node:path";
+var TOKEN_SESSION_REL = join29("artifacts", "skillsforge-token-session.json");
+function estimateTokens2(text) {
   const source = String(text ?? "");
   const chars = [...source].length;
   const lines = source.length === 0 ? 0 : source.split(/\r?\n/).length;
-  const tokens = Math.ceil(chars / 4);
-  return { chars, lines, tokens };
+  const tokens2 = Math.ceil(chars / 4);
+  return { chars, lines, tokens: tokens2 };
 }
 async function runTokensCommand(root, options = {}) {
   const limit = clamp(options.limit, 15, 1, 200);
@@ -23936,7 +24512,7 @@ async function runDigestCommand(root, options = {}) {
   const skillCosts = [];
   for (const hit of recommendation.skills.slice(0, limit)) {
     const record = index.skills.find((skill) => skill.id === hit.id || skill.key === hit.key);
-    const dir = record?.sourcePath ? resolveHomePath(root, record.sourcePath, options.home) : join28(root, "plugins", "skillsforge", "skills", hit.id);
+    const dir = record?.sourcePath ? resolveHomePath(root, record.sourcePath, options.home) : join29(root, "plugins", "skillsforge", "skills", hit.id);
     try {
       const skill = await loadSkillLight(dir);
       if (skill) skillCosts.push(summarizeSkillTokens(root, skill));
@@ -23986,7 +24562,7 @@ async function runDigestCommand(root, options = {}) {
 async function runNextCommand(root, options = {}) {
   const status = await runWorkbench(root, "status");
   const suggestions = [];
-  const mapIndexExists = await pathExists10(join28(root, "artifacts", "forgemap", "index.json"));
+  const mapIndexExists = await pathExists11(join29(root, "artifacts", "forgemap", "index.json"));
   if (status.dirty) {
     suggestions.push({
       priority: 1,
@@ -24022,8 +24598,8 @@ async function runNextCommand(root, options = {}) {
       why: "ForgeMap index missing - build once for symbol/impact lookups"
     });
   }
-  const briefExists = await pathExists10(join28(root, "docs", "work", "brief.md"));
-  const planExists = await pathExists10(join28(root, "docs", "work", "plan.md"));
+  const briefExists = await pathExists11(join29(root, "docs", "work", "brief.md"));
+  const planExists = await pathExists11(join29(root, "docs", "work", "plan.md"));
   if (!briefExists) {
     suggestions.push({
       priority: 1,
@@ -24141,26 +24717,26 @@ function summarizeSkillTokens(root, skill) {
   const combined = `${description}
 ${body}
 ${sidecar}`;
-  const estimate = estimateTokens(combined);
+  const estimate = estimateTokens2(combined);
   return {
     kind: "skill",
     id: skill.name,
-    path: relative15(root, skill.directory).replaceAll("\\", "/"),
+    path: relative16(root, skill.directory).replaceAll("\\", "/"),
     ...estimate,
     parts: {
-      description: estimateTokens(description).tokens,
-      body: estimateTokens(body).tokens,
-      sidecar: estimateTokens(sidecar).tokens
+      description: estimateTokens2(description).tokens,
+      body: estimateTokens2(body).tokens,
+      sidecar: estimateTokens2(sidecar).tokens
     }
   };
 }
 async function summarizePathTokens(root, inputPath) {
-  const abs = resolve27(root, inputPath);
-  const text = await readFile21(abs, "utf8");
-  const estimate = estimateTokens(text);
+  const abs = resolve28(root, inputPath);
+  const text = await readFile22(abs, "utf8");
+  const estimate = estimateTokens2(text);
   return {
     kind: "path",
-    path: relative15(root, abs).replaceAll("\\", "/"),
+    path: relative16(root, abs).replaceAll("\\", "/"),
     id: basename7(abs),
     ...estimate
   };
@@ -24171,11 +24747,11 @@ async function loadSkillLight(dir) {
 }
 function resolveHomePath(root, sourcePath, home) {
   if (sourcePath.startsWith("~/") || sourcePath.startsWith("~\\")) {
-    const base = home ? resolve27(home) : resolve27(process.env.USERPROFILE || process.env.HOME || root);
-    return resolve27(base, sourcePath.slice(2));
+    const base = home ? resolve28(home) : resolve28(process.env.USERPROFILE || process.env.HOME || root);
+    return resolve28(base, sourcePath.slice(2));
   }
-  if (sourcePath.startsWith("/") || /^[A-Za-z]:[\\/]/.test(sourcePath)) return resolve27(sourcePath);
-  return resolve27(root, sourcePath);
+  if (sourcePath.startsWith("/") || /^[A-Za-z]:[\\/]/.test(sourcePath)) return resolve28(sourcePath);
+  return resolve28(root, sourcePath);
 }
 function emptySession() {
   return {
@@ -24187,23 +24763,23 @@ function emptySession() {
   };
 }
 async function readTokenSession(root) {
-  const path = join28(root, TOKEN_SESSION_REL);
+  const path = join29(root, TOKEN_SESSION_REL);
   try {
-    return JSON.parse(await readFile21(path, "utf8"));
+    return JSON.parse(await readFile22(path, "utf8"));
   } catch {
     return emptySession();
   }
 }
 async function writeTokenSession(root, session) {
-  const path = join28(root, TOKEN_SESSION_REL);
-  await mkdir15(join28(root, "artifacts"), { recursive: true });
-  await writeFile15(path, `${JSON.stringify(session, null, 2)}
+  const path = join29(root, TOKEN_SESSION_REL);
+  await mkdir16(join29(root, "artifacts"), { recursive: true });
+  await writeFile16(path, `${JSON.stringify(session, null, 2)}
 `);
   return session;
 }
-async function pathExists10(path) {
+async function pathExists11(path) {
   try {
-    await access17(path);
+    await access18(path);
     return true;
   } catch {
     return false;
@@ -24301,11 +24877,11 @@ async function runNextCli(argv, options) {
 }
 
 // lib/capabilities/forgemap.mjs
-import { createHash as createHash4 } from "node:crypto";
+import { createHash as createHash5 } from "node:crypto";
 import { existsSync as existsSync2 } from "node:fs";
-import { mkdir as mkdir16, readdir as readdir13, readFile as readFile22, stat as stat5, writeFile as writeFile16 } from "node:fs/promises";
-import { basename as basename8, dirname as dirname13, extname as extname2, join as join29, relative as relative16, resolve as resolve28 } from "node:path";
-var FORGEMAP_INDEX_REL = join29("artifacts", "forgemap", "index.json");
+import { mkdir as mkdir17, readdir as readdir13, readFile as readFile23, stat as stat5, writeFile as writeFile17 } from "node:fs/promises";
+import { basename as basename8, dirname as dirname14, extname as extname2, join as join30, relative as relative17, resolve as resolve29 } from "node:path";
+var FORGEMAP_INDEX_REL = join30("artifacts", "forgemap", "index.json");
 var CODE_EXTS = [".js", ".mjs", ".cjs", ".ts", ".tsx"];
 var SKIP_DIRS = /* @__PURE__ */ new Set([
   "node_modules",
@@ -24538,7 +25114,7 @@ async function loadOrBuildIndex(root, options = {}) {
     return index2;
   }
   try {
-    const raw = JSON.parse(await readFile22(join29(root, FORGEMAP_INDEX_REL), "utf8"));
+    const raw = JSON.parse(await readFile23(join30(root, FORGEMAP_INDEX_REL), "utf8"));
     if (raw?.schemaVersion === 1 && Array.isArray(raw.files)) return raw;
   } catch {
   }
@@ -24554,10 +25130,10 @@ async function buildLightweightIndex(root) {
   const symbols = [];
   const edges = [];
   for (const rel of filePaths) {
-    const abs = join29(root, rel);
+    const abs = join30(root, rel);
     let text = "";
     try {
-      text = await readFile22(abs, "utf8");
+      text = await readFile23(abs, "utf8");
     } catch {
       continue;
     }
@@ -24591,7 +25167,7 @@ async function buildLightweightIndex(root) {
     }
     files.push({ path: rel, symbolCount });
   }
-  const fingerprint = createHash4("sha256").update(filePaths.slice().sort().join("\n")).digest("hex").slice(0, 16);
+  const fingerprint = createHash5("sha256").update(filePaths.slice().sort().join("\n")).digest("hex").slice(0, 16);
   return {
     schemaVersion: 1,
     builtAt: (/* @__PURE__ */ new Date()).toISOString(),
@@ -24611,39 +25187,39 @@ async function walkCodeFiles(root, dir, out) {
   for (const entry of entries) {
     if (SKIP_DIRS.has(entry.name)) continue;
     if (entry.name.startsWith(".") && entry.name !== ".github") continue;
-    const abs = join29(dir, entry.name);
+    const abs = join30(dir, entry.name);
     if (entry.isDirectory()) {
       await walkCodeFiles(root, abs, out);
       continue;
     }
     if (!CODE_EXTS.includes(extname2(entry.name))) continue;
-    out.push(toPosix2(relative16(root, abs)));
+    out.push(toPosix2(relative17(root, abs)));
   }
 }
 function resolveImport(root, fromFile, spec, fileSet) {
   if (!spec.startsWith(".")) return null;
-  const base = resolve28(dirname13(join29(root, fromFile)), spec);
+  const base = resolve29(dirname14(join30(root, fromFile)), spec);
   const candidates = [];
   for (const ext of ["", ...CODE_EXTS]) {
     candidates.push(base + ext);
   }
   for (const ext of CODE_EXTS) {
-    candidates.push(join29(base, `index${ext}`));
+    candidates.push(join30(base, `index${ext}`));
   }
   for (const candidate of candidates) {
     if (!existsSync2(candidate)) continue;
-    const rel = toPosix2(relative16(root, candidate));
+    const rel = toPosix2(relative17(root, candidate));
     if (fileSet.has(rel)) return rel;
   }
-  const soft = toPosix2(relative16(root, base));
+  const soft = toPosix2(relative17(root, base));
   for (const ext of CODE_EXTS) {
     if (fileSet.has(soft + ext)) return soft + ext;
   }
   return null;
 }
 async function persistIndex(root, index) {
-  await mkdir16(join29(root, "artifacts", "forgemap"), { recursive: true });
-  await writeFile16(join29(root, FORGEMAP_INDEX_REL), `${JSON.stringify(index)}
+  await mkdir17(join30(root, "artifacts", "forgemap"), { recursive: true });
+  await writeFile17(join30(root, FORGEMAP_INDEX_REL), `${JSON.stringify(index)}
 `);
 }
 function toPosix2(p) {
@@ -24655,7 +25231,7 @@ function clamp2(value, fallback, min, max) {
   return Math.max(min, Math.min(max, Math.trunc(n)));
 }
 async function probeCodegraph(root) {
-  const path = join29(root, ".codegraph", "codegraph.db");
+  const path = join30(root, ".codegraph", "codegraph.db");
   try {
     await stat5(path);
   } catch {
@@ -24671,7 +25247,7 @@ async function probeCodegraph(root) {
   }
 }
 async function withCodegraph(root, fn) {
-  const path = join29(root, ".codegraph", "codegraph.db");
+  const path = join30(root, ".codegraph", "codegraph.db");
   try {
     await stat5(path);
   } catch {
@@ -24788,10 +25364,10 @@ async function runMapCli(argv, options) {
 }
 
 // lib/capabilities/slim.mjs
-import { mkdir as mkdir17, readFile as readFile23, writeFile as writeFile17 } from "node:fs/promises";
+import { mkdir as mkdir18, readFile as readFile24, writeFile as writeFile18 } from "node:fs/promises";
 import { spawn as spawn3 } from "node:child_process";
-import { join as join30 } from "node:path";
-var SLIM_GAIN_REL = join30("artifacts", "skillsforge-slim-gain.json");
+import { join as join31 } from "node:path";
+var SLIM_GAIN_REL = join31("artifacts", "skillsforge-slim-gain.json");
 async function runSlim(root, task, options = {}) {
   switch (task) {
     case "status":
@@ -25051,14 +25627,14 @@ function emptyGain() {
 }
 async function readGain(root) {
   try {
-    return JSON.parse(await readFile23(join30(root, SLIM_GAIN_REL), "utf8"));
+    return JSON.parse(await readFile24(join31(root, SLIM_GAIN_REL), "utf8"));
   } catch {
     return emptyGain();
   }
 }
 async function writeGain(root, ledger) {
-  await mkdir17(join30(root, "artifacts"), { recursive: true });
-  await writeFile17(join30(root, SLIM_GAIN_REL), `${JSON.stringify(ledger, null, 2)}
+  await mkdir18(join31(root, "artifacts"), { recursive: true });
+  await writeFile18(join31(root, SLIM_GAIN_REL), `${JSON.stringify(ledger, null, 2)}
 `);
 }
 function runProcess3(command, args, options = {}) {
@@ -25156,6 +25732,12 @@ Known keys:
   library.outDir
   library.cacheHostChecks
   library.extraSkillRoots
+  project.selectedSkills
+  project.defaultWorkflows
+  session.enabled
+  session.outDir
+  session.maxEntries
+  session.tokenBudget
   mutations.allowByDefault
 `;
 }
@@ -25204,6 +25786,231 @@ async function runSettingsCommand(argv, options) {
   return result.ok ? 0 : 1;
 }
 
+// scripts/cli/commands/session.mjs
+function sessionHelp() {
+  return `usage: skillsforge session <remember|recall|score|summary|reset|export> [options]
+
+Session memory:
+  remember --query <text>       Record compact skill/workflow usage memory
+  recall [--query <text>]       Return top-K compact session entries
+  score                         Review skill/workflow usage discipline
+  summary                       Print compact project session summary
+  reset                         Clear local session memory artifacts
+  export --out <file>           Write a shareable Markdown summary
+
+Options:
+  --json --config <file> --session-host <id> --limit <n> --token-budget <n>
+  --skill <id> --workflow <id> --agent <role> --score <0-100>
+  --reason <text> --command <cmd> --tokens <n> --outcome <text> --verification <text>
+`;
+}
+async function runSessionCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, "--json");
+  const config = consumeOption(args, "--config");
+  const sessionHost = consumeOption(args, "--session-host");
+  const query = consumeOption(args, "--query");
+  const skill = consumeOption(args, "--skill");
+  const workflow = consumeOption(args, "--workflow");
+  const agent = consumeOption(args, "--agent");
+  const score = consumeOption(args, "--score");
+  const reasons = consumeOptions(args, "--reason");
+  const commands = consumeOptions(args, "--command");
+  const tokens2 = consumeOption(args, "--tokens");
+  const outcome = consumeOption(args, "--outcome");
+  const verification = consumeOption(args, "--verification");
+  const limit = consumeOption(args, "--limit");
+  const tokenBudget = consumeOption(args, "--token-budget");
+  const out = consumeOption(args, "--out");
+  if ([config, sessionHost, query, skill, workflow, agent, score, reasons, commands, tokens2, outcome, verification, limit, tokenBudget, out].some((value) => value === null)) {
+    return usage("session option requires a value");
+  }
+  if (!subcommand || subcommand === "help" || subcommand === "--help") {
+    process.stdout.write(sessionHelp());
+    return 0;
+  }
+  if (hasUnknownOption(args)) return usage(`unknown session option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  let result;
+  try {
+    if (subcommand === "remember") {
+      const text = query ?? args.join(" ");
+      if (!text) return usage("usage: skillsforge session remember --query <text>");
+      result = await rememberSessionEvent(root, {
+        query: text,
+        selectedSkill: skill,
+        selectedWorkflow: workflow,
+        agentRole: agent,
+        score: score ? Number(score) : void 0,
+        reasons,
+        commandsSuggested: commands,
+        tokensEstimated: tokens2 ? Number(tokens2) : void 0,
+        outcome,
+        verification
+      }, { config, sessionHost: sessionHost ?? void 0 });
+    } else if (subcommand === "recall") {
+      result = await recallSessionMemory(root, {
+        config,
+        query: query ?? args.join(" "),
+        limit: limit ? Number(limit) : void 0,
+        tokenBudget: tokenBudget ? Number(tokenBudget) : void 0
+      });
+    } else if (subcommand === "score") {
+      result = await scoreSessionMemory(root, { config });
+    } else if (subcommand === "summary") {
+      result = { ok: true, summary: await readSessionSummary(root, { config }) };
+    } else if (subcommand === "reset") {
+      result = await resetSessionMemory(root, { config });
+    } else if (subcommand === "export") {
+      if (!out) return usage("usage: skillsforge session export --out <file>");
+      result = await exportSessionMemory(root, {
+        config,
+        out,
+        query: query ?? args.join(" "),
+        limit: limit ? Number(limit) : void 0,
+        tokenBudget: tokenBudget ? Number(tokenBudget) : void 0
+      });
+    } else {
+      return usage(`unknown session command: ${subcommand}`);
+    }
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  if (json || subcommand !== "recall") process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else process.stdout.write(formatRecallText(result));
+  return result.ok ? 0 : 1;
+}
+function formatRecallText(result) {
+  if (!result.ok) return `${result.error ?? "session recall failed"}
+`;
+  if (!result.entries.length) return "no session memory entries\n";
+  return `${result.entries.map((entry) => [
+    entry.timestamp,
+    entry.selectedSkill ?? "no-skill",
+    entry.selectedWorkflow ?? "no-workflow",
+    entry.outcome ?? entry.query ?? ""
+  ].join("	")).join("\n")}
+`;
+}
+
+// lib/capabilities/init.mjs
+import { mkdir as mkdir19 } from "node:fs/promises";
+import { join as join32, resolve as resolve30 } from "node:path";
+async function initializeProject(root, options = {}) {
+  const absRoot = resolve30(root);
+  const profile = options.profile ?? "vibecoder";
+  const sessionHost = options.sessionHost ?? "codex";
+  const loaded = await loadSettings(absRoot, { config: options.config });
+  const settings = {
+    ...loaded.settings,
+    defaultHost: sessionHost,
+    project: {
+      ...loaded.settings.project,
+      selectedSkills: loaded.settings.project?.selectedSkills ?? [],
+      defaultWorkflows: loaded.settings.project?.defaultWorkflows ?? []
+    },
+    session: {
+      ...loaded.settings.session,
+      enabled: true
+    }
+  };
+  const saved = await saveSettings(absRoot, settings, { config: options.config });
+  if (!saved.ok) return { ok: false, stage: "settings", errors: saved.errors, path: saved.path };
+  await mkdir19(join32(absRoot, "artifacts"), { recursive: true });
+  const library = await writeLibraryArtifacts(absRoot, {
+    home: options.home,
+    sessionHost,
+    config: options.config,
+    outDir: settings.library.outDir
+  });
+  const session = await ensureSessionMemory(absRoot, { config: options.config });
+  return {
+    ok: library.ok && session.ok,
+    profile,
+    sessionHost,
+    config: saved.path,
+    library,
+    session,
+    links: {
+      libraryHtml: library.files.html,
+      aiIndexHtml: library.files.ai,
+      libraryJson: library.files.json,
+      serve: `skillsforge lib serve --session-host ${sessionHost}`,
+      serveMutations: `skillsforge lib serve --session-host ${sessionHost} --allow-mutations`
+    },
+    nextCommands: [
+      `skillsforge lib open`,
+      `skillsforge lib recommend --query "<task>" --json`,
+      `skillsforge workflows recommend --query "<task>" --json`,
+      `skillsforge session score --json`
+    ],
+    errors: library.errors ?? []
+  };
+}
+
+// scripts/cli/commands/init.mjs
+async function runInitCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const open = consumeFlag(args, "--open");
+  const profile = consumeOption(args, "--profile") ?? "vibecoder";
+  const sessionHost = consumeOption(args, "--session-host") ?? "codex";
+  const home = consumeOption(args, "--home");
+  const config = consumeOption(args, "--config");
+  if (profile === null || sessionHost === null || home === null || config === null) {
+    return usage("init options require values: --profile/--session-host/--home/--config");
+  }
+  if (args.includes("help") || args.includes("--help")) {
+    process.stdout.write(`usage: skillsforge init [--profile vibecoder] [--session-host codex] [--open] [--json]
+
+Initialize project-local SkillsForge config, library HTML/AI index, and compact session memory.
+`);
+    return 0;
+  }
+  if (hasUnknownOption(args)) return usage(`unknown init option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  let result;
+  try {
+    result = await initializeProject(root, {
+      profile,
+      sessionHost,
+      home: home || void 0,
+      config: config || void 0
+    });
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  if (open && result.ok) {
+    const command = platformOpenCommand(result.links.libraryHtml);
+    const opened = await runProcess(command.command, command.args, { cwd: root, timeoutMs: 1e4 });
+    result.opened = opened.status === 0;
+  }
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else process.stdout.write(formatInitText(result));
+  return result.ok ? 0 : 1;
+}
+function formatInitText(result) {
+  if (!result.ok) return `SkillsForge init failed: ${(result.errors ?? []).join("; ") || result.stage || "unknown"}
+`;
+  return [
+    "SkillsForge project initialized",
+    `config	${result.config}`,
+    `library	${result.links.libraryHtml}`,
+    `aiIndex	${result.links.aiIndexHtml}`,
+    `session	${result.session.files.summary}`,
+    `serve	${result.links.serve}`,
+    `mutate	${result.links.serveMutations}`,
+    ""
+  ].join("\n");
+}
+
 // scripts/skillsforge-cli.mjs
 var modulePath2 = fileURLToPath6(import.meta.url);
 async function main(argv = process.argv.slice(2), options = {}) {
@@ -25216,6 +26023,7 @@ Default output is compact. Most commands accept --json. Operator cmds also accep
 Prefer --dry-run before writes. Install/remove/write require explicit confirmation.
 
   help                              Show this help
+  init                              Initialize project library HTML, config, and session memory
 
 Catalog & authoring:
   vibe                              Magical moment: work stubs + catalog summary + quality sample
@@ -25234,8 +26042,8 @@ Catalog & authoring:
 Operator terminals:
   wb <task>                         Workbench: status/tree/find/grep/diff/errors/bigfiles/recent/proof
                                     (--json --limit <n> --full)
-  lib <build|update|serve|check|recommend|remove>
-                                    Local library index + UI; recommend is read-only; remove dry-run default
+  lib <build|update|serve|check|recommend|select|unselect|selected|remove|open>
+                                    Local library UI, AI index, project selection; remove dry-run default
   workflows <list|show|recommend|run|export-html>
                                     Workflow catalog (run = dry-run only)
   auto <plan|run>                   Skill + workflow recommend; run requires --read-only
@@ -25248,6 +26056,8 @@ Operator terminals:
   slim <status|diff|log|test|...>   ForgeSlim: compress git/test/rg output + gain ledger
   settings <show|set|reset|validate>
                                     Local config for thresholds, library UI, and mutation defaults
+  session <remember|recall|score|summary|reset|export>
+                                    Compact skill/workflow usage memory, not chat transcript memory
   ps export                         Write PowerShell sf-*.ps1 helpers (token-friendly)
 
 Hosts & install:
@@ -25256,7 +26066,7 @@ Hosts & install:
   package --host codex              One skill -> guarded Codex plugin (--skill/--out/--dry-run/--write)
 
 Trust & ship:
-  demo                              Judge path: unsafe deny -> safe package -> demo scoreboard
+  demo                              Trust-layer beat: unsafe deny -> safe package -> demo scoreboard
   validate [paths...]               Structure + capability policy (--all/--json/--profile/--allow-empty)
   doctor                            Plugin + installed-skill health (--json)
   receipt / verify-receipt         Tamper-evident package receipt (--package-only for verify)
@@ -25337,6 +26147,8 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runDemoCommand(argv.slice(1), options);
     case "watch":
       return runWatchCommand(argv.slice(1), options);
+    case "init":
+      return runInitCommand(argv.slice(1), options);
     case "wb":
       return runWorkbenchCommand(argv.slice(1), options);
     case "lib":
@@ -25357,6 +26169,8 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runSlimCli(argv.slice(1), options);
     case "settings":
       return runSettingsCommand(argv.slice(1), options);
+    case "session":
+      return runSessionCommand(argv.slice(1), options);
     case "ps":
       return runPsCommand(argv.slice(1), options);
     case "os-env":
@@ -25384,7 +26198,7 @@ if (process.argv[1]) {
   try {
     sameEntry = realpathSync2(process.argv[1]) === realpathSync2(modulePath2);
   } catch {
-    sameEntry = resolve29(process.argv[1]) === modulePath2;
+    sameEntry = resolve31(process.argv[1]) === modulePath2;
   }
   if (sameEntry) {
     process.exitCode = await main();

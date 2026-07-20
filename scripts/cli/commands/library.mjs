@@ -1,8 +1,18 @@
 import { resolve } from 'node:path';
-import { buildLibraryIndex, planSkillRemoval, recommendFromLibrary, removeInstalledSkill, serveLibrary, writeLibraryArtifacts } from '../../../lib/capabilities/library.mjs';
+import {
+  buildLibraryIndex,
+  listProjectSelection,
+  planSkillRemoval,
+  recommendFromLibrary,
+  removeInstalledSkill,
+  selectProjectSkill,
+  serveLibrary,
+  unselectProjectSkill,
+  writeLibraryArtifacts
+} from '../../../lib/capabilities/library.mjs';
 import { loadWorkflows, planAuto, recommendWorkflows, runAutoReadOnly, runWorkflowDryRun, showWorkflow } from '../../../lib/capabilities/workflows.mjs';
 import {
-  consumeFlag, consumeOption, consumeOptions, resolveRuntimeRoot, usage, hasUnknownOption
+  consumeFlag, consumeOption, consumeOptions, platformOpenCommand, resolveRuntimeRoot, runProcess, usage, hasUnknownOption
 } from '../shared.mjs';
 
 export async function runLibCommand(argv, options) {
@@ -21,15 +31,19 @@ export async function runLibCommand(argv, options) {
   if (config === null) return usage('--config requires a value');
   if (extraSkillRoots === null) return usage('--extra-skill-root requires a value');
   if (!subcommand || subcommand === 'help' || subcommand === '--help') {
-    process.stdout.write(`usage: skillsforge lib <build|update|serve|check|recommend|remove> [options]
+    process.stdout.write(`usage: skillsforge lib <build|update|serve|check|recommend|select|unselect|selected|remove|open> [options]
 
 Library:
   build/update                  Write skillsforge-library.json/html and skillsforge-ai-index.html
   serve                         Serve localhost read-only UI unless --allow-mutations
   check --skill <id>            Show one indexed skill
   recommend --query <text>      Read-only skill/workflow recommendation
+  select --skill <id>           Add an indexed skill to project.selectedSkills
+  unselect --skill <id>         Remove a skill from project.selectedSkills
+  selected                      List selected project skills
   remove --host <id> --skill <id>
                                 Dry-run by default; write requires --allow-mutations --yes
+  open                          Build if needed and open local HTML file
 
 Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --extra-skill-root <dir> --allow-absolute
 `);
@@ -92,6 +106,25 @@ Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --e
     return result.ok ? 0 : 1;
   }
 
+  if (subcommand === 'select' || subcommand === 'unselect') {
+    const skill = consumeOption(args, '--skill') ?? args.shift();
+    if (skill === null) return usage('--skill requires a value');
+    if (!skill) return usage(`usage: skillsforge lib ${subcommand} --skill <id>`);
+    if (hasUnknownOption(args)) return usage(`unknown lib ${subcommand} option: ${hasUnknownOption(args)}`);
+    const result = subcommand === 'select'
+      ? await selectProjectSkill(root, { skill, home, sessionHost: sessionHost ?? undefined, config, extraSkillRoots })
+      : await unselectProjectSkill(root, { skill, home, sessionHost: sessionHost ?? undefined, config, extraSkillRoots });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    return result.ok ? 0 : 1;
+  }
+
+  if (subcommand === 'selected') {
+    if (hasUnknownOption(args)) return usage(`unknown lib selected option: ${hasUnknownOption(args)}`);
+    const result = await listProjectSelection(root, { home, sessionHost: sessionHost ?? undefined, config, extraSkillRoots });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    return result.ok ? 0 : 1;
+  }
+
   if (subcommand === 'remove') {
     const dryRun = consumeFlag(args, '--dry-run');
     const allowMutations = consumeFlag(args, '--allow-mutations');
@@ -128,8 +161,24 @@ Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --e
     process.stdout.write(`${JSON.stringify({ ok: result.ok, url: result.url, readOnly: result.readOnly }, null, 2)}\n`);
     return 0;
   }
+  if (subcommand === 'open') {
+    if (hasUnknownOption(args)) return usage(`unknown lib open option: ${hasUnknownOption(args)}`);
+    const result = await writeLibraryArtifacts(root, {
+      outDir: out ?? undefined,
+      home,
+      allowAbsolute,
+      sessionHost: sessionHost ?? undefined,
+      config,
+      extraSkillRoots
+    });
+    const command = platformOpenCommand(result.files.html);
+    const opened = await runProcess(command.command, command.args, { cwd: root, timeoutMs: 10000 });
+    const payload = { ...result, opened: opened.status === 0, openError: opened.status === 0 ? undefined : opened.stderr };
+    process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+    return result.ok ? 0 : 1;
+  }
 
-  if (!subcommand) return usage('usage: skillsforge lib <build|update|serve|check|recommend|remove>');
+  if (!subcommand) return usage('usage: skillsforge lib <build|update|serve|check|recommend|select|unselect|selected|remove|open>');
   return usage(`unknown lib command: ${subcommand}`);
 }
 

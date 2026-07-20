@@ -24,6 +24,12 @@ Known keys:
   library.outDir
   library.cacheHostChecks
   library.extraSkillRoots
+  project.selectedSkills
+  project.defaultWorkflows
+  session.enabled
+  session.outDir
+  session.maxEntries
+  session.tokenBudget
   mutations.allowByDefault
 `;
 }

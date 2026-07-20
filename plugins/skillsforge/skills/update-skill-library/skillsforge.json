@@ -26,8 +26,17 @@
     "exec": {
       "allowed": true,
       "commands": [
+        "skillsforge init",
+        "node plugins/skillsforge/bin/skillsforge.mjs init",
         "skillsforge lib update",
-        "node plugins/skillsforge/bin/skillsforge.mjs lib update"
+        "node plugins/skillsforge/bin/skillsforge.mjs lib update",
+        "skillsforge lib select",
+        "skillsforge lib unselect",
+        "skillsforge lib selected",
+        "skillsforge lib open",
+        "skillsforge session remember",
+        "skillsforge session summary",
+        "skillsforge session score"
       ]
     },
     "network": {

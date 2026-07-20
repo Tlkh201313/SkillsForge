@@ -51,7 +51,7 @@ Catalog skill ids and on-disk `SKILL.md` packages match 1:1 (no missing / no orp
 
 Entry points: `node plugins/skillsforge/bin/skillsforge.mjs` (bundled) or `node scripts/skillsforge-cli.mjs`.
 
-Magical moment: `skillsforge vibe` - recommend: `lib recommend` / `workflows recommend` / `auto run --read-only`.
+Magical moment: `skillsforge init --profile vibecoder --session-host codex` - then `lib recommend`, `workflows run --dry-run`, and `session score`.
 
 ### Catalog & authoring
 
@@ -59,7 +59,7 @@ Magical moment: `skillsforge vibe` - recommend: `lib recommend` / `workflows rec
 
 ### Operator terminals
 
-`wb`, `lib`, `workflows`, `auto`, `ps`, `os-env`, `os-find`, `os-ports`, `os-open`, `os-run`, `os-copy-path`, `os-clean`
+`init`, `session`, `wb`, `lib`, `workflows`, `auto`, `settings`, `ps`, `os-env`, `os-find`, `os-ports`, `os-open`, `os-run`, `os-copy-path`, `os-clean`
 
 ### Hosts & install
 
@@ -69,7 +69,7 @@ Magical moment: `skillsforge vibe` - recommend: `lib recommend` / `workflows rec
 
 `validate`, `doctor`, `forge`, `receipt`, `verify-receipt`, `enforce`, `eval`, `skillshield`, `pressure`, `lint-skill`, `evidence`, `demo`
 
-Judge path: `skillsforge demo` -> unsafe deny -> safe package -> **demo scoreboard** (package-tree hash).
+Trust-layer proof: `skillsforge demo` -> unsafe deny -> safe package -> **demo scoreboard** (package-tree hash).
 
 Full help text is the source of truth: `skillsforge help`.
 
@@ -117,9 +117,11 @@ Exported via `skillsforge ps export` from `POWERSHELL_HELPERS`:
 
 | Command | What it does |
 | --- | --- |
-| `lib` (`build` / `update` / `serve` / `check` / `recommend` / `remove`) | Local skill library index, UI, recommendation, removal preview |
+| `init` | Create project config, local library artifacts, AI index, and compact session memory |
+| `lib` (`build` / `update` / `serve` / `check` / `recommend` / `select` / `unselect` / `selected` / `remove` / `open`) | Local skill library index, UI, recommendation, project selection, removal preview |
 | `workflows` (`list` / `show` / `recommend` / `run` / `export-html`) | Curated workflow catalog (dry-run execution) |
 | `auto` (`plan` / `run`) | Combine skill + workflow recommendation; `run` requires `--read-only` |
+| `session` (`remember` / `recall` / `score` / `summary` / `reset` / `export`) | Compact project memory for skill/workflow/agent usage; never chat transcript memory |
 
 ## Hosts & install fidelity
 

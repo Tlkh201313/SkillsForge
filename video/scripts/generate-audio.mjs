@@ -50,7 +50,7 @@ const writeWav = async (name, duration, sampleFn) => {
 };
 
 const music = async () => {
-  const duration = 118;
+  const duration = 139;
   const roots = [55, 65.406, 73.416, 82.407, 61.735, 69.296, 77.782, 65.406];
   await writeWav("music.wav", duration, (t, i) => {
     const section = Math.floor(t / 14.75) % roots.length;

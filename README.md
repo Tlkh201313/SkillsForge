@@ -34,16 +34,16 @@ Full surface map: **[docs/features.md](docs/features.md)**.
 
 Browser preview: **[docs/demo-video.html](docs/demo-video.html)**.
 
-Packaged MP4: [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-demo.mp4). The committed cut is 1:58, H.264/AAC, with English voiceover, original procedural background music, light UI sound effects, and burned-in captions. GitHub README playback for committed MP4s is unreliable, so the poster stays visible. For judging, upload the same MP4 to YouTube as public/unlisted and paste the URL into Devpost.
+Packaged MP4: [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-demo.mp4). The committed cut is 2:19, H.264/AAC, with English voiceover, original procedural background music, light UI sound effects, and burned-in captions. GitHub README playback for committed MP4s is unreliable, so the poster stays visible. For judging, upload the same MP4 to YouTube as public/unlisted and paste the URL into Devpost.
 
 | Beat | What you'll see |
 |---|---|
-| Thesis | Agent skills need routing, validation, packaging, and evidence |
+| Thesis | Vibe coding needs a development plugin layer: skills, commands, workflows, indexes, routing |
 | AI use | Codex accelerated implementation/video/verification; GPT-5.6 helped reason through claims and review quality |
 | Scale | 499 skills / 28 packs / 11 profiles / 100 workflows / 98 agents / 135 command shims |
-| Operator path | `vibe` -> route request -> deny unsafe behavior -> package safe skill |
-| Safety beat | Unsafe deny PASS -> safe validate PASS -> packaged PASS -> false-allow 0 |
-| CTA | Free local test: `node plugins/skillsforge/bin/skillsforge.mjs demo` |
+| Operator path | `vibe` -> `catalog` / `lib` -> `route` / `workflows` -> `map` / `slim` / `digest` |
+| Safety layer | Validation, packaging, receipts, and guardrails sit underneath the productivity surface |
+| CTA | Free local test: `node plugins/skillsforge/bin/skillsforge.mjs vibe` |
 
 ---
 
@@ -73,7 +73,7 @@ SkillsForge is that layer:
 
 ## Codex + GPT-5.6 collaboration
 
-This Build Week work used Codex and GPT-5.6 as implementation and review accelerators. Codex helped navigate the repository, produce the Remotion demo video, generate audio assets, update docs, and run verification commands. GPT-5.6 helped reason through product claims, edge cases, timing, and review quality.
+This Build Week work used Codex and GPT-5.6 as implementation and review accelerators. Codex helped navigate the repository, produce the demo video, generate audio assets, update docs, and run verification commands. GPT-5.6 helped reason through product claims, edge cases, timing, and review quality.
 
 Human decisions stayed human: product scope, claim boundaries, what not to overstate, and what evidence was strong enough for submission. The video says this explicitly.
 
@@ -117,18 +117,25 @@ cd SkillsForge
 npm ci
 npm run build
 npm link
-sf demo
+sf init --profile vibecoder --session-host codex --json
+sf lib recommend --query "build an MCP plugin and validate the launch path" --json
+sf workflows run --id agentic.skill-routing-plan --dry-run --json
+sf session score --json
 ```
 
-You should see: **unsafe deny -> safe package -> demo scoreboard hash** (package-tree digest). For a full trust receipt use `skillsforge receipt` / `evidence` after `package` / `build:dist`.
+You should see: project config, local library HTML, AI index, compact session memory, a minimum skill/workflow recommendation, and a dry-run workflow checklist. The generated AI index lives at `artifacts/skillsforge-library/skillsforge-ai-index.html`.
 
 Optional follow-ups:
 
 ```sh
 sf vibe
+sf lib open
+sf lib select --skill build-mcp-server
 sf lib recommend --query "safe refactor" --session-host codex
 sf workflows recommend --query "ship a release"
 sf auto run --read-only --query "audit README claims"
+sf session remember --query "safe refactor" --skill eng-safe-codegen --workflow coding.safe-refactor --outcome "tests passed"
+sf demo  # trust-layer beat: unsafe deny -> safe package -> scoreboard
 sf compare-skill --a examples/codex-unsafe-release --b examples/codex-safe-release
 ```
 
@@ -146,7 +153,8 @@ Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/r
 | Productivity catalog | **499** skills, **28** packs, **11** profiles |
 | Workflows | **100** dry-run definitions under `plugins/skillsforge/workflows/` |
 | Agents / commands | **98** agents - **135** command shims |
-| Library | `lib build|update|serve|recommend` - local HTML + AI index + settings-aware session hints |
+| Project OS | `init`, `settings`, `session` - config, compact usage memory, AI-facing links |
+| Library | `lib build|update|serve|recommend|select|unselect|selected|open` - local HTML + AI index + project selection |
 | Auto router | `auto plan`, `auto run --read-only` |
 | Workbench | `wb status|tree|find|grep|diff|errors|bigfiles|recent|proof` |
 | PowerShell | `ps export` -> `sf-*.ps1` wrappers |
@@ -229,7 +237,7 @@ npm ci
 npm run build
 npm link          # once per machine: puts `skillsforge` and `sf` on your PATH
 skillsforge help
-sf demo
+sf init --profile vibecoder --session-host codex
 ```
 
 ```powershell
@@ -240,7 +248,7 @@ npm link
 #   $env:Path += ";$env:APPDATA\npm"
 # Or permanently: add %AppData%\npm under Environment Variables -> Path
 skillsforge help
-sf demo
+sf init --profile vibecoder --session-host codex
 # optional: also export repo-local helpers
 skillsforge ps export
 # then add artifacts/powershell to PATH, or dot-source:
@@ -250,7 +258,7 @@ skillsforge ps export
 Without `npm link`, the long form still works (judge/CI path):
 
 ```sh
-node ./plugins/skillsforge/bin/skillsforge.mjs demo
+node plugins/skillsforge/bin/skillsforge.mjs demo
 ```
 
 > **Not on npm yet.** Do not use `npx skillsforge` from the public registry. Use `npm link` from this clone (or the long `node` path).
@@ -262,11 +270,13 @@ Exit codes: `0` success - `1` failure - `2` invalid usage.
 | Command | Purpose |
 |---|---|
 | `vibe` / `catalog` / `quality` | Magical moment, pack browse, quality score |
+| `init` | Create project config, library artifacts, AI index, and compact session memory |
 | `route --query <text>` | Explainable skill routing |
 | `lib` | Build/update/serve/recommend local skill library |
 | `workflows` | List, show, recommend, or dry-run workflows |
 | `auto` | Recommend smallest matching skill + workflow (read-only) |
 | `settings` | Show, validate, set, or reset local SkillsForge config |
+| `session` | Remember/recall/score/export compact skill/workflow usage, not chat transcripts |
 | `tokens` | Estimate context tokens (catalog / skill / path); default catalog = repo skills (`--installed` for host); optional `--track` session. Heuristic chars/4 - not API billing. |
 | `digest` | One-shot briefing: status + recommend + token cost + next commands |
 | `next` | Suggest next productive commands from repo state |
@@ -280,7 +290,7 @@ Exit codes: `0` success - `1` failure - `2` invalid usage.
 
 | Command | Purpose |
 |---|---|
-| `demo` | Judge path: unsafe deny -> safe package -> scoreboard |
+| `demo` | Trust-layer proof: unsafe deny -> safe package -> scoreboard |
 | `hosts` / `install` | Host inventory + multi-host install |
 | `validate` / `doctor` | Structure + capability policy |
 | `package --host codex` | One skill -> guarded Codex plugin |

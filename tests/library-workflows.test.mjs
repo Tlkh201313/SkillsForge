@@ -3,7 +3,16 @@ import { access, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:f
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { buildLibraryIndex, planSkillRemoval, recommendFromLibrary, writeLibraryArtifacts } from '../lib/capabilities/library.mjs';
+import {
+  buildLibraryIndex,
+  listProjectSelection,
+  planSkillRemoval,
+  recommendFromLibrary,
+  selectProjectSkill,
+  serveLibrary,
+  unselectProjectSkill,
+  writeLibraryArtifacts
+} from '../lib/capabilities/library.mjs';
 import { exportPowerShellHelpers, POWERSHELL_HELPERS } from '../lib/capabilities/powershell.mjs';
 import { loadAllSkills } from '../lib/capabilities/skill-loader.mjs';
 import { loadWorkflows, planAuto, recommendWorkflows, runAutoReadOnly, runWorkflowDryRun, showWorkflow } from '../lib/capabilities/workflows.mjs';
@@ -152,6 +161,13 @@ test('library index and HTML artifacts include skills, workflows, hosts, and AI 
   assert.match(html, /removeConfirm/);
   assert.match(html, /allowMutations/);
   assert.match(html, /Session-aware local index/);
+  assert.match(html, /selectedPanel/);
+  assert.match(html, /projectSelect/);
+  assert.match(html, /projectUnselect/);
+  assert.match(html, /useWorkflow/);
+  assert.match(html, /api\/project\/select/);
+  assert.match(html, /api\/session\/remember/);
+  assert.match(html, /projectSelected/);
   assert.match(html, /sourceFilter/);
   assert.match(html, /vibeBuilderPanel/);
   assert.match(html, /quickFilters/);
@@ -160,6 +176,9 @@ test('library index and HTML artifacts include skills, workflows, hosts, and AI 
   const ai = await readFile(result.files.ai, 'utf8');
   assert.match(ai, /skillsforge-ai-index/);
   assert.match(ai, /sessionInstalled/);
+  assert.match(ai, /projectSelected/);
+  assert.match(ai, /sessionSummary/);
+  assert.match(ai, /project\.selectedSkills/);
 });
 
 test('library index includes installed user skills and recommends for current session', async (context) => {
@@ -196,6 +215,44 @@ Use this installed helper when local docs and media claims need strict review.
   assert.ok(recommendation.confidence === 'high' || recommendation.confidence === 'low');
   assert.equal(recommendation.skills[0].id, 'external-review-helper');
   assert.ok(recommendation.skills[0].reasons.includes('session-installed'));
+});
+
+test('library project selection writes config and influences non-hardcoded recommendation', async (context) => {
+  const home = await mkdtemp(join(tmpdir(), 'sf-project-selection-'));
+  context.after(() => rm(home, { recursive: true, force: true }));
+  const configPath = join(home, 'skillsforge.config.json');
+
+  const selected = await selectProjectSkill(root, {
+    home,
+    config: configPath,
+    sessionHost: 'codex',
+    skill: 'build-mcp-server'
+  });
+  assert.equal(selected.ok, true, JSON.stringify(selected.errors));
+  assert.ok(selected.selectedSkills.includes('build-mcp-server'));
+
+  const listed = await listProjectSelection(root, { home, config: configPath, sessionHost: 'codex' });
+  assert.equal(listed.ok, true);
+  assert.ok(listed.skills.some((skill) => skill.id === 'build-mcp-server'));
+
+  const index = await buildLibraryIndex(root, { home, config: configPath, sessionHost: 'codex' });
+  const record = index.skills.find((skill) => skill.id === 'build-mcp-server');
+  assert.equal(record.projectSelected, true);
+  assert.equal(index.stats.selectedSkills, 1);
+
+  const recommendation = recommendFromLibrary(index, 'build an MCP server for an AI CLI plugin', { limit: 5 });
+  const recommended = recommendation.skills.find((skill) => skill.id === 'build-mcp-server');
+  assert.ok(recommended, JSON.stringify(recommendation.skills));
+  assert.ok(recommended.reasons.includes('project-selected'));
+
+  const unselected = await unselectProjectSkill(root, {
+    home,
+    config: configPath,
+    sessionHost: 'codex',
+    skill: record.key
+  });
+  assert.equal(unselected.ok, true, JSON.stringify(unselected.errors));
+  assert.equal(unselected.selectedSkills.includes('build-mcp-server'), false);
 });
 
 test('library index covers all host roots, plugin cache roots, and extra skill roots with source details', async (context) => {
@@ -290,6 +347,66 @@ test('library removal is dry-run by default', async (context) => {
   assert.equal(result.ok, true);
   assert.equal(result.dryRun, true);
   assert.match(result.command, /--dry-run/);
+});
+
+test('library serve keeps static mode read-only and gates project/session writes behind mutation mode', async (context) => {
+  const home = await mkdtemp(join(tmpdir(), 'sf-lib-serve-'));
+  context.after(() => rm(home, { recursive: true, force: true }));
+  const configPath = join(home, 'skillsforge.config.json');
+  const sessionOutDir = `artifacts/test-session-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  context.after(() => rm(join(root, sessionOutDir), { recursive: true, force: true }));
+  await writeFile(configPath, JSON.stringify({
+    session: { outDir: sessionOutDir }
+  }, null, 2));
+
+  const readOnly = await serveLibrary(root, {
+    host: '127.0.0.1',
+    port: 0,
+    home,
+    config: configPath,
+    sessionHost: 'codex'
+  });
+  context.after(() => new Promise((resolveClose) => readOnly.server.close(resolveClose)));
+  const drySelect = await fetch(`${readOnly.url}api/project/select`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ skill: 'build-mcp-server' })
+  }).then((response) => response.json());
+  assert.equal(drySelect.ok, true);
+  assert.equal(drySelect.dryRun, true);
+  assert.match(drySelect.command, /lib select/);
+
+  const writable = await serveLibrary(root, {
+    host: '127.0.0.1',
+    port: 0,
+    allowMutations: true,
+    home,
+    config: configPath,
+    sessionHost: 'codex'
+  });
+  context.after(() => new Promise((resolveClose) => writable.server.close(resolveClose)));
+  const selected = await fetch(`${writable.url}api/project/select`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ skill: 'build-mcp-server' })
+  }).then((response) => response.json());
+  assert.equal(selected.ok, true, JSON.stringify(selected));
+  assert.equal(selected.selectedSkills.includes('build-mcp-server'), true);
+
+  const remembered = await fetch(`${writable.url}api/session/remember`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      query: 'build mcp server',
+      selectedSkill: 'build-mcp-server',
+      selectedWorkflow: 'agentic.skill-routing-plan',
+      score: 70,
+      outcome: 'selected from localhost library',
+      verification: 'api test'
+    })
+  }).then((response) => response.json());
+  assert.equal(remembered.ok, true, JSON.stringify(remembered));
+  assert.equal(remembered.summary.totals.events, 1);
 });
 
 test('PowerShell export creates helper scripts and manifest', async (context) => {

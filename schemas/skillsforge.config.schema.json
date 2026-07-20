@@ -38,6 +38,32 @@
         }
       }
     },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "selectedSkills": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "default": []
+        },
+        "defaultWorkflows": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "default": []
+        }
+      }
+    },
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "outDir": { "type": "string", "minLength": 1, "default": "artifacts/skillsforge-session" },
+        "maxEntries": { "type": "integer", "minimum": 1, "maximum": 5000, "default": 200 },
+        "tokenBudget": { "type": "integer", "minimum": 200, "maximum": 10000, "default": 1200 }
+      }
+    },
     "mutations": {
       "type": "object",
       "additionalProperties": false,

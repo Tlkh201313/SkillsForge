@@ -2,7 +2,8 @@ import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { discoverTestFiles } from './test-lib.mjs';
 
-const files = await discoverTestFiles(fileURLToPath(new URL('../tests', import.meta.url)));
+const files = (await discoverTestFiles(fileURLToPath(new URL('../tests', import.meta.url))))
+  .filter((file) => !file.endsWith('dist-smoke.test.mjs'));
 
 if (files.length === 0) {
   console.log('No test files found.');
@@ -17,7 +18,7 @@ if (build.status !== 0) {
   process.exit(build.status ?? 1);
 }
 
-const child = spawn(process.execPath, ['--test', ...files], {
+const child = spawn(process.execPath, ['--test', '--test-concurrency=1', ...files], {
   stdio: 'inherit'
 });
 

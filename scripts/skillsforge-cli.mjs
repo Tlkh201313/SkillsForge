@@ -25,6 +25,8 @@ import { runTokensCli, runDigestCli, runNextCli } from './cli/commands/operator.
 import { runMapCli } from './cli/commands/map.mjs';
 import { runSlimCli } from './cli/commands/slim.mjs';
 import { runSettingsCommand } from './cli/commands/settings.mjs';
+import { runSessionCommand } from './cli/commands/session.mjs';
+import { runInitCommand } from './cli/commands/init.mjs';
 
 export { enforcePolicy, exportPortableSkill };
 
@@ -40,6 +42,7 @@ Default output is compact. Most commands accept --json. Operator cmds also accep
 Prefer --dry-run before writes. Install/remove/write require explicit confirmation.
 
   help                              Show this help
+  init                              Initialize project library HTML, config, and session memory
 
 Catalog & authoring:
   vibe                              Magical moment: work stubs + catalog summary + quality sample
@@ -58,8 +61,8 @@ Catalog & authoring:
 Operator terminals:
   wb <task>                         Workbench: status/tree/find/grep/diff/errors/bigfiles/recent/proof
                                     (--json --limit <n> --full)
-  lib <build|update|serve|check|recommend|remove>
-                                    Local library index + UI; recommend is read-only; remove dry-run default
+  lib <build|update|serve|check|recommend|select|unselect|selected|remove|open>
+                                    Local library UI, AI index, project selection; remove dry-run default
   workflows <list|show|recommend|run|export-html>
                                     Workflow catalog (run = dry-run only)
   auto <plan|run>                   Skill + workflow recommend; run requires --read-only
@@ -72,6 +75,8 @@ Operator terminals:
   slim <status|diff|log|test|...>   ForgeSlim: compress git/test/rg output + gain ledger
   settings <show|set|reset|validate>
                                     Local config for thresholds, library UI, and mutation defaults
+  session <remember|recall|score|summary|reset|export>
+                                    Compact skill/workflow usage memory, not chat transcript memory
   ps export                         Write PowerShell sf-*.ps1 helpers (token-friendly)
 
 Hosts & install:
@@ -80,7 +85,7 @@ Hosts & install:
   package --host codex              One skill -> guarded Codex plugin (--skill/--out/--dry-run/--write)
 
 Trust & ship:
-  demo                              Judge path: unsafe deny -> safe package -> demo scoreboard
+  demo                              Trust-layer beat: unsafe deny -> safe package -> demo scoreboard
   validate [paths...]               Structure + capability policy (--all/--json/--profile/--allow-empty)
   doctor                            Plugin + installed-skill health (--json)
   receipt / verify-receipt         Tamper-evident package receipt (--package-only for verify)
@@ -131,6 +136,7 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
     case 'compare-skill': return runCompareSkillCommand(argv.slice(1), options);
     case 'demo': return runDemoCommand(argv.slice(1), options);
     case 'watch': return runWatchCommand(argv.slice(1), options);
+    case 'init': return runInitCommand(argv.slice(1), options);
     case 'wb': return runWorkbenchCommand(argv.slice(1), options);
     case 'lib': return runLibCommand(argv.slice(1), options);
     case 'workflows': return runWorkflowsCommand(argv.slice(1), options);
@@ -141,6 +147,7 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
     case 'map': return runMapCli(argv.slice(1), options);
     case 'slim': return runSlimCli(argv.slice(1), options);
     case 'settings': return runSettingsCommand(argv.slice(1), options);
+    case 'session': return runSessionCommand(argv.slice(1), options);
     case 'ps': return runPsCommand(argv.slice(1), options);
     case 'os-env': return runOsEnvCommand(argv.slice(1), options);
     case 'os-find': return runOsFindCommand(argv.slice(1), options);
