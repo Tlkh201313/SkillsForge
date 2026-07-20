@@ -40,7 +40,7 @@ export const scenes: Scene[] = [
 export const stats = [
   { label: "skills", value: 511 },
   { label: "workflows", value: 100 },
-  { label: "commands", value: 136 },
+  { label: "commands", value: 140 },
   { label: "packs", value: 28 },
   { label: "profiles", value: 11 },
   { label: "agents", value: 98 },
@@ -73,7 +73,7 @@ export const architecture = [
   },
   {
     label: "Custom commands",
-    value: "136 command shims turn common AI CLI work into short, memorable entrypoints instead of long prompts.",
+    value: "140 command shims turn common AI CLI work into short, memorable entrypoints instead of long prompts.",
   },
   {
     label: "Workflow OS",

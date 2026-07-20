@@ -7,9 +7,9 @@ Post-hackathon hardening. **Productivity Work OS** stays the product; trust pipe
 | Item | Owner | Notes |
 |------|-------|-------|
 | Video check | Human | Verify README poster/MP4 and script in `docs/hackathon-demo.md` |
-| Push PR + CI green | Human | current PR -> `main` (0.4.2) |
+| Push PR + CI green | Human | current PR -> `main` (0.4.3) |
 | Devpost | Human | Developer Tools + limitations + free access |
-| Tag after merge | Human | Suggested `v0.4.2-buildweek` |
+| Tag after merge | Human | Suggested `v0.4.3-buildweek` |
 
 ## P1 - Product (same release train)
 

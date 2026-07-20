@@ -1,8 +1,8 @@
 # SkillsForge features inventory
 
-Judge-friendly map of **every** SkillsForge surface. **Product first:** SkillsForge is a **productivity Work OS** for agent coding (skills, packs, profiles, workflows, agents, commands, library, auto, workbench). **Trust** (validate / package / hooks / receipts) is the **safety layer underneath**, not the hero story.
+Judge-friendly map of **every** SkillsForge surface. **Product first:** SkillsForge is a **productivity Work OS** for AI CLI work: coding, design, research, video, docs, ops, launch, skills, packs, profiles, workflows, agents, commands, library, auto, and workbench. **Trust** (validate / package / hooks / receipts) is the **safety layer underneath**, not the hero story.
 
-Counts are live from catalog, plugin trees, CLI help, and capability registries - not marketing estimates. Version **0.4.2**.
+Counts are live from catalog, plugin trees, CLI help, and capability registries - not marketing estimates. Version **0.4.3**.
 
 ## Related docs
 
@@ -38,7 +38,7 @@ Counts are live from catalog, plugin trees, CLI help, and capability registries 
 | Packs | 28 | catalog packs |
 | Profiles | 11 | catalog profiles |
 | Agents | 98 | `plugins/skillsforge/agents/*.md` |
-| Slash commands | 136 | `plugins/skillsforge/commands/*.*` |
+| Slash commands | 140 | `plugins/skillsforge/commands/*.*` |
 | Workflows | 100 | `plugins/skillsforge/workflows/**/*.json` (10 categories) |
 | Hosts | 7 | `HOST_REGISTRY` in `lib/capabilities/hosts.mjs` |
 | PowerShell helpers | 22 | `POWERSHELL_HELPERS` in `lib/capabilities/powershell.mjs` |
@@ -554,7 +554,7 @@ Cloud and DevOps basics
 
 ## Commands
 
-**136 slash commands** in `plugins/skillsforge/commands/`. Classification is on-disk: files containing `generated thin command` are thin pack/domain shims. CLI-only surfaces such as `demo` and `hosts` live in the native CLI help.
+**140 slash commands** in `plugins/skillsforge/commands/`. Classification is on-disk: files containing `generated thin command` are thin pack/domain shims. CLI-only surfaces such as `demo` and `hosts` live in the native CLI help.
 
 ### Trust / upgraded entry commands
 
@@ -679,4 +679,4 @@ Run the bundled judge path: `node plugins/skillsforge/bin/skillsforge.mjs demo`.
 
 ---
 
-*Generated from live inventory. Snapshot counts: skills 511, packs 28, profiles 11, agents 98, command shims 136, workflows 100, hosts 7, PowerShell helpers 22, MCP tools 15, auto heroes 8.*
+*Generated from live inventory. Snapshot counts: skills 511, packs 28, profiles 11, agents 98, command shims 140, workflows 100, hosts 7, PowerShell helpers 22, MCP tools 15, auto heroes 8.*

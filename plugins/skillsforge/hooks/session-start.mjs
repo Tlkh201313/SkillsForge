@@ -1,14 +1,5 @@
-import { readFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const root = dirname(dirname(fileURLToPath(import.meta.url)));
-
-try {
-  const skill = await readFile(join(root, 'skills', 'using-skillsforge', 'SKILL.md'), 'utf8');
-  const overview = skill.split('## Overview')[1]?.split('##')[0]?.trim() ?? '';
-  process.stdout.write(`SkillsForge active. ${overview}\nCommands: skillsforge demo|doctor|validate|route|wb|lib|package|receipt|verify-receipt\n`);
-} catch {
-  process.stdout.write('SkillsForge active. Run skillsforge doctor to check plugin health.\n');
-}
+process.stdout.write([
+  'SkillsForge active: route first, load one skill only when needed.',
+  'Commands: sf digest|route|lib|workflows|map|slim|doctor'
+].join('\n') + '\n');
 process.exit(0);

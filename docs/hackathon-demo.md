@@ -25,7 +25,7 @@ Criteria map:
 | Time | Beat | What to show / say |
 | --- | --- | --- |
 | 0:00-0:20 | Thesis | *SkillsForge is a development plugin layer for AI CLIs: skills, custom commands, workflows, routing, and token-efficient operator tools.* |
-| 0:20-0:45 | Inventory + command surface | Show `vibe` and `catalog`: 511 skills, 28 packs, 11 profiles, 100 workflows, 136 command shims. |
+| 0:20-0:45 | Inventory + command surface | Show `vibe` and `catalog`: 511 skills, 28 packs, 11 profiles, 100 workflows, 140 command shims. |
 | 0:45-1:10 | Project library OS | `init --profile vibecoder --session-host codex` creates config, `skillsforge-library.html`, `skillsforge-ai-index.html`, and compact session memory; explain discoverability before context burn. |
 | 1:10-1:35 | Routing + token efficiency | `route --query`, `digest --query`, `map explore`, and `slim test` show selecting the right capability and compressing noisy output. |
 | 1:35-2:00 | Workflows + memory | `workflows recommend --query "release"` and `session score --json` show reusable playbooks, roles, commands, stop gates, artifacts, and compact usage memory. |

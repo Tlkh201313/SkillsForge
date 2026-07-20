@@ -93,6 +93,16 @@ test('bundled CLI help lists every subcommand', () => {
   }
 });
 
+test('bundled CLI version is lightweight and current', () => {
+  const result = spawnSync(process.execPath, [cli, '--version'], {
+    cwd: process.cwd(),
+    encoding: 'utf8'
+  });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.equal(result.stdout.trim(), 'skillsforge 0.4.3');
+  assert.equal(result.stderr, '');
+});
+
 test('bundled CLI exposes workbench, workflow, auto, library, and PowerShell commands', async () => {
   const { mkdir, mkdtemp, readFile, rm, writeFile } = await import('node:fs/promises');
   const { tmpdir } = await import('node:os');

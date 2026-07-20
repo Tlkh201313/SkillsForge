@@ -509,6 +509,7 @@ export const COMMANDS = [
   'pack-lifecycle', 'next', 'status', 'work-brief', 'work-plan', 'work-proof',
   'os-run', 'os-open', 'os-find', 'os-ports', 'os-env', 'os-copy-path',
   'os-clean', 'wb', 'lib', 'workflows', 'auto', 'ps',
+  'tokens', 'digest', 'map', 'slim',
   'agent-terminal', 'video-watch', 'video-frames', 'video-read', 'video-rate',
   'video-quality', 'video-design', 'remotion-video', 'skill-generate',
   'pack-author', 'builder', 'validation', 'vibecoder', 'mcp-build',

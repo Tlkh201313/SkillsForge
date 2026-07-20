@@ -1,13 +1,13 @@
 ![SkillsForge - Work OS for productive Agent Skills](assets/skillsforge-banner.svg)
 
 [![CI](https://github.com/Tlkh201313/SkillsForge/actions/workflows/ci.yml/badge.svg)](https://github.com/Tlkh201313/SkillsForge/actions/workflows/ci.yml)
-![Version](https://img.shields.io/badge/version-0.4.2-7c3aed)
+![Version](https://img.shields.io/badge/version-0.4.3-7c3aed)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 
 **SkillsForge is the Work OS that makes Agent Skills productive** - route the right skill, run the right workflow, keep a local library, and ship across AI CLIs. Trust (validate -> package -> hooks -> receipts) is built in so you can run that catalog safely.
 
-Current inventory: **511** skills - **28** packs - **11** profiles - **100** workflows - **98** agents - **136** command shims.
+Current inventory: **511** skills - **28** packs - **11** profiles - **100** workflows - **98** agents - **140** command shims.
 
 ![SkillsForge local library command center](assets/skillsforge-library-preview.png)
 
@@ -19,7 +19,7 @@ The preview is an illustrative product visual with no embedded text claims. Sour
 
 | You want... | SkillsForge gives you... |
 |---|---|
-| Less flailing in Codex / Claude / Cursor | Packs, profiles, roles, and `auto` / `lib recommend` routing |
+| Less flailing across AI CLI work | Packs, profiles, roles, and `auto` / `lib recommend` routing for coding, design, research, video, docs, ops, and launch |
 | Reusable playbooks | **100** dry-run workflows + workbench (`wb`) + PowerShell `sf-*` helpers |
 | One install story across hosts | `hosts` + `install` with honest fidelity labels |
 | Confidence the skill isn't a random blob | Sidecars, validate/package, PreToolUse where supported, receipts |
@@ -40,7 +40,7 @@ Packaged MP4: [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-dem
 |---|---|
 | Thesis | Vibe coding needs a development plugin layer: skills, commands, workflows, indexes, routing |
 | AI use | Codex accelerated implementation/video/verification; GPT-5.6 helped reason through claims and review quality |
-| Scale | 511 skills / 28 packs / 11 profiles / 100 workflows / 98 agents / 136 command shims |
+| Scale | 511 skills / 28 packs / 11 profiles / 100 workflows / 98 agents / 140 command shims |
 | Operator path | `vibe` -> `catalog` / `lib` -> `route` / `workflows` -> `map` / `slim` / `digest` |
 | Safety layer | Validation, packaging, receipts, and guardrails sit underneath the productivity surface |
 | CTA | Free local test: `node plugins/skillsforge/bin/skillsforge.mjs vibe` |
@@ -73,7 +73,7 @@ SkillsForge is that layer:
 
 ## Codex + GPT-5.6 collaboration
 
-This Build Week work used Codex and GPT-5.6 as implementation and review accelerators. Codex helped navigate the repository, produce the demo video, generate audio assets, update docs, and run verification commands. GPT-5.6 helped reason through product claims, edge cases, timing, and review quality.
+This Build Week work used Codex and GPT-5.6 as implementation and review accelerators across the full working surface, not only coding. Codex helped navigate the repository, shape product positioning, improve the local library UX, produce the demo video, generate audio assets, update docs, and run verification commands. GPT-5.6 helped reason through product claims, edge cases, timing, and review quality.
 
 Human decisions stayed human: product scope, claim boundaries, what not to overstate, and what evidence was strong enough for submission. The video says this explicitly.
 
@@ -152,7 +152,7 @@ Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/r
 | One plugin | `skillsforge` (Claude + Codex manifests) |
 | Productivity catalog | **511** skills, **28** packs, **11** profiles |
 | Workflows | **100** dry-run definitions under `plugins/skillsforge/workflows/` |
-| Agents / commands | **98** agents - **136** command shims |
+| Agents / commands | **98** agents - **140** command shims |
 | Project OS | `init`, `settings`, `session` - config, compact usage memory, AI-facing links |
 | Library | `lib build|update|serve|recommend|select|unselect|selected|open` - local HTML + AI index + project selection |
 | Auto router | `auto plan`, `auto run --read-only` |
@@ -210,6 +210,38 @@ Codex **runtime** policy for an external skill requires `skillsforge package --h
 /skillsforge:validate path/to/skill
 /skillsforge:route how do I validate a skill package
 /skillsforge:doctor
+```
+
+Claude Code performance note: SkillsForge is named and routed. The plugin manifest does not embed all 511 skill bodies into the startup prompt. Skill text remains in `plugins/skillsforge/skills/<id>/SKILL.md` and is loaded when the matching skill or command is called. The SessionStart hook prints only a compact SkillsForge status line and command hint, so normal Claude Code startup should not be dominated by the full catalog. Use `sf route`, `sf lib recommend`, `sf tokens`, `sf digest`, `sf map`, and `sf slim` to keep context small before opening a skill body.
+
+### Update / upgrade
+
+Current repository version: **0.4.3**. Users should choose when to update; SkillsForge does not auto-replace local plugins.
+
+Codex marketplace snapshot:
+
+```sh
+codex plugin marketplace upgrade
+codex plugin list --json
+codex plugin remove skillsforge@skillsforge-marketplace --json
+codex plugin add skillsforge@skillsforge-marketplace --json
+```
+
+Claude Code:
+
+```text
+/plugin update skillsforge@skillsforge-marketplace
+```
+
+Clone / local development install:
+
+```sh
+git fetch --tags
+git pull --ff-only
+npm ci
+npm run build
+npm link
+sf doctor
 ```
 
 ### Multi-host skill install
@@ -354,7 +386,7 @@ npm run check
 | [docs/hackathon-demo.md](docs/hackathon-demo.md) | Timed judge script |
 | [docs/competitive-matrix.md](docs/competitive-matrix.md) | Claim boundaries |
 | [docs/submit-checklist.md](docs/submit-checklist.md) | Human submit gates |
-| [docs/roadmap-next.md](docs/roadmap-next.md) | Post-0.4.2 priorities |
+| [docs/roadmap-next.md](docs/roadmap-next.md) | Post-0.4.3 priorities |
 
 ---
 

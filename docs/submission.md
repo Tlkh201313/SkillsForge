@@ -20,13 +20,13 @@
 
 ## Human / Stage One blockers (you execute)
 
-- [ ] Start a **Codex + GPT-5.6** qualifying session after build-window start
-- [ ] Run `/feedback` in that thread; paste Session ID into `BUILD_WEEK.md` (replace `REPLACE_WITH_CODEX_FEEDBACK_SESSION_ID`)
-- [ ] Commit: `docs: record Build Week Codex Session ID`
+- [x] Start a **Codex + GPT-5.6** qualifying session after build-window start
+- [x] Run `/feedback` in that thread; paste Session ID into `BUILD_WEEK.md`
+- [x] Commit: record Build Week Codex Session ID
 - [ ] Upload the committed 2:22 YouTube demo as public/unlisted **under 3 minutes** (see [video.md](video.md) / [hackathon-demo.md](hackathon-demo.md))
 - [ ] Push; confirm CI green on `main`
 - [ ] Devpost: category Developer Tools, repo, Session ID, video, limitations, free access through judging
-- [ ] Tag release (suggested: `v0.4.2-buildweek`)
+- [ ] Tag release (suggested: `v0.4.3-buildweek`)
 
 See also: [submit-checklist.md](submit-checklist.md), [roadmap-next.md](roadmap-next.md), [features.md](features.md).
 

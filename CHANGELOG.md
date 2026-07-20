@@ -2,6 +2,19 @@
 
 All notable changes to SkillsForge are recorded here.
 
+## [0.4.3] - 2026-07-20
+
+### Changed - Submission polish and host update guidance
+
+- Recorded the Codex `/feedback` Session ID and broadened Build Week notes to cover product, design, docs, media, verification, and release planning, not only coding.
+- Updated the visible inventory to **511** skills, **28** packs, **11** profiles, **100** workflows, **98** agents, and **140** command shims.
+- Added explicit Codex and Claude Code update guidance while keeping plugin upgrades user-controlled.
+- Documented Claude Code's lazy-load expectation: compact SessionStart hint first, route/recommend before loading individual skill bodies.
+
+### Added - Lightweight version check
+
+- `skillsforge version`, `skillsforge --version`, and `skillsforge -v` print the current CLI version without loading the skill catalog or library index.
+
 ## [0.4.2] - 2026-07-19
 
 ### Added - ForgeMap + ForgeSlim for AI CLIs

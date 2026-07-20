@@ -8,7 +8,7 @@ import { validateRepository } from '../scripts/validate-repo-lib.mjs';
 test('current repository passes repository validation', async () => {
   const result = await validateRepository(process.cwd());
   assert.equal(result.ok, true, result.text);
-  assert.equal(result.version, '0.4.2');
+  assert.equal(result.version, '0.4.3');
 });
 
 test('every lockstep version source is enforced', async (context) => {

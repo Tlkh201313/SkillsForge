@@ -31,6 +31,7 @@ import { runInitCommand } from './cli/commands/init.mjs';
 export { enforcePolicy, exportPortableSkill };
 
 const modulePath = fileURLToPath(import.meta.url);
+const CLI_VERSION = '0.4.3';
 
 export async function main(argv = process.argv.slice(2), options = {}) {
   const command = argv[0];
@@ -42,6 +43,7 @@ Default output is compact. Most commands accept --json. Operator cmds also accep
 Prefer --dry-run before writes. Install/remove/write require explicit confirmation.
 
   help                              Show this help
+  version / --version               Print CLI version
   init                              Initialize project library HTML, config, and session memory
 
 Catalog & authoring:
@@ -101,6 +103,11 @@ Compat OS helpers (prefer wb/ps when possible):
 
 Exit codes: 0 success, 1 command failure, 2 invalid usage
 `);
+    return 0;
+  }
+
+  if (command === 'version' || command === '--version' || command === '-v') {
+    process.stdout.write(`skillsforge ${CLI_VERSION}\n`);
     return 0;
   }
 

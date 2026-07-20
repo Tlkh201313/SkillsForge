@@ -17030,8 +17030,8 @@ var init_receipt = __esm({
   "lib/capabilities/receipt.mjs"() {
     init_dependency_graph();
     init_policy();
-    SCANNER_VERSION = "0.4.2";
-    RECEIPT_VERSION = "0.4.2";
+    SCANNER_VERSION = "0.4.3";
+    RECEIPT_VERSION = "0.4.3";
   }
 });
 
@@ -18323,7 +18323,7 @@ var init_evidence = __esm({
     init_skill_loader();
     init_receipt();
     init_verify();
-    EVIDENCE_VERSION = "0.4.2";
+    EVIDENCE_VERSION = "0.4.3";
     moduleRoot = resolve16(dirname7(fileURLToPath5(import.meta.url)), "../..");
   }
 });
@@ -26013,6 +26013,7 @@ function formatInitText(result) {
 
 // scripts/skillsforge-cli.mjs
 var modulePath2 = fileURLToPath6(import.meta.url);
+var CLI_VERSION = "0.4.3";
 async function main(argv = process.argv.slice(2), options = {}) {
   const command = argv[0];
   if (!command || command === "help" || command === "--help") {
@@ -26023,6 +26024,7 @@ Default output is compact. Most commands accept --json. Operator cmds also accep
 Prefer --dry-run before writes. Install/remove/write require explicit confirmation.
 
   help                              Show this help
+  version / --version               Print CLI version
   init                              Initialize project library HTML, config, and session memory
 
 Catalog & authoring:
@@ -26081,6 +26083,11 @@ Compat OS helpers (prefer wb/ps when possible):
   os-run is dry-run unless --yes
 
 Exit codes: 0 success, 1 command failure, 2 invalid usage
+`);
+    return 0;
+  }
+  if (command === "version" || command === "--version" || command === "-v") {
+    process.stdout.write(`skillsforge ${CLI_VERSION}
 `);
     return 0;
   }

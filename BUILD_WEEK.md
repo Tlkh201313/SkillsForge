@@ -3,7 +3,7 @@
 **Track:** Developer Tools  
 **Project:** SkillsForge - Work OS for productive Agent Skills (trust safety layer included)  
 **Build window:** 2026-07-13 09:00 PT -> 2026-07-21 17:00 PT  
-**Branch:** `main`
+**Branch:** `upgrade/work-os-quality` -> `main`
 
 ## Codex / GPT-5.6 Session ID (required)
 
@@ -11,9 +11,9 @@
 
 | Field | Value |
 |---|---|
-| Codex `/feedback` Session ID | `REPLACE_WITH_CODEX_FEEDBACK_SESSION_ID` |
+| Codex `/feedback` Session ID | `019f75ef-1cae-7370-863c-c76f553ac2a7` |
 | Model | GPT-5.6 (via Codex) |
-| Qualifying thread started | _fill after session_ |
+| Qualifying thread started | 2026-07-20 |
 
 ### How to obtain the Session ID
 
@@ -46,11 +46,10 @@ Without a real Session ID, Stage One compliance fails. Do **not** invent a Sessi
 
 ## How Codex and GPT-5.6 were used
 
-Replace this section with specifics from the qualifying Codex thread once available. Intended narrative:
-
-- Codex + GPT-5.6 authored and iterated the native Codex plugin contracts, package compiler, and hook policy mapping.
-- Codex reviewed Official Codex plugin/skills/hooks docs against the implementation.
-- Human partner directed architecture (one guarded skill per plugin, honest claim boundaries) and ran CI/demo rehearsal.
+- Codex + GPT-5.6 accelerated the whole working surface, not only coding: product positioning, skill/workflow architecture, library UX, CLI ergonomics, docs, media assets, verification, and submission readiness.
+- Codex implemented and iterated the native Codex plugin contracts, package compiler, hook policy mapping, local library/session OS, video/media skills, and command surfaces.
+- Codex reviewed official host behavior through local CLI help and repo tests before writing update/install instructions.
+- Human partner directed product scope, hackathon category, claim boundaries, design taste, and what evidence was strong enough for submission.
 
 ## Evidence artifacts
 

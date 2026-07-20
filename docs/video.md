@@ -45,7 +45,7 @@ Use these committed visuals in this order:
 | `assets/skillsforge-library-preview.png` | Product preview for local library / workflows / trust pipeline |
 | `assets/skillsforge-demo-poster.png` | Visible fallback when GitHub does not play committed MP4 inline |
 | `assets/skillsforge-universal-fanout.svg` | Host support and package-fidelity boundary |
-| `assets/skillsforge-star-map.svg` | Current 511 / 28 / 11 / 100 / 98 / 136 / 15 inventory map |
+| `assets/skillsforge-star-map.svg` | Current 511 / 28 / 11 / 100 / 98 / 140 / 15 inventory map |
 | `assets/skillsforge-trust-pipeline.svg` | Safety layer explanation |
 
 The generated preview image intentionally has no embedded text claims; keep exact counts in Markdown/SVG text only.
