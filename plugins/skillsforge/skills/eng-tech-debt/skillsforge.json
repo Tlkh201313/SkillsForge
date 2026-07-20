@@ -8,7 +8,11 @@
       "run eng tech debt",
       "eng tech debt skill",
       "help with eng tech debt",
-      "eng eng tech debt"
+      "eng eng tech debt",
+      "engineer eng tech debt",
+      "fullstack eng tech debt",
+      "code eng tech debt",
+      "repo eng tech debt"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
@@ -16,7 +20,11 @@
       "write application code only",
       "design mockups only",
       "marketing copy only",
-      "finance ledger only"
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

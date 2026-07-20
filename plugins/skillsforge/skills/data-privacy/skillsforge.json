@@ -8,14 +8,21 @@
       "run data privacy",
       "data privacy skill",
       "help with data privacy",
-      "data data privacy"
+      "data data privacy",
+      "metrics data privacy",
+      "tracking data privacy",
+      "analytics data privacy"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "UI styling only",
+      "no event or metric surface",
+      "invent event volume",
+      "track personal data without purpose",
+      "skip data quality checks",
+      "mix metric names without definitions"
     ],
     "mode": "explicit",
     "pack": "data"

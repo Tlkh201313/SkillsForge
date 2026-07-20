@@ -1,6 +1,6 @@
 interface:
   display_name: Role Crew Coordinator
-  short_description: Use when doing role crew coordinator work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing role crew coordinator work for roles-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the role-crew-coordinator skill for this task.
 policy:
   allow_implicit_invocation: false

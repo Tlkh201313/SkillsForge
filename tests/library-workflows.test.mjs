@@ -7,6 +7,7 @@ import { buildLibraryIndex, planSkillRemoval, recommendFromLibrary, writeLibrary
 import { exportPowerShellHelpers, POWERSHELL_HELPERS } from '../lib/capabilities/powershell.mjs';
 import { loadAllSkills } from '../lib/capabilities/skill-loader.mjs';
 import { loadWorkflows, planAuto, recommendWorkflows, runAutoReadOnly, runWorkflowDryRun, showWorkflow } from '../lib/capabilities/workflows.mjs';
+import { VIBE_CODER_SKILLS } from './vibe-skill-expansion-fixtures.mjs';
 
 const root = process.cwd();
 
@@ -81,6 +82,25 @@ test('workflow recommended skills and agents resolve to shipped files', async ()
   assert.deepEqual(missing, []);
 });
 
+test('workflows cover new vibe-coder builder, validation, startup, and proof skills', async () => {
+  const result = await loadWorkflows(root);
+  assert.equal(result.ok, true, JSON.stringify(result.errors));
+  const newSkillSet = new Set(VIBE_CODER_SKILLS);
+  const covered = new Set();
+  for (const workflow of result.workflows) {
+    for (const skill of workflow.recommendedSkills) {
+      if (newSkillSet.has(skill)) covered.add(skill);
+    }
+  }
+  assert.ok(
+    covered.size >= 20,
+    `expected >=20 new vibe-coder skills in workflows, got ${covered.size}: ${[...covered].sort().join(', ')}`
+  );
+  assert.ok([...covered].some((id) => id.startsWith('build-')), 'expected builder skill coverage');
+  assert.ok([...covered].some((id) => id.startsWith('validate-')), 'expected validation skill coverage');
+  assert.ok([...covered].some((id) => id.startsWith('startup-')), 'expected startup skill coverage');
+});
+
 test('auto plan and read-only run never execute writes', async () => {
   const plan = await planAuto(root, 'audit README claims and demo proof', { limit: 3 });
   assert.equal(plan.ok, true);
@@ -99,7 +119,7 @@ test('library index and HTML artifacts include skills, workflows, hosts, and AI 
   context.after(() => rm(outDir, { recursive: true, force: true }));
 
   const index = await buildLibraryIndex(root, { home: outDir });
-  assert.ok(index.stats.skills >= 399);
+  assert.ok(index.stats.skills >= 499);
   assert.equal(index.stats.workflows, 100);
   assert.ok(index.skills.some((skill) => skill.id === 'using-skillsforge'));
   assert.ok(index.skills.some((skill) => skill.id === 'update-skill-library'));
@@ -120,6 +140,10 @@ test('library index and HTML artifacts include skills, workflows, hosts, and AI 
   assert.match(html, /allowMutations/);
   assert.match(html, /Session-aware local index/);
   assert.match(html, /sourceFilter/);
+  assert.match(html, /vibeBuilderPanel/);
+  assert.match(html, /quickFilters/);
+  assert.match(html, /viewModeTable/);
+  assert.match(html, /Vibe Builder/);
   const ai = await readFile(result.files.ai, 'utf8');
   assert.match(ai, /skillsforge-ai-index/);
   assert.match(ai, /sessionInstalled/);

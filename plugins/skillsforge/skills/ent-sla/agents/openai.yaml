@@ -1,6 +1,6 @@
 interface:
   display_name: Ent Sla
-  short_description: Use when doing ent sla work and you need bounded enterprise-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing ent sla work for enterprise-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the ent-sla skill for this task.
 policy:
   allow_implicit_invocation: false

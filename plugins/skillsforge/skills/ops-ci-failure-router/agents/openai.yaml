@@ -1,0 +1,6 @@
+interface:
+  display_name: Ops Ci Failure Router
+  short_description: Use when doing ops ci failure router work for environment, CI, deployment, reliability, and operational readiness work and you need environment map, failing signal, command path, rollback option, and
+  default_prompt: Use the ops-ci-failure-router skill for this task.
+policy:
+  allow_implicit_invocation: false

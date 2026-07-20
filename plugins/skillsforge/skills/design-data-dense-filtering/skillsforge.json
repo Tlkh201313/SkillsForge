@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "design data dense filtering",
+      "run design data dense filtering",
+      "design data dense filtering skill",
+      "help with design data dense filtering",
+      "design design data dense filtering",
+      "ui design data dense filtering",
+      "polish design data dense filtering",
+      "layout design data dense filtering"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "backend schema migration only",
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
+    ],
+    "mode": "explicit",
+    "pack": "design"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

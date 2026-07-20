@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "media demo proof pack",
+      "run media demo proof pack",
+      "media demo proof pack skill",
+      "help with media demo proof pack",
+      "media media demo proof pack",
+      "docs media demo proof pack",
+      "guide media demo proof pack",
+      "demo media demo proof pack"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "database migration only",
+      "authz policy rewrite",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
+    ],
+    "mode": "explicit",
+    "pack": "media"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

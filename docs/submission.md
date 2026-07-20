@@ -25,7 +25,7 @@
 - [ ] Record/upload public YouTube demo **under 3 minutes** (see [video.md](video.md) / [hackathon-demo.md](hackathon-demo.md))
 - [ ] Push; confirm CI green on `main`
 - [ ] Devpost: category Developer Tools, repo, Session ID, video, limitations, free access through judging
-- [ ] Tag release (suggested: `v0.4.1-buildweek`)
+- [ ] Tag release (suggested: `v0.4.2-buildweek`)
 
 See also: [submit-checklist.md](submit-checklist.md), [roadmap-next.md](roadmap-next.md), [features.md](features.md).
 
@@ -57,5 +57,5 @@ codex plugin add skillsforge@skillsforge-marketplace
 - Pressure is a fixture gate (expanding toward behavioral pressure)
 - Receipts are unsigned tamper-evident hashes (not third-party attestation)
 - Judge demo scoreboard (`artifacts/demo-evidence/demo-scoreboard.json`) is a package-tree hash, not a full `buildReceipt`/`verifyReceipt` trust receipt
-- 399 catalog entries / 50 design skills / eight auto-route heroes - honest depth claim (contract-backed domain skills)
+- 499 catalog entries / 60 design skills / eight auto-route heroes - honest depth claim (contract-backed domain skills)
 - Codex does not intercept every tool path; incomplete matchers; invalid hook output can fail open at the host

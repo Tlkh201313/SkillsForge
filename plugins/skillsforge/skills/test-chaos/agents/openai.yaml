@@ -1,6 +1,6 @@
 interface:
   display_name: Test Chaos
-  short_description: Use when doing test chaos work and you need bounded testing-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing test chaos work for testing-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the test-chaos skill for this task.
 policy:
   allow_implicit_invocation: false

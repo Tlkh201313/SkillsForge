@@ -8,14 +8,21 @@
       "run design color",
       "design color skill",
       "help with design color",
-      "design design color"
+      "design design color",
+      "ui design color",
+      "polish design color",
+      "layout design color"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

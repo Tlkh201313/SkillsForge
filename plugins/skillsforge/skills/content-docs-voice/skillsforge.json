@@ -8,14 +8,22 @@
       "run content docs voice",
       "content docs voice skill",
       "help with content docs voice",
-      "content content docs voice"
+      "content content docs voice",
+      "docs content docs voice",
+      "media content docs voice",
+      "guide content docs voice",
+      "demo content docs voice"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "database-only task",
+      "no audience or source material",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "content"

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "validate mobile layout",
+      "run validate mobile layout",
+      "validate mobile layout skill",
+      "help with validate mobile layout",
+      "validation validate mobile layout",
+      "prove validate mobile layout",
+      "audit validate mobile layout",
+      "verify validate mobile layout",
+      "check validate mobile layout"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "new feature build only",
+      "brainstorming without proof artifacts",
+      "make claims without evidence",
+      "accept marketing language as proof",
+      "delete or install while validating",
+      "score quality without a reproducible check"
+    ],
+    "mode": "explicit",
+    "pack": "validation"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

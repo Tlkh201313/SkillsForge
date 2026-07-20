@@ -1,6 +1,6 @@
 interface:
   display_name: Design Dashboard Density
-  short_description: Use when doing design dashboard density work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing design dashboard density work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibil
   default_prompt: Use the design-dashboard-density skill for this task.
 policy:
   allow_implicit_invocation: false

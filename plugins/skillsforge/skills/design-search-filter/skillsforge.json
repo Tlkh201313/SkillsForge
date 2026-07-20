@@ -8,14 +8,21 @@
       "run design search filter",
       "design search filter skill",
       "help with design search filter",
-      "design design search filter"
+      "design design search filter",
+      "ui design search filter",
+      "polish design search filter",
+      "layout design search filter"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

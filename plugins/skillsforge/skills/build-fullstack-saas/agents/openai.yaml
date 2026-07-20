@@ -1,0 +1,6 @@
+interface:
+  display_name: Build Fullstack Saas
+  short_description: Use when doing build fullstack saas work for full-stack SaaS, CRUD, auth, admin, MVP, and launch-proof builder work and you need repo map, data model, auth boundary, UI flow, deploy path, test plan, a
+  default_prompt: Use the build-fullstack-saas skill for this task.
+policy:
+  allow_implicit_invocation: false

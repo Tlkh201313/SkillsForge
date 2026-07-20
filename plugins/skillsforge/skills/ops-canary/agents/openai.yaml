@@ -1,6 +1,6 @@
 interface:
   display_name: Ops Canary
-  short_description: Use when doing ops canary work and you need bounded ops-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing ops canary work for environment, CI, deployment, reliability, and operational readiness work and you need environment map, failing signal, command path, rollback option, and runbook not
   default_prompt: Use the ops-canary skill for this task.
 policy:
   allow_implicit_invocation: false

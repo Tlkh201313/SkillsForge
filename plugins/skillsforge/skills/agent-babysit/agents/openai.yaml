@@ -1,6 +1,6 @@
 interface:
   display_name: Agent Babysit
-  short_description: Use when doing agent babysit work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing agent babysit work for agent workflow planning, replay, routing, tool policy, and token-budget work and you need agent role, tool boundary, context budget, stop gate, replay path, and h
   default_prompt: Use the agent-babysit skill for this task.
 policy:
   allow_implicit_invocation: false

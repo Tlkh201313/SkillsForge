@@ -8,7 +8,11 @@
       "run eng module boundaries",
       "eng module boundaries skill",
       "help with eng module boundaries",
-      "eng eng module boundaries"
+      "eng eng module boundaries",
+      "engineer eng module boundaries",
+      "fullstack eng module boundaries",
+      "code eng module boundaries",
+      "repo eng module boundaries"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
@@ -16,7 +20,11 @@
       "write application code only",
       "design mockups only",
       "marketing copy only",
-      "finance ledger only"
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

@@ -39,7 +39,11 @@
   "recommendedSkills": [
     "eng-api-design",
     "eng-contracts",
-    "test-contract"
+    "test-contract",
+    "build-mcp-server",
+    "build-mcp-tool-contract",
+    "validate-mcp-contract",
+    "build-plugin-marketplace-entry"
   ],
   "recommendedAgents": [
     "api-designer",

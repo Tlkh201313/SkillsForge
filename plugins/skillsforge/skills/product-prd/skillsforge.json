@@ -8,14 +8,21 @@
       "run product prd",
       "product prd skill",
       "help with product prd",
-      "product product prd"
+      "product product prd",
+      "plan product prd",
+      "startup product prd",
+      "mvp product prd"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "backend-only patch with locked scope",
+      "pretend user data exists",
+      "build a full roadmap without constraints",
+      "invent customer quotes",
+      "write code before scope is locked",
+      "optimize vanity metrics only"
     ],
     "mode": "explicit",
     "pack": "product"

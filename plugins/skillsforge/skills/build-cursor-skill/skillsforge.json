@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "build cursor skill",
+      "run build cursor skill",
+      "build cursor skill skill",
+      "help with build cursor skill",
+      "builder build cursor skill",
+      "create build cursor skill",
+      "ship build cursor skill",
+      "scaffold build cursor skill",
+      "ai cli build cursor skill"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "read-only audit only",
+      "no host or SDK target selected",
+      "pure code review with no build artifact",
+      "marketing copy only",
+      "live install without explicit confirmation",
+      "invent SDK behavior"
+    ],
+    "mode": "explicit",
+    "pack": "builder"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

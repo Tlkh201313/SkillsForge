@@ -1,0 +1,6 @@
+interface:
+  display_name: Research Source Trust
+  short_description: Use when doing research source trust work for source-grounded product, technical, market, or open-source research and you need question, source map, trust grade, contradictory evidence, and decision s
+  default_prompt: Use the research-source-trust skill for this task.
+policy:
+  allow_implicit_invocation: false

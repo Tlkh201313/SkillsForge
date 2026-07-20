@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "fullstack architecture plan",
+      "run fullstack architecture plan",
+      "fullstack architecture plan skill",
+      "help with fullstack architecture plan",
+      "eng fullstack architecture plan",
+      "engineer fullstack architecture plan",
+      "fullstack fullstack architecture plan",
+      "code fullstack architecture plan",
+      "repo fullstack architecture plan"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
+    ],
+    "mode": "explicit",
+    "pack": "eng"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

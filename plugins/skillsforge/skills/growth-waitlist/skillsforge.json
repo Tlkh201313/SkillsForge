@@ -8,14 +8,20 @@
       "run growth waitlist",
       "growth waitlist skill",
       "help with growth waitlist",
-      "growth growth waitlist"
+      "growth growth waitlist",
+      "launch growth waitlist",
+      "seo growth waitlist",
+      "campaign growth waitlist"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "technical migration only",
+      "fake social proof",
+      "invent traffic numbers",
+      "spam outreach",
+      "optimize copy without a target segment"
     ],
     "mode": "explicit",
     "pack": "growth"

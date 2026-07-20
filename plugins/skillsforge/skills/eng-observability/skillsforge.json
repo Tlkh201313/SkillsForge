@@ -8,7 +8,11 @@
       "run eng observability",
       "eng observability skill",
       "help with eng observability",
-      "eng eng observability"
+      "eng eng observability",
+      "engineer eng observability",
+      "fullstack eng observability",
+      "code eng observability",
+      "repo eng observability"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
@@ -16,7 +20,11 @@
       "write application code only",
       "design mockups only",
       "marketing copy only",
-      "finance ledger only"
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

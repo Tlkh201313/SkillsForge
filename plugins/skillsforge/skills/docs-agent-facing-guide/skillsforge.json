@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "docs agent facing guide",
+      "run docs agent facing guide",
+      "docs agent facing guide skill",
+      "help with docs agent facing guide",
+      "docs docs agent facing guide",
+      "media docs agent facing guide",
+      "guide docs agent facing guide",
+      "demo docs agent facing guide"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "implement production code only",
+      "pentest live systems",
+      "deploy to prod only",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
+    ],
+    "mode": "explicit",
+    "pack": "docs"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

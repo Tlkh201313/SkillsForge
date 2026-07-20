@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "research pricing signal",
+      "run research pricing signal",
+      "research pricing signal skill",
+      "help with research pricing signal",
+      "research research pricing signal",
+      "map research pricing signal",
+      "compare research pricing signal",
+      "source trust research pricing signal"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "local bug fix with no external question",
+      "unsupported claim generation only",
+      "invent market stats",
+      "use unattributed competitor claims",
+      "ship recommendations without source quality",
+      "research already answered by local code"
+    ],
+    "mode": "explicit",
+    "pack": "research"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

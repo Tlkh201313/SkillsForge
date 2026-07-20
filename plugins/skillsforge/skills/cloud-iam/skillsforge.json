@@ -8,14 +8,22 @@
       "run cloud iam",
       "cloud iam skill",
       "help with cloud iam",
-      "cloud-devops cloud iam"
+      "cloud-devops cloud iam",
+      "ops cloud iam",
+      "ci cloud iam",
+      "deploy cloud iam",
+      "env cloud iam"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "pure frontend styling only",
-      "legal contract drafting"
+      "legal contract drafting",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
     ],
     "mode": "explicit",
     "pack": "cloud-devops"

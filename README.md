@@ -7,7 +7,7 @@
 
 **SkillsForge is the Work OS that makes Agent Skills productive** - route the right skill, run the right workflow, keep a local library, and ship across AI CLIs. Trust (validate -> package -> hooks -> receipts) is built in so you can run that catalog safely.
 
-Current inventory: **399** skills - **26** packs - **10** profiles - **100** workflows - **98** agents - **124** commands.
+Current inventory: **499** skills - **28** packs - **11** profiles - **100** workflows - **98** agents - **135** command shims.
 
 ---
 
@@ -37,7 +37,7 @@ Packaged MP4: [`assets/video/skillsforge-demo.mp4`](assets/video/skillsforge-dem
 | Beat | What you'll see |
 |---|---|
 | Thesis | Agent work gets productive when skills + workflows are discoverable and runnable |
-| Scale | 399 skills / 26 packs / 98 agents / 124 commands / 100 workflows |
+| Scale | 499 skills / 28 packs / 98 agents / 135 command shims / 100 workflows |
 | Operator path | `vibe` - `lib recommend` - `workflows recommend` - `auto run --read-only` - `wb status` - `map` - `slim` - `tokens` / `digest` / `next` |
 | Safety beat | Unsafe example denied -> safe example packaged -> **demo scoreboard** (package-tree hash) |
 | CTA | Clone + `node plugins/skillsforge/bin/skillsforge.mjs demo` |
@@ -50,7 +50,7 @@ Most skill dumps optimize for **count**. Operators need **throughput**: which sk
 
 SkillsForge is that layer:
 
-1. **Catalog + profiles** - 26 packs / 10 profiles spanning methodology, eng, design, product, ops, security, and more
+1. **Catalog + profiles** - 28 packs / 11 profiles spanning builder, validation, methodology, eng, design, product, ops, security, and more
 2. **Route & recommend** - `route`, `lib recommend`, `workflows recommend`, `auto plan|run --read-only` (returns `no confident match` instead of forcing weak hits)
 3. **Operator terminals** - `wb`, `os-*`, `ps export` -> `sf-*.ps1`
 4. **Ship across hosts** - Codex + Claude Code runtime where supported; package-fidelity elsewhere
@@ -82,7 +82,7 @@ Honest differentiation: [docs/competitive-matrix.md](docs/competitive-matrix.md)
 | Dimension | Local evidence |
 |---|---|
 | Core pitch | Productivity Work OS for Agent Skills |
-| Catalog | 399/399 skills ship `skillsforge.json`; design pack has 50 skills |
+| Catalog | 499/499 skills ship `skillsforge.json`; design pack has 60 skills |
 | Operator CLI | `vibe`, `lib`, `workflows`, `auto`, `wb`, `ps`, `demo` |
 | Safety layer | validate -> package -> PreToolUse -> receipt |
 | SkillShield | Best-effort skill-body scanner |
@@ -124,9 +124,9 @@ Timed script: [docs/hackathon-demo.md](docs/hackathon-demo.md). Roadmap: [docs/r
 | Surface | Actual implementation |
 |---|---|
 | One plugin | `skillsforge` (Claude + Codex manifests) |
-| Productivity catalog | **399** skills, **26** packs, **10** profiles |
+| Productivity catalog | **499** skills, **28** packs, **11** profiles |
 | Workflows | **100** dry-run definitions under `plugins/skillsforge/workflows/` |
-| Agents / commands | **98** agents - **124** command shims |
+| Agents / commands | **98** agents - **135** command shims |
 | Library | `lib build|update|serve|recommend` - local HTML + AI index + settings-aware session hints |
 | Auto router | `auto plan`, `auto run --read-only` |
 | Workbench | `wb status|tree|find|grep|diff|errors|bigfiles|recent|proof` |

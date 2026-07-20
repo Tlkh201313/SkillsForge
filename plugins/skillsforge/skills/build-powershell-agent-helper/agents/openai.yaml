@@ -1,0 +1,6 @@
+interface:
+  display_name: Build Powershell Agent Helper
+  short_description: Use when doing build powershell agent helper work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host matrix, interface contract, scaffold boundary, smoke command, and validat
+  default_prompt: Use the build-powershell-agent-helper skill for this task.
+policy:
+  allow_implicit_invocation: false

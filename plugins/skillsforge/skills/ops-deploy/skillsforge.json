@@ -8,14 +8,21 @@
       "run ops deploy",
       "ops deploy skill",
       "help with ops deploy",
-      "ops ops deploy"
+      "ops ops deploy",
+      "ci ops deploy",
+      "deploy ops deploy",
+      "env ops deploy"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "local UI mock only",
-      "ignore runbooks and alerts"
+      "ignore runbooks and alerts",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
     ],
     "mode": "explicit",
     "pack": "ops"

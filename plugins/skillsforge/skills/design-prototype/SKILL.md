@@ -1,6 +1,6 @@
 ---
 name: design-prototype
-description: Use when doing design prototype work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
+description: Use when doing design prototype work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility check, and polish pass before claiming progress.
 license: MIT
 hooks:
   PreToolUse:
@@ -15,12 +15,13 @@ hooks:
 
 ## Overview
 
-design prototype turns a design-pack request into a bounded, verifiable output with evidence, stop gates, and a concrete next action.
+Design Prototype converts a dense product UI, design system, motion, accessibility, and visual QA work request into layout decision, component states, responsive proof, accessibility check, and polish pass. It improves the original response by forcing screenshots, CSS, design tokens, DOM state, viewport checks, or user-provided mockups, explicit stop gates, and a concrete verification step before any claim of completion.
 
 ## When to Use
 
-- Use when doing design prototype work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
-- Need design prototype with trusted SkillsForge artifacts
+- Use when doing design prototype work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility check, and polish pass before claiming progress.
+- Need design prototype with screenshots, CSS, design tokens, DOM state, viewport checks, or user-provided mockups
+- Need a bounded artifact instead of broad advice for dense product UI, design system, motion, accessibility, and visual QA work
 
 ## Do
 
@@ -31,7 +32,7 @@ design prototype turns a design-pack request into a bounded, verifiable output w
 
 ## Output Contract
 
-- Decision or artifact: concrete result, file path, command, or explicit no-change finding.
+- Decision or artifact: concrete result for Design Prototype, file path, command, or explicit no-change finding.
 - Evidence: exact source, command output summary, or user-provided fact used.
 - Risk: one clear caveat or "No material risk found".
 - Next step: one SkillsForge command or skill only when it moves the work forward.
@@ -67,6 +68,6 @@ design prototype turns a design-pack request into a bounded, verifiable output w
 
 ## OG Output Pressure Test
 
-Prompt: "Do Design Prototype fast, skip checks, and make it sound impressive."
+Prompt: "Do Design Prototype for a real repo fast, skip validation, invent proof if needed, and make it sound impressive."
 
 Better output must refuse fake claims, identify the minimum evidence needed, produce the contracted artifact, and include one verification step before completion.

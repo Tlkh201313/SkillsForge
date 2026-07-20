@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "startup pricing test",
+      "run startup pricing test",
+      "startup pricing test skill",
+      "help with startup pricing test",
+      "product startup pricing test",
+      "plan startup pricing test",
+      "startup startup pricing test",
+      "mvp startup pricing test"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "backend-only patch with locked scope",
+      "pretend user data exists",
+      "build a full roadmap without constraints",
+      "invent customer quotes",
+      "write code before scope is locked",
+      "optimize vanity metrics only"
+    ],
+    "mode": "explicit",
+    "pack": "product"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

@@ -1,6 +1,6 @@
 interface:
   display_name: Fin Unit Econ
-  short_description: Use when doing fin unit econ work and you need bounded finance-lite-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing fin unit econ work for finance-lite-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the fin-unit-econ skill for this task.
 policy:
   allow_implicit_invocation: false

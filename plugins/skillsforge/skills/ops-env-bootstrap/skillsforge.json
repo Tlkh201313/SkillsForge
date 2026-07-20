@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "ops env bootstrap",
+      "run ops env bootstrap",
+      "ops env bootstrap skill",
+      "help with ops env bootstrap",
+      "ops ops env bootstrap",
+      "ci ops env bootstrap",
+      "deploy ops env bootstrap",
+      "env ops env bootstrap"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "local UI mock only",
+      "ignore runbooks and alerts",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
+    ],
+    "mode": "explicit",
+    "pack": "ops"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

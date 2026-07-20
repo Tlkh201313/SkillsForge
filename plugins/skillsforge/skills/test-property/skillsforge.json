@@ -15,7 +15,11 @@
       "unrelated coding task",
       "write application code only",
       "ship without tests",
-      "manual poke only with no plan"
+      "manual poke only with no plan",
+      "skip verification",
+      "invent credentials",
+      "ignore existing project constraints",
+      "write outside declared scope"
     ],
     "mode": "explicit",
     "pack": "testing"

@@ -8,14 +8,21 @@
       "run media storyboard",
       "media storyboard skill",
       "help with media storyboard",
-      "media media storyboard"
+      "media media storyboard",
+      "docs media storyboard",
+      "guide media storyboard",
+      "demo media storyboard"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "database migration only",
-      "authz policy rewrite"
+      "authz policy rewrite",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "media"

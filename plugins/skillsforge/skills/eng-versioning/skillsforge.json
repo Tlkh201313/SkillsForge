@@ -8,7 +8,11 @@
       "run eng versioning",
       "eng versioning skill",
       "help with eng versioning",
-      "eng eng versioning"
+      "eng eng versioning",
+      "engineer eng versioning",
+      "fullstack eng versioning",
+      "code eng versioning",
+      "repo eng versioning"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
@@ -16,7 +20,11 @@
       "write application code only",
       "design mockups only",
       "marketing copy only",
-      "finance ledger only"
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

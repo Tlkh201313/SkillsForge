@@ -1,6 +1,6 @@
 interface:
   display_name: Media Podcast
-  short_description: Use when doing media podcast work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing media podcast work for agent-facing docs, launch media, demo proof, and content production and you need audience, source facts, outline, asset path, claim proof, and publishing check be
   default_prompt: Use the media-podcast skill for this task.
 policy:
   allow_implicit_invocation: false

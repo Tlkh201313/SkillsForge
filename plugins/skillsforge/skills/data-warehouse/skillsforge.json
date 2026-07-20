@@ -8,14 +8,21 @@
       "run data warehouse",
       "data warehouse skill",
       "help with data warehouse",
-      "data data warehouse"
+      "data data warehouse",
+      "metrics data warehouse",
+      "tracking data warehouse",
+      "analytics data warehouse"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "UI styling only",
+      "no event or metric surface",
+      "invent event volume",
+      "track personal data without purpose",
+      "skip data quality checks",
+      "mix metric names without definitions"
     ],
     "mode": "explicit",
     "pack": "data"

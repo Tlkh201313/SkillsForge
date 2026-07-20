@@ -8,14 +8,21 @@
       "run design a11y",
       "design a11y skill",
       "help with design a11y",
-      "design design a11y"
+      "design design a11y",
+      "ui design a11y",
+      "polish design a11y",
+      "layout design a11y"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

@@ -39,7 +39,10 @@
   "recommendedSkills": [
     "test-regression",
     "debug-issue",
-    "tdd-first"
+    "tdd-first",
+    "validate-real-task",
+    "validate-feature-claim",
+    "validate-workflow-runbook"
   ],
   "recommendedAgents": [
     "debugger",

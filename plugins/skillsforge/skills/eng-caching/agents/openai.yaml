@@ -1,6 +1,6 @@
 interface:
   display_name: Eng Caching
-  short_description: Use when doing eng caching work and you need bounded eng-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing eng caching work for repo-grounded full-stack architecture, implementation planning, and engineering gates and you need system map, contract, affected files, test plan, rollback note, a
   default_prompt: Use the eng-caching skill for this task.
 policy:
   allow_implicit_invocation: false

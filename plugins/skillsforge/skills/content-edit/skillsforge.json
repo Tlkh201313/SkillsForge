@@ -8,14 +8,22 @@
       "run content edit",
       "content edit skill",
       "help with content edit",
-      "content content edit"
+      "content content edit",
+      "docs content edit",
+      "media content edit",
+      "guide content edit",
+      "demo content edit"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "database-only task",
+      "no audience or source material",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "content"

@@ -8,14 +8,22 @@
       "run cloud queues",
       "cloud queues skill",
       "help with cloud queues",
-      "cloud-devops cloud queues"
+      "cloud-devops cloud queues",
+      "ops cloud queues",
+      "ci cloud queues",
+      "deploy cloud queues",
+      "env cloud queues"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "pure frontend styling only",
-      "legal contract drafting"
+      "legal contract drafting",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
     ],
     "mode": "explicit",
     "pack": "cloud-devops"

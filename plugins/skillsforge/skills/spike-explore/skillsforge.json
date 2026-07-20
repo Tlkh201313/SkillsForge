@@ -15,7 +15,11 @@
       "unrelated coding task",
       "write application code only",
       "one-off throwaway script with no brief",
-      "skip capture and proof"
+      "skip capture and proof",
+      "skip verification",
+      "invent credentials",
+      "ignore existing project constraints",
+      "write outside declared scope"
     ],
     "mode": "explicit",
     "pack": "lifecycle"

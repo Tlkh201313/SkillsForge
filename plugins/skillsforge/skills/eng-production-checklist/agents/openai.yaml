@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Production Checklist
+  short_description: Use when doing eng production checklist work for repo-grounded full-stack architecture, implementation planning, and engineering gates and you need system map, contract, affected files, test plan, rol
+  default_prompt: Use the eng-production-checklist skill for this task.
+policy:
+  allow_implicit_invocation: false

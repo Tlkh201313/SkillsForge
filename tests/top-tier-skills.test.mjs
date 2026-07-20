@@ -9,14 +9,32 @@ import { loadCatalog } from '../lib/capabilities/catalog.mjs';
 import { buildLibraryIndex, writeLibraryArtifacts } from '../lib/capabilities/library.mjs';
 import { lintSkill, scoreSkillQuality } from '../lib/capabilities/quality.mjs';
 import { callTool, TOOLS } from '../scripts/skillsforge-mcp.mjs';
+import { VIBE_CODER_PACKS, VIBE_CODER_PROFILE_PACKS, VIBE_CODER_SKILLS } from './vibe-skill-expansion-fixtures.mjs';
 
 const root = process.cwd();
 const cli = join(root, 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
 
-test('design pack has at least 50 real design skills with shipped files and design sidecars', async () => {
+test('vibe-coder expansion ships exactly 100 planned skills and resolves new packs/profile', async () => {
+  const { catalog } = await loadCatalog(root);
+  assert.equal(new Set(VIBE_CODER_SKILLS).size, 100);
+  assert.equal(VIBE_CODER_SKILLS.length, 100);
+  assert.equal(catalog.packs.builder.skills.length, 18);
+  assert.equal(catalog.packs.validation.skills.length, 18);
+  assert.deepEqual(catalog.packs.builder.skills, VIBE_CODER_PACKS.builder);
+  assert.deepEqual(catalog.packs.validation.skills, VIBE_CODER_PACKS.validation);
+  assert.deepEqual(catalog.profiles.vibecoder.packs, VIBE_CODER_PROFILE_PACKS);
+  assert.ok(catalog.profiles.full.packs.includes('builder'));
+  assert.ok(catalog.profiles.full.packs.includes('validation'));
+
+  const catalogIds = new Set(Object.values(catalog.packs).flatMap((pack) => pack.skills));
+  const missing = VIBE_CODER_SKILLS.filter((id) => !catalogIds.has(id));
+  assert.deepEqual(missing, []);
+});
+
+test('design pack has at least 60 real design skills with shipped files and design sidecars', async () => {
   const { catalog } = await loadCatalog(root);
   const designSkills = catalog.packs.design.skills;
-  assert.ok(designSkills.length >= 50, `expected >=50 design skills, got ${designSkills.length}`);
+  assert.ok(designSkills.length >= 60, `expected >=60 design skills, got ${designSkills.length}`);
   assert.equal(new Set(designSkills).size, designSkills.length);
 
   for (const id of designSkills) {
@@ -33,7 +51,7 @@ test('design pack has at least 50 real design skills with shipped files and desi
 test('every shipped skill has deterministic output contract, verification, and failure modes', async () => {
   const skillRoot = join(root, 'plugins', 'skillsforge', 'skills');
   const dirs = (await readdir(skillRoot, { withFileTypes: true })).filter((entry) => entry.isDirectory());
-  assert.ok(dirs.length >= 399);
+  assert.ok(dirs.length >= 499);
   const missing = [];
   for (const dir of dirs) {
     const source = await readFile(join(skillRoot, dir.name, 'SKILL.md'), 'utf8');
@@ -43,6 +61,35 @@ test('every shipped skill has deterministic output contract, verification, and f
     assert.doesNotMatch(source, /Lean SkillsForge scaffold|Add domain examples|Pressure stub/i, dir.name);
   }
   assert.deepEqual(missing, []);
+});
+
+test('all 100 vibe-coder skills have concrete pressure prompts and sidecar routing', async () => {
+  const missing = [];
+  const weak = [];
+  for (const id of VIBE_CODER_SKILLS) {
+    const skillDir = join(root, 'plugins', 'skillsforge', 'skills', id);
+    const source = await readFile(join(skillDir, 'SKILL.md'), 'utf8').catch(() => null);
+    const sidecar = await readFile(join(skillDir, 'skillsforge.json'), 'utf8')
+      .then((text) => JSON.parse(text))
+      .catch(() => null);
+    if (!source || !sidecar) {
+      missing.push(id);
+      continue;
+    }
+    const label = id.replace(/-/g, ' ');
+    assert.match(source, new RegExp(`name:\\s*${id}`));
+    assert.match(source, /## Output Contract/);
+    assert.match(source, /## Verification/);
+    assert.match(source, /## Failure Modes/);
+    assert.match(source, /## OG Output Pressure Test/);
+    assert.match(source, new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), id);
+    assert.match(source, /skip validation|invent proof|fake claims|real repo/i, id);
+    assert.ok(sidecar.routing.triggers.length >= 5, id);
+    assert.ok(sidecar.routing.antiTriggers.length >= 4, id);
+    if (/sample work|TBD|TODO|Add domain examples|Pressure stub/i.test(source)) weak.push(id);
+  }
+  assert.deepEqual(missing, []);
+  assert.deepEqual(weak, []);
 });
 
 test('quality scoring rejects scaffold-like skills and reports output-contract checks', async (context) => {
@@ -167,6 +214,11 @@ test('library HTML exposes settings and local-only recommendation policy', async
   const html = await readFile(result.files.html, 'utf8');
   const ai = await readFile(result.files.ai, 'utf8');
   assert.match(html, /settingsPanel/);
+  assert.match(html, /vibeBuilderPanel/);
+  assert.match(html, /quickFilters/);
+  assert.match(html, /viewModeList/);
+  assert.match(html, /viewModeTable/);
+  assert.match(html, /Build \/ Validate \/ Research \/ Launch/);
   assert.match(html, /recommendThreshold/);
   assert.match(html, /No external assets/);
   assert.match(ai, /smallest matching skill/);

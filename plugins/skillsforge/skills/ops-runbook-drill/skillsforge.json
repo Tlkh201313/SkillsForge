@@ -8,14 +8,21 @@
       "run ops runbook drill",
       "ops runbook drill skill",
       "help with ops runbook drill",
-      "ops ops runbook drill"
+      "ops ops runbook drill",
+      "ci ops runbook drill",
+      "deploy ops runbook drill",
+      "env ops runbook drill"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "local UI mock only",
-      "ignore runbooks and alerts"
+      "ignore runbooks and alerts",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
     ],
     "mode": "explicit",
     "pack": "ops"

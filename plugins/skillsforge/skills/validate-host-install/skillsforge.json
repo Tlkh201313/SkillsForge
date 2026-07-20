@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "validate host install",
+      "run validate host install",
+      "validate host install skill",
+      "help with validate host install",
+      "validation validate host install",
+      "prove validate host install",
+      "audit validate host install",
+      "verify validate host install",
+      "check validate host install"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "new feature build only",
+      "brainstorming without proof artifacts",
+      "make claims without evidence",
+      "accept marketing language as proof",
+      "delete or install while validating",
+      "score quality without a reproducible check"
+    ],
+    "mode": "explicit",
+    "pack": "validation"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

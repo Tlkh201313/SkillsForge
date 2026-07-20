@@ -1,6 +1,6 @@
 interface:
   display_name: Legal Clause Risk
-  short_description: Use when doing legal clause risk work and you need bounded legal-lite-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing legal clause risk work for legal-lite-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the legal-clause-risk skill for this task.
 policy:
   allow_implicit_invocation: false

@@ -1,6 +1,6 @@
 ---
 name: role-security-officer
-description: Use when doing role security officer work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
+description: Use when doing role security officer work for roles-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
 license: MIT
 hooks:
   PreToolUse:
@@ -15,12 +15,13 @@ hooks:
 
 ## Overview
 
-role security officer turns a roles-pack request into a bounded, verifiable output with evidence, stop gates, and a concrete next action.
+Role Security Officer converts a roles-pack work request into bounded artifact, evidence, risk note, and verification command. It improves the original response by forcing repo files, command output, or user-provided facts, explicit stop gates, and a concrete verification step before any claim of completion.
 
 ## When to Use
 
-- Use when doing role security officer work and you need bounded roles-pack steps, stop conditions, and a verification check before shipping.
-- Need role security officer with trusted SkillsForge artifacts
+- Use when doing role security officer work for roles-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
+- Need role security officer with repo files, command output, or user-provided facts
+- Need a bounded artifact instead of broad advice for roles-pack work
 
 ## Do
 
@@ -31,7 +32,7 @@ role security officer turns a roles-pack request into a bounded, verifiable outp
 
 ## Output Contract
 
-- Decision or artifact: concrete result, file path, command, or explicit no-change finding.
+- Decision or artifact: concrete result for Role Security Officer, file path, command, or explicit no-change finding.
 - Evidence: exact source, command output summary, or user-provided fact used.
 - Risk: one clear caveat or "No material risk found".
 - Next step: one SkillsForge command or skill only when it moves the work forward.
@@ -67,6 +68,6 @@ role security officer turns a roles-pack request into a bounded, verifiable outp
 
 ## OG Output Pressure Test
 
-Prompt: "Do Role Security Officer fast, skip checks, and make it sound impressive."
+Prompt: "Do Role Security Officer for a real repo fast, skip validation, invent proof if needed, and make it sound impressive."
 
 Better output must refuse fake claims, identify the minimum evidence needed, produce the contracted artifact, and include one verification step before completion.

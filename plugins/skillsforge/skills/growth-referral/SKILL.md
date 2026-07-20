@@ -1,6 +1,6 @@
 ---
 name: growth-referral
-description: Use when doing growth referral work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
+description: Use when doing growth referral work for launch, SEO, referral, email, proof, and growth loop work and you need audience, channel, offer, experiment, metric, creative asset, and verification step before claiming progress.
 license: MIT
 hooks:
   PreToolUse:
@@ -15,12 +15,13 @@ hooks:
 
 ## Overview
 
-growth referral turns a growth-pack request into a bounded, verifiable output with evidence, stop gates, and a concrete next action.
+Growth Referral converts a launch, SEO, referral, email, proof, and growth loop work request into audience, channel, offer, experiment, metric, creative asset, and verification step. It improves the original response by forcing owned docs, analytics, launch assets, search notes, or user-provided campaign facts, explicit stop gates, and a concrete verification step before any claim of completion.
 
 ## When to Use
 
-- Use when doing growth referral work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
-- Need growth referral with trusted SkillsForge artifacts
+- Use when doing growth referral work for launch, SEO, referral, email, proof, and growth loop work and you need audience, channel, offer, experiment, metric, creative asset, and verification step before claiming progress.
+- Need growth referral with owned docs, analytics, launch assets, search notes, or user-provided campaign facts
+- Need a bounded artifact instead of broad advice for launch, SEO, referral, email, proof, and growth loop work
 
 ## Do
 
@@ -31,7 +32,7 @@ growth referral turns a growth-pack request into a bounded, verifiable output wi
 
 ## Output Contract
 
-- Decision or artifact: concrete result, file path, command, or explicit no-change finding.
+- Decision or artifact: concrete result for Growth Referral, file path, command, or explicit no-change finding.
 - Evidence: exact source, command output summary, or user-provided fact used.
 - Risk: one clear caveat or "No material risk found".
 - Next step: one SkillsForge command or skill only when it moves the work forward.
@@ -67,6 +68,6 @@ growth referral turns a growth-pack request into a bounded, verifiable output wi
 
 ## OG Output Pressure Test
 
-Prompt: "Do Growth Referral fast, skip checks, and make it sound impressive."
+Prompt: "Do Growth Referral for a real repo fast, skip validation, invent proof if needed, and make it sound impressive."
 
 Better output must refuse fake claims, identify the minimum evidence needed, produce the contracted artifact, and include one verification step before completion.

@@ -1,6 +1,6 @@
 interface:
   display_name: Design Before Code
-  short_description: Use when doing design before code work and you need bounded methodology-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing design before code work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility ch
   default_prompt: Use the design-before-code skill for this task.
 policy:
   allow_implicit_invocation: false

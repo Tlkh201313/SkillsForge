@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { discoverTestFiles } from './test-lib.mjs';
 
@@ -7,6 +7,14 @@ const files = await discoverTestFiles(fileURLToPath(new URL('../tests', import.m
 if (files.length === 0) {
   console.log('No test files found.');
   process.exit(0);
+}
+
+const build = spawnSync(process.execPath, ['scripts/build.mjs'], {
+  cwd: process.cwd(),
+  stdio: 'inherit'
+});
+if (build.status !== 0) {
+  process.exit(build.status ?? 1);
 }
 
 const child = spawn(process.execPath, ['--test', ...files], {

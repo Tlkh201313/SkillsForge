@@ -39,7 +39,10 @@
   "recommendedSkills": [
     "media-video-script",
     "product-launch",
-    "prove-outcome"
+    "prove-outcome",
+    "validate-demo-path",
+    "media-demo-proof-pack",
+    "startup-demo-script"
   ],
   "recommendedAgents": [
     "video-workflow-producer",

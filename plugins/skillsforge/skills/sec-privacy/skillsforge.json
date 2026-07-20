@@ -8,7 +8,10 @@
       "run sec privacy",
       "sec privacy skill",
       "help with sec privacy",
-      "security sec privacy"
+      "security sec privacy",
+      "permission sec privacy",
+      "threat sec privacy",
+      "boundary sec privacy"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
@@ -16,7 +19,11 @@
       "write application code only",
       "feature brainstorm only",
       "docs polish only",
-      "UI visual QA only"
+      "UI visual QA only",
+      "perform live exploitation",
+      "request secrets",
+      "claim compliance certification",
+      "weaken authorization for convenience"
     ],
     "mode": "explicit",
     "pack": "security"

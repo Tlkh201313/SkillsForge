@@ -1,0 +1,6 @@
+interface:
+  display_name: Growth Referral Loop
+  short_description: Use when doing growth referral loop work for launch, SEO, referral, email, proof, and growth loop work and you need audience, channel, offer, experiment, metric, creative asset, and verification step
+  default_prompt: Use the growth-referral-loop skill for this task.
+policy:
+  allow_implicit_invocation: false

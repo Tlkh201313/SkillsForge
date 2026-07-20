@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "security agent permission review",
+      "run security agent permission review",
+      "security agent permission review skill",
+      "help with security agent permission review",
+      "security security agent permission review",
+      "permission security agent permission review",
+      "threat security agent permission review",
+      "boundary security agent permission review"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "feature brainstorm only",
+      "docs polish only",
+      "UI visual QA only",
+      "perform live exploitation",
+      "request secrets",
+      "claim compliance certification",
+      "weaken authorization for convenience"
+    ],
+    "mode": "explicit",
+    "pack": "security"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

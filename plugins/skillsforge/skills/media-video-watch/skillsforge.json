@@ -8,14 +8,21 @@
       "run media video watch",
       "media video watch skill",
       "help with media video watch",
-      "media media video watch"
+      "media media video watch",
+      "docs media video watch",
+      "guide media video watch",
+      "demo media video watch"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "database migration only",
-      "authz policy rewrite"
+      "authz policy rewrite",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "media"

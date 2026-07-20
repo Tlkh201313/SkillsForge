@@ -1,6 +1,6 @@
 interface:
   display_name: Cloud Cdn
-  short_description: Use when doing cloud cdn work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing cloud cdn work for environment, CI, deployment, reliability, and operational readiness work and you need environment map, failing signal, command path, rollback option, and runbook note
   default_prompt: Use the cloud-cdn skill for this task.
 policy:
   allow_implicit_invocation: false

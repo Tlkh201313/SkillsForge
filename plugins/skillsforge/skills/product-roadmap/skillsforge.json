@@ -8,14 +8,21 @@
       "run product roadmap",
       "product roadmap skill",
       "help with product roadmap",
-      "product product roadmap"
+      "product product roadmap",
+      "plan product roadmap",
+      "startup product roadmap",
+      "mvp product roadmap"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "backend-only patch with locked scope",
+      "pretend user data exists",
+      "build a full roadmap without constraints",
+      "invent customer quotes",
+      "write code before scope is locked",
+      "optimize vanity metrics only"
     ],
     "mode": "explicit",
     "pack": "product"

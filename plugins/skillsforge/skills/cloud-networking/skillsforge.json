@@ -8,14 +8,22 @@
       "run cloud networking",
       "cloud networking skill",
       "help with cloud networking",
-      "cloud-devops cloud networking"
+      "cloud-devops cloud networking",
+      "ops cloud networking",
+      "ci cloud networking",
+      "deploy cloud networking",
+      "env cloud networking"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "pure frontend styling only",
-      "legal contract drafting"
+      "legal contract drafting",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
     ],
     "mode": "explicit",
     "pack": "cloud-devops"

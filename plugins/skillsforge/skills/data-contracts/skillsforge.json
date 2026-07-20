@@ -8,14 +8,21 @@
       "run data contracts",
       "data contracts skill",
       "help with data contracts",
-      "data data contracts"
+      "data data contracts",
+      "metrics data contracts",
+      "tracking data contracts",
+      "analytics data contracts"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "UI styling only",
+      "no event or metric surface",
+      "invent event volume",
+      "track personal data without purpose",
+      "skip data quality checks",
+      "mix metric names without definitions"
     ],
     "mode": "explicit",
     "pack": "data"

@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Proof Dashboard
+  short_description: Use when doing design proof dashboard work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibilit
+  default_prompt: Use the design-proof-dashboard skill for this task.
+policy:
+  allow_implicit_invocation: false

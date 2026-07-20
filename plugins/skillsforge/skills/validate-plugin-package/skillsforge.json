@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "validate plugin package",
+      "run validate plugin package",
+      "validate plugin package skill",
+      "help with validate plugin package",
+      "validation validate plugin package",
+      "prove validate plugin package",
+      "audit validate plugin package",
+      "verify validate plugin package",
+      "check validate plugin package"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "new feature build only",
+      "brainstorming without proof artifacts",
+      "make claims without evidence",
+      "accept marketing language as proof",
+      "delete or install while validating",
+      "score quality without a reproducible check"
+    ],
+    "mode": "explicit",
+    "pack": "validation"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

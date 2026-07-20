@@ -13,6 +13,48 @@ packs:
     skills:
     - browse-catalog
     - update-skill-library
+  builder:
+    description: "AI CLI SDK, plugin, MCP, and full-stack builder workflows"
+    skills:
+    - build-codex-plugin
+    - build-claude-code-plugin
+    - build-cursor-skill
+    - build-opencode-pack
+    - build-zcode-pack
+    - build-hermes-agent-pack
+    - build-mcp-server
+    - build-mcp-tool-contract
+    - build-agent-skill
+    - build-ai-cli-sdk-project
+    - build-plugin-marketplace-entry
+    - build-skill-library-index
+    - build-localhost-tool-ui
+    - build-powershell-agent-helper
+    - build-fullstack-saas
+    - build-fullstack-crud
+    - build-fullstack-auth
+    - build-fullstack-admin
+  validation:
+    description: "Real-task proof, claim audit, launch readiness, and anti-slop gates"
+    skills:
+    - validate-real-task
+    - validate-feature-claim
+    - validate-readme-claims
+    - validate-demo-path
+    - validate-plugin-package
+    - validate-mcp-contract
+    - validate-cli-help
+    - validate-host-install
+    - validate-workflow-runbook
+    - validate-ui-screenshot
+    - validate-mobile-layout
+    - validate-accessibility-proof
+    - validate-security-boundary
+    - validate-performance-budget
+    - validate-release-readiness
+    - validate-no-fake-stats
+    - validate-generated-artifacts
+    - validate-evidence-bundle
   methodology:
     description: "Discipline iron laws - brainstorm, plan, TDD, verify (original)"
     skills:
@@ -95,6 +137,22 @@ packs:
     - eng-rollback
     - eng-hotfixes
     - eng-tech-debt
+    - fullstack-repo-map
+    - fullstack-architecture-plan
+    - fullstack-db-schema
+    - fullstack-api-contract
+    - fullstack-auth-flow
+    - fullstack-file-upload
+    - fullstack-background-jobs
+    - fullstack-observability
+    - fullstack-deploy-plan
+    - fullstack-test-plan
+    - eng-ai-generated-diff-review
+    - eng-context-budget
+    - eng-safe-codegen
+    - eng-library-choice
+    - eng-monorepo-map
+    - eng-production-checklist
   design:
     description: "Product design and UI craft"
     skills:
@@ -148,6 +206,16 @@ packs:
     - design-responsive-proof
     - design-design-qa
     - design-page-structure
+    - design-openrouter-style-catalog
+    - design-command-center
+    - design-comparison-table
+    - design-proof-dashboard
+    - design-builder-wizard
+    - design-launch-page
+    - design-saas-empty-states
+    - design-mobile-agent-ui
+    - design-data-dense-filtering
+    - design-ui-polish-pass
   product:
     description: "Product management and discovery"
     skills:
@@ -165,6 +233,18 @@ packs:
     - product-feedback
     - product-scope-cut
     - product-north-star
+    - startup-idea-filter
+    - startup-mvp-scope
+    - startup-landing-offer
+    - startup-user-interview
+    - startup-waitlist-loop
+    - startup-pricing-test
+    - startup-founder-brief
+    - startup-demo-script
+    - product-onboarding-audit
+    - product-retention-loop
+    - product-activation-map
+    - product-paywall-fit
   growth:
     description: "Growth, SEO, retention, launch"
     skills:
@@ -184,6 +264,12 @@ packs:
     - growth-waitlist
     - growth-partnerships
     - growth-positioning
+    - growth-seo-cluster
+    - growth-launch-plan
+    - growth-social-proof
+    - growth-email-sequence
+    - growth-referral-loop
+    - growth-analytics-proof
   research:
     description: "Research and competitive teardown"
     skills:
@@ -199,6 +285,18 @@ packs:
     - research-assumptions
     - research-evidence-grade
     - research-contradictions
+    - research-competitor-map
+    - research-github-patterns
+    - research-docs-first
+    - research-user-pain
+    - research-market-gap
+    - research-technical-feasibility
+    - research-api-surface
+    - research-pricing-signal
+    - research-launch-channel
+    - research-open-source-license
+    - research-benchmark-method
+    - research-source-trust
   docs:
     description: "Documentation and developer writing"
     skills:
@@ -214,6 +312,7 @@ packs:
     - docs-faq
     - docs-troubleshooting
     - docs-examples
+    - docs-agent-facing-guide
   security:
     description: "Security and privacy practices"
     skills:
@@ -231,6 +330,7 @@ packs:
     - sec-audit-log
     - sec-pentest-prep
     - sec-disclosure
+    - security-agent-permission-review
   ops:
     description: "Operations and reliability"
     skills:
@@ -246,6 +346,8 @@ packs:
     - ops-runbook-drill
     - ops-feature-freeze
     - ops-canary
+    - ops-env-bootstrap
+    - ops-ci-failure-router
   os:
     description: "Cross-platform OS helpers for agentic workstations"
     skills:
@@ -274,6 +376,8 @@ packs:
     - agent-critique
     - agent-replay
     - agent-sandbox
+    - agentic-orchestrator-plan
+    - agentic-workflow-replay
   lang:
     description: "Language-specific lean patterns (original)"
     skills:
@@ -357,6 +461,7 @@ packs:
     - data-backfill
     - data-contracts
     - data-governance
+    - data-event-tracking-plan
   testing:
     description: "Testing strategies"
     skills:
@@ -395,6 +500,7 @@ packs:
     - media-frame-sampling
     - media-video-plan
     - media-caption-qc
+    - media-demo-proof-pack
   mobile:
     description: "Mobile release and store"
     skills:
@@ -500,6 +606,8 @@ profiles:
     packs:
     - trust
     - browse-catalog
+    - builder
+    - validation
     - methodology
     - roles
     - lifecycle
@@ -524,6 +632,19 @@ profiles:
     - legal-lite
     - finance-lite
     - cloud-devops
+  vibecoder:
+    description: "Vibe-coder builder surface for plugins, MCPs, proof, launch, and full-stack app work"
+    packs:
+    - trust
+    - browse-catalog
+    - lifecycle
+    - builder
+    - validation
+    - design
+    - product
+    - growth
+    - eng
+    - ops
   eng:
     description: "Engineering focus"
     packs:

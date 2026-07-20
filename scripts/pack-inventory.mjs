@@ -14,6 +14,119 @@ function expand(ids, defaults = {}) {
   return ids.map((id) => (typeof id === 'string' ? skill(id, defaults) : skill(id.id, { ...defaults, ...id })));
 }
 
+const BUILDER_SKILLS = [
+  'build-codex-plugin',
+  'build-claude-code-plugin',
+  'build-cursor-skill',
+  'build-opencode-pack',
+  'build-zcode-pack',
+  'build-hermes-agent-pack',
+  'build-mcp-server',
+  'build-mcp-tool-contract',
+  'build-agent-skill',
+  'build-ai-cli-sdk-project',
+  'build-plugin-marketplace-entry',
+  'build-skill-library-index',
+  'build-localhost-tool-ui',
+  'build-powershell-agent-helper',
+  'build-fullstack-saas',
+  'build-fullstack-crud',
+  'build-fullstack-auth',
+  'build-fullstack-admin'
+];
+
+const VALIDATION_SKILLS = [
+  'validate-real-task',
+  'validate-feature-claim',
+  'validate-readme-claims',
+  'validate-demo-path',
+  'validate-plugin-package',
+  'validate-mcp-contract',
+  'validate-cli-help',
+  'validate-host-install',
+  'validate-workflow-runbook',
+  'validate-ui-screenshot',
+  'validate-mobile-layout',
+  'validate-accessibility-proof',
+  'validate-security-boundary',
+  'validate-performance-budget',
+  'validate-release-readiness',
+  'validate-no-fake-stats',
+  'validate-generated-artifacts',
+  'validate-evidence-bundle'
+];
+
+const RESEARCH_VIBE_SKILLS = [
+  'research-competitor-map',
+  'research-github-patterns',
+  'research-docs-first',
+  'research-user-pain',
+  'research-market-gap',
+  'research-technical-feasibility',
+  'research-api-surface',
+  'research-pricing-signal',
+  'research-launch-channel',
+  'research-open-source-license',
+  'research-benchmark-method',
+  'research-source-trust'
+];
+
+const STARTUP_PRODUCT_SKILLS = [
+  'startup-idea-filter',
+  'startup-mvp-scope',
+  'startup-landing-offer',
+  'startup-user-interview',
+  'startup-waitlist-loop',
+  'startup-pricing-test',
+  'startup-founder-brief',
+  'startup-demo-script',
+  'product-onboarding-audit',
+  'product-retention-loop',
+  'product-activation-map',
+  'product-paywall-fit'
+];
+
+const GROWTH_VIBE_SKILLS = [
+  'growth-seo-cluster',
+  'growth-launch-plan',
+  'growth-social-proof',
+  'growth-email-sequence',
+  'growth-referral-loop',
+  'growth-analytics-proof'
+];
+
+const FULLSTACK_ENG_SKILLS = [
+  'fullstack-repo-map',
+  'fullstack-architecture-plan',
+  'fullstack-db-schema',
+  'fullstack-api-contract',
+  'fullstack-auth-flow',
+  'fullstack-file-upload',
+  'fullstack-background-jobs',
+  'fullstack-observability',
+  'fullstack-deploy-plan',
+  'fullstack-test-plan',
+  'eng-ai-generated-diff-review',
+  'eng-context-budget',
+  'eng-safe-codegen',
+  'eng-library-choice',
+  'eng-monorepo-map',
+  'eng-production-checklist'
+];
+
+const DESIGN_VIBE_SKILLS = [
+  'design-openrouter-style-catalog',
+  'design-command-center',
+  'design-comparison-table',
+  'design-proof-dashboard',
+  'design-builder-wizard',
+  'design-launch-page',
+  'design-saas-empty-states',
+  'design-mobile-agent-ui',
+  'design-data-dense-filtering',
+  'design-ui-polish-pass'
+];
+
 export const PACKS = {
   trust: {
     description: 'SkillsForge trust spine (validate, forge, route, verify)',
@@ -31,6 +144,14 @@ export const PACKS = {
       { id: 'browse-catalog', mode: 'auto', write: 'none' },
       { id: 'update-skill-library', mode: 'auto', write: 'project' }
     ])
+  },
+  builder: {
+    description: 'AI CLI SDK, plugin, MCP, and full-stack builder workflows',
+    skills: expand(BUILDER_SKILLS)
+  },
+  validation: {
+    description: 'Real-task proof, claim audit, launch readiness, and anti-slop gates',
+    skills: expand(VALIDATION_SKILLS)
   },
   methodology: {
     description: 'Discipline iron laws - brainstorm, plan, TDD, verify (original)',
@@ -100,7 +221,8 @@ export const PACKS = {
       'eng-contracts', 'eng-versioning', 'eng-deps-upgrade', 'eng-dead-code',
       'eng-types-strict', 'eng-module-boundaries', 'eng-config-hygiene', 'eng-secrets-handling',
       'eng-rate-limits', 'eng-pagination', 'eng-webhooks', 'eng-background-jobs',
-      'eng-observability', 'eng-rollback', 'eng-hotfixes', 'eng-tech-debt'
+      'eng-observability', 'eng-rollback', 'eng-hotfixes', 'eng-tech-debt',
+      ...FULLSTACK_ENG_SKILLS
     ])
   },
   design: {
@@ -122,7 +244,8 @@ export const PACKS = {
       'design-kanban-ui', 'design-chart-ui', 'design-figma-handoff',
       'design-prototype-flow', 'design-density-audit',
       'design-saas-workbench', 'design-accessible-motion',
-      'design-responsive-proof', 'design-design-qa', 'design-page-structure'
+      'design-responsive-proof', 'design-design-qa', 'design-page-structure',
+      ...DESIGN_VIBE_SKILLS
     ])
   },
   product: {
@@ -131,7 +254,8 @@ export const PACKS = {
       'product-jtbd', 'product-rice', 'product-prd', 'product-launch',
       'product-postmortem', 'product-roadmap', 'product-metrics', 'product-experiment',
       'product-persona', 'product-onboarding', 'product-pricing-signal', 'product-feedback',
-      'product-scope-cut', 'product-north-star'
+      'product-scope-cut', 'product-north-star',
+      ...STARTUP_PRODUCT_SKILLS
     ])
   },
   growth: {
@@ -140,7 +264,8 @@ export const PACKS = {
       'growth-seo', 'growth-copy', 'growth-launch', 'growth-retention',
       'growth-pricing', 'growth-referral', 'growth-landing', 'growth-email',
       'growth-analytics', 'growth-activation', 'growth-churn', 'growth-viral',
-      'growth-content-engine', 'growth-waitlist', 'growth-partnerships', 'growth-positioning'
+      'growth-content-engine', 'growth-waitlist', 'growth-partnerships', 'growth-positioning',
+      ...GROWTH_VIBE_SKILLS
     ])
   },
   research: {
@@ -148,7 +273,8 @@ export const PACKS = {
     skills: expand([
       'research-question', 'research-sources', 'research-teardown', 'research-synth',
       'research-interview', 'research-survey', 'research-desk', 'research-market',
-      'research-user-journey', 'research-assumptions', 'research-evidence-grade', 'research-contradictions'
+      'research-user-journey', 'research-assumptions', 'research-evidence-grade', 'research-contradictions',
+      ...RESEARCH_VIBE_SKILLS
     ])
   },
   docs: {
@@ -156,7 +282,8 @@ export const PACKS = {
     skills: expand([
       'docs-readme', 'docs-quickstart', 'docs-adr', 'docs-runbook',
       'docs-llms-txt', 'docs-api-ref', 'docs-changelog', 'docs-contributing',
-      'docs-migration', 'docs-faq', 'docs-troubleshooting', 'docs-examples'
+      'docs-migration', 'docs-faq', 'docs-troubleshooting', 'docs-examples',
+      'docs-agent-facing-guide'
     ])
   },
   security: {
@@ -165,7 +292,8 @@ export const PACKS = {
       'sec-threat-model', 'sec-secrets', 'sec-authz', 'sec-deps',
       'sec-incident', 'sec-privacy', 'sec-owasp', 'sec-supply-chain',
       'sec-input-validation', 'sec-session', 'sec-crypto-hygiene', 'sec-audit-log',
-      'sec-pentest-prep', 'sec-disclosure'
+      'sec-pentest-prep', 'sec-disclosure',
+      'security-agent-permission-review'
     ])
   },
   ops: {
@@ -173,7 +301,8 @@ export const PACKS = {
     skills: expand([
       'ops-deploy', 'ops-health', 'ops-oncall', 'ops-cost',
       'ops-env-parity', 'ops-backup', 'ops-capacity', 'ops-slos',
-      'ops-incident-comms', 'ops-runbook-drill', 'ops-feature-freeze', 'ops-canary'
+      'ops-incident-comms', 'ops-runbook-drill', 'ops-feature-freeze', 'ops-canary',
+      'ops-env-bootstrap', 'ops-ci-failure-router'
     ])
   },
   os: {
@@ -189,7 +318,8 @@ export const PACKS = {
       'agent-crew', 'agent-fanout', 'agent-babysit', 'agent-context',
       'agent-eval-loop', 'agent-handoff', 'agent-tool-policy', 'agent-prompt-budget',
       'agent-memory-lite', 'agent-parallel', 'agent-stop-gates', 'agent-critique',
-      'agent-replay', 'agent-sandbox'
+      'agent-replay', 'agent-sandbox',
+      'agentic-orchestrator-plan', 'agentic-workflow-replay'
     ])
   },
   lang: {
@@ -220,7 +350,8 @@ export const PACKS = {
       'data-schema', 'data-etl', 'data-warehouse', 'data-analytics-plan',
       'data-quality', 'data-lineage', 'data-privacy', 'data-metrics-dict',
       'data-experiment-design', 'data-dashboard', 'data-sql-review', 'data-pipelines',
-      'data-streaming', 'data-backfill', 'data-contracts', 'data-governance'
+      'data-streaming', 'data-backfill', 'data-contracts', 'data-governance',
+      'data-event-tracking-plan'
     ])
   },
   testing: {
@@ -238,7 +369,8 @@ export const PACKS = {
       'media-image-brief', 'media-video-script', 'media-brand-asset', 'media-podcast',
       'media-thumbnail', 'media-storyboard', 'media-alt-text', 'media-compression',
       'media-style-guide', 'media-ugc', 'media-localization', 'media-accessibility',
-      'media-video-watch', 'media-frame-sampling', 'media-video-plan', 'media-caption-qc'
+      'media-video-watch', 'media-frame-sampling', 'media-video-plan', 'media-caption-qc',
+      'media-demo-proof-pack'
     ])
   },
   mobile: {
@@ -303,6 +435,10 @@ export const PROFILES = {
     description: 'Everything -- broad trusted skill surface',
     packs: Object.keys(PACKS)
   },
+  vibecoder: {
+    description: 'Vibe-coder builder surface for plugins, MCPs, proof, launch, and full-stack app work',
+    packs: ['trust', 'browse-catalog', 'lifecycle', 'builder', 'validation', 'design', 'product', 'growth', 'eng', 'ops']
+  },
   eng: { description: 'Engineering focus', packs: ['trust', 'methodology', 'eng', 'testing', 'lang', 'framework'] },
   design: { description: 'Design focus', packs: ['trust', 'design', 'roles', 'content'] },
   product: { description: 'Product focus', packs: ['trust', 'product', 'research', 'growth'] },
@@ -358,7 +494,8 @@ export const COMMANDS = [
   'os-run', 'os-open', 'os-find', 'os-ports', 'os-env', 'os-copy-path',
   'os-clean', 'wb', 'lib', 'workflows', 'auto', 'ps',
   'agent-terminal', 'video-watch', 'video-frames', 'skill-generate',
-  'pack-author'
+  'pack-author', 'builder', 'validation', 'vibecoder', 'mcp-build',
+  'plugin-build', 'claim-proof', 'real-task-proof'
 ];
 
 export function allSkills() {

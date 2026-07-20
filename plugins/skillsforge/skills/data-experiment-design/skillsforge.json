@@ -8,14 +8,21 @@
       "run data experiment design",
       "data experiment design skill",
       "help with data experiment design",
-      "data data experiment design"
+      "data data experiment design",
+      "metrics data experiment design",
+      "tracking data experiment design",
+      "analytics data experiment design"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "UI styling only",
+      "no event or metric surface",
+      "invent event volume",
+      "track personal data without purpose",
+      "skip data quality checks",
+      "mix metric names without definitions"
     ],
     "mode": "explicit",
     "pack": "data"

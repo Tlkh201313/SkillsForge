@@ -2,7 +2,7 @@
 
 Judge-friendly map of **every** SkillsForge surface. **Product first:** SkillsForge is a **productivity Work OS** for agent coding (skills, packs, profiles, workflows, agents, commands, library, auto, workbench). **Trust** (validate / package / hooks / receipts) is the **safety layer underneath**, not the hero story.
 
-Counts are live from catalog, plugin trees, CLI help, and capability registries - not marketing estimates. Version **0.4.1**.
+Counts are live from catalog, plugin trees, CLI help, and capability registries - not marketing estimates. Version **0.4.2**.
 
 ## Related docs
 
@@ -33,12 +33,12 @@ Counts are live from catalog, plugin trees, CLI help, and capability registries 
 
 | Surface | Count | Source |
 | --- | ---: | --- |
-| Catalog skills | 399 | `catalog/skillsforge.catalog.yaml` packs |
-| Skill packages with `SKILL.md` | 399 | `plugins/skillsforge/skills/*/SKILL.md` |
-| Packs | 26 | catalog packs |
-| Profiles | 10 | catalog profiles |
+| Catalog skills | 499 | `catalog/skillsforge.catalog.yaml` packs |
+| Skill packages with `SKILL.md` | 499 | `plugins/skillsforge/skills/*/SKILL.md` |
+| Packs | 28 | catalog packs |
+| Profiles | 11 | catalog profiles |
 | Agents | 98 | `plugins/skillsforge/agents/*.md` |
-| Slash commands | 128 | `plugins/skillsforge/commands/*.*` |
+| Slash commands | 135 | `plugins/skillsforge/commands/*.*` |
 | Workflows | 100 | `plugins/skillsforge/workflows/**/*.json` (10 categories) |
 | Hosts | 7 | `HOST_REGISTRY` in `lib/capabilities/hosts.mjs` |
 | PowerShell helpers | 22 | `POWERSHELL_HELPERS` in `lib/capabilities/powershell.mjs` |
@@ -154,7 +154,7 @@ Install: `skillsforge hosts`, `skillsforge install --hosts ...`, optional `--cus
 
 ## Packs
 
-**26 packs / 399 skills.** Trust + lifecycle + methodology are the production-depth spine; domain packs are contract-backed SkillsForge skills.
+**28 packs / 499 skills.** Trust + lifecycle + methodology are the production-depth spine; builder, validation, and domain packs are contract-backed SkillsForge skills.
 
 ### `agentic` (14)
 
@@ -494,7 +494,7 @@ SkillsForge trust spine (validate, forge, route, verify)
 
 ## Commands
 
-**124 slash commands** in `plugins/skillsforge/commands/`.
+**135 slash commands** in `plugins/skillsforge/commands/`.
 
 Classification is on-disk: files containing `generated thin command` are thin pack/domain shims.
 CLI-only surfaces (no slash file) such as `demo` and `hosts` live under **Trust & judge CLI** above.
@@ -554,4 +554,4 @@ Run the bundled judge path: `node plugins/skillsforge/bin/skillsforge.mjs demo`.
 
 ---
 
-*Generated from live inventory. Snapshot counts: skills 399, packs 26, profiles 10, agents 98, commands 128, workflows 100, hosts 7, PowerShell helpers 22, MCP tools 15, auto heroes 8.*
+*Generated from live inventory. Snapshot counts: skills 499, packs 28, profiles 11, agents 98, command shims 135, workflows 100, hosts 7, PowerShell helpers 22, MCP tools 15, auto heroes 8.*

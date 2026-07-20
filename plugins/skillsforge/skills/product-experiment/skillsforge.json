@@ -8,14 +8,21 @@
       "run product experiment",
       "product experiment skill",
       "help with product experiment",
-      "product product experiment"
+      "product product experiment",
+      "plan product experiment",
+      "startup product experiment",
+      "mvp product experiment"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "backend-only patch with locked scope",
+      "pretend user data exists",
+      "build a full roadmap without constraints",
+      "invent customer quotes",
+      "write code before scope is locked",
+      "optimize vanity metrics only"
     ],
     "mode": "explicit",
     "pack": "product"

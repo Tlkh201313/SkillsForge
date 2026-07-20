@@ -8,14 +8,21 @@
       "run design empty states",
       "design empty states skill",
       "help with design empty states",
-      "design design empty states"
+      "design design empty states",
+      "ui design empty states",
+      "polish design empty states",
+      "layout design empty states"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

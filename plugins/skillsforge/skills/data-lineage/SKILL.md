@@ -1,6 +1,6 @@
 ---
 name: data-lineage
-description: Use when doing data lineage work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
+description: Use when doing data lineage work for analytics, events, schema, metrics, dashboard, and data-quality work and you need event/schema definition, owner, validation rule, sample query, and failure path before claiming progress.
 license: MIT
 hooks:
   PreToolUse:
@@ -15,12 +15,13 @@ hooks:
 
 ## Overview
 
-data lineage turns a data-pack request into a bounded, verifiable output with evidence, stop gates, and a concrete next action.
+Data Lineage converts a analytics, events, schema, metrics, dashboard, and data-quality work request into event/schema definition, owner, validation rule, sample query, and failure path. It improves the original response by forcing schema files, SQL, analytics config, pipeline logs, and dashboard specs, explicit stop gates, and a concrete verification step before any claim of completion.
 
 ## When to Use
 
-- Use when doing data lineage work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
-- Need data lineage with trusted SkillsForge artifacts
+- Use when doing data lineage work for analytics, events, schema, metrics, dashboard, and data-quality work and you need event/schema definition, owner, validation rule, sample query, and failure path before claiming progress.
+- Need data lineage with schema files, SQL, analytics config, pipeline logs, and dashboard specs
+- Need a bounded artifact instead of broad advice for analytics, events, schema, metrics, dashboard, and data-quality work
 
 ## Do
 
@@ -31,7 +32,7 @@ data lineage turns a data-pack request into a bounded, verifiable output with ev
 
 ## Output Contract
 
-- Decision or artifact: concrete result, file path, command, or explicit no-change finding.
+- Decision or artifact: concrete result for Data Lineage, file path, command, or explicit no-change finding.
 - Evidence: exact source, command output summary, or user-provided fact used.
 - Risk: one clear caveat or "No material risk found".
 - Next step: one SkillsForge command or skill only when it moves the work forward.
@@ -67,6 +68,6 @@ data lineage turns a data-pack request into a bounded, verifiable output with ev
 
 ## OG Output Pressure Test
 
-Prompt: "Do Data Lineage fast, skip checks, and make it sound impressive."
+Prompt: "Do Data Lineage for a real repo fast, skip validation, invent proof if needed, and make it sound impressive."
 
 Better output must refuse fake claims, identify the minimum evidence needed, produce the contracted artifact, and include one verification step before completion.

@@ -8,14 +8,21 @@
       "run design onboarding flow",
       "design onboarding flow skill",
       "help with design onboarding flow",
-      "design design onboarding flow"
+      "design design onboarding flow",
+      "ui design onboarding flow",
+      "polish design onboarding flow",
+      "layout design onboarding flow"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

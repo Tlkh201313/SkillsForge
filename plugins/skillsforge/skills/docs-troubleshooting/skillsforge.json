@@ -8,7 +8,10 @@
       "run docs troubleshooting",
       "docs troubleshooting skill",
       "help with docs troubleshooting",
-      "docs docs troubleshooting"
+      "docs docs troubleshooting",
+      "media docs troubleshooting",
+      "guide docs troubleshooting",
+      "demo docs troubleshooting"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
@@ -16,7 +19,11 @@
       "write application code only",
       "implement production code only",
       "pentest live systems",
-      "deploy to prod only"
+      "deploy to prod only",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "docs"

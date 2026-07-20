@@ -1,0 +1,6 @@
+interface:
+  display_name: Research Competitor Map
+  short_description: Use when doing research competitor map work for source-grounded product, technical, market, or open-source research and you need question, source map, trust grade, contradictory evidence, and decision
+  default_prompt: Use the research-competitor-map skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -8,14 +8,21 @@
       "run product jtbd",
       "product jtbd skill",
       "help with product jtbd",
-      "product product jtbd"
+      "product product jtbd",
+      "plan product jtbd",
+      "startup product jtbd",
+      "mvp product jtbd"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "backend-only patch with locked scope",
+      "pretend user data exists",
+      "build a full roadmap without constraints",
+      "invent customer quotes",
+      "write code before scope is locked",
+      "optimize vanity metrics only"
     ],
     "mode": "explicit",
     "pack": "product"

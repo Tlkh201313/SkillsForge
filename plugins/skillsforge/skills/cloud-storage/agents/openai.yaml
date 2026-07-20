@@ -1,6 +1,6 @@
 interface:
   display_name: Cloud Storage
-  short_description: Use when doing cloud storage work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing cloud storage work for environment, CI, deployment, reliability, and operational readiness work and you need environment map, failing signal, command path, rollback option, and runbook
   default_prompt: Use the cloud-storage skill for this task.
 policy:
   allow_implicit_invocation: false

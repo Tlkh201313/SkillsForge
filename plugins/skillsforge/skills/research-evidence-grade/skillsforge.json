@@ -8,14 +8,21 @@
       "run research evidence grade",
       "research evidence grade skill",
       "help with research evidence grade",
-      "research research evidence grade"
+      "research research evidence grade",
+      "map research evidence grade",
+      "compare research evidence grade",
+      "source trust research evidence grade"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "local bug fix with no external question",
+      "unsupported claim generation only",
+      "invent market stats",
+      "use unattributed competitor claims",
+      "ship recommendations without source quality",
+      "research already answered by local code"
     ],
     "mode": "explicit",
     "pack": "research"

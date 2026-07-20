@@ -8,7 +8,10 @@
       "run sec session",
       "sec session skill",
       "help with sec session",
-      "security sec session"
+      "security sec session",
+      "permission sec session",
+      "threat sec session",
+      "boundary sec session"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
@@ -16,7 +19,11 @@
       "write application code only",
       "feature brainstorm only",
       "docs polish only",
-      "UI visual QA only"
+      "UI visual QA only",
+      "perform live exploitation",
+      "request secrets",
+      "claim compliance certification",
+      "weaken authorization for convenience"
     ],
     "mode": "explicit",
     "pack": "security"

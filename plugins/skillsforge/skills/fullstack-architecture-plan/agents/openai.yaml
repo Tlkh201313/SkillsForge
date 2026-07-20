@@ -1,0 +1,6 @@
+interface:
+  display_name: Fullstack Architecture Plan
+  short_description: Use when doing fullstack architecture plan work for repo-grounded full-stack architecture, implementation planning, and engineering gates and you need system map, contract, affected files, test plan,
+  default_prompt: Use the fullstack-architecture-plan skill for this task.
+policy:
+  allow_implicit_invocation: false

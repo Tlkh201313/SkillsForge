@@ -1,6 +1,6 @@
 interface:
   display_name: Design Notifications
-  short_description: Use when doing design notifications work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing design notifications work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility
   default_prompt: Use the design-notifications skill for this task.
 policy:
   allow_implicit_invocation: false

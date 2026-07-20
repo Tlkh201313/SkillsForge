@@ -8,7 +8,10 @@
       "run docs changelog",
       "docs changelog skill",
       "help with docs changelog",
-      "docs docs changelog"
+      "docs docs changelog",
+      "media docs changelog",
+      "guide docs changelog",
+      "demo docs changelog"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
@@ -16,7 +19,11 @@
       "write application code only",
       "implement production code only",
       "pentest live systems",
-      "deploy to prod only"
+      "deploy to prod only",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "docs"

@@ -8,7 +8,10 @@
       "run sec authz",
       "sec authz skill",
       "help with sec authz",
-      "security sec authz"
+      "security sec authz",
+      "permission sec authz",
+      "threat sec authz",
+      "boundary sec authz"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
@@ -16,7 +19,11 @@
       "write application code only",
       "feature brainstorm only",
       "docs polish only",
-      "UI visual QA only"
+      "UI visual QA only",
+      "perform live exploitation",
+      "request secrets",
+      "claim compliance certification",
+      "weaken authorization for convenience"
     ],
     "mode": "explicit",
     "pack": "security"

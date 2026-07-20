@@ -8,14 +8,21 @@
       "run data lineage",
       "data lineage skill",
       "help with data lineage",
-      "data data lineage"
+      "data data lineage",
+      "metrics data lineage",
+      "tracking data lineage",
+      "analytics data lineage"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "UI styling only",
+      "no event or metric surface",
+      "invent event volume",
+      "track personal data without purpose",
+      "skip data quality checks",
+      "mix metric names without definitions"
     ],
     "mode": "explicit",
     "pack": "data"

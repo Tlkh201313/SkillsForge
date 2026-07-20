@@ -1,0 +1,6 @@
+interface:
+  display_name: Security Agent Permission Review
+  short_description: Use when doing security agent permission review work for permission, privacy, boundary, dependency, and threat-model work and you need asset, actor, boundary, failure path, mitigation, and verificatio
+  default_prompt: Use the security-agent-permission-review skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -8,14 +8,21 @@
       "run design settings panel",
       "design settings panel skill",
       "help with design settings panel",
-      "design design settings panel"
+      "design design settings panel",
+      "ui design settings panel",
+      "polish design settings panel",
+      "layout design settings panel"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

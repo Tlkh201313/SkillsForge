@@ -8,14 +8,21 @@
       "run ops feature freeze",
       "ops feature freeze skill",
       "help with ops feature freeze",
-      "ops ops feature freeze"
+      "ops ops feature freeze",
+      "ci ops feature freeze",
+      "deploy ops feature freeze",
+      "env ops feature freeze"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "local UI mock only",
-      "ignore runbooks and alerts"
+      "ignore runbooks and alerts",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
     ],
     "mode": "explicit",
     "pack": "ops"

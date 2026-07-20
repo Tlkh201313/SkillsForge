@@ -1,6 +1,6 @@
 interface:
   display_name: Media Accessibility
-  short_description: Use when doing media accessibility work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing media accessibility work for agent-facing docs, launch media, demo proof, and content production and you need audience, source facts, outline, asset path, claim proof, and publishing ch
   default_prompt: Use the media-accessibility skill for this task.
 policy:
   allow_implicit_invocation: false

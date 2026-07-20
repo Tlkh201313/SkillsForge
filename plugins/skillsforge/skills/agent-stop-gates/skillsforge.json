@@ -8,14 +8,22 @@
       "run agent stop gates",
       "agent stop gates skill",
       "help with agent stop gates",
-      "agentic agent stop gates"
+      "agentic agent stop gates",
+      "agent agent stop gates",
+      "workflow agent stop gates",
+      "orchestrate agent stop gates",
+      "route agent stop gates"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "single-step manual task",
+      "subagents forbidden by user",
+      "start extra agents when user forbids it",
+      "hide tool side effects",
+      "skip handoff evidence",
+      "expand context without a budget"
     ],
     "mode": "explicit",
     "pack": "agentic"

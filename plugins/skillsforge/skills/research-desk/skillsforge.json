@@ -8,14 +8,21 @@
       "run research desk",
       "research desk skill",
       "help with research desk",
-      "research research desk"
+      "research research desk",
+      "map research desk",
+      "compare research desk",
+      "source trust research desk"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "local bug fix with no external question",
+      "unsupported claim generation only",
+      "invent market stats",
+      "use unattributed competitor claims",
+      "ship recommendations without source quality",
+      "research already answered by local code"
     ],
     "mode": "explicit",
     "pack": "research"

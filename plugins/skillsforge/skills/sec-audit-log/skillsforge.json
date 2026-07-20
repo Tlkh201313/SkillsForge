@@ -8,7 +8,10 @@
       "run sec audit log",
       "sec audit log skill",
       "help with sec audit log",
-      "security sec audit log"
+      "security sec audit log",
+      "permission sec audit log",
+      "threat sec audit log",
+      "boundary sec audit log"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
@@ -16,7 +19,11 @@
       "write application code only",
       "feature brainstorm only",
       "docs polish only",
-      "UI visual QA only"
+      "UI visual QA only",
+      "perform live exploitation",
+      "request secrets",
+      "claim compliance certification",
+      "weaken authorization for convenience"
     ],
     "mode": "explicit",
     "pack": "security"

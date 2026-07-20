@@ -10,8 +10,15 @@ import { buildCursorLossiness, runBuildDist } from '../scripts/build-dist.mjs';
 async function fixtureRepo(context) {
   const root = await mkdtemp(join(tmpdir(), 'sf-build-dist-'));
   context.after(() => rm(root, { recursive: true, force: true }));
-  await mkdir(join(root, 'plugins'), { recursive: true });
-  await cp(join(process.cwd(), 'plugins', 'skillsforge'), join(root, 'plugins', 'skillsforge'), { recursive: true });
+  const pluginRoot = join(root, 'plugins', 'skillsforge');
+  const sourcePluginRoot = join(process.cwd(), 'plugins', 'skillsforge');
+  await mkdir(join(pluginRoot, 'skills'), { recursive: true });
+  for (const rel of ['.claude-plugin', '.codex-plugin', 'bin', 'hooks', 'rules']) {
+    await cp(join(sourcePluginRoot, rel), join(pluginRoot, rel), { recursive: true });
+  }
+  for (const id of ['using-skillsforge', 'eng-refactor-safe', 'validate-agent-skill']) {
+    await cp(join(sourcePluginRoot, 'skills', id), join(pluginRoot, 'skills', id), { recursive: true });
+  }
   await mkdir(join(root, 'evaluation'), { recursive: true });
   await writeFile(join(root, 'evaluation', 'routing-holdout.json'), JSON.stringify({
     frozen: '2026-07-13',

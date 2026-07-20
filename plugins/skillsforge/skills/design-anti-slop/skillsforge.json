@@ -8,14 +8,21 @@
       "run design anti slop",
       "design anti slop skill",
       "help with design anti slop",
-      "design design anti slop"
+      "design design anti slop",
+      "ui design anti slop",
+      "polish design anti slop",
+      "layout design anti slop"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

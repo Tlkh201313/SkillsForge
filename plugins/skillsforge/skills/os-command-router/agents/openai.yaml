@@ -1,6 +1,6 @@
 interface:
   display_name: Os Command Router
-  short_description: Use when doing os command router work and you need bounded os-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing os command router work for os-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the os-command-router skill for this task.
 policy:
   allow_implicit_invocation: false

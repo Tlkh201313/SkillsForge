@@ -8,7 +8,10 @@
       "run docs faq",
       "docs faq skill",
       "help with docs faq",
-      "docs docs faq"
+      "docs docs faq",
+      "media docs faq",
+      "guide docs faq",
+      "demo docs faq"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
@@ -16,7 +19,11 @@
       "write application code only",
       "implement production code only",
       "pentest live systems",
-      "deploy to prod only"
+      "deploy to prod only",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "docs"

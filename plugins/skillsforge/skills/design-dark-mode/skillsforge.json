@@ -8,14 +8,21 @@
       "run design dark mode",
       "design dark mode skill",
       "help with design dark mode",
-      "design design dark mode"
+      "design design dark mode",
+      "ui design dark mode",
+      "polish design dark mode",
+      "layout design dark mode"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

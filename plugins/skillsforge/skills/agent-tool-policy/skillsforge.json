@@ -8,14 +8,22 @@
       "run agent tool policy",
       "agent tool policy skill",
       "help with agent tool policy",
-      "agentic agent tool policy"
+      "agentic agent tool policy",
+      "agent agent tool policy",
+      "workflow agent tool policy",
+      "orchestrate agent tool policy",
+      "route agent tool policy"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "single-step manual task",
+      "subagents forbidden by user",
+      "start extra agents when user forbids it",
+      "hide tool side effects",
+      "skip handoff evidence",
+      "expand context without a budget"
     ],
     "mode": "explicit",
     "pack": "agentic"

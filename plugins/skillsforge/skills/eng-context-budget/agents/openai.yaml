@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Context Budget
+  short_description: Use when doing eng context budget work for repo-grounded full-stack architecture, implementation planning, and engineering gates and you need system map, contract, affected files, test plan, rollback
+  default_prompt: Use the eng-context-budget skill for this task.
+policy:
+  allow_implicit_invocation: false

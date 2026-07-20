@@ -1,6 +1,6 @@
 interface:
   display_name: Agent Handoff
-  short_description: Use when doing agent handoff work and you need bounded agentic-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing agent handoff work for agent workflow planning, replay, routing, tool policy, and token-budget work and you need agent role, tool boundary, context budget, stop gate, replay path, and h
   default_prompt: Use the agent-handoff skill for this task.
 policy:
   allow_implicit_invocation: false

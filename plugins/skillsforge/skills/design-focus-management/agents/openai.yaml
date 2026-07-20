@@ -1,6 +1,6 @@
 interface:
   display_name: Design Focus Management
-  short_description: Use when doing design focus management work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing design focus management work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibili
   default_prompt: Use the design-focus-management skill for this task.
 policy:
   allow_implicit_invocation: false

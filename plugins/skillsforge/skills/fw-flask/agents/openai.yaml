@@ -1,6 +1,6 @@
 interface:
   display_name: Fw Flask
-  short_description: Use when doing fw flask work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing fw flask work for framework-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the fw-flask skill for this task.
 policy:
   allow_implicit_invocation: false

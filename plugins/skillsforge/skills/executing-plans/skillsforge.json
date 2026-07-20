@@ -15,7 +15,11 @@
       "unrelated coding task",
       "write application code only",
       "skip planning and ship immediately",
-      "ignore verification gates"
+      "ignore verification gates",
+      "skip verification",
+      "invent credentials",
+      "ignore existing project constraints",
+      "write outside declared scope"
     ],
     "mode": "explicit",
     "pack": "methodology"

@@ -8,14 +8,21 @@
       "run media compression",
       "media compression skill",
       "help with media compression",
-      "media media compression"
+      "media media compression",
+      "docs media compression",
+      "guide media compression",
+      "demo media compression"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "database migration only",
-      "authz policy rewrite"
+      "authz policy rewrite",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "media"

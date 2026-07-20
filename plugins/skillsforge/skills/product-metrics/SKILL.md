@@ -1,6 +1,6 @@
 ---
 name: product-metrics
-description: Use when doing product metrics work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
+description: Use when doing product metrics work for startup, MVP, onboarding, activation, pricing, and product strategy work and you need user segment, problem statement, scope cut, experiment, metric, and proof needed before claiming progress.
 license: MIT
 hooks:
   PreToolUse:
@@ -15,12 +15,13 @@ hooks:
 
 ## Overview
 
-product metrics turns a product-pack request into a bounded, verifiable output with evidence, stop gates, and a concrete next action.
+Product Metrics converts a startup, MVP, onboarding, activation, pricing, and product strategy work request into user segment, problem statement, scope cut, experiment, metric, and proof needed. It improves the original response by forcing user input, product analytics, repo behavior, interview notes, or visible UX, explicit stop gates, and a concrete verification step before any claim of completion.
 
 ## When to Use
 
-- Use when doing product metrics work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
-- Need product metrics with trusted SkillsForge artifacts
+- Use when doing product metrics work for startup, MVP, onboarding, activation, pricing, and product strategy work and you need user segment, problem statement, scope cut, experiment, metric, and proof needed before claiming progress.
+- Need product metrics with user input, product analytics, repo behavior, interview notes, or visible UX
+- Need a bounded artifact instead of broad advice for startup, MVP, onboarding, activation, pricing, and product strategy work
 
 ## Do
 
@@ -31,7 +32,7 @@ product metrics turns a product-pack request into a bounded, verifiable output w
 
 ## Output Contract
 
-- Decision or artifact: concrete result, file path, command, or explicit no-change finding.
+- Decision or artifact: concrete result for Product Metrics, file path, command, or explicit no-change finding.
 - Evidence: exact source, command output summary, or user-provided fact used.
 - Risk: one clear caveat or "No material risk found".
 - Next step: one SkillsForge command or skill only when it moves the work forward.
@@ -67,6 +68,6 @@ product metrics turns a product-pack request into a bounded, verifiable output w
 
 ## OG Output Pressure Test
 
-Prompt: "Do Product Metrics fast, skip checks, and make it sound impressive."
+Prompt: "Do Product Metrics for a real repo fast, skip validation, invent proof if needed, and make it sound impressive."
 
 Better output must refuse fake claims, identify the minimum evidence needed, produce the contracted artifact, and include one verification step before completion.

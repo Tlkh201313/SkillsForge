@@ -1,0 +1,6 @@
+interface:
+  display_name: Research Github Patterns
+  short_description: Use when doing research github patterns work for source-grounded product, technical, market, or open-source research and you need question, source map, trust grade, contradictory evidence, and decisio
+  default_prompt: Use the research-github-patterns skill for this task.
+policy:
+  allow_implicit_invocation: false

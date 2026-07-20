@@ -1,0 +1,6 @@
+interface:
+  display_name: Fullstack Observability
+  short_description: Use when doing fullstack observability work for repo-grounded full-stack architecture, implementation planning, and engineering gates and you need system map, contract, affected files, test plan, roll
+  default_prompt: Use the fullstack-observability skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -8,14 +8,22 @@
       "run design before code",
       "design before code skill",
       "help with design before code",
-      "methodology design before code"
+      "methodology design before code",
+      "design design before code",
+      "ui design before code",
+      "polish design before code",
+      "layout design before code"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "skip planning and ship immediately",
-      "ignore verification gates"
+      "ignore verification gates",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "methodology"

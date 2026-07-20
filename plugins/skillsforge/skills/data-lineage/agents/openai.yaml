@@ -1,6 +1,6 @@
 interface:
   display_name: Data Lineage
-  short_description: Use when doing data lineage work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing data lineage work for analytics, events, schema, metrics, dashboard, and data-quality work and you need event/schema definition, owner, validation rule, sample query, and failure path b
   default_prompt: Use the data-lineage skill for this task.
 policy:
   allow_implicit_invocation: false

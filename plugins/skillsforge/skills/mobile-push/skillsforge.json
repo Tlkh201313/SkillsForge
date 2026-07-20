@@ -15,7 +15,9 @@
       "unrelated coding task",
       "write application code only",
       "skip verification",
-      "invent credentials"
+      "invent credentials",
+      "ignore existing project constraints",
+      "write outside declared scope"
     ],
     "mode": "explicit",
     "pack": "mobile"

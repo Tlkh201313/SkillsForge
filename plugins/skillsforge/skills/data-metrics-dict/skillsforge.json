@@ -8,14 +8,21 @@
       "run data metrics dict",
       "data metrics dict skill",
       "help with data metrics dict",
-      "data data metrics dict"
+      "data data metrics dict",
+      "metrics data metrics dict",
+      "tracking data metrics dict",
+      "analytics data metrics dict"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "UI styling only",
+      "no event or metric surface",
+      "invent event volume",
+      "track personal data without purpose",
+      "skip data quality checks",
+      "mix metric names without definitions"
     ],
     "mode": "explicit",
     "pack": "data"

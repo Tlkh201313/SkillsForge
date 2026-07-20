@@ -1,6 +1,6 @@
 interface:
   display_name: Design Saas Workbench
-  short_description: Use when doing design saas workbench work and you need bounded design-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing design saas workbench work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility
   default_prompt: Use the design-saas-workbench skill for this task.
 policy:
   allow_implicit_invocation: false

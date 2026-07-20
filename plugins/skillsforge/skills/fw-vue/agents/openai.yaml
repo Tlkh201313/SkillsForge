@@ -1,6 +1,6 @@
 interface:
   display_name: Fw Vue
-  short_description: Use when doing fw vue work and you need bounded framework-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing fw vue work for framework-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the fw-vue skill for this task.
 policy:
   allow_implicit_invocation: false

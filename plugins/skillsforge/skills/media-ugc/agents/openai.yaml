@@ -1,6 +1,6 @@
 interface:
   display_name: Media Ugc
-  short_description: Use when doing media ugc work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing media ugc work for agent-facing docs, launch media, demo proof, and content production and you need audience, source facts, outline, asset path, claim proof, and publishing check before
   default_prompt: Use the media-ugc skill for this task.
 policy:
   allow_implicit_invocation: false

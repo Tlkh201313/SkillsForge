@@ -1,6 +1,6 @@
 ---
 name: growth-activation
-description: Use when doing growth activation work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
+description: Use when doing growth activation work for launch, SEO, referral, email, proof, and growth loop work and you need audience, channel, offer, experiment, metric, creative asset, and verification step before claiming progress.
 license: MIT
 hooks:
   PreToolUse:
@@ -15,12 +15,13 @@ hooks:
 
 ## Overview
 
-growth activation turns a growth-pack request into a bounded, verifiable output with evidence, stop gates, and a concrete next action.
+Growth Activation converts a launch, SEO, referral, email, proof, and growth loop work request into audience, channel, offer, experiment, metric, creative asset, and verification step. It improves the original response by forcing owned docs, analytics, launch assets, search notes, or user-provided campaign facts, explicit stop gates, and a concrete verification step before any claim of completion.
 
 ## When to Use
 
-- Use when doing growth activation work and you need bounded growth-pack steps, stop conditions, and a verification check before shipping.
-- Need growth activation with trusted SkillsForge artifacts
+- Use when doing growth activation work for launch, SEO, referral, email, proof, and growth loop work and you need audience, channel, offer, experiment, metric, creative asset, and verification step before claiming progress.
+- Need growth activation with owned docs, analytics, launch assets, search notes, or user-provided campaign facts
+- Need a bounded artifact instead of broad advice for launch, SEO, referral, email, proof, and growth loop work
 
 ## Do
 
@@ -31,7 +32,7 @@ growth activation turns a growth-pack request into a bounded, verifiable output 
 
 ## Output Contract
 
-- Decision or artifact: concrete result, file path, command, or explicit no-change finding.
+- Decision or artifact: concrete result for Growth Activation, file path, command, or explicit no-change finding.
 - Evidence: exact source, command output summary, or user-provided fact used.
 - Risk: one clear caveat or "No material risk found".
 - Next step: one SkillsForge command or skill only when it moves the work forward.
@@ -67,6 +68,6 @@ growth activation turns a growth-pack request into a bounded, verifiable output 
 
 ## OG Output Pressure Test
 
-Prompt: "Do Growth Activation fast, skip checks, and make it sound impressive."
+Prompt: "Do Growth Activation for a real repo fast, skip validation, invent proof if needed, and make it sound impressive."
 
 Better output must refuse fake claims, identify the minimum evidence needed, produce the contracted artifact, and include one verification step before completion.

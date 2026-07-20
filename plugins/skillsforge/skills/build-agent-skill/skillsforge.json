@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "build agent skill",
+      "run build agent skill",
+      "build agent skill skill",
+      "help with build agent skill",
+      "builder build agent skill",
+      "create build agent skill",
+      "ship build agent skill",
+      "scaffold build agent skill",
+      "ai cli build agent skill"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "read-only audit only",
+      "no host or SDK target selected",
+      "pure code review with no build artifact",
+      "marketing copy only",
+      "live install without explicit confirmation",
+      "invent SDK behavior"
+    ],
+    "mode": "explicit",
+    "pack": "builder"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

@@ -1,6 +1,6 @@
 interface:
   display_name: Research Desk
-  short_description: Use when doing research desk work and you need bounded research-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing research desk work for source-grounded product, technical, market, or open-source research and you need question, source map, trust grade, contradictory evidence, and decision summary b
   default_prompt: Use the research-desk skill for this task.
 policy:
   allow_implicit_invocation: false

@@ -1,6 +1,6 @@
 interface:
   display_name: Content Edit
-  short_description: Use when doing content edit work and you need bounded content-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing content edit work for agent-facing docs, launch media, demo proof, and content production and you need audience, source facts, outline, asset path, claim proof, and publishing check bef
   default_prompt: Use the content-edit skill for this task.
 policy:
   allow_implicit_invocation: false

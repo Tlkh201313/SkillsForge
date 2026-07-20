@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "eng safe codegen",
+      "run eng safe codegen",
+      "eng safe codegen skill",
+      "help with eng safe codegen",
+      "eng eng safe codegen",
+      "engineer eng safe codegen",
+      "fullstack eng safe codegen",
+      "code eng safe codegen",
+      "repo eng safe codegen"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
+    ],
+    "mode": "explicit",
+    "pack": "eng"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

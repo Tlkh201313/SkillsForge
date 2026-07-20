@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "eng ai generated diff review",
+      "run eng ai generated diff review",
+      "eng ai generated diff review skill",
+      "help with eng ai generated diff review",
+      "eng eng ai generated diff review",
+      "engineer eng ai generated diff review",
+      "fullstack eng ai generated diff review",
+      "code eng ai generated diff review",
+      "repo eng ai generated diff review"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
+    ],
+    "mode": "explicit",
+    "pack": "eng"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

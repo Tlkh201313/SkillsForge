@@ -1,6 +1,6 @@
 interface:
   display_name: Product Jtbd
-  short_description: Use when doing product jtbd work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing product jtbd work for startup, MVP, onboarding, activation, pricing, and product strategy work and you need user segment, problem statement, scope cut, experiment, metric, and proof nee
   default_prompt: Use the product-jtbd skill for this task.
 policy:
   allow_implicit_invocation: false

@@ -8,14 +8,21 @@
       "run design kanban ui",
       "design kanban ui skill",
       "help with design kanban ui",
-      "design design kanban ui"
+      "design design kanban ui",
+      "ui design kanban ui",
+      "polish design kanban ui",
+      "layout design kanban ui"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

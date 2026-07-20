@@ -8,14 +8,21 @@
       "run design copy hierarchy",
       "design copy hierarchy skill",
       "help with design copy hierarchy",
-      "design design copy hierarchy"
+      "design design copy hierarchy",
+      "ui design copy hierarchy",
+      "polish design copy hierarchy",
+      "layout design copy hierarchy"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

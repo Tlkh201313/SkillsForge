@@ -1,0 +1,6 @@
+interface:
+  display_name: Research Open Source License
+  short_description: Use when doing research open source license work for source-grounded product, technical, market, or open-source research and you need question, source map, trust grade, contradictory evidence, and dec
+  default_prompt: Use the research-open-source-license skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -8,14 +8,21 @@
       "run media localization",
       "media localization skill",
       "help with media localization",
-      "media media localization"
+      "media media localization",
+      "docs media localization",
+      "guide media localization",
+      "demo media localization"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "database migration only",
-      "authz policy rewrite"
+      "authz policy rewrite",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "media"

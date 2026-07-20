@@ -1,6 +1,6 @@
 ---
 name: cloud-k8s-basics
-description: Use when doing cloud k8s basics work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
+description: Use when doing cloud k8s basics work for environment, CI, deployment, reliability, and operational readiness work and you need environment map, failing signal, command path, rollback option, and runbook note before claiming progress.
 license: MIT
 hooks:
   PreToolUse:
@@ -15,12 +15,13 @@ hooks:
 
 ## Overview
 
-cloud k8s basics turns a cloud-devops-pack request into a bounded, verifiable output with evidence, stop gates, and a concrete next action.
+Cloud K8s Basics converts a environment, CI, deployment, reliability, and operational readiness work request into environment map, failing signal, command path, rollback option, and runbook note. It improves the original response by forcing CI logs, env files, deployment config, health checks, and local command output, explicit stop gates, and a concrete verification step before any claim of completion.
 
 ## When to Use
 
-- Use when doing cloud k8s basics work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
-- Need cloud k8s basics with trusted SkillsForge artifacts
+- Use when doing cloud k8s basics work for environment, CI, deployment, reliability, and operational readiness work and you need environment map, failing signal, command path, rollback option, and runbook note before claiming progress.
+- Need cloud k8s basics with CI logs, env files, deployment config, health checks, and local command output
+- Need a bounded artifact instead of broad advice for environment, CI, deployment, reliability, and operational readiness work
 
 ## Do
 
@@ -31,7 +32,7 @@ cloud k8s basics turns a cloud-devops-pack request into a bounded, verifiable ou
 
 ## Output Contract
 
-- Decision or artifact: concrete result, file path, command, or explicit no-change finding.
+- Decision or artifact: concrete result for Cloud K8s Basics, file path, command, or explicit no-change finding.
 - Evidence: exact source, command output summary, or user-provided fact used.
 - Risk: one clear caveat or "No material risk found".
 - Next step: one SkillsForge command or skill only when it moves the work forward.
@@ -67,6 +68,6 @@ cloud k8s basics turns a cloud-devops-pack request into a bounded, verifiable ou
 
 ## OG Output Pressure Test
 
-Prompt: "Do Cloud K8s Basics fast, skip checks, and make it sound impressive."
+Prompt: "Do Cloud K8s Basics for a real repo fast, skip validation, invent proof if needed, and make it sound impressive."
 
 Better output must refuse fake claims, identify the minimum evidence needed, produce the contracted artifact, and include one verification step before completion.

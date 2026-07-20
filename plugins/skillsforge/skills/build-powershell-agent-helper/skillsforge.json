@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "build powershell agent helper",
+      "run build powershell agent helper",
+      "build powershell agent helper skill",
+      "help with build powershell agent helper",
+      "builder build powershell agent helper",
+      "create build powershell agent helper",
+      "ship build powershell agent helper",
+      "scaffold build powershell agent helper",
+      "ai cli build powershell agent helper"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "read-only audit only",
+      "no host or SDK target selected",
+      "pure code review with no build artifact",
+      "marketing copy only",
+      "live install without explicit confirmation",
+      "invent SDK behavior"
+    ],
+    "mode": "explicit",
+    "pack": "builder"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

@@ -8,14 +8,22 @@
       "run agent fanout",
       "agent fanout skill",
       "help with agent fanout",
-      "agentic agent fanout"
+      "agentic agent fanout",
+      "agent agent fanout",
+      "workflow agent fanout",
+      "orchestrate agent fanout",
+      "route agent fanout"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "single-step manual task",
+      "subagents forbidden by user",
+      "start extra agents when user forbids it",
+      "hide tool side effects",
+      "skip handoff evidence",
+      "expand context without a budget"
     ],
     "mode": "explicit",
     "pack": "agentic"

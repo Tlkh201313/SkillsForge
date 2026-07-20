@@ -8,14 +8,22 @@
       "run content seo draft",
       "content seo draft skill",
       "help with content seo draft",
-      "content content seo draft"
+      "content content seo draft",
+      "docs content seo draft",
+      "media content seo draft",
+      "guide content seo draft",
+      "demo content seo draft"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "database-only task",
+      "no audience or source material",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "content"

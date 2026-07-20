@@ -8,14 +8,21 @@
       "run design system",
       "design system skill",
       "help with design system",
-      "design design system"
+      "design design system",
+      "ui design system",
+      "polish design system",
+      "layout design system"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

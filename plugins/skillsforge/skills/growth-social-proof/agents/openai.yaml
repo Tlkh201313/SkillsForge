@@ -1,0 +1,6 @@
+interface:
+  display_name: Growth Social Proof
+  short_description: Use when doing growth social proof work for launch, SEO, referral, email, proof, and growth loop work and you need audience, channel, offer, experiment, metric, creative asset, and verification step b
+  default_prompt: Use the growth-social-proof skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -8,14 +8,21 @@
       "run design typography",
       "design typography skill",
       "help with design typography",
-      "design design typography"
+      "design design typography",
+      "ui design typography",
+      "polish design typography",
+      "layout design typography"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

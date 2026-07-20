@@ -1,6 +1,6 @@
 interface:
   display_name: Data Contracts
-  short_description: Use when doing data contracts work and you need bounded data-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing data contracts work for analytics, events, schema, metrics, dashboard, and data-quality work and you need event/schema definition, owner, validation rule, sample query, and failure path
   default_prompt: Use the data-contracts skill for this task.
 policy:
   allow_implicit_invocation: false

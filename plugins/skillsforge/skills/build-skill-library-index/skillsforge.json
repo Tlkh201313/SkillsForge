@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "build skill library index",
+      "run build skill library index",
+      "build skill library index skill",
+      "help with build skill library index",
+      "builder build skill library index",
+      "create build skill library index",
+      "ship build skill library index",
+      "scaffold build skill library index",
+      "ai cli build skill library index"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "read-only audit only",
+      "no host or SDK target selected",
+      "pure code review with no build artifact",
+      "marketing copy only",
+      "live install without explicit confirmation",
+      "invent SDK behavior"
+    ],
+    "mode": "explicit",
+    "pack": "builder"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

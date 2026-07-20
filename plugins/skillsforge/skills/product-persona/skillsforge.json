@@ -8,14 +8,21 @@
       "run product persona",
       "product persona skill",
       "help with product persona",
-      "product product persona"
+      "product product persona",
+      "plan product persona",
+      "startup product persona",
+      "mvp product persona"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "backend-only patch with locked scope",
+      "pretend user data exists",
+      "build a full roadmap without constraints",
+      "invent customer quotes",
+      "write code before scope is locked",
+      "optimize vanity metrics only"
     ],
     "mode": "explicit",
     "pack": "product"

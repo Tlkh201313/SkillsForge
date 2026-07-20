@@ -8,14 +8,21 @@
       "run data streaming",
       "data streaming skill",
       "help with data streaming",
-      "data data streaming"
+      "data data streaming",
+      "metrics data streaming",
+      "tracking data streaming",
+      "analytics data streaming"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "UI styling only",
+      "no event or metric surface",
+      "invent event volume",
+      "track personal data without purpose",
+      "skip data quality checks",
+      "mix metric names without definitions"
     ],
     "mode": "explicit",
     "pack": "data"

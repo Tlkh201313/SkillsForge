@@ -39,7 +39,10 @@
   "recommendedSkills": [
     "docs-readme",
     "research-evidence-grade",
-    "prove-outcome"
+    "prove-outcome",
+    "validate-readme-claims",
+    "validate-no-fake-stats",
+    "docs-agent-facing-guide"
   ],
   "recommendedAgents": [
     "docs-engineer",

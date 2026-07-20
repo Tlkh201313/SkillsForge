@@ -1,6 +1,6 @@
 interface:
   display_name: Product Scope Cut
-  short_description: Use when doing product scope cut work and you need bounded product-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing product scope cut work for startup, MVP, onboarding, activation, pricing, and product strategy work and you need user segment, problem statement, scope cut, experiment, metric, and proo
   default_prompt: Use the product-scope-cut skill for this task.
 policy:
   allow_implicit_invocation: false

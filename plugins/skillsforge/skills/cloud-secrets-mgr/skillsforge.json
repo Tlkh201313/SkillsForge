@@ -8,14 +8,22 @@
       "run cloud secrets mgr",
       "cloud secrets mgr skill",
       "help with cloud secrets mgr",
-      "cloud-devops cloud secrets mgr"
+      "cloud-devops cloud secrets mgr",
+      "ops cloud secrets mgr",
+      "ci cloud secrets mgr",
+      "deploy cloud secrets mgr",
+      "env cloud secrets mgr"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "pure frontend styling only",
-      "legal contract drafting"
+      "legal contract drafting",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
     ],
     "mode": "explicit",
     "pack": "cloud-devops"

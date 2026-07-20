@@ -1,0 +1,6 @@
+interface:
+  display_name: Research Api Surface
+  short_description: Use when doing research api surface work for source-grounded product, technical, market, or open-source research and you need question, source map, trust grade, contradictory evidence, and decision su
+  default_prompt: Use the research-api-surface skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -8,14 +8,21 @@
       "run design icons",
       "design icons skill",
       "help with design icons",
-      "design design icons"
+      "design design icons",
+      "ui design icons",
+      "polish design icons",
+      "layout design icons"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

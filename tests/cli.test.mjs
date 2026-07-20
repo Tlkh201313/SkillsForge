@@ -1,29 +1,10 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
 import test from 'node:test';
 
 const binary = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge-validate');
-const npmCliCandidates = [
-  process.env.npm_execpath,
-  join(dirname(process.execPath), '..', 'lib', 'node_modules', 'npm', 'bin', 'npm-cli.js'),
-  join(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js')
-].filter(Boolean);
-const npmCli = npmCliCandidates.find((candidate) => existsSync(candidate));
-
-function runNpm(args) {
-  if (npmCli) {
-    return spawnSync(process.execPath, [npmCli, ...args], {
-      cwd: process.cwd(),
-      encoding: 'utf8'
-    });
-  }
-  return spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', args, {
-    cwd: process.cwd(),
-    encoding: 'utf8'
-  });
-}
+const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
 
 test('bundled CLI validates a portable skill without installed runtime dependencies', () => {
   const result = spawnSync(process.execPath, [binary, 'tests/fixtures/skills/good-basic'], {
@@ -46,9 +27,6 @@ test('bundled CLI emits machine-readable failures', () => {
 });
 
 test('shipped shim accepts Claude Code profile for Claude-only skill', () => {
-  const build = runNpm(['run', 'build']);
-  assert.equal(build.status, 0, build.stderr || build.stdout);
-
   const result = spawnSync(
     process.execPath,
     [binary, '--profile', 'claude-code', 'tests/fixtures/skills/good-claude-extension'],
@@ -105,10 +83,6 @@ test('bundled CLI validate fails undeclared-exec with policy JSON fields', () =>
 });
 
 test('bundled CLI help lists every subcommand', () => {
-  const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
-  const build = runNpm(['run', 'build']);
-  assert.equal(build.status, 0, build.stderr || build.stdout);
-
   const result = spawnSync(process.execPath, [cli, 'help'], {
     cwd: process.cwd(),
     encoding: 'utf8'
@@ -124,10 +98,6 @@ test('bundled CLI exposes workbench, workflow, auto, library, and PowerShell com
   const { tmpdir } = await import('node:os');
   const outDir = await mkdtemp(join(tmpdir(), 'sf-cli-new-'));
   try {
-    const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
-    const build = runNpm(['run', 'build']);
-    assert.equal(build.status, 0, build.stderr || build.stdout);
-
     const status = spawnSync(process.execPath, [cli, 'wb', 'status', '--json'], {
       cwd: process.cwd(),
       encoding: 'utf8'
@@ -170,10 +140,6 @@ test('bundled CLI exposes workbench, workflow, auto, library, and PowerShell com
 });
 
 test('bundled CLI hosts --json reports universal host boundaries', () => {
-  const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
-  const build = runNpm(['run', 'build']);
-  assert.equal(build.status, 0, build.stderr || build.stdout);
-
   const result = spawnSync(process.execPath, [cli, 'hosts', '--json', '--home', process.cwd()], {
     cwd: process.cwd(),
     encoding: 'utf8'

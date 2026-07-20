@@ -1,6 +1,6 @@
 interface:
   display_name: Cloud Secrets Mgr
-  short_description: Use when doing cloud secrets mgr work and you need bounded cloud-devops-pack steps, stop conditions, and a verification check before shipping.
+  short_description: Use when doing cloud secrets mgr work for environment, CI, deployment, reliability, and operational readiness work and you need environment map, failing signal, command path, rollback option, and runb
   default_prompt: Use the cloud-secrets-mgr skill for this task.
 policy:
   allow_implicit_invocation: false

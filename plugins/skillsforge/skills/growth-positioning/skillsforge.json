@@ -8,14 +8,20 @@
       "run growth positioning",
       "growth positioning skill",
       "help with growth positioning",
-      "growth growth positioning"
+      "growth growth positioning",
+      "launch growth positioning",
+      "seo growth positioning",
+      "campaign growth positioning"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "technical migration only",
+      "fake social proof",
+      "invent traffic numbers",
+      "spam outreach",
+      "optimize copy without a target segment"
     ],
     "mode": "explicit",
     "pack": "growth"

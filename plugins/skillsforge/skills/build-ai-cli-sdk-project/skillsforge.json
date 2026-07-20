@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "build ai cli sdk project",
+      "run build ai cli sdk project",
+      "build ai cli sdk project skill",
+      "help with build ai cli sdk project",
+      "builder build ai cli sdk project",
+      "create build ai cli sdk project",
+      "ship build ai cli sdk project",
+      "scaffold build ai cli sdk project",
+      "ai cli build ai cli sdk project"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "read-only audit only",
+      "no host or SDK target selected",
+      "pure code review with no build artifact",
+      "marketing copy only",
+      "live install without explicit confirmation",
+      "invent SDK behavior"
+    ],
+    "mode": "explicit",
+    "pack": "builder"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

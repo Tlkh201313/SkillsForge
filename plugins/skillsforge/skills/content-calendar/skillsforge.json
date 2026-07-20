@@ -8,14 +8,22 @@
       "run content calendar",
       "content calendar skill",
       "help with content calendar",
-      "content content calendar"
+      "content content calendar",
+      "docs content calendar",
+      "media content calendar",
+      "guide content calendar",
+      "demo content calendar"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "database-only task",
+      "no audience or source material",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "content"

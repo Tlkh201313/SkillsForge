@@ -8,14 +8,21 @@
       "run design data table",
       "design data table skill",
       "help with design data table",
-      "design design data table"
+      "design design data table",
+      "ui design data table",
+      "polish design data table",
+      "layout design data table"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "backend schema migration only",
-      "CLI packaging only"
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

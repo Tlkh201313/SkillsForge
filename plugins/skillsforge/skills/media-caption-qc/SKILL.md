@@ -1,6 +1,6 @@
 ---
 name: media-caption-qc
-description: Use when doing media caption qc work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
+description: Use when doing media caption qc work for agent-facing docs, launch media, demo proof, and content production and you need audience, source facts, outline, asset path, claim proof, and publishing check before claiming progress.
 license: MIT
 hooks:
   PreToolUse:
@@ -15,12 +15,13 @@ hooks:
 
 ## Overview
 
-media caption qc turns a media-pack request into a bounded, verifiable output with evidence, stop gates, and a concrete next action.
+Media Caption Qc converts a agent-facing docs, launch media, demo proof, and content production request into audience, source facts, outline, asset path, claim proof, and publishing check. It improves the original response by forcing repo docs, media files, screenshots, transcripts, and command output, explicit stop gates, and a concrete verification step before any claim of completion.
 
 ## When to Use
 
-- Use when doing media caption qc work and you need bounded media-pack steps, stop conditions, and a verification check before shipping.
-- Need media caption qc with trusted SkillsForge artifacts
+- Use when doing media caption qc work for agent-facing docs, launch media, demo proof, and content production and you need audience, source facts, outline, asset path, claim proof, and publishing check before claiming progress.
+- Need media caption qc with repo docs, media files, screenshots, transcripts, and command output
+- Need a bounded artifact instead of broad advice for agent-facing docs, launch media, demo proof, and content production
 
 ## Do
 
@@ -31,7 +32,7 @@ media caption qc turns a media-pack request into a bounded, verifiable output wi
 
 ## Output Contract
 
-- Decision or artifact: concrete result, file path, command, or explicit no-change finding.
+- Decision or artifact: concrete result for Media Caption Qc, file path, command, or explicit no-change finding.
 - Evidence: exact source, command output summary, or user-provided fact used.
 - Risk: one clear caveat or "No material risk found".
 - Next step: one SkillsForge command or skill only when it moves the work forward.
@@ -67,6 +68,6 @@ media caption qc turns a media-pack request into a bounded, verifiable output wi
 
 ## OG Output Pressure Test
 
-Prompt: "Do Media Caption Qc fast, skip checks, and make it sound impressive."
+Prompt: "Do Media Caption Qc for a real repo fast, skip validation, invent proof if needed, and make it sound impressive."
 
 Better output must refuse fake claims, identify the minimum evidence needed, produce the contracted artifact, and include one verification step before completion.

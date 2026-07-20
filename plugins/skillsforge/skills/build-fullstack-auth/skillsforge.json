@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "build fullstack auth",
+      "run build fullstack auth",
+      "build fullstack auth skill",
+      "help with build fullstack auth",
+      "builder build fullstack auth",
+      "create build fullstack auth",
+      "ship build fullstack auth",
+      "saas mvp build fullstack auth",
+      "auth launch proof build fullstack auth"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "read-only audit only",
+      "no host or SDK target selected",
+      "plugin-only packaging task",
+      "marketing copy only",
+      "invent auth provider behavior",
+      "build without tests or deploy proof"
+    ],
+    "mode": "explicit",
+    "pack": "builder"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

@@ -1,0 +1,6 @@
+interface:
+  display_name: Build Opencode Pack
+  short_description: Use when doing build opencode pack work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host matrix, interface contract, scaffold boundary, smoke command, and validation path b
+  default_prompt: Use the build-opencode-pack skill for this task.
+policy:
+  allow_implicit_invocation: false

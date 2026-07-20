@@ -8,14 +8,21 @@
       "run research question",
       "research question skill",
       "help with research question",
-      "research research question"
+      "research research question",
+      "map research question",
+      "compare research question",
+      "source trust research question"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "local bug fix with no external question",
+      "unsupported claim generation only",
+      "invent market stats",
+      "use unattributed competitor claims",
+      "ship recommendations without source quality",
+      "research already answered by local code"
     ],
     "mode": "explicit",
     "pack": "research"

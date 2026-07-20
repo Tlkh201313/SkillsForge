@@ -8,14 +8,21 @@
       "run ops oncall",
       "ops oncall skill",
       "help with ops oncall",
-      "ops ops oncall"
+      "ops ops oncall",
+      "ci ops oncall",
+      "deploy ops oncall",
+      "env ops oncall"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "local UI mock only",
-      "ignore runbooks and alerts"
+      "ignore runbooks and alerts",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
     ],
     "mode": "explicit",
     "pack": "ops"

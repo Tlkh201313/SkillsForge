@@ -8,14 +8,21 @@
       "run product onboarding",
       "product onboarding skill",
       "help with product onboarding",
-      "product product onboarding"
+      "product product onboarding",
+      "plan product onboarding",
+      "startup product onboarding",
+      "mvp product onboarding"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "backend-only patch with locked scope",
+      "pretend user data exists",
+      "build a full roadmap without constraints",
+      "invent customer quotes",
+      "write code before scope is locked",
+      "optimize vanity metrics only"
     ],
     "mode": "explicit",
     "pack": "product"

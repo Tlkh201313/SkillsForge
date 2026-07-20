@@ -39,7 +39,10 @@
   "recommendedSkills": [
     "eng-api-design",
     "test-unit",
-    "docs-api-ref"
+    "docs-api-ref",
+    "build-ai-cli-sdk-project",
+    "build-powershell-agent-helper",
+    "validate-cli-help"
   ],
   "recommendedAgents": [
     "cli-workbench-engineer",

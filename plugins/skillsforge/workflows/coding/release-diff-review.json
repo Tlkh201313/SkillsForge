@@ -39,7 +39,10 @@
   "recommendedSkills": [
     "review-diff",
     "ship-release",
-    "prove-outcome"
+    "prove-outcome",
+    "eng-ai-generated-diff-review",
+    "eng-safe-codegen",
+    "validate-generated-artifacts"
   ],
   "recommendedAgents": [
     "release-manager",

@@ -8,14 +8,21 @@
       "run data quality",
       "data quality skill",
       "help with data quality",
-      "data data quality"
+      "data data quality",
+      "metrics data quality",
+      "tracking data quality",
+      "analytics data quality"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "UI styling only",
+      "no event or metric surface",
+      "invent event volume",
+      "track personal data without purpose",
+      "skip data quality checks",
+      "mix metric names without definitions"
     ],
     "mode": "explicit",
     "pack": "data"

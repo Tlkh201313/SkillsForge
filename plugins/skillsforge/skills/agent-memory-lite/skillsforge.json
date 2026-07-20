@@ -8,14 +8,22 @@
       "run agent memory lite",
       "agent memory lite skill",
       "help with agent memory lite",
-      "agentic agent memory lite"
+      "agentic agent memory lite",
+      "agent agent memory lite",
+      "workflow agent memory lite",
+      "orchestrate agent memory lite",
+      "route agent memory lite"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "single-step manual task",
+      "subagents forbidden by user",
+      "start extra agents when user forbids it",
+      "hide tool side effects",
+      "skip handoff evidence",
+      "expand context without a budget"
     ],
     "mode": "explicit",
     "pack": "agentic"

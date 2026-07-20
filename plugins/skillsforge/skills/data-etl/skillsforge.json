@@ -8,14 +8,21 @@
       "run data etl",
       "data etl skill",
       "help with data etl",
-      "data data etl"
+      "data data etl",
+      "metrics data etl",
+      "tracking data etl",
+      "analytics data etl"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
-      "skip verification",
-      "invent credentials"
+      "UI styling only",
+      "no event or metric surface",
+      "invent event volume",
+      "track personal data without purpose",
+      "skip data quality checks",
+      "mix metric names without definitions"
     ],
     "mode": "explicit",
     "pack": "data"

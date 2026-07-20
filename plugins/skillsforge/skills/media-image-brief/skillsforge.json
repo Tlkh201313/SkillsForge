@@ -8,14 +8,21 @@
       "run media image brief",
       "media image brief skill",
       "help with media image brief",
-      "media media image brief"
+      "media media image brief",
+      "docs media image brief",
+      "guide media image brief",
+      "demo media image brief"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "database migration only",
-      "authz policy rewrite"
+      "authz policy rewrite",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "media"

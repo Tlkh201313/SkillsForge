@@ -8,14 +8,22 @@
       "run cloud ci providers",
       "cloud ci providers skill",
       "help with cloud ci providers",
-      "cloud-devops cloud ci providers"
+      "cloud-devops cloud ci providers",
+      "ops cloud ci providers",
+      "ci cloud ci providers",
+      "deploy cloud ci providers",
+      "env cloud ci providers"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
       "write application code only",
       "pure frontend styling only",
-      "legal contract drafting"
+      "legal contract drafting",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
     ],
     "mode": "explicit",
     "pack": "cloud-devops"
