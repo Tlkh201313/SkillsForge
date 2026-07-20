@@ -21504,7 +21504,7 @@ init_hosts();
 init_catalog();
 import { access as access15, mkdir as mkdir13, readFile as readFile20, readdir as readdir11, rm as rm4, writeFile as writeFile13 } from "node:fs/promises";
 import { createServer } from "node:http";
-import { basename as basename6, dirname as dirname12, join as join24, relative as relative12, resolve as resolve22, sep as sep10 } from "node:path";
+import { basename as basename6, dirname as dirname12, isAbsolute as isAbsolute8, join as join24, relative as relative12, resolve as resolve22, sep as sep10 } from "node:path";
 
 // lib/capabilities/workflows.mjs
 init_skill_loader();
@@ -22906,7 +22906,7 @@ async function pathExists9(path) {
 }
 function isInside6(parent, candidate) {
   const path = relative12(resolve22(parent), resolve22(candidate));
-  return path === "" || !path.startsWith(`..${sep10}`) && path !== "..";
+  return path === "" || !path.startsWith(`..${sep10}`) && path !== ".." && !isAbsolute8(path);
 }
 function sendJson(response, payload) {
   response.setHeader("content-type", "application/json; charset=utf-8");
