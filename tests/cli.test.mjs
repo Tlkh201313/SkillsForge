@@ -94,7 +94,7 @@ test('bundled CLI help lists every subcommand', () => {
 });
 
 test('bundled CLI exposes workbench, workflow, auto, library, and PowerShell commands', async () => {
-  const { mkdtemp, rm } = await import('node:fs/promises');
+  const { mkdir, mkdtemp, readFile, rm, writeFile } = await import('node:fs/promises');
   const { tmpdir } = await import('node:os');
   const outDir = await mkdtemp(join(tmpdir(), 'sf-cli-new-'));
   try {
@@ -127,6 +127,25 @@ test('bundled CLI exposes workbench, workflow, auto, library, and PowerShell com
     });
     assert.equal(library.status, 0, library.stderr || library.stdout);
     assert.equal(JSON.parse(library.stdout).stats.workflows, 100);
+
+    const extraRoot = join(outDir, 'extra-skills');
+    await mkdir(join(extraRoot, 'cli-extra-helper'), { recursive: true });
+    await writeFile(join(extraRoot, 'cli-extra-helper', 'SKILL.md'), `---
+name: cli-extra-helper
+description: Use when checking CLI extra skill root indexing.
+---
+
+# CLI Extra Helper
+`);
+    const sourceCli = join(process.cwd(), 'scripts', 'skillsforge-cli.mjs');
+    const extraLibrary = spawnSync(process.execPath, [sourceCli, 'lib', 'build', '--json', '--allow-absolute', '--out', outDir, '--home', outDir, '--extra-skill-root', extraRoot], {
+      cwd: process.cwd(),
+      encoding: 'utf8'
+    });
+    assert.equal(extraLibrary.status, 0, extraLibrary.stderr || extraLibrary.stdout);
+    const libraryJson = JSON.parse(await readFile(join(outDir, 'skillsforge-library.json'), 'utf8'));
+    assert.ok(libraryJson.skills.some((skill) => skill.id === 'cli-extra-helper'));
+    assert.ok(libraryJson.sourceDetails.some((source) => source.id === 'extra:extra-skills'));
 
     const ps = spawnSync(process.execPath, [cli, 'ps', 'export', '--json', '--allow-absolute', '--out', outDir], {
       cwd: process.cwd(),

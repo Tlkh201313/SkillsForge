@@ -23,6 +23,7 @@ Known keys:
   library.theme
   library.outDir
   library.cacheHostChecks
+  library.extraSkillRoots
   mutations.allowByDefault
 `;
 }

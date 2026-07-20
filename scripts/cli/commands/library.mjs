@@ -2,7 +2,7 @@ import { resolve } from 'node:path';
 import { buildLibraryIndex, planSkillRemoval, recommendFromLibrary, removeInstalledSkill, serveLibrary, writeLibraryArtifacts } from '../../../lib/capabilities/library.mjs';
 import { loadWorkflows, planAuto, recommendWorkflows, runAutoReadOnly, runWorkflowDryRun, showWorkflow } from '../../../lib/capabilities/workflows.mjs';
 import {
-  consumeFlag, consumeOption, resolveRuntimeRoot, usage, hasUnknownOption
+  consumeFlag, consumeOption, consumeOptions, resolveRuntimeRoot, usage, hasUnknownOption
 } from '../shared.mjs';
 
 export async function runLibCommand(argv, options) {
@@ -14,10 +14,12 @@ export async function runLibCommand(argv, options) {
   const homeOption = consumeOption(args, '--home');
   const sessionHost = consumeOption(args, '--session-host');
   const config = consumeOption(args, '--config');
+  const extraSkillRoots = consumeOptions(args, '--extra-skill-root');
   if (out === null) return usage('--out requires a value');
   if (homeOption === null) return usage('--home requires a value');
   if (sessionHost === null) return usage('--session-host requires a value');
   if (config === null) return usage('--config requires a value');
+  if (extraSkillRoots === null) return usage('--extra-skill-root requires a value');
   if (!subcommand || subcommand === 'help' || subcommand === '--help') {
     process.stdout.write(`usage: skillsforge lib <build|update|serve|check|recommend|remove> [options]
 
@@ -29,7 +31,7 @@ Library:
   remove --host <id> --skill <id>
                                 Dry-run by default; write requires --allow-mutations --yes
 
-Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --allow-absolute
+Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --extra-skill-root <dir> --allow-absolute
 `);
     return 0;
   }
@@ -46,6 +48,7 @@ Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --a
         allowAbsolute,
         sessionHost: sessionHost ?? undefined,
         config,
+        extraSkillRoots,
         noCache: subcommand === 'update'
       });
     } catch (error) {
@@ -60,7 +63,7 @@ Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --a
     const skill = consumeOption(args, '--skill') ?? args.shift();
     if (skill === null) return usage('--skill requires a value');
     if (hasUnknownOption(args)) return usage(`unknown lib check option: ${hasUnknownOption(args)}`);
-    const index = await buildLibraryIndex(root, { home, sessionHost: sessionHost ?? undefined, config });
+    const index = await buildLibraryIndex(root, { home, sessionHost: sessionHost ?? undefined, config, extraSkillRoots });
     const record = skill ? index.skills.find((item) => item.id === skill || item.key === skill) : null;
     const result = record ? { ok: true, skill: record } : { ok: false, error: `unknown skill: ${skill}` };
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
@@ -78,7 +81,8 @@ Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --a
     const index = await buildLibraryIndex(root, {
       home,
       sessionHost: sessionHost ?? undefined,
-      config
+      config,
+      extraSkillRoots
     });
     const result = recommendFromLibrary(index, query, {
       limit: Number(limitValue) || 5,
@@ -118,7 +122,8 @@ Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --a
       allowMutations,
       home,
       sessionHost: sessionHost ?? undefined,
-      config
+      config,
+      extraSkillRoots
     });
     process.stdout.write(`${JSON.stringify({ ok: result.ok, url: result.url, readOnly: result.readOnly }, null, 2)}\n`);
     return 0;

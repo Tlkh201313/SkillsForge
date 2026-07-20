@@ -11,6 +11,19 @@ import { VIBE_CODER_SKILLS } from './vibe-skill-expansion-fixtures.mjs';
 
 const root = process.cwd();
 
+async function writeTestSkill(skillDir, name, description = `Use when ${name.replaceAll('-', ' ')} is needed.`) {
+  await mkdir(skillDir, { recursive: true });
+  await writeFile(join(skillDir, 'SKILL.md'), `---
+name: ${name}
+description: ${description}
+---
+
+# ${name}
+
+Use this helper for deterministic library indexing tests.
+`);
+}
+
 test('workflow catalog contains exactly 100 valid workflows in planned categories', async () => {
   const result = await loadWorkflows(root);
   assert.equal(result.ok, true, JSON.stringify(result.errors));
@@ -183,6 +196,87 @@ Use this installed helper when local docs and media claims need strict review.
   assert.ok(recommendation.confidence === 'high' || recommendation.confidence === 'low');
   assert.equal(recommendation.skills[0].id, 'external-review-helper');
   assert.ok(recommendation.skills[0].reasons.includes('session-installed'));
+});
+
+test('library index covers all host roots, plugin cache roots, and extra skill roots with source details', async (context) => {
+  const home = await mkdtemp(join(tmpdir(), 'sf-source-details-'));
+  const extraConfigRoot = join(home, 'custom-skills-a');
+  const extraCliRoot = join(home, 'custom-skills-b');
+  context.after(() => rm(home, { recursive: true, force: true }));
+
+  const skillRoots = [
+    [join(home, '.codex', 'skills', 'codex-local-helper'), 'codex-local-helper'],
+    [join(home, '.codex', 'skills', '.system', 'codex-system-helper'), 'codex-system-helper'],
+    [join(home, '.agents', 'skills', 'agent-session-helper'), 'agent-session-helper'],
+    [join(home, '.claude', 'skills', 'claude-helper'), 'claude-helper'],
+    [join(home, '.cursor', 'skills', 'cursor-helper'), 'cursor-helper'],
+    [join(home, '.config', 'opencode', 'skills', 'opencode-helper'), 'opencode-helper'],
+    [join(home, '.zcode', 'skills', 'zcode-helper'), 'zcode-helper'],
+    [join(home, '.hermes', 'skills', 'hermes-helper'), 'hermes-helper'],
+    [join(home, '.gemini', 'skills', 'gemini-helper'), 'gemini-helper'],
+    [
+      join(home, '.codex', 'plugins', 'cache', 'openai-templates', 'artifact-template-analytics-dashboard', '0.1.0', 'skills', 'dashboard-template-helper'),
+      'dashboard-template-helper'
+    ],
+    [join(extraConfigRoot, 'extra-config-helper'), 'extra-config-helper'],
+    [join(extraCliRoot, 'extra-cli-helper'), 'extra-cli-helper']
+  ];
+  await Promise.all(skillRoots.map(([dir, name]) => writeTestSkill(dir, name)));
+
+  const badSkill = join(home, '.agents', 'skills', 'bad-installed-helper');
+  await mkdir(badSkill, { recursive: true });
+  await writeFile(join(badSkill, 'SKILL.md'), '# Missing frontmatter\n');
+
+  const configPath = join(home, 'skillsforge.config.json');
+  await writeFile(configPath, JSON.stringify({
+    library: {
+      theme: 'system',
+      outDir: 'artifacts/skillsforge-library',
+      cacheHostChecks: true,
+      extraSkillRoots: [extraConfigRoot]
+    }
+  }, null, 2));
+
+  const index = await buildLibraryIndex(root, {
+    home,
+    config: configPath,
+    sessionHost: 'codex',
+    extraSkillRoots: [extraCliRoot]
+  });
+  assert.equal(index.ok, true);
+  assert.ok(index.skills.some((skill) => skill.id === 'extra-config-helper'));
+  assert.ok(index.skills.some((skill) => skill.id === 'extra-cli-helper'));
+  assert.ok(index.skills.some((skill) => skill.id === 'dashboard-template-helper'));
+  assert.ok(Array.isArray(index.sourceDetails));
+
+  const bySource = new Map(index.sourceDetails.map((source) => [source.id, source]));
+  for (const id of [
+    'user-codex',
+    'codex-system',
+    'user-agents',
+    'claude-code',
+    'cursor',
+    'opencode',
+    'zcode',
+    'hermes',
+    'gemini',
+    'artifact-template-analytics-dashboard@openai-templates',
+    'extra:custom-skills-a',
+    'extra:custom-skills-b'
+  ]) {
+    assert.ok(bySource.has(id), `missing source detail ${id}`);
+    assert.ok(bySource.get(id).skillCount >= 1, id);
+  }
+  const cacheSource = bySource.get('artifact-template-analytics-dashboard@openai-templates');
+  assert.equal(cacheSource.kind, 'plugin-cache');
+  assert.equal(cacheSource.plugin, 'artifact-template-analytics-dashboard');
+  assert.equal(cacheSource.provider, 'openai-templates');
+  assert.equal(cacheSource.version, '0.1.0');
+
+  const agentSource = bySource.get('user-agents');
+  assert.ok(agentSource.installedCount >= 1);
+  assert.ok(agentSource.sessionCount >= 1);
+  assert.ok(agentSource.loadErrors.some((error) => /frontmatter/i.test(error.error)));
 });
 
 test('library removal is dry-run by default', async (context) => {

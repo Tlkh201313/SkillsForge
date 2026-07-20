@@ -779,6 +779,13 @@ export const schemas = Object.freeze({
           },
           "cacheHostChecks": {
             "type": "boolean"
+          },
+          "extraSkillRoots": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           }
         }
       },
