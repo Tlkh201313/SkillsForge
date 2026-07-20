@@ -46,6 +46,7 @@
     "examples/",
     "assets/*.svg",
     "assets/skillsforge-library-preview.png",
+    "assets/skillsforge-demo-preview.gif",
     "assets/skillsforge-demo-poster.png",
     "assets/video/skillsforge-demo.mp4"
   ],

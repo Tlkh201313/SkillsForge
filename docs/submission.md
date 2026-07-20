@@ -36,8 +36,9 @@ See also: [submit-checklist.md](submit-checklist.md), [roadmap-next.md](roadmap-
 | --- | --- |
 | `assets/skillsforge-banner.svg` | README hero with current repo inventory |
 | `assets/skillsforge-library-preview.png` | Product preview; generated image, no embedded text claims |
-| `assets/skillsforge-demo-poster.png` | Always-visible fallback for GitHub README |
-| `assets/video/skillsforge-demo.mp4` | Packaged demo MP4 for upload / release assets |
+| `assets/video/skillsforge-demo.mp4` | Primary README player source and packaged demo MP4 for upload / release assets |
+| `assets/skillsforge-demo-preview.gif` | Animated fallback when a renderer refuses inline MP4 playback |
+| `assets/skillsforge-demo-poster.png` | Poster frame for GitHub/browser players |
 | `assets/skillsforge-star-map.svg` | Static inventory map |
 | `assets/skillsforge-universal-fanout.svg` | Host boundary map |
 

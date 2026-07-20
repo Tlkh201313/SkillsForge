@@ -152,6 +152,7 @@ async function validateReadmeClaims(readme, repositoryRoot, errors, passes) {
 
 async function validateDemoMedia(repositoryRoot, errors, passes) {
   const required = [
+    ['assets/skillsforge-demo-preview.gif', 'demo animated preview'],
     ['assets/skillsforge-demo-poster.png', 'demo poster'],
     ['assets/video/skillsforge-demo.mp4', 'demo mp4'],
     ['assets/skillsforge-banner.svg', 'banner svg']
@@ -180,6 +181,9 @@ async function validatePackageAllowlist(packageJson, errors, passes) {
   }
   if (!packageJson.files.includes('assets/skillsforge-demo-poster.png')) {
     errors.push('package.json files must include assets/skillsforge-demo-poster.png');
+  }
+  if (!packageJson.files.includes('assets/skillsforge-demo-preview.gif')) {
+    errors.push('package.json files must include assets/skillsforge-demo-preview.gif');
   }
   if (!packageJson.files.includes('assets/video/skillsforge-demo.mp4')) {
     errors.push('package.json files must include assets/video/skillsforge-demo.mp4');

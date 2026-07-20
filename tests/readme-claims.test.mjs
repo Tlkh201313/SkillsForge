@@ -23,10 +23,20 @@ test('README does not advertise dead npx skillsforge CTA', async () => {
 });
 
 test('demo media assets exist for judge poster + mp4', async () => {
+  await access(join(root, 'assets', 'skillsforge-demo-preview.gif'));
   await access(join(root, 'assets', 'skillsforge-demo-poster.png'));
   await access(join(root, 'assets', 'video', 'skillsforge-demo.mp4'));
   await access(join(root, 'assets', 'skillsforge-banner.svg'));
   await access(join(root, 'assets', 'skillsforge-star-map.svg'));
+});
+
+test('README embeds the demo as a video player first', async () => {
+  const readme = await readFile(join(root, 'README.md'), 'utf8');
+  const videoBlock = readme.match(/<video[\s\S]*?<\/video>/i)?.[0] ?? '';
+  assert.match(videoBlock, /controls/i);
+  assert.match(videoBlock, /poster="assets\/skillsforge-demo-poster\.png"/i);
+  assert.match(videoBlock, /<source src="assets\/video\/skillsforge-demo\.mp4" type="video\/mp4">/i);
+  assert.match(readme, /Fallback animated preview: \[`assets\/skillsforge-demo-preview\.gif`\]/);
 });
 
 test('library recommend returns no confident match for empty/noise queries', async () => {
