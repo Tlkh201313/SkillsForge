@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Saas Empty States
+  short_description: Use when doing design saas empty states work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibil
+  default_prompt: Use the design-saas-empty-states skill for this task.
+policy:
+  allow_implicit_invocation: false

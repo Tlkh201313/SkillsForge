@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "validate security boundary",
+      "run validate security boundary",
+      "validate security boundary skill",
+      "help with validate security boundary",
+      "validation validate security boundary",
+      "prove validate security boundary",
+      "audit validate security boundary",
+      "verify validate security boundary",
+      "check validate security boundary"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "new feature build only",
+      "brainstorming without proof artifacts",
+      "make claims without evidence",
+      "accept marketing language as proof",
+      "delete or install while validating",
+      "score quality without a reproducible check"
+    ],
+    "mode": "explicit",
+    "pack": "validation"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

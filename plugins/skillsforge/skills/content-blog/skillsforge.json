@@ -8,12 +8,22 @@
       "run content blog",
       "content blog skill",
       "help with content blog",
-      "content content blog"
+      "content content blog",
+      "docs content blog",
+      "media content blog",
+      "guide content blog",
+      "demo content blog"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "database-only task",
+      "no audience or source material",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "content"

@@ -1,6 +1,6 @@
 interface:
   display_name: Lang Graphql
-  short_description: Use when you need lang graphql in a SkillsForge lang workflow.
+  short_description: Use when doing lang graphql work for lang-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the lang-graphql skill for this task.
 policy:
   allow_implicit_invocation: false

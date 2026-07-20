@@ -1,6 +1,6 @@
 interface:
   display_name: Content Case Study
-  short_description: Use when you need content case study in a SkillsForge content workflow.
+  short_description: Use when doing content case study work for agent-facing docs, launch media, demo proof, and content production and you need audience, source facts, outline, asset path, claim proof, and publishing che
   default_prompt: Use the content-case-study skill for this task.
 policy:
   allow_implicit_invocation: false

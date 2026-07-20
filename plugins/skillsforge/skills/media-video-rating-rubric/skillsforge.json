@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "video rating rubric",
+      "rate demo video",
+      "score video quality",
+      "video review",
+      "read video",
+      "rate video",
+      "video quality",
+      "video evidence",
+      "timestamped video",
+      "frame sample",
+      "audio captions",
+      "demo video",
+      "media video rating rubric",
+      "run media video rating rubric"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "database migration only",
+      "authz policy rewrite",
+      "invent video contents without watching or sampling frames",
+      "claim audio quality without checking a track or transcript",
+      "copy copyrighted music or third-party assets",
+      "render long videos without a short proof pass"
+    ],
+    "mode": "explicit",
+    "pack": "media"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

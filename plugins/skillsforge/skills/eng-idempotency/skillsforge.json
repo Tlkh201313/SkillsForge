@@ -8,12 +8,23 @@
       "run eng idempotency",
       "eng idempotency skill",
       "help with eng idempotency",
-      "eng eng idempotency"
+      "eng eng idempotency",
+      "engineer eng idempotency",
+      "fullstack eng idempotency",
+      "code eng idempotency",
+      "repo eng idempotency"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

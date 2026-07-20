@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
-      "eng api design",
-      "run eng api design",
-      "eng api design skill",
-      "help with eng api design",
-      "eng eng api design"
+      "api design",
+      "design the API",
+      "REST contract",
+      "OpenAPI sketch",
+      "eng api design"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "skip verification",
+      "marketing copy only"
     ],
     "mode": "explicit",
     "pack": "eng"

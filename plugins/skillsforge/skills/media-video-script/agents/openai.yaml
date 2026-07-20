@@ -1,6 +1,6 @@
 interface:
   display_name: Media Video Script
-  short_description: Use when you need media video script in a SkillsForge media workflow.
+  short_description: Use when doing media video script work for agent-facing docs, launch media, demo proof, and content production and you need audience, source facts, outline, asset path, claim proof, and publishing che
   default_prompt: Use the media-video-script skill for this task.
 policy:
   allow_implicit_invocation: false

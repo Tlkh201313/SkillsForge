@@ -8,12 +8,23 @@
       "run eng perf profile",
       "eng perf profile skill",
       "help with eng perf profile",
-      "eng eng perf profile"
+      "eng eng perf profile",
+      "engineer eng perf profile",
+      "fullstack eng perf profile",
+      "code eng perf profile",
+      "repo eng perf profile"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

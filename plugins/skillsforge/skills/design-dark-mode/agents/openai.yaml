@@ -1,6 +1,6 @@
 interface:
   display_name: Design Dark Mode
-  short_description: Use when you need design dark mode in a SkillsForge design workflow.
+  short_description: Use when doing design dark mode work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility chec
   default_prompt: Use the design-dark-mode skill for this task.
 policy:
   allow_implicit_invocation: false

@@ -8,12 +8,23 @@
       "run eng secrets handling",
       "eng secrets handling skill",
       "help with eng secrets handling",
-      "eng eng secrets handling"
+      "eng eng secrets handling",
+      "engineer eng secrets handling",
+      "fullstack eng secrets handling",
+      "code eng secrets handling",
+      "repo eng secrets handling"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

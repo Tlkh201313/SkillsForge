@@ -1,6 +1,6 @@
 interface:
   display_name: Eng Tech Debt
-  short_description: Use when you need eng tech debt in a SkillsForge eng workflow.
+  short_description: Use when doing eng tech debt work for repo-grounded full-stack architecture, implementation planning, and engineering gates and you need system map, contract, affected files, test plan, rollback note,
   default_prompt: Use the eng-tech-debt skill for this task.
 policy:
   allow_implicit_invocation: false

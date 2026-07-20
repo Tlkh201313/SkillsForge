@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "research docs first",
+      "run research docs first",
+      "research docs first skill",
+      "help with research docs first",
+      "research research docs first",
+      "map research docs first",
+      "compare research docs first",
+      "source trust research docs first"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "local bug fix with no external question",
+      "unsupported claim generation only",
+      "invent market stats",
+      "use unattributed competitor claims",
+      "ship recommendations without source quality",
+      "research already answered by local code"
+    ],
+    "mode": "explicit",
+    "pack": "research"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

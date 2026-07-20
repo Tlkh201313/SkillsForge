@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "validate evidence bundle",
+      "run validate evidence bundle",
+      "validate evidence bundle skill",
+      "help with validate evidence bundle",
+      "validation validate evidence bundle",
+      "prove validate evidence bundle",
+      "audit validate evidence bundle",
+      "verify validate evidence bundle",
+      "check validate evidence bundle"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "new feature build only",
+      "brainstorming without proof artifacts",
+      "make claims without evidence",
+      "accept marketing language as proof",
+      "delete or install while validating",
+      "score quality without a reproducible check"
+    ],
+    "mode": "explicit",
+    "pack": "validation"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

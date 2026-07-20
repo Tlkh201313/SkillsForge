@@ -1,6 +1,6 @@
 interface:
   display_name: Product Launch
-  short_description: Use when you need product launch in a SkillsForge product workflow.
+  short_description: Use when doing product launch work for startup, MVP, onboarding, activation, pricing, and product strategy work and you need user segment, problem statement, scope cut, experiment, metric, and proof n
   default_prompt: Use the product-launch skill for this task.
 policy:
   allow_implicit_invocation: false

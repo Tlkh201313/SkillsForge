@@ -1,6 +1,6 @@
 # SkillsForge Work OS
 
-Six pillars: Catalog OS, Vibe CLI, Authoring Factory, Cross-Harness, SkillShield+Evidence, Capture→Forge.
+Six pillars: Catalog OS, Vibe CLI, Authoring Factory, Cross-Harness, SkillShield+Evidence, Capture->Forge.
 
 Magical moment:
 

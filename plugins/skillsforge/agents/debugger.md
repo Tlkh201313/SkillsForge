@@ -13,7 +13,7 @@ Reproduce-first debugger.
 1. Re-run failing command; save output excerpts to `docs/work/findings.md`.
 2. Skills: `validate`, `compare`, `doctor`; app: project test runner.
 3. Minimal fix; re-run the same command.
-4. Invoke `no-rationalize` mindset — no excuse paths.
+4. Invoke `no-rationalize` mindset - no excuse paths.
 
 ## CLI
 

@@ -8,12 +8,20 @@
       "run growth churn",
       "growth churn skill",
       "help with growth churn",
-      "growth growth churn"
+      "growth growth churn",
+      "launch growth churn",
+      "seo growth churn",
+      "campaign growth churn"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "technical migration only",
+      "fake social proof",
+      "invent traffic numbers",
+      "spam outreach",
+      "optimize copy without a target segment"
     ],
     "mode": "explicit",
     "pack": "growth"

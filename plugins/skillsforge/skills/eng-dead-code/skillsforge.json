@@ -8,12 +8,23 @@
       "run eng dead code",
       "eng dead code skill",
       "help with eng dead code",
-      "eng eng dead code"
+      "eng eng dead code",
+      "engineer eng dead code",
+      "fullstack eng dead code",
+      "code eng dead code",
+      "repo eng dead code"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

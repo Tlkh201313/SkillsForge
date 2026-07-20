@@ -8,12 +8,22 @@
       "run sec crypto hygiene",
       "sec crypto hygiene skill",
       "help with sec crypto hygiene",
-      "security sec crypto hygiene"
+      "security sec crypto hygiene",
+      "permission sec crypto hygiene",
+      "threat sec crypto hygiene",
+      "boundary sec crypto hygiene"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "feature brainstorm only",
+      "docs polish only",
+      "UI visual QA only",
+      "perform live exploitation",
+      "request secrets",
+      "claim compliance certification",
+      "weaken authorization for convenience"
     ],
     "mode": "explicit",
     "pack": "security"

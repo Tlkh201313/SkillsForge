@@ -1,6 +1,6 @@
 interface:
   display_name: Role Eng Review
-  short_description: Use when you need role eng review in a SkillsForge roles workflow.
+  short_description: Use when doing role eng review work for roles-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the role-eng-review skill for this task.
 policy:
   allow_implicit_invocation: false

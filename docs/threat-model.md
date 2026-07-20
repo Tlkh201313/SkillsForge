@@ -4,7 +4,7 @@
 
 SkillsForge validates, forges, routes, policy-scans, and packages Agent Skills for **Codex** (native plugin + guarded package) and **Claude Code** (full), with package-fidelity installs for Cursor / OpenCode / ZCode / Hermes / Gemini and custom local AI CLI targets. This document covers trust boundaries for static capability scanning and host PreToolUse policy hooks.
 
-One plugin: `skillsforge`. Thin read-only MCP only (`scripts/skillsforge-mcp.mjs`: validate/route/skillshield plus library/workflow recommendation). No LSP, monitors, or token ledgers. Domain packs ship as lean scaffolds — productivity surface is in scope; OS sandboxing and third-party attestation are not.
+One plugin: `skillsforge`. Thin read-only MCP only (`scripts/skillsforge-mcp.mjs`: validate/route/skillshield plus library/workflow/settings/quality/contract inspection). No LSP, monitors, or token ledgers. Domain packs ship as contract-backed SkillsForge skills - productivity surface is in scope; OS sandboxing and third-party attestation are not.
 
 ## Assets
 
@@ -18,10 +18,10 @@ One plugin: `skillsforge`. Thin read-only MCP only (`scripts/skillsforge-mcp.mjs
 
 | Boundary | What crosses it | Control |
 | --- | --- | --- |
-| Skill package → scanner | Files on disk | Static `scanSkill` rules |
-| Declared sidecar → Claude runtime | Tool calls during a skill session | Skill-scoped PreToolUse hook |
-| Declared sidecar → Codex runtime | Matched plugin-level tools | Compiled PreToolUse hook (`Bash\|apply_patch\|mcp__*`) |
-| Plugin package → agent host | Installed hooks/CLI | Bundled `skillsforge` / policy runner |
+| Skill package -> scanner | Files on disk | Static `scanSkill` rules |
+| Declared sidecar -> Claude runtime | Tool calls during a skill session | Skill-scoped PreToolUse hook |
+| Declared sidecar -> Codex runtime | Matched plugin-level tools | Compiled PreToolUse hook (`Bash\|apply_patch\|mcp__*`) |
+| Plugin package -> agent host | Installed hooks/CLI | Bundled `skillsforge` / policy runner |
 
 ## Static scanner threats
 
@@ -47,7 +47,7 @@ Hooks are **guardrails, not an OS sandbox**:
 - They run with the same privileges as the user/agent session.
 - They can deny matched tool calls when the host honors PreToolUse decisions.
 - They cannot confine processes, block arbitrary filesystem access outside matched tools, or replace OS-level isolation.
-- Exit with no stdout means “no SkillsForge decision,” never an auto-approve.
+- Exit with no stdout means "no SkillsForge decision," never an auto-approve.
 
 ## Runtime hook threats (Codex)
 
@@ -61,7 +61,7 @@ Hooks are **guardrails, not an OS sandbox**:
 | **`/hooks` trust review** | Newly installed or changed hooks may require the operator to accept them via Codex `/hooks` before they run. Until trusted, policy does not enforce. | Demo and docs show the trust step; treat untrusted hooks as inactive. |
 | **Invalid hook output fail-open** | If a hook returns malformed output, the **host** may fail open (allow the tool) even when SkillsForge intends fail-closed on load/parse errors inside the runner. | Keep runner stdout strictly shaped; test adversarial stdin; surface this as residual host risk. |
 
-SkillsForge’s Codex runner still aims to **fail closed** on missing/invalid policy, malformed stdin, and unexpected exceptions (explicit deny + exit 0). That does not override host fail-open on invalid hook protocol output.
+SkillsForge's Codex runner still aims to **fail closed** on missing/invalid policy, malformed stdin, and unexpected exceptions (explicit deny + exit 0). That does not override host fail-open on invalid hook protocol output.
 
 ## Non-goals / anti-goals
 

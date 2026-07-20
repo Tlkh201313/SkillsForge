@@ -8,12 +8,22 @@
       "run content repurpose",
       "content repurpose skill",
       "help with content repurpose",
-      "content content repurpose"
+      "content content repurpose",
+      "docs content repurpose",
+      "media content repurpose",
+      "guide content repurpose",
+      "demo content repurpose"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "database-only task",
+      "no audience or source material",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "content"

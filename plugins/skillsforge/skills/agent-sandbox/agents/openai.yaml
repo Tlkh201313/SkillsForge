@@ -1,6 +1,6 @@
 interface:
   display_name: Agent Sandbox
-  short_description: Use when you need agent sandbox in a SkillsForge agentic workflow.
+  short_description: Use when doing agent sandbox work for agent workflow planning, replay, routing, tool policy, and token-budget work and you need agent role, tool boundary, context budget, stop gate, replay path, and h
   default_prompt: Use the agent-sandbox skill for this task.
 policy:
   allow_implicit_invocation: false

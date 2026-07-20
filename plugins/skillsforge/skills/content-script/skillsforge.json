@@ -8,12 +8,22 @@
       "run content script",
       "content script skill",
       "help with content script",
-      "content content script"
+      "content content script",
+      "docs content script",
+      "media content script",
+      "guide content script",
+      "demo content script"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "database-only task",
+      "no audience or source material",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "content"

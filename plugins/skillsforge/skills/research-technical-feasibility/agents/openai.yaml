@@ -1,0 +1,6 @@
+interface:
+  display_name: Research Technical Feasibility
+  short_description: Use when doing research technical feasibility work for source-grounded product, technical, market, or open-source research and you need question, source map, trust grade, contradictory evidence, and d
+  default_prompt: Use the research-technical-feasibility skill for this task.
+policy:
+  allow_implicit_invocation: false

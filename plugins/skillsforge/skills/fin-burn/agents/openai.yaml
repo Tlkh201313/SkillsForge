@@ -1,6 +1,6 @@
 interface:
   display_name: Fin Burn
-  short_description: Use when you need fin burn in a SkillsForge finance-lite workflow.
+  short_description: Use when doing fin burn work for finance-lite-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the fin-burn skill for this task.
 policy:
   allow_implicit_invocation: false

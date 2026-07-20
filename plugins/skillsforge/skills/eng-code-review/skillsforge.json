@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
+      "code review",
+      "review this PR",
       "eng code review",
-      "run eng code review",
-      "eng code review skill",
-      "help with eng code review",
-      "eng eng code review"
+      "review diff for bugs",
+      "request changes review"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "skip verification",
+      "marketing copy only"
     ],
     "mode": "explicit",
     "pack": "eng"

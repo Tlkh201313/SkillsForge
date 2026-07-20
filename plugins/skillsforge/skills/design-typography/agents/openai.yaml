@@ -1,6 +1,6 @@
 interface:
   display_name: Design Typography
-  short_description: Use when you need design typography in a SkillsForge design workflow.
+  short_description: Use when doing design typography work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility che
   default_prompt: Use the design-typography skill for this task.
 policy:
   allow_implicit_invocation: false

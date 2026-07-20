@@ -1,6 +1,6 @@
 interface:
   display_name: Design Empty States
-  short_description: Use when you need design empty states in a SkillsForge design workflow.
+  short_description: Use when doing design empty states work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility c
   default_prompt: Use the design-empty-states skill for this task.
 policy:
   allow_implicit_invocation: false

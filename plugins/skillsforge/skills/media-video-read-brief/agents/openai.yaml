@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Video Read Brief
+  short_description: Use when doing media video read brief work for token-efficient video, Remotion, demo-review, frame-reading, audio-caption, and launch-media QA work and you need video brief, timestamped findings, fram
+  default_prompt: Use the media-video-read-brief skill for this task.
+policy:
+  allow_implicit_invocation: false

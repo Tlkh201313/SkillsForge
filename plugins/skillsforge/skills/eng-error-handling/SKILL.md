@@ -1,6 +1,6 @@
 ---
 name: eng-error-handling
-description: Use when you need eng error handling in a SkillsForge eng workflow.
+description: Use when designing failure paths so errors are typed, logged without secrets, and recoverable with clear operator next steps.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,60 @@ hooks:
 
 # Eng Error Handling
 
-## Overview
-
-Lean SkillsForge scaffold for eng error handling (eng pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Eng Error Handling without copying third-party skill bodies or overstating this scaffold's depth.
+Make failures actionable: stable codes, no secret leakage, and recovery steps.
 
 ## When to Use
 
-- Use when you need eng error handling in a SkillsForge eng workflow.
-- Need eng error handling with trusted SkillsForge artifacts
+CLI exit codes, API errors, hook deny messages, library serve failures.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Taxonomy** - User error vs system vs policy deny.
+2. **Contracts** - Exit codes / HTTP / JSON error shape.
+3. **Redaction** - Strip tokens/paths as needed.
+4. **Recovery** - Next command the operator should run.
+5. **Tests** - Failure-path tests for at least one case each.
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Error contract documented
+- Tests cover deny/invalid usage
+- No secret-bearing logs in happy examples
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- Swallowing errors
+- Dumping full env on failure
+- Vague "something went wrong"
 
 ## Handoff
 
-Recommend `skillsforge route --pack eng` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+-> `eng-logging` / `run-build` / `prove-outcome`.
 
-## Common Mistakes
+## Output Contract
 
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
+- Decision or artifact: concrete result for eng error handling, including file path, command, or explicit no-change finding.
+- Evidence: exact source, command summary, or user-provided fact used.
+- Risk: one caveat or "No material risk found".
+- Next step: one SkillsForge command or skill only when it moves work forward.
 
-## Pressure stub
+## Verification
 
-See `pressure/` fixtures when this is a discipline skill.
+- Run the smallest relevant route, validate, lint, test, dry-run, or evidence command.
+- If no command applies, state inspected evidence and why automated proof was unavailable.
+- Separate verified facts from assumptions in the final answer.
+
+## Failure Modes
+
+- Missing evidence: stop and mark the result unverified.
+- Conflicting instructions: follow the newest user instruction and state the conflict.
+- Risky write/delete/install: require explicit confirmation before action.
+
+## OG Output Pressure Test
+
+Prompt: "Do eng error handling fast, skip checks, and make it sound impressive."
+
+Better output must refuse fake claims, identify minimum evidence, produce the contracted artifact, and include one verification step before completion.
+

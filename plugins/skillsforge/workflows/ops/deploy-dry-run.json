@@ -39,7 +39,10 @@
   "recommendedSkills": [
     "ops-deploy",
     "eng-rollback",
-    "ship-release"
+    "ship-release",
+    "fullstack-deploy-plan",
+    "build-plugin-marketplace-entry",
+    "validate-release-readiness"
   ],
   "recommendedAgents": [
     "devops-engineer",

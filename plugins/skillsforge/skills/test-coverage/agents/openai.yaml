@@ -1,6 +1,6 @@
 interface:
   display_name: Test Coverage
-  short_description: Use when you need test coverage in a SkillsForge testing workflow.
+  short_description: Use when doing test coverage work for testing-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the test-coverage skill for this task.
 policy:
   allow_implicit_invocation: false

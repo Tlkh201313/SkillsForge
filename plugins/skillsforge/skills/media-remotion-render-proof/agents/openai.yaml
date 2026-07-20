@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Remotion Render Proof
+  short_description: Use when doing media remotion render proof work for token-efficient video, Remotion, demo-review, frame-reading, audio-caption, and launch-media QA work and you need video brief, timestamped findings,
+  default_prompt: Use the media-remotion-render-proof skill for this task.
+policy:
+  allow_implicit_invocation: false

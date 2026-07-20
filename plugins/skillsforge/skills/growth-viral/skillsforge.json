@@ -8,12 +8,20 @@
       "run growth viral",
       "growth viral skill",
       "help with growth viral",
-      "growth growth viral"
+      "growth growth viral",
+      "launch growth viral",
+      "seo growth viral",
+      "campaign growth viral"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "technical migration only",
+      "fake social proof",
+      "invent traffic numbers",
+      "spam outreach",
+      "optimize copy without a target segment"
     ],
     "mode": "explicit",
     "pack": "growth"

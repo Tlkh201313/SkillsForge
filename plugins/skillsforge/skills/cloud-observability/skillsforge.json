@@ -8,12 +8,22 @@
       "run cloud observability",
       "cloud observability skill",
       "help with cloud observability",
-      "cloud-devops cloud observability"
+      "cloud-devops cloud observability",
+      "ops cloud observability",
+      "ci cloud observability",
+      "deploy cloud observability",
+      "env cloud observability"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "pure frontend styling only",
+      "legal contract drafting",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
     ],
     "mode": "explicit",
     "pack": "cloud-devops"

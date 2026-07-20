@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Mobile Touch
+  short_description: Use when doing design mobile touch work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility c
+  default_prompt: Use the design-mobile-touch skill for this task.
+policy:
+  allow_implicit_invocation: false

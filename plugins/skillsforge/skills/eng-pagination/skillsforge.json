@@ -8,12 +8,23 @@
       "run eng pagination",
       "eng pagination skill",
       "help with eng pagination",
-      "eng eng pagination"
+      "eng eng pagination",
+      "engineer eng pagination",
+      "fullstack eng pagination",
+      "code eng pagination",
+      "repo eng pagination"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

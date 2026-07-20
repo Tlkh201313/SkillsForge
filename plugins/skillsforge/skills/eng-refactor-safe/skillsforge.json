@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
-      "eng refactor safe",
-      "run eng refactor safe",
-      "eng refactor safe skill",
-      "help with eng refactor safe",
-      "eng eng refactor safe"
+      "safe refactor",
+      "refactor safely",
+      "bounded refactor",
+      "refactor with tests",
+      "eng refactor safe"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "skip verification",
+      "marketing copy only"
     ],
     "mode": "explicit",
     "pack": "eng"

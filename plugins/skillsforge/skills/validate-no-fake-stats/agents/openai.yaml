@@ -1,0 +1,6 @@
+interface:
+  display_name: Validate No Fake Stats
+  short_description: Use when doing validate no fake stats work for real-task proof, claim audit, package verification, and launch readiness and you need claim list, evidence source, command result, pass/fail gate, and un
+  default_prompt: Use the validate-no-fake-stats skill for this task.
+policy:
+  allow_implicit_invocation: false

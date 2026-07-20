@@ -8,12 +8,21 @@
       "run research assumptions",
       "research assumptions skill",
       "help with research assumptions",
-      "research research assumptions"
+      "research research assumptions",
+      "map research assumptions",
+      "compare research assumptions",
+      "source trust research assumptions"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "local bug fix with no external question",
+      "unsupported claim generation only",
+      "invent market stats",
+      "use unattributed competitor claims",
+      "ship recommendations without source quality",
+      "research already answered by local code"
     ],
     "mode": "explicit",
     "pack": "research"

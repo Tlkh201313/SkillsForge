@@ -8,12 +8,23 @@
       "run eng caching",
       "eng caching skill",
       "help with eng caching",
-      "eng eng caching"
+      "eng eng caching",
+      "engineer eng caching",
+      "fullstack eng caching",
+      "code eng caching",
+      "repo eng caching"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

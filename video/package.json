@@ -1,0 +1,18 @@
+{
+  "name": "skillsforge-demo-video",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "audio": "node scripts/generate-audio.mjs",
+    "captions": "node scripts/convert-srt-to-captions.mjs",
+    "still": "remotion still src/index.ts SkillsForgePoster ../assets/skillsforge-demo-poster.png --frame=0 --overwrite",
+    "render": "remotion render src/index.ts SkillsForgeDemo ../assets/video/skillsforge-demo.mp4 --codec=h264 --audio-codec=aac --crf=17 --concurrency=100% --overwrite"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.278"
+  },
+  "devDependencies": {}
+}

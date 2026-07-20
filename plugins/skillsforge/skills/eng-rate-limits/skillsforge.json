@@ -8,12 +8,23 @@
       "run eng rate limits",
       "eng rate limits skill",
       "help with eng rate limits",
-      "eng eng rate limits"
+      "eng eng rate limits",
+      "engineer eng rate limits",
+      "fullstack eng rate limits",
+      "code eng rate limits",
+      "repo eng rate limits"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

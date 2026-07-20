@@ -1,6 +1,6 @@
 interface:
   display_name: Research Evidence Grade
-  short_description: Use when you need research evidence grade in a SkillsForge research workflow.
+  short_description: Use when doing research evidence grade work for source-grounded product, technical, market, or open-source research and you need question, source map, trust grade, contradictory evidence, and decision
   default_prompt: Use the research-evidence-grade skill for this task.
 policy:
   allow_implicit_invocation: false

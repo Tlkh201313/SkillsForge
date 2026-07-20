@@ -8,12 +8,21 @@
       "run media video plan",
       "media video plan skill",
       "help with media video plan",
-      "media media video plan"
+      "media media video plan",
+      "docs media video plan",
+      "guide media video plan",
+      "demo media video plan"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "database migration only",
+      "authz policy rewrite",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "media"

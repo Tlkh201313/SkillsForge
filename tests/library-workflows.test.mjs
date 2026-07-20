@@ -3,12 +3,35 @@ import { access, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:f
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { buildLibraryIndex, planSkillRemoval, recommendFromLibrary, writeLibraryArtifacts } from '../lib/capabilities/library.mjs';
+import {
+  buildLibraryIndex,
+  listProjectSelection,
+  planSkillRemoval,
+  recommendFromLibrary,
+  selectProjectSkill,
+  serveLibrary,
+  unselectProjectSkill,
+  writeLibraryArtifacts
+} from '../lib/capabilities/library.mjs';
 import { exportPowerShellHelpers, POWERSHELL_HELPERS } from '../lib/capabilities/powershell.mjs';
 import { loadAllSkills } from '../lib/capabilities/skill-loader.mjs';
 import { loadWorkflows, planAuto, recommendWorkflows, runAutoReadOnly, runWorkflowDryRun, showWorkflow } from '../lib/capabilities/workflows.mjs';
+import { VIBE_CODER_SKILLS } from './vibe-skill-expansion-fixtures.mjs';
 
 const root = process.cwd();
+
+async function writeTestSkill(skillDir, name, description = `Use when ${name.replaceAll('-', ' ')} is needed.`) {
+  await mkdir(skillDir, { recursive: true });
+  await writeFile(join(skillDir, 'SKILL.md'), `---
+name: ${name}
+description: ${description}
+---
+
+# ${name}
+
+Use this helper for deterministic library indexing tests.
+`);
+}
 
 test('workflow catalog contains exactly 100 valid workflows in planned categories', async () => {
   const result = await loadWorkflows(root);
@@ -39,7 +62,14 @@ test('workflow catalog contains exactly 100 valid workflows in planned categorie
 test('workflow recommendation and dry-run expose compact actionable plans', async () => {
   const recommended = await recommendWorkflows(root, 'safe refactor code with tests', { limit: 3 });
   assert.equal(recommended.ok, true);
+  assert.ok(recommended.confidence === 'high' || recommended.confidence === 'low');
+  assert.equal(recommended.needsConfirmation, true);
   assert.ok(recommended.candidates.some((workflow) => workflow.id === 'coding.safe-refactor'));
+
+  const noise = await recommendWorkflows(root, 'zzzzqx qqqqxyz', { limit: 3 });
+  assert.equal(noise.confidence, 'none');
+  assert.equal(noise.fallback, 'no-confident-match');
+  assert.equal(noise.candidates.length, 0);
 
   const shown = await showWorkflow(root, 'coding.safe-refactor');
   assert.equal(shown.ok, true);
@@ -74,6 +104,25 @@ test('workflow recommended skills and agents resolve to shipped files', async ()
   assert.deepEqual(missing, []);
 });
 
+test('workflows cover new vibe-coder builder, validation, startup, and proof skills', async () => {
+  const result = await loadWorkflows(root);
+  assert.equal(result.ok, true, JSON.stringify(result.errors));
+  const newSkillSet = new Set(VIBE_CODER_SKILLS);
+  const covered = new Set();
+  for (const workflow of result.workflows) {
+    for (const skill of workflow.recommendedSkills) {
+      if (newSkillSet.has(skill)) covered.add(skill);
+    }
+  }
+  assert.ok(
+    covered.size >= 20,
+    `expected >=20 new vibe-coder skills in workflows, got ${covered.size}: ${[...covered].sort().join(', ')}`
+  );
+  assert.ok([...covered].some((id) => id.startsWith('build-')), 'expected builder skill coverage');
+  assert.ok([...covered].some((id) => id.startsWith('validate-')), 'expected validation skill coverage');
+  assert.ok([...covered].some((id) => id.startsWith('startup-')), 'expected startup skill coverage');
+});
+
 test('auto plan and read-only run never execute writes', async () => {
   const plan = await planAuto(root, 'audit README claims and demo proof', { limit: 3 });
   assert.equal(plan.ok, true);
@@ -92,7 +141,7 @@ test('library index and HTML artifacts include skills, workflows, hosts, and AI 
   context.after(() => rm(outDir, { recursive: true, force: true }));
 
   const index = await buildLibraryIndex(root, { home: outDir });
-  assert.ok(index.stats.skills >= 367);
+  assert.ok(index.stats.skills >= 511);
   assert.equal(index.stats.workflows, 100);
   assert.ok(index.skills.some((skill) => skill.id === 'using-skillsforge'));
   assert.ok(index.skills.some((skill) => skill.id === 'update-skill-library'));
@@ -112,10 +161,24 @@ test('library index and HTML artifacts include skills, workflows, hosts, and AI 
   assert.match(html, /removeConfirm/);
   assert.match(html, /allowMutations/);
   assert.match(html, /Session-aware local index/);
+  assert.match(html, /selectedPanel/);
+  assert.match(html, /projectSelect/);
+  assert.match(html, /projectUnselect/);
+  assert.match(html, /useWorkflow/);
+  assert.match(html, /api\/project\/select/);
+  assert.match(html, /api\/session\/remember/);
+  assert.match(html, /projectSelected/);
   assert.match(html, /sourceFilter/);
+  assert.match(html, /vibeBuilderPanel/);
+  assert.match(html, /quickFilters/);
+  assert.match(html, /viewModeTable/);
+  assert.match(html, /Vibe Builder/);
   const ai = await readFile(result.files.ai, 'utf8');
   assert.match(ai, /skillsforge-ai-index/);
   assert.match(ai, /sessionInstalled/);
+  assert.match(ai, /projectSelected/);
+  assert.match(ai, /sessionSummary/);
+  assert.match(ai, /project\.selectedSkills/);
 });
 
 test('library index includes installed user skills and recommends for current session', async (context) => {
@@ -149,8 +212,128 @@ Use this installed helper when local docs and media claims need strict review.
   });
   assert.equal(recommendation.ok, true);
   assert.equal(recommendation.sessionHost, 'codex');
+  assert.ok(recommendation.confidence === 'high' || recommendation.confidence === 'low');
   assert.equal(recommendation.skills[0].id, 'external-review-helper');
   assert.ok(recommendation.skills[0].reasons.includes('session-installed'));
+});
+
+test('library project selection writes config and influences non-hardcoded recommendation', async (context) => {
+  const home = await mkdtemp(join(tmpdir(), 'sf-project-selection-'));
+  context.after(() => rm(home, { recursive: true, force: true }));
+  const configPath = join(home, 'skillsforge.config.json');
+
+  const selected = await selectProjectSkill(root, {
+    home,
+    config: configPath,
+    sessionHost: 'codex',
+    skill: 'build-mcp-server'
+  });
+  assert.equal(selected.ok, true, JSON.stringify(selected.errors));
+  assert.ok(selected.selectedSkills.includes('build-mcp-server'));
+
+  const listed = await listProjectSelection(root, { home, config: configPath, sessionHost: 'codex' });
+  assert.equal(listed.ok, true);
+  assert.ok(listed.skills.some((skill) => skill.id === 'build-mcp-server'));
+
+  const index = await buildLibraryIndex(root, { home, config: configPath, sessionHost: 'codex' });
+  const record = index.skills.find((skill) => skill.id === 'build-mcp-server');
+  assert.equal(record.projectSelected, true);
+  assert.equal(index.stats.selectedSkills, 1);
+
+  const recommendation = recommendFromLibrary(index, 'build an MCP server for an AI CLI plugin', { limit: 5 });
+  const recommended = recommendation.skills.find((skill) => skill.id === 'build-mcp-server');
+  assert.ok(recommended, JSON.stringify(recommendation.skills));
+  assert.ok(recommended.reasons.includes('project-selected'));
+
+  const unselected = await unselectProjectSkill(root, {
+    home,
+    config: configPath,
+    sessionHost: 'codex',
+    skill: record.key
+  });
+  assert.equal(unselected.ok, true, JSON.stringify(unselected.errors));
+  assert.equal(unselected.selectedSkills.includes('build-mcp-server'), false);
+});
+
+test('library index covers all host roots, plugin cache roots, and extra skill roots with source details', async (context) => {
+  const home = await mkdtemp(join(tmpdir(), 'sf-source-details-'));
+  const extraConfigRoot = join(home, 'custom-skills-a');
+  const extraCliRoot = join(home, 'custom-skills-b');
+  context.after(() => rm(home, { recursive: true, force: true }));
+
+  const skillRoots = [
+    [join(home, '.codex', 'skills', 'codex-local-helper'), 'codex-local-helper'],
+    [join(home, '.codex', 'skills', '.system', 'codex-system-helper'), 'codex-system-helper'],
+    [join(home, '.agents', 'skills', 'agent-session-helper'), 'agent-session-helper'],
+    [join(home, '.claude', 'skills', 'claude-helper'), 'claude-helper'],
+    [join(home, '.cursor', 'skills', 'cursor-helper'), 'cursor-helper'],
+    [join(home, '.config', 'opencode', 'skills', 'opencode-helper'), 'opencode-helper'],
+    [join(home, '.zcode', 'skills', 'zcode-helper'), 'zcode-helper'],
+    [join(home, '.hermes', 'skills', 'hermes-helper'), 'hermes-helper'],
+    [join(home, '.gemini', 'skills', 'gemini-helper'), 'gemini-helper'],
+    [
+      join(home, '.codex', 'plugins', 'cache', 'openai-templates', 'artifact-template-analytics-dashboard', '0.1.0', 'skills', 'dashboard-template-helper'),
+      'dashboard-template-helper'
+    ],
+    [join(extraConfigRoot, 'extra-config-helper'), 'extra-config-helper'],
+    [join(extraCliRoot, 'extra-cli-helper'), 'extra-cli-helper']
+  ];
+  await Promise.all(skillRoots.map(([dir, name]) => writeTestSkill(dir, name)));
+
+  const badSkill = join(home, '.agents', 'skills', 'bad-installed-helper');
+  await mkdir(badSkill, { recursive: true });
+  await writeFile(join(badSkill, 'SKILL.md'), '# Missing frontmatter\n');
+
+  const configPath = join(home, 'skillsforge.config.json');
+  await writeFile(configPath, JSON.stringify({
+    library: {
+      theme: 'system',
+      outDir: 'artifacts/skillsforge-library',
+      cacheHostChecks: true,
+      extraSkillRoots: [extraConfigRoot]
+    }
+  }, null, 2));
+
+  const index = await buildLibraryIndex(root, {
+    home,
+    config: configPath,
+    sessionHost: 'codex',
+    extraSkillRoots: [extraCliRoot]
+  });
+  assert.equal(index.ok, true);
+  assert.ok(index.skills.some((skill) => skill.id === 'extra-config-helper'));
+  assert.ok(index.skills.some((skill) => skill.id === 'extra-cli-helper'));
+  assert.ok(index.skills.some((skill) => skill.id === 'dashboard-template-helper'));
+  assert.ok(Array.isArray(index.sourceDetails));
+
+  const bySource = new Map(index.sourceDetails.map((source) => [source.id, source]));
+  for (const id of [
+    'user-codex',
+    'codex-system',
+    'user-agents',
+    'claude-code',
+    'cursor',
+    'opencode',
+    'zcode',
+    'hermes',
+    'gemini',
+    'artifact-template-analytics-dashboard@openai-templates',
+    'extra:custom-skills-a',
+    'extra:custom-skills-b'
+  ]) {
+    assert.ok(bySource.has(id), `missing source detail ${id}`);
+    assert.ok(bySource.get(id).skillCount >= 1, id);
+  }
+  const cacheSource = bySource.get('artifact-template-analytics-dashboard@openai-templates');
+  assert.equal(cacheSource.kind, 'plugin-cache');
+  assert.equal(cacheSource.plugin, 'artifact-template-analytics-dashboard');
+  assert.equal(cacheSource.provider, 'openai-templates');
+  assert.equal(cacheSource.version, '0.1.0');
+
+  const agentSource = bySource.get('user-agents');
+  assert.ok(agentSource.installedCount >= 1);
+  assert.ok(agentSource.sessionCount >= 1);
+  assert.ok(agentSource.loadErrors.some((error) => /frontmatter/i.test(error.error)));
 });
 
 test('library removal is dry-run by default', async (context) => {
@@ -164,6 +347,66 @@ test('library removal is dry-run by default', async (context) => {
   assert.equal(result.ok, true);
   assert.equal(result.dryRun, true);
   assert.match(result.command, /--dry-run/);
+});
+
+test('library serve keeps static mode read-only and gates project/session writes behind mutation mode', async (context) => {
+  const home = await mkdtemp(join(tmpdir(), 'sf-lib-serve-'));
+  context.after(() => rm(home, { recursive: true, force: true }));
+  const configPath = join(home, 'skillsforge.config.json');
+  const sessionOutDir = `artifacts/test-session-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  context.after(() => rm(join(root, sessionOutDir), { recursive: true, force: true }));
+  await writeFile(configPath, JSON.stringify({
+    session: { outDir: sessionOutDir }
+  }, null, 2));
+
+  const readOnly = await serveLibrary(root, {
+    host: '127.0.0.1',
+    port: 0,
+    home,
+    config: configPath,
+    sessionHost: 'codex'
+  });
+  context.after(() => new Promise((resolveClose) => readOnly.server.close(resolveClose)));
+  const drySelect = await fetch(`${readOnly.url}api/project/select`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ skill: 'build-mcp-server' })
+  }).then((response) => response.json());
+  assert.equal(drySelect.ok, true);
+  assert.equal(drySelect.dryRun, true);
+  assert.match(drySelect.command, /lib select/);
+
+  const writable = await serveLibrary(root, {
+    host: '127.0.0.1',
+    port: 0,
+    allowMutations: true,
+    home,
+    config: configPath,
+    sessionHost: 'codex'
+  });
+  context.after(() => new Promise((resolveClose) => writable.server.close(resolveClose)));
+  const selected = await fetch(`${writable.url}api/project/select`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ skill: 'build-mcp-server' })
+  }).then((response) => response.json());
+  assert.equal(selected.ok, true, JSON.stringify(selected));
+  assert.equal(selected.selectedSkills.includes('build-mcp-server'), true);
+
+  const remembered = await fetch(`${writable.url}api/session/remember`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      query: 'build mcp server',
+      selectedSkill: 'build-mcp-server',
+      selectedWorkflow: 'agentic.skill-routing-plan',
+      score: 70,
+      outcome: 'selected from localhost library',
+      verification: 'api test'
+    })
+  }).then((response) => response.json());
+  assert.equal(remembered.ok, true, JSON.stringify(remembered));
+  assert.equal(remembered.summary.totals.events, 1);
 });
 
 test('PowerShell export creates helper scripts and manifest', async (context) => {

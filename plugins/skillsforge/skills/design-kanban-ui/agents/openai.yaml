@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Kanban Ui
+  short_description: Use when doing design kanban ui work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility chec
+  default_prompt: Use the design-kanban-ui skill for this task.
+policy:
+  allow_implicit_invocation: false

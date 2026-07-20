@@ -1,6 +1,6 @@
 interface:
   display_name: Agent Crew
-  short_description: Use when you need agent crew in a SkillsForge agentic workflow.
+  short_description: Use when doing agent crew work for agent workflow planning, replay, routing, tool policy, and token-budget work and you need agent role, tool boundary, context budget, stop gate, replay path, and hand
   default_prompt: Use the agent-crew skill for this task.
 policy:
   allow_implicit_invocation: false

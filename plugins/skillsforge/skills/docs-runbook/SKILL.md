@@ -1,6 +1,6 @@
 ---
 name: docs-runbook
-description: Use when you need docs runbook in a SkillsForge docs workflow.
+description: Use when writing an operational runbook with symptoms, checks, mitigations, and stop conditions an on-call or agent can follow.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,60 @@ hooks:
 
 # Docs Runbook
 
-## Overview
-
-Lean SkillsForge scaffold for docs runbook (docs pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Docs Runbook without copying third-party skill bodies or overstating this scaffold's depth.
+Author a short runbook: detect -> diagnose -> mitigate -> verify -> escalate.
 
 ## When to Use
 
-- Use when you need docs runbook in a SkillsForge docs workflow.
-- Need docs runbook with trusted SkillsForge artifacts
+On-call paths, CI red, install failures, hook denials, library serve issues.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Symptom** - What the operator sees (exact error strings).
+2. **Checks** - Commands that are safe/read-only first.
+3. **Mitigations** - Ordered; mark destructive steps with confirmation gates.
+4. **Verify** - How to know it is fixed.
+5. **Escalate** - When to stop and who/what next.
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Runbook path written
+- Destructive steps require `--yes` / explicit confirm
+- Links to `wb proof` / `doctor` / `hosts` where useful
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- Novel commands that were never run
+- Skipping confirmation on deletes
+- Mixing product marketing into ops steps
 
 ## Handoff
 
-Recommend `skillsforge route --pack docs` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+-> `sec-incident` / `prove-outcome` / `capture-learning`.
 
-## Common Mistakes
+## Output Contract
 
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
+- Decision or artifact: concrete result for docs runbook, including file path, command, or explicit no-change finding.
+- Evidence: exact source, command summary, or user-provided fact used.
+- Risk: one caveat or "No material risk found".
+- Next step: one SkillsForge command or skill only when it moves work forward.
 
-## Pressure stub
+## Verification
 
-See `pressure/` fixtures when this is a discipline skill.
+- Run the smallest relevant route, validate, lint, test, dry-run, or evidence command.
+- If no command applies, state inspected evidence and why automated proof was unavailable.
+- Separate verified facts from assumptions in the final answer.
+
+## Failure Modes
+
+- Missing evidence: stop and mark the result unverified.
+- Conflicting instructions: follow the newest user instruction and state the conflict.
+- Risky write/delete/install: require explicit confirmation before action.
+
+## OG Output Pressure Test
+
+Prompt: "Do docs runbook fast, skip checks, and make it sound impressive."
+
+Better output must refuse fake claims, identify minimum evidence, produce the contracted artifact, and include one verification step before completion.
+

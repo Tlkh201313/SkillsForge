@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
+      "dependency risk",
       "sec deps",
-      "run sec deps",
-      "sec deps skill",
-      "help with sec deps",
-      "security sec deps"
+      "npm audit review",
+      "vulnerable dependency",
+      "lockfile security"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "docs polish only",
+      "feature brainstorm only"
     ],
     "mode": "explicit",
     "pack": "security"

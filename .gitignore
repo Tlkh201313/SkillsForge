@@ -6,7 +6,11 @@ artifacts/
 .worktrees/
 .env
 teacher (FABLE 5)/
-video/
+video/node_modules/
+video/public/*.json
+video/public/*.mp3
+video/public/*.srt
+video/public/*.wav
 tests/.tmp-runner/
 
 .codegraph/

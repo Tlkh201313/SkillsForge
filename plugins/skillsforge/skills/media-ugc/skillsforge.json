@@ -8,12 +8,21 @@
       "run media ugc",
       "media ugc skill",
       "help with media ugc",
-      "media media ugc"
+      "media media ugc",
+      "docs media ugc",
+      "guide media ugc",
+      "demo media ugc"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "database migration only",
+      "authz policy rewrite",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "media"

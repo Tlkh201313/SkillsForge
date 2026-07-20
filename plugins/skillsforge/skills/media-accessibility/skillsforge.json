@@ -8,12 +8,21 @@
       "run media accessibility",
       "media accessibility skill",
       "help with media accessibility",
-      "media media accessibility"
+      "media media accessibility",
+      "docs media accessibility",
+      "guide media accessibility",
+      "demo media accessibility"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "database migration only",
+      "authz policy rewrite",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "media"

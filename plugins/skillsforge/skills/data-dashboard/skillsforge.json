@@ -8,12 +8,21 @@
       "run data dashboard",
       "data dashboard skill",
       "help with data dashboard",
-      "data data dashboard"
+      "data data dashboard",
+      "metrics data dashboard",
+      "tracking data dashboard",
+      "analytics data dashboard"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "UI styling only",
+      "no event or metric surface",
+      "invent event volume",
+      "track personal data without purpose",
+      "skip data quality checks",
+      "mix metric names without definitions"
     ],
     "mode": "explicit",
     "pack": "data"

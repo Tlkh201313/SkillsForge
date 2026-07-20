@@ -3,6 +3,7 @@ import { access, readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import test from 'node:test';
 import { parseDocument } from 'yaml';
+import { COMMANDS } from '../scripts/pack-inventory.mjs';
 import { parseFrontmatter } from '../scripts/validate-skill-lib.mjs';
 
 const repoRoot = process.cwd();
@@ -35,6 +36,12 @@ test('plugin ships required slash commands plus dominance entrypoints', async ()
     assert.match(parsed.body, /\$ARGUMENTS/);
     assert.doesNotMatch(parsed.body, /scripts\/skillsforge-cli\.mjs/);
   }
+});
+
+test('command inventory matches shipped command files', async () => {
+  const entries = await readdir(commandsRoot);
+  const names = entries.filter((name) => name.endsWith('.md')).map((name) => name.replace(/\.md$/, '')).sort();
+  assert.deepEqual([...COMMANDS].sort(), names);
 });
 
 test('slash commands only reference the bundled CLI binary that exists', async () => {

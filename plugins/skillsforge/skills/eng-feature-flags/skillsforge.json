@@ -8,12 +8,23 @@
       "run eng feature flags",
       "eng feature flags skill",
       "help with eng feature flags",
-      "eng eng feature flags"
+      "eng eng feature flags",
+      "engineer eng feature flags",
+      "fullstack eng feature flags",
+      "code eng feature flags",
+      "repo eng feature flags"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

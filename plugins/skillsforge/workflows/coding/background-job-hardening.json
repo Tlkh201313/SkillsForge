@@ -39,7 +39,10 @@
   "recommendedSkills": [
     "eng-background-jobs",
     "eng-idempotency",
-    "eng-observability"
+    "eng-observability",
+    "fullstack-background-jobs",
+    "fullstack-observability",
+    "validate-performance-budget"
   ],
   "recommendedAgents": [
     "backend-dev",

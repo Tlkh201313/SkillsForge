@@ -8,12 +8,21 @@
       "run design prototype",
       "design prototype skill",
       "help with design prototype",
-      "design design prototype"
+      "design design prototype",
+      "ui design prototype",
+      "polish design prototype",
+      "layout design prototype"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "backend schema migration only",
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

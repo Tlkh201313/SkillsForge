@@ -1,0 +1,6 @@
+interface:
+  display_name: Research Launch Channel
+  short_description: Use when doing research launch channel work for source-grounded product, technical, market, or open-source research and you need question, source map, trust grade, contradictory evidence, and decision
+  default_prompt: Use the research-launch-channel skill for this task.
+policy:
+  allow_implicit_invocation: false

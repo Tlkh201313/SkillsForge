@@ -1,29 +1,10 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
 import test from 'node:test';
 
 const binary = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge-validate');
-const npmCliCandidates = [
-  process.env.npm_execpath,
-  join(dirname(process.execPath), '..', 'lib', 'node_modules', 'npm', 'bin', 'npm-cli.js'),
-  join(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js')
-].filter(Boolean);
-const npmCli = npmCliCandidates.find((candidate) => existsSync(candidate));
-
-function runNpm(args) {
-  if (npmCli) {
-    return spawnSync(process.execPath, [npmCli, ...args], {
-      cwd: process.cwd(),
-      encoding: 'utf8'
-    });
-  }
-  return spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', args, {
-    cwd: process.cwd(),
-    encoding: 'utf8'
-  });
-}
+const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
 
 test('bundled CLI validates a portable skill without installed runtime dependencies', () => {
   const result = spawnSync(process.execPath, [binary, 'tests/fixtures/skills/good-basic'], {
@@ -46,9 +27,6 @@ test('bundled CLI emits machine-readable failures', () => {
 });
 
 test('shipped shim accepts Claude Code profile for Claude-only skill', () => {
-  const build = runNpm(['run', 'build']);
-  assert.equal(build.status, 0, build.stderr || build.stdout);
-
   const result = spawnSync(
     process.execPath,
     [binary, '--profile', 'claude-code', 'tests/fixtures/skills/good-claude-extension'],
@@ -105,29 +83,31 @@ test('bundled CLI validate fails undeclared-exec with policy JSON fields', () =>
 });
 
 test('bundled CLI help lists every subcommand', () => {
-  const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
-  const build = runNpm(['run', 'build']);
-  assert.equal(build.status, 0, build.stderr || build.stdout);
-
   const result = spawnSync(process.execPath, [cli, 'help'], {
     cwd: process.cwd(),
     encoding: 'utf8'
   });
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'hosts', 'help', 'install', 'wb', 'lib', 'workflows', 'auto', 'ps']) {
+  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'hosts', 'help', 'install', 'wb', 'lib', 'workflows', 'auto', 'ps', 'tokens', 'digest', 'next', 'map', 'slim', 'settings', 'init', 'session']) {
     assert.match(result.stdout, new RegExp(`\\b${name}\\b`));
   }
 });
 
+test('bundled CLI version is lightweight and current', () => {
+  const result = spawnSync(process.execPath, [cli, '--version'], {
+    cwd: process.cwd(),
+    encoding: 'utf8'
+  });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.equal(result.stdout.trim(), 'skillsforge 0.4.3');
+  assert.equal(result.stderr, '');
+});
+
 test('bundled CLI exposes workbench, workflow, auto, library, and PowerShell commands', async () => {
-  const { mkdtemp, rm } = await import('node:fs/promises');
+  const { mkdir, mkdtemp, readFile, rm, writeFile } = await import('node:fs/promises');
   const { tmpdir } = await import('node:os');
   const outDir = await mkdtemp(join(tmpdir(), 'sf-cli-new-'));
   try {
-    const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
-    const build = runNpm(['run', 'build']);
-    assert.equal(build.status, 0, build.stderr || build.stdout);
-
     const status = spawnSync(process.execPath, [cli, 'wb', 'status', '--json'], {
       cwd: process.cwd(),
       encoding: 'utf8'
@@ -158,6 +138,25 @@ test('bundled CLI exposes workbench, workflow, auto, library, and PowerShell com
     assert.equal(library.status, 0, library.stderr || library.stdout);
     assert.equal(JSON.parse(library.stdout).stats.workflows, 100);
 
+    const extraRoot = join(outDir, 'extra-skills');
+    await mkdir(join(extraRoot, 'cli-extra-helper'), { recursive: true });
+    await writeFile(join(extraRoot, 'cli-extra-helper', 'SKILL.md'), `---
+name: cli-extra-helper
+description: Use when checking CLI extra skill root indexing.
+---
+
+# CLI Extra Helper
+`);
+    const sourceCli = join(process.cwd(), 'scripts', 'skillsforge-cli.mjs');
+    const extraLibrary = spawnSync(process.execPath, [sourceCli, 'lib', 'build', '--json', '--allow-absolute', '--out', outDir, '--home', outDir, '--extra-skill-root', extraRoot], {
+      cwd: process.cwd(),
+      encoding: 'utf8'
+    });
+    assert.equal(extraLibrary.status, 0, extraLibrary.stderr || extraLibrary.stdout);
+    const libraryJson = JSON.parse(await readFile(join(outDir, 'skillsforge-library.json'), 'utf8'));
+    assert.ok(libraryJson.skills.some((skill) => skill.id === 'cli-extra-helper'));
+    assert.ok(libraryJson.sourceDetails.some((source) => source.id === 'extra:extra-skills'));
+
     const ps = spawnSync(process.execPath, [cli, 'ps', 'export', '--json', '--allow-absolute', '--out', outDir], {
       cwd: process.cwd(),
       encoding: 'utf8'
@@ -170,10 +169,6 @@ test('bundled CLI exposes workbench, workflow, auto, library, and PowerShell com
 });
 
 test('bundled CLI hosts --json reports universal host boundaries', () => {
-  const cli = join(process.cwd(), 'plugins', 'skillsforge', 'bin', 'skillsforge.mjs');
-  const build = runNpm(['run', 'build']);
-  assert.equal(build.status, 0, build.stderr || build.stdout);
-
   const result = spawnSync(process.execPath, [cli, 'hosts', '--json', '--home', process.cwd()], {
     cwd: process.cwd(),
     encoding: 'utf8'

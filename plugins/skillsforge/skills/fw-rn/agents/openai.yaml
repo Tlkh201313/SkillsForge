@@ -1,6 +1,6 @@
 interface:
   display_name: Fw Rn
-  short_description: Use when you need fw rn in a SkillsForge framework workflow.
+  short_description: Use when doing fw rn work for framework-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the fw-rn skill for this task.
 policy:
   allow_implicit_invocation: false

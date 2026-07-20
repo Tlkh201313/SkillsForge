@@ -39,7 +39,10 @@
   "recommendedSkills": [
     "data-metrics-dict",
     "product-metrics",
-    "docs-api-ref"
+    "docs-api-ref",
+    "data-event-tracking-plan",
+    "research-benchmark-method",
+    "growth-analytics-proof"
   ],
   "recommendedAgents": [
     "data-analyst",

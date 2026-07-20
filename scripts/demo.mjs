@@ -2,7 +2,7 @@
 /**
  * Deterministic offline SkillsForge demo (noninteractive).
  * Trust workflow via plugin CLI (dist-equivalent path when present):
- * forge dry-run → integrated policy validate fail → explained route → enforce deny → receipt verify
+ * forge dry-run -> integrated policy validate fail -> explained route -> enforce deny -> receipt verify
  */
 import { access, cp, mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';

@@ -1,6 +1,6 @@
 interface:
   display_name: Data Pipelines
-  short_description: Use when you need data pipelines in a SkillsForge data workflow.
+  short_description: Use when doing data pipelines work for analytics, events, schema, metrics, dashboard, and data-quality work and you need event/schema definition, owner, validation rule, sample query, and failure path
   default_prompt: Use the data-pipelines skill for this task.
 policy:
   allow_implicit_invocation: false

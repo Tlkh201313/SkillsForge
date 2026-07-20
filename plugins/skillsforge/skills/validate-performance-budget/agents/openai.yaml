@@ -1,0 +1,6 @@
+interface:
+  display_name: Validate Performance Budget
+  short_description: Use when doing validate performance budget work for real-task proof, claim audit, package verification, and launch readiness and you need claim list, evidence source, command result, pass/fail gate, a
+  default_prompt: Use the validate-performance-budget skill for this task.
+policy:
+  allow_implicit_invocation: false

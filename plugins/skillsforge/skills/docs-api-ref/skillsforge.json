@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
+      "API reference docs",
       "docs api ref",
-      "run docs api ref",
-      "docs api ref skill",
-      "help with docs api ref",
-      "docs docs api ref"
+      "document CLI API",
+      "schema reference page",
+      "command reference"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "skip verification",
+      "marketing copy only"
     ],
     "mode": "explicit",
     "pack": "docs"

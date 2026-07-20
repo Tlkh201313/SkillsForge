@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Video Design Taste
+  short_description: Use when doing media video design taste work for token-efficient video, Remotion, demo-review, frame-reading, audio-caption, and launch-media QA work and you need video brief, timestamped findings, fr
+  default_prompt: Use the media-video-design-taste skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -39,7 +39,11 @@
   "recommendedSkills": [
     "route-capability",
     "browse-catalog",
-    "using-skillsforge"
+    "using-skillsforge",
+    "build-agent-skill",
+    "build-skill-library-index",
+    "agentic-orchestrator-plan",
+    "agentic-workflow-replay"
   ],
   "recommendedAgents": [
     "workflow-curator",

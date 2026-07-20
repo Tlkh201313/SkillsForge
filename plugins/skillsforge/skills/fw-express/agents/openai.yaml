@@ -1,6 +1,6 @@
 interface:
   display_name: Fw Express
-  short_description: Use when you need fw express in a SkillsForge framework workflow.
+  short_description: Use when doing fw express work for framework-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the fw-express skill for this task.
 policy:
   allow_implicit_invocation: false

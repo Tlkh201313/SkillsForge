@@ -8,12 +8,21 @@
       "run ops env parity",
       "ops env parity skill",
       "help with ops env parity",
-      "ops ops env parity"
+      "ops ops env parity",
+      "ci ops env parity",
+      "deploy ops env parity",
+      "env ops env parity"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "local UI mock only",
+      "ignore runbooks and alerts",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
     ],
     "mode": "explicit",
     "pack": "ops"

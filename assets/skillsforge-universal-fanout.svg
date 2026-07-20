@@ -26,7 +26,7 @@
     <text x="589" y="156" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800" fill="#0f172a">SkillsForge</text>
     <text x="589" y="190" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" fill="#334155">productivity Work OS</text>
     <rect x="469" y="223" width="240" height="42" rx="10" fill="#ecfdf5" stroke="#86efac"/>
-    <text x="589" y="250" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#166534">route · lib · workflows</text>
+    <text x="589" y="250" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#166534">route - lib - workflows</text>
     <rect x="469" y="278" width="240" height="42" rx="10" fill="#e0f2fe" stroke="#7dd3fc"/>
     <text x="589" y="305" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#075985">validate (safety layer)</text>
     <rect x="469" y="333" width="240" height="42" rx="10" fill="#fff7ed" stroke="#fdba74"/>

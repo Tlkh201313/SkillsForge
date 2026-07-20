@@ -8,12 +8,21 @@
       "run research market",
       "research market skill",
       "help with research market",
-      "research research market"
+      "research research market",
+      "map research market",
+      "compare research market",
+      "source trust research market"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "local bug fix with no external question",
+      "unsupported claim generation only",
+      "invent market stats",
+      "use unattributed competitor claims",
+      "ship recommendations without source quality",
+      "research already answered by local code"
     ],
     "mode": "explicit",
     "pack": "research"

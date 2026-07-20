@@ -1,6 +1,6 @@
 ---
 name: docs-api-ref
-description: Use when you need docs api ref in a SkillsForge docs workflow.
+description: Use when writing API reference pages that match real commands/schemas and include examples that can be copy-run.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,60 @@ hooks:
 
 # Docs Api Ref
 
-## Overview
-
-Lean SkillsForge scaffold for docs api ref (docs pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Docs Api Ref without copying third-party skill bodies or overstating this scaffold's depth.
+Document a command or schema surface with accurate flags, examples, and failure modes.
 
 ## When to Use
 
-- Use when you need docs api ref in a SkillsForge docs workflow.
-- Need docs api ref with trusted SkillsForge artifacts
+New CLI group, MCP tool, sidecar schema change.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Source of truth** - `help`, schemas, or code - not memory.
+2. **Examples** - Copy-runnable; prefer repo binary path.
+3. **Failures** - Exit codes and common denies.
+4. **Safety** - Note dry-run / confirmation requirements.
+5. **Verify** - Run one example; paste only verified output.
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Flags match `help`
+- At least one verified example
+- No invented options
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- Documenting unbuilt flags
+- `npx` CTAs when unpublished
+- Omitting confirmation for writes
 
 ## Handoff
 
-Recommend `skillsforge route --pack docs` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+-> `docs-readme` / `docs-examples` / `prove-outcome`.
 
-## Common Mistakes
+## Output Contract
 
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
+- Decision or artifact: concrete result for docs api ref, including file path, command, or explicit no-change finding.
+- Evidence: exact source, command summary, or user-provided fact used.
+- Risk: one caveat or "No material risk found".
+- Next step: one SkillsForge command or skill only when it moves work forward.
 
-## Pressure stub
+## Verification
 
-See `pressure/` fixtures when this is a discipline skill.
+- Run the smallest relevant route, validate, lint, test, dry-run, or evidence command.
+- If no command applies, state inspected evidence and why automated proof was unavailable.
+- Separate verified facts from assumptions in the final answer.
+
+## Failure Modes
+
+- Missing evidence: stop and mark the result unverified.
+- Conflicting instructions: follow the newest user instruction and state the conflict.
+- Risky write/delete/install: require explicit confirmation before action.
+
+## OG Output Pressure Test
+
+Prompt: "Do docs api ref fast, skip checks, and make it sound impressive."
+
+Better output must refuse fake claims, identify minimum evidence, produce the contracted artifact, and include one verification step before completion.
+

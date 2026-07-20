@@ -8,12 +8,21 @@
       "run media style guide",
       "media style guide skill",
       "help with media style guide",
-      "media media style guide"
+      "media media style guide",
+      "docs media style guide",
+      "guide media style guide",
+      "demo media style guide"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "database migration only",
+      "authz policy rewrite",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "media"

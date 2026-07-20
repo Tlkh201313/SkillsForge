@@ -1,8 +1,8 @@
 # Hackathon demo script (&lt;3 min)
 
-Target: prove the trust thesis: **unsafe skill denied -> safe skill packaged -> evidence receipt**. Then show verified local inventory.
+Target: prove the developer-tools thesis: **SkillsForge turns vibe coding into a structured AI CLI development plugin** with skill packs, custom commands, routing, local HTML indexing, reusable workflows, token-efficient operator tools, and portable host packaging. Trust validation is the safety layer underneath, not the main pitch.
 
-Offline: `node plugins/skillsforge/bin/skillsforge.mjs demo` (deterministic, &lt;90s). Live video uses the beats below.
+Offline quick proof: `node plugins/skillsforge/bin/skillsforge.mjs init --profile vibecoder --session-host codex`, then `lib recommend`, `workflows run --dry-run`, `session score`, `map`, `slim`, `digest`, and the trust-layer `demo`. The committed YouTube/Devpost MP4 is the 2:22 cut in [video.md](video.md). The longer beats below are a fallback for a live presentation slot.
 
 ## Judge framing
 
@@ -17,21 +17,21 @@ Criteria map:
 
 | Criterion | SkillsForge proof |
 | --- | --- |
-| Working product | `demo` runs unsafe deny -> safe package -> receipt locally |
-| Technical depth | Sidecar policy, static scan, Codex hook compiler, receipt hashing |
-| Practicality | `hosts` and `install` target Codex, Claude Code, package-fidelity hosts, and custom local AI CLIs |
-| Honesty | Claim boundaries are explicit: hooks are not an OS sandbox; package-fidelity hosts do not enforce runtime policy |
+| Working product | `vibe`, `catalog`, `route`, `lib`, `workflows`, `map`, `slim`, `digest`, and `demo` run locally |
+| Technical depth | Skill catalog, command shims, workflow catalog, source-indexing, routing, slim/map context tools, host packaging |
+| Practicality | Codex + Claude Code support, package-fidelity hosts, custom local AI CLI paths, no account required |
+| Honesty | Claim boundaries are explicit: trust is a safety layer; hooks are not an OS sandbox |
 
 | Time | Beat | What to show / say |
 | --- | --- | --- |
-| 0:00–0:20 | Thesis | *Codex makes workflows reusable. SkillsForge makes Agent Skills reviewable, least-privilege, measurable, and tamper-evident.* A release helper can hide undeclared shell + network. |
-| 0:20-0:50 | Unsafe deny | `node plugins/skillsforge/bin/skillsforge.mjs demo` **or** `node plugins/skillsforge/bin/skillsforge.mjs validate examples/codex-unsafe-release` -> blocking findings, exit non-zero. Say: rejected **without executing** the skill. |
-| 0:50-1:20 | Safe package | Same demo packages `examples/codex-safe-release` -> native Codex plugin tree. Show sidecar capabilities + hooks. |
-| 1:20-1:50 | Scoreboard | Show package-tree hash and `artifacts/demo-evidence/demo-scoreboard.json`. Optional: `compare-skill` unsafe vs safe. |
-| 1:50-2:20 | Runtime deny (optional live) | Feed PreToolUse stdin for undeclared Bash -> `permissionDecision: deny`. Say aloud: hook is not an OS sandbox. |
-| 2:20-2:40 | Agent workbench | `wb status --json`, `workflows recommend --query "safe refactor code"`, and `auto run --read-only --query "audit README claims"` show token-efficient routing without writes. |
-| 2:40-2:55 | Local library | `lib update --session-host codex` creates `skillsforge-library.html` and `skillsforge-ai-index.html`; `lib recommend --query "audit README claims"` proves session-aware selection; `ps export` creates Windows helper commands. |
-| 2:55-3:00 | Provenance | CI green, package dry-run, audit, receipt verification, and `hosts --json`. Do not cite session IDs unless a real one exists. |
+| 0:00-0:20 | Thesis | *SkillsForge is a development plugin layer for AI CLIs: skills, custom commands, workflows, routing, and token-efficient operator tools.* |
+| 0:20-0:45 | Inventory + command surface | Show `vibe` and `catalog`: 511 skills, 28 packs, 11 profiles, 100 workflows, 140 command shims. |
+| 0:45-1:10 | Project library OS | `init --profile vibecoder --session-host codex` creates config, `skillsforge-library.html`, `skillsforge-ai-index.html`, and compact session memory; explain discoverability before context burn. |
+| 1:10-1:35 | Routing + token efficiency | `route --query`, `digest --query`, `map explore`, and `slim test` show selecting the right capability and compressing noisy output. |
+| 1:35-2:00 | Workflows + memory | `workflows recommend --query "release"` and `session score --json` show reusable playbooks, roles, commands, stop gates, artifacts, and compact usage memory. |
+| 2:00-2:25 | Host ecosystem | `hosts --json` and `install --dry-run` show Codex, Claude Code, Cursor, OpenCode, Gemini, and custom CLI paths. |
+| 2:25-2:45 | Trust underneath | `demo` or `validate` proves unsafe deny / safe package as a foundation, not the headline. |
+| 2:45-3:00 | Submission proof | CI green, local `npm run check`, package dry-run, no account required. Do not cite session IDs unless a real one exists. |
 
 ## Claim boundaries (say aloud)
 
@@ -45,7 +45,9 @@ Criteria map:
 - `node plugins/skillsforge/bin/skillsforge.mjs demo` green under 90s
 - `node plugins/skillsforge/bin/skillsforge.mjs hosts --json` lists Codex, Claude Code, Cursor, OpenCode, ZCode, Hermes, Gemini
 - `node plugins/skillsforge/bin/skillsforge.mjs workflows list --json` reports 100 workflows
+- `node plugins/skillsforge/bin/skillsforge.mjs init --profile vibecoder --session-host codex --json` creates config, HTML, AI index, and session summary
 - `node plugins/skillsforge/bin/skillsforge.mjs lib update --session-host codex` emits HTML + AI index locally
 - `node plugins/skillsforge/bin/skillsforge.mjs lib recommend --query "audit README claims" --session-host codex` returns read-only skill/workflow recommendations
+- `node plugins/skillsforge/bin/skillsforge.mjs session score --json` reports compact usage-memory score
 - Live video under 3:00
-- Prefer trust pipeline over unsupported skill-count claims
+- Prefer development-tool architecture over a security-only pitch

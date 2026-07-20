@@ -8,12 +8,22 @@
       "run docs contributing",
       "docs contributing skill",
       "help with docs contributing",
-      "docs docs contributing"
+      "docs docs contributing",
+      "media docs contributing",
+      "guide docs contributing",
+      "demo docs contributing"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "implement production code only",
+      "pentest live systems",
+      "deploy to prod only",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "docs"

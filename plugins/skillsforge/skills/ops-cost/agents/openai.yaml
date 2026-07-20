@@ -1,6 +1,6 @@
 interface:
   display_name: Ops Cost
-  short_description: Use when you need ops cost in a SkillsForge ops workflow.
+  short_description: Use when doing ops cost work for environment, CI, deployment, reliability, and operational readiness work and you need environment map, failing signal, command path, rollback option, and runbook note
   default_prompt: Use the ops-cost skill for this task.
 policy:
   allow_implicit_invocation: false

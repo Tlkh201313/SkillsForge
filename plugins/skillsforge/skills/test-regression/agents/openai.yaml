@@ -1,6 +1,6 @@
 interface:
   display_name: Test Regression
-  short_description: Use when you need test regression in a SkillsForge testing workflow.
+  short_description: Use when doing test regression work for testing-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the test-regression skill for this task.
 policy:
   allow_implicit_invocation: false

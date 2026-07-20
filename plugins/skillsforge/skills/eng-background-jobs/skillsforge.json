@@ -8,12 +8,23 @@
       "run eng background jobs",
       "eng background jobs skill",
       "help with eng background jobs",
-      "eng eng background jobs"
+      "eng eng background jobs",
+      "engineer eng background jobs",
+      "fullstack eng background jobs",
+      "code eng background jobs",
+      "repo eng background jobs"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

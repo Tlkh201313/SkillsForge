@@ -1,0 +1,6 @@
+interface:
+  display_name: Eng Safe Codegen
+  short_description: Use when doing eng safe codegen work for repo-grounded full-stack architecture, implementation planning, and engineering gates and you need system map, contract, affected files, test plan, rollback no
+  default_prompt: Use the eng-safe-codegen skill for this task.
+policy:
+  allow_implicit_invocation: false

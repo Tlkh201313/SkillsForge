@@ -128,8 +128,8 @@ test('receipt includes scanner inventory, dependency order, evaluation, and no t
     requireEvaluation: true
   });
   assert.equal(result.ok, true, JSON.stringify(result.errors));
-  assert.equal(result.receipt.version, '0.4.1');
-  assert.equal(result.receipt.scanner.version, '0.4.1');
+  assert.equal(result.receipt.version, '0.4.3');
+  assert.equal(result.receipt.scanner.version, '0.4.3');
   assert.deepEqual(result.receipt.dependencyOrder, ['lib', 'app']);
   assert.deepEqual(result.receipt.scanner.rules, [...POLICY_RULES]);
   assert.equal(result.receipt.evaluation.corpusSha256, 'abc123');

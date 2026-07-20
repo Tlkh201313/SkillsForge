@@ -4,16 +4,17 @@
   "requires": [],
   "routing": {
     "triggers": [
+      "threat model",
+      "threat modelling",
+      "STRIDE lite",
       "sec threat model",
-      "run sec threat model",
-      "sec threat model skill",
-      "help with sec threat model",
-      "security sec threat model"
+      "security threat model"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "docs polish only",
+      "feature brainstorm only"
     ],
     "mode": "explicit",
     "pack": "security"

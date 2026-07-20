@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "fullstack auth flow",
+      "run fullstack auth flow",
+      "fullstack auth flow skill",
+      "help with fullstack auth flow",
+      "eng fullstack auth flow",
+      "engineer fullstack auth flow",
+      "fullstack fullstack auth flow",
+      "code fullstack auth flow",
+      "repo fullstack auth flow"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
+    ],
+    "mode": "explicit",
+    "pack": "eng"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

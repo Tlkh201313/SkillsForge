@@ -8,12 +8,22 @@
       "run sec disclosure",
       "sec disclosure skill",
       "help with sec disclosure",
-      "security sec disclosure"
+      "security sec disclosure",
+      "permission sec disclosure",
+      "threat sec disclosure",
+      "boundary sec disclosure"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "feature brainstorm only",
+      "docs polish only",
+      "UI visual QA only",
+      "perform live exploitation",
+      "request secrets",
+      "claim compliance certification",
+      "weaken authorization for convenience"
     ],
     "mode": "explicit",
     "pack": "security"

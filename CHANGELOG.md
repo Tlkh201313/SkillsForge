@@ -2,11 +2,57 @@
 
 All notable changes to SkillsForge are recorded here.
 
+## [0.4.3] - 2026-07-20
+
+### Changed - Submission polish and host update guidance
+
+- Recorded the Codex `/feedback` Session ID and broadened Build Week notes to cover product, design, docs, media, verification, and release planning, not only coding.
+- Updated the visible inventory to **511** skills, **28** packs, **11** profiles, **100** workflows, **98** agents, and **140** command shims.
+- Added explicit Codex and Claude Code update guidance while keeping plugin upgrades user-controlled.
+- Documented Claude Code's lazy-load expectation: compact SessionStart hint first, route/recommend before loading individual skill bodies.
+
+### Added - Lightweight version check
+
+- `skillsforge version`, `skillsforge --version`, and `skillsforge -v` print the current CLI version without loading the skill catalog or library index.
+
+## [0.4.2] - 2026-07-19
+
+### Added - ForgeMap + ForgeSlim for AI CLIs
+
+- `sf map` (ForgeMap): zero-dep lightweight JS/TS structural index under `artifacts/forgemap/index.json` with `status` / `index` / `files` / `symbol` / `callers` / `impact` / `explore`. Optionally enriches from `.codegraph/codegraph.db` via `node:sqlite` (fail open).
+- `sf slim` (ForgeSlim): pure-JS output compressors for `status` / `diff` / `log` / `test` / `run` / `rg`, plus `slim gain` ledger at `artifacts/skillsforge-slim-gain.json` (chars/4 estimates - not provider billing).
+- AI host steering: `AGENTS.md` token-budget section, `using-skillsforge` iron law, host specialist agents, slash commands `map`/`slim`/`digest`/`tokens`/`next`, MCP tools `map`/`slim`/`digest`/`next`/`tokens`.
+- PowerShell helpers: `sf-map`, `sf-slim`, `sf-slim-gain`.
+- Docs: `docs/forgemap-slim.md` (honest limits; no unverifiable multipliers).
+
+### Changed - Operator tokens/digest
+
+- `tokens --catalog` defaults to **repo skills only** (fast); pass `--installed` to include host-installed skills.
+- `digest` reuses library recommend hits for token cost instead of rescanning the full catalog.
+- `next` / `digest` hint `map index` / `slim status` / `map explore` when useful.
+- Session tracker path `artifacts/skillsforge-token-session.json` documented as gitignored local state.
+
+### Changed - Short CLI aliases
+
+- `package.json` `bin` now exposes both `skillsforge` and `sf` (same binary). After `npm link`, type `sf demo` / `skillsforge help` instead of the long `node .../skillsforge.mjs` path.
+- `ps export` also writes a passthrough `sf.ps1` helper.
+
+### Changed - Work OS quality pass (Phase A)
+
+- CLI `help` regrouped: Catalog & authoring -> Operator terminals -> Hosts & install -> Trust & ship -> Compat (os-*).
+- `lib recommend` / `workflows recommend` use confidence thresholds; return `confidence`, `fallback: no-confident-match`, `alternatives`, `needsConfirmation`, and skill `riskFlags` instead of forcing weak matches.
+- Library UI shows explicit "No confident match" empty state.
+- `validate-repo` claim/media/package-allowlist hygiene for full repos; README claim + media tests.
+- Skill index cache fingerprint includes per-skill `SKILL.md` / sidecar mtimes.
+- Lean scaffold/gen-pack descriptions + pack-aware antiTriggers; regenerable scaffolds synced.
+- Promoted 15 high-traffic eng/security/docs skills from lean scaffolds to concrete workflows (still experimental maturity).
+- AGENTS.md productivity framing.
+
 ## [0.4.1] - 2026-07-19
 
-### Changed — Productivity-first framing
+### Changed - Productivity-first framing
 
-- README, plugin manifests, marketplace, architecture, and banners now lead with the **Work OS** story (skills, packs, workflows, library, auto, wb) — trust validate/package/hooks/receipts is the safety layer underneath.
+- README, plugin manifests, marketplace, architecture, and banners now lead with the **Work OS** story (skills, packs, workflows, library, auto, wb) - trust validate/package/hooks/receipts is the safety layer underneath.
 - Demo artifact renamed to `artifacts/demo-evidence/demo-scoreboard.json` (package-tree hash; not a full trust receipt).
 - Judge docs drop dead `npx skillsforge` CTAs; submit docs retarget `main`.
 - Threat/eval titles and CI evidence artifact bumped to v0.4; Codex `isMcpTool` matches `^mcp__` only.

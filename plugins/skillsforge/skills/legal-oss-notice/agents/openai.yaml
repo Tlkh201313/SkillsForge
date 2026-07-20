@@ -1,6 +1,6 @@
 interface:
   display_name: Legal Oss Notice
-  short_description: Use when you need legal oss notice in a SkillsForge legal-lite workflow.
+  short_description: Use when doing legal oss notice work for legal-lite-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the legal-oss-notice skill for this task.
 policy:
   allow_implicit_invocation: false

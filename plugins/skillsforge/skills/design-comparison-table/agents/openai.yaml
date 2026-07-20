@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Comparison Table
+  short_description: Use when doing design comparison table work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibili
+  default_prompt: Use the design-comparison-table skill for this task.
+policy:
+  allow_implicit_invocation: false

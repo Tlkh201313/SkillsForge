@@ -8,12 +8,22 @@
       "run content newsletter",
       "content newsletter skill",
       "help with content newsletter",
-      "content content newsletter"
+      "content content newsletter",
+      "docs content newsletter",
+      "media content newsletter",
+      "guide content newsletter",
+      "demo content newsletter"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "database-only task",
+      "no audience or source material",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "content"

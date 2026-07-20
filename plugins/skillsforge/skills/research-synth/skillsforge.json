@@ -8,12 +8,21 @@
       "run research synth",
       "research synth skill",
       "help with research synth",
-      "research research synth"
+      "research research synth",
+      "map research synth",
+      "compare research synth",
+      "source trust research synth"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "local bug fix with no external question",
+      "unsupported claim generation only",
+      "invent market stats",
+      "use unattributed competitor claims",
+      "ship recommendations without source quality",
+      "research already answered by local code"
     ],
     "mode": "explicit",
     "pack": "research"

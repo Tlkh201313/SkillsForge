@@ -8,12 +8,22 @@
       "run docs migration",
       "docs migration skill",
       "help with docs migration",
-      "docs docs migration"
+      "docs docs migration",
+      "media docs migration",
+      "guide docs migration",
+      "demo docs migration"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "implement production code only",
+      "pentest live systems",
+      "deploy to prod only",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "docs"

@@ -8,12 +8,23 @@
       "run eng types strict",
       "eng types strict skill",
       "help with eng types strict",
-      "eng eng types strict"
+      "eng eng types strict",
+      "engineer eng types strict",
+      "fullstack eng types strict",
+      "code eng types strict",
+      "repo eng types strict"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

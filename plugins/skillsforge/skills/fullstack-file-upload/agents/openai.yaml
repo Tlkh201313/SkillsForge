@@ -1,0 +1,6 @@
+interface:
+  display_name: Fullstack File Upload
+  short_description: Use when doing fullstack file upload work for repo-grounded full-stack architecture, implementation planning, and engineering gates and you need system map, contract, affected files, test plan, rollba
+  default_prompt: Use the fullstack-file-upload skill for this task.
+policy:
+  allow_implicit_invocation: false

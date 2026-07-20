@@ -1,0 +1,6 @@
+interface:
+  display_name: Build Mcp Tool Contract
+  short_description: Use when doing build mcp tool contract work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host matrix, interface contract, scaffold boundary, smoke command, and validation pa
+  default_prompt: Use the build-mcp-tool-contract skill for this task.
+policy:
+  allow_implicit_invocation: false

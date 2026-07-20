@@ -39,7 +39,10 @@
   "recommendedSkills": [
     "cloud-ci-providers",
     "eng-ci-pipeline",
-    "test-smoke"
+    "test-smoke",
+    "ops-ci-failure-router",
+    "validate-generated-artifacts",
+    "validate-release-readiness"
   ],
   "recommendedAgents": [
     "ci-diagnostician",

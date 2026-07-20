@@ -8,12 +8,21 @@
       "run design brand",
       "design brand skill",
       "help with design brand",
-      "design design brand"
+      "design design brand",
+      "ui design brand",
+      "polish design brand",
+      "layout design brand"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "backend schema migration only",
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

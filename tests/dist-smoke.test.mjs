@@ -62,6 +62,8 @@ test('cached plugin CLI works without repository root modules', async (context) 
   const session = await runNode([join(pluginRoot, 'hooks', 'session-start.mjs')], { cwd: cache });
   assert.equal(session.code, 0, session.stderr);
   assert.match(session.stdout, /SkillsForge active/);
+  assert.ok(session.stdout.length < 180, `session-start output too long: ${session.stdout.length}`);
+  assert.doesNotMatch(session.stdout, /Token budget|Phases|Quick Reference/);
 
   const doctor = await runNode([cli, 'doctor', '--json'], { cwd: pluginRoot });
   assert.equal(doctor.code, 0, doctor.stderr || doctor.stdout);

@@ -1,6 +1,6 @@
 interface:
   display_name: Agent Replay
-  short_description: Use when you need agent replay in a SkillsForge agentic workflow.
+  short_description: Use when doing agent replay work for agent workflow planning, replay, routing, tool policy, and token-budget work and you need agent role, tool boundary, context budget, stop gate, replay path, and ha
   default_prompt: Use the agent-replay skill for this task.
 policy:
   allow_implicit_invocation: false

@@ -1,9 +1,11 @@
-import { readFile } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { schemas } from './schemas.generated.mjs';
 import { validateWithSchema } from './schema-lib.mjs';
 
 const readmeBadgePattern = /img\.shields\.io\/badge\/version-([0-9]+\.[0-9]+\.[0-9]+)-/;
+const SUPERLATIVE_PATTERN = /\b(fastest|best-in-class|#1\b|number one|world'?s best|guaranteed hackathon winner)\b/i;
+const JUNK_README_PATTERN = /\bnpm run video:render\b|\bremoved source renderer\b|\bsource renderer is included\b/i;
 
 export async function validateRepository(root = process.cwd()) {
   const repositoryRoot = resolve(root);
@@ -54,8 +56,17 @@ export async function validateRepository(root = process.cwd()) {
     if (!errors.some((error) => error.includes('version '))) passes.push(`version lockstep ${expected}`);
   }
 
-  // Optional Codex plugin presence — warn/pass only; do not join Claude marketplace lockstep.
+  // Optional Codex plugin presence - warn/pass only; do not join Claude marketplace lockstep.
   await validateOptionalCodexPlugin(repositoryRoot, errors, passes);
+
+  const fullRepo = await pathExists(join(repositoryRoot, 'plugins', 'skillsforge', 'skills', 'using-skillsforge', 'SKILL.md'));
+  if (fullRepo) {
+    if (readme) {
+      await validateReadmeClaims(readme, repositoryRoot, errors, passes);
+    }
+    await validateDemoMedia(repositoryRoot, errors, passes);
+    await validatePackageAllowlist(packageJson, errors, passes);
+  }
 
   const ok = errors.length === 0;
   const text = ok
@@ -116,6 +127,68 @@ async function validateOptionalCodexPlugin(repositoryRoot, errors, passes) {
   passes.push('codex plugin + marketplace present');
 }
 
+async function validateReadmeClaims(readme, repositoryRoot, errors, passes) {
+  for (const match of readme.matchAll(/npx skillsforge/gi)) {
+    const start = Math.max(0, match.index - 120);
+    const ctx = readme.slice(start, match.index + match[0].length + 40);
+    if (!/do not|not on npm|not published/i.test(ctx)) {
+      errors.push('README advertises npx skillsforge without an explicit not-published warning');
+      break;
+    }
+  }
+  if (!/node plugins\/skillsforge\/bin\/skillsforge\.mjs demo/.test(readme)) {
+    errors.push('README must show the repo binary demo path');
+  }
+  if (SUPERLATIVE_PATTERN.test(readme)) {
+    errors.push('README contains unverifiable superlative marketing claims');
+  }
+  if (JUNK_README_PATTERN.test(readme)) {
+    errors.push('README references removed renderer/video:render path without honesty note');
+  }
+  if (!errors.some((error) => error.startsWith('README'))) {
+    passes.push('README claim hygiene');
+  }
+}
+
+async function validateDemoMedia(repositoryRoot, errors, passes) {
+  const required = [
+    ['assets/skillsforge-demo-poster.png', 'demo poster'],
+    ['assets/video/skillsforge-demo.mp4', 'demo mp4'],
+    ['assets/skillsforge-banner.svg', 'banner svg']
+  ];
+  for (const [rel, label] of required) {
+    try {
+      await access(join(repositoryRoot, rel));
+      passes.push(`media ${label}`);
+    } catch {
+      errors.push(`missing ${label} at ${rel}`);
+    }
+  }
+}
+
+async function validatePackageAllowlist(packageJson, errors, passes) {
+  if (!packageJson?.files || !Array.isArray(packageJson.files)) {
+    errors.push('package.json files allowlist missing');
+    return;
+  }
+  const blocked = ['teacher (FABLE 5)', 'video/', '.worktrees/', 'node_modules/'];
+  for (const entry of packageJson.files) {
+    const normalized = String(entry).replaceAll('\\', '/');
+    if (blocked.some((item) => normalized === item || normalized.startsWith(item))) {
+      errors.push(`package.json files allowlist includes junk path: ${entry}`);
+    }
+  }
+  if (!packageJson.files.includes('assets/skillsforge-demo-poster.png')) {
+    errors.push('package.json files must include assets/skillsforge-demo-poster.png');
+  }
+  if (!packageJson.files.includes('assets/video/skillsforge-demo.mp4')) {
+    errors.push('package.json files must include assets/video/skillsforge-demo.mp4');
+  }
+  if (!errors.some((error) => error.includes('package.json files'))) {
+    passes.push('package allowlist hygiene');
+  }
+}
+
 async function validateManifest(label, schema, value, errors, passes) {
   const result = await validateWithSchema(schema, value);
   if (result.valid) passes.push(label);
@@ -145,4 +218,13 @@ async function readText(path, label, errors) {
 function isInside(parent, candidate) {
   const path = relative(parent, candidate);
   return path === '' || (!path.startsWith(`..${sep}`) && path !== '..' && !isAbsolute(path));
+}
+
+async function pathExists(path) {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
 }

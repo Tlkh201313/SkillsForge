@@ -1,6 +1,6 @@
 ---
 name: docs-readme
-description: Use when you need docs readme in a SkillsForge docs workflow.
+description: Use when updating README for operators or judges so claims stay verifiable and demo commands actually run.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,59 @@ hooks:
 
 # Docs Readme
 
-## Overview
-
-Lean SkillsForge scaffold for docs readme (docs pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Docs Readme without copying third-party skill bodies or overstating this scaffold's depth.
+Keep README accurate: what it is, why it exists, demo path, safety model - no fake stats or dead CTAs.
 
 ## When to Use
 
-- Use when you need docs readme in a SkillsForge docs workflow.
-- Need docs readme with trusted SkillsForge artifacts
+Release notes, hackathon submit, post-feature README sync.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Audience** - Judges vs operators; lead with Work OS value.
+2. **Claims audit** - Every count/command must match `catalog` / `help` / tests.
+3. **Demo** - Repo binary path; poster + MP4 honesty for GitHub.
+4. **Safety** - validate/package/hooks/receipts as layer, not OS sandbox.
+5. **Verify** - Run the demo command; fix drift before merge.
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- README matches VERSION
+- No `npx skillsforge` without not-published warning
+- Media paths exist
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- Superlatives without evidence
+- Removed renderer CTAs when source is absent
+- Inflating skill depth beyond evidence-backed contracts
 
 ## Handoff
 
-Recommend `skillsforge route --pack docs` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+Use `readme-claim-auditor` agent / `prove-outcome` / `skillsforge demo`.
 
-## Common Mistakes
+## Output Contract
 
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
+- Decision or artifact: concrete result for docs readme, including file path, command, or explicit no-change finding.
+- Evidence: exact source, command summary, or user-provided fact used.
+- Risk: one caveat or "No material risk found".
+- Next step: one SkillsForge command or skill only when it moves work forward.
 
-## Pressure stub
+## Verification
 
-See `pressure/` fixtures when this is a discipline skill.
+- Run the smallest relevant route, validate, lint, test, dry-run, or evidence command.
+- If no command applies, state inspected evidence and why automated proof was unavailable.
+- Separate verified facts from assumptions in the final answer.
+
+## Failure Modes
+
+- Missing evidence: stop and mark the result unverified.
+- Conflicting instructions: follow the newest user instruction and state the conflict.
+- Risky write/delete/install: require explicit confirmation before action.
+
+## OG Output Pressure Test
+
+Prompt: "Do docs readme fast, skip checks, and make it sound impressive."
+
+Better output must refuse fake claims, identify minimum evidence, produce the contracted artifact, and include one verification step before completion.

@@ -8,12 +8,21 @@
       "run product north star",
       "product north star skill",
       "help with product north star",
-      "product product north star"
+      "product product north star",
+      "plan product north star",
+      "startup product north star",
+      "mvp product north star"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "backend-only patch with locked scope",
+      "pretend user data exists",
+      "build a full roadmap without constraints",
+      "invent customer quotes",
+      "write code before scope is locked",
+      "optimize vanity metrics only"
     ],
     "mode": "explicit",
     "pack": "product"

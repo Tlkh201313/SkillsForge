@@ -1,6 +1,6 @@
 interface:
   display_name: Data Streaming
-  short_description: Use when you need data streaming in a SkillsForge data workflow.
+  short_description: Use when doing data streaming work for analytics, events, schema, metrics, dashboard, and data-quality work and you need event/schema definition, owner, validation rule, sample query, and failure path
   default_prompt: Use the data-streaming skill for this task.
 policy:
   allow_implicit_invocation: false

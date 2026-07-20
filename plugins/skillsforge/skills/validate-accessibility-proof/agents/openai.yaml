@@ -1,0 +1,6 @@
+interface:
+  display_name: Validate Accessibility Proof
+  short_description: Use when doing validate accessibility proof work for real-task proof, claim audit, package verification, and launch readiness and you need claim list, evidence source, command result, pass/fail gate,
+  default_prompt: Use the validate-accessibility-proof skill for this task.
+policy:
+  allow_implicit_invocation: false

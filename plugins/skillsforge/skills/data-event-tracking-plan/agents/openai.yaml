@@ -1,0 +1,6 @@
+interface:
+  display_name: Data Event Tracking Plan
+  short_description: Use when doing data event tracking plan work for analytics, events, schema, metrics, dashboard, and data-quality work and you need event/schema definition, owner, validation rule, sample query, and fa
+  default_prompt: Use the data-event-tracking-plan skill for this task.
+policy:
+  allow_implicit_invocation: false

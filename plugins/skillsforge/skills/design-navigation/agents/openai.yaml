@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Navigation
+  short_description: Use when doing design navigation work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility che
+  default_prompt: Use the design-navigation skill for this task.
+policy:
+  allow_implicit_invocation: false

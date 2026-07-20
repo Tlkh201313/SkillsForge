@@ -1,0 +1,6 @@
+interface:
+  display_name: Build Cursor Skill
+  short_description: Use when doing build cursor skill work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host matrix, interface contract, scaffold boundary, smoke command, and validation path be
+  default_prompt: Use the build-cursor-skill skill for this task.
+policy:
+  allow_implicit_invocation: false

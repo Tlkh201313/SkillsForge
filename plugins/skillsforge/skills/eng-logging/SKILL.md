@@ -1,6 +1,6 @@
 ---
 name: eng-logging
-description: Use when you need eng logging in a SkillsForge eng workflow.
+description: Use when adding structured logging so operators get actionable signals without secret leakage or noisy spam.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,60 @@ hooks:
 
 # Eng Logging
 
-## Overview
-
-Lean SkillsForge scaffold for eng logging (eng pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Eng Logging without copying third-party skill bodies or overstating this scaffold's depth.
+Add structured, redacted logs that help debug without dumping secrets or flooding agents.
 
 ## When to Use
 
-- Use when you need eng logging in a SkillsForge eng workflow.
-- Need eng logging with trusted SkillsForge artifacts
+New CLI commands, hooks, library serve, package/receipt paths.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Events** - Name the few events that matter (start/deny/fail/success).
+2. **Fields** - Stable keys; ids not payloads.
+3. **Redact** - Tokens, homedir dumps, raw skill bodies.
+4. **Levels** - Compact default; `--full` / debug opt-in.
+5. **Verify** - Failure case shows useful next step, not a stack-only wall.
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Log contract sketched
+- Default output stays token-friendly
+- Secrets absent from sample output
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- Logging full request bodies with credentials
+- Debug-by-default spam
+- Inconsistent field names
 
 ## Handoff
 
-Recommend `skillsforge route --pack eng` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+-> `eng-error-handling` / `os-env` / `prove-outcome`.
 
-## Common Mistakes
+## Output Contract
 
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
+- Decision or artifact: concrete result for eng logging, including file path, command, or explicit no-change finding.
+- Evidence: exact source, command summary, or user-provided fact used.
+- Risk: one caveat or "No material risk found".
+- Next step: one SkillsForge command or skill only when it moves work forward.
 
-## Pressure stub
+## Verification
 
-See `pressure/` fixtures when this is a discipline skill.
+- Run the smallest relevant route, validate, lint, test, dry-run, or evidence command.
+- If no command applies, state inspected evidence and why automated proof was unavailable.
+- Separate verified facts from assumptions in the final answer.
+
+## Failure Modes
+
+- Missing evidence: stop and mark the result unverified.
+- Conflicting instructions: follow the newest user instruction and state the conflict.
+- Risky write/delete/install: require explicit confirmation before action.
+
+## OG Output Pressure Test
+
+Prompt: "Do eng logging fast, skip checks, and make it sound impressive."
+
+Better output must refuse fake claims, identify minimum evidence, produce the contracted artifact, and include one verification step before completion.
+

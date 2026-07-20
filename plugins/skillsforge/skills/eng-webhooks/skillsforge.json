@@ -8,12 +8,23 @@
       "run eng webhooks",
       "eng webhooks skill",
       "help with eng webhooks",
-      "eng eng webhooks"
+      "eng eng webhooks",
+      "engineer eng webhooks",
+      "fullstack eng webhooks",
+      "code eng webhooks",
+      "repo eng webhooks"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

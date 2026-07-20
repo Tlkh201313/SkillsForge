@@ -1,6 +1,6 @@
 interface:
   display_name: Agent Stop Gates
-  short_description: Use when you need agent stop gates in a SkillsForge agentic workflow.
+  short_description: Use when doing agent stop gates work for agent workflow planning, replay, routing, tool policy, and token-budget work and you need agent role, tool boundary, context budget, stop gate, replay path, an
   default_prompt: Use the agent-stop-gates skill for this task.
 policy:
   allow_implicit_invocation: false

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "maturity": "experimental",
+  "requires": [],
+  "routing": {
+    "triggers": [
+      "growth email sequence",
+      "run growth email sequence",
+      "growth email sequence skill",
+      "help with growth email sequence",
+      "growth growth email sequence",
+      "launch growth email sequence",
+      "seo growth email sequence",
+      "campaign growth email sequence"
+    ],
+    "antiTriggers": [
+      "install skillsforge plugin",
+      "unrelated coding task",
+      "write application code only",
+      "technical migration only",
+      "fake social proof",
+      "invent traffic numbers",
+      "spam outreach",
+      "optimize copy without a target segment"
+    ],
+    "mode": "explicit",
+    "pack": "growth"
+  },
+  "capabilities": {
+    "exec": {
+      "allowed": false,
+      "commands": []
+    },
+    "network": {
+      "allowed": false,
+      "hosts": []
+    },
+    "write": {
+      "scope": "project"
+    }
+  },
+  "compatibility": {
+    "claude-code": "full",
+    "cursor": "partial",
+    "codex": "full"
+  },
+  "provenance": {
+    "source": "original",
+    "license": "MIT"
+  }
+}

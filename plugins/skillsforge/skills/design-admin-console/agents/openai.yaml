@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Admin Console
+  short_description: Use when doing design admin console work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility
+  default_prompt: Use the design-admin-console skill for this task.
+policy:
+  allow_implicit_invocation: false

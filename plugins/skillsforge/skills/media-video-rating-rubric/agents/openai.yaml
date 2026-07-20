@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Video Rating Rubric
+  short_description: Use when doing media video rating rubric work for token-efficient video, Remotion, demo-review, frame-reading, audio-caption, and launch-media QA work and you need video brief, timestamped findings, f
+  default_prompt: Use the media-video-rating-rubric skill for this task.
+policy:
+  allow_implicit_invocation: false

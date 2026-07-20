@@ -8,12 +8,21 @@
       "run media frame sampling",
       "media frame sampling skill",
       "help with media frame sampling",
-      "media media frame sampling"
+      "media media frame sampling",
+      "docs media frame sampling",
+      "guide media frame sampling",
+      "demo media frame sampling"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "database migration only",
+      "authz policy rewrite",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "media"

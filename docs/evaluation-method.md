@@ -27,11 +27,11 @@ Each case declares an expected skill name or `null` (no skill).
 
 Confusion counts use honest one-vs-rest accounting (`scripts/eval.mjs`):
 
-- **TP** — selected skill matches expected non-null
-- **TN** — correctly selected null
-- **FP only** — selected a skill when expected was `null`
-- **FN only** — selected null when a skill was expected
-- **FP + FN** — wrong non-null selection (expected A, got B): counts as one false positive for B and one false negative for A
+- **TP** - selected skill matches expected non-null
+- **TN** - correctly selected null
+- **FP only** - selected a skill when expected was `null`
+- **FN only** - selected null when a skill was expected
+- **FP + FN** - wrong non-null selection (expected A, got B): counts as one false positive for B and one false negative for A
 
 Because wrong-skill cases increment both FP and FN, `tp + fp + fn + tn` may exceed `total`.
 
@@ -39,7 +39,7 @@ Derived:
 
 - Precision = TP / (TP + FP)
 - Recall = TP / (TP + FN)
-- **Exact-match accuracy** — fraction of cases where selected label equals expected (reported separately; not the release gate)
+- **Exact-match accuracy** - fraction of cases where selected label equals expected (reported separately; not the release gate)
 
 Also reported: latency p50/p95, failure list, corpus SHA-256, frozen date.
 
@@ -47,10 +47,10 @@ Also reported: latency p50/p95, failure list, corpus SHA-256, frozen date.
 
 Eval compares:
 
-1. **Full sidecar router** — contiguous phrase triggers, anti-triggers, maturity, description overlap; selection requires positive trigger evidence and a minimum score margin over #2
-2. **Metadata-only baseline** — description tokens only (no sidecar routing); cannot select without trigger evidence
+1. **Full sidecar router** - contiguous phrase triggers, anti-triggers, maturity, description overlap; selection requires positive trigger evidence and a minimum score margin over #2
+2. **Metadata-only baseline** - description tokens only (no sidecar routing); cannot select without trigger evidence
 
-Release gate (holdout): precision ≥ 0.95 and recall ≥ 0.90.
+Release gate (holdout): precision >= 0.95 and recall >= 0.90.
 
 ## Running
 

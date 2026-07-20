@@ -1,7 +1,7 @@
 {
   "name": "skillsforge",
-  "version": "0.4.1",
-  "description": "Work OS for productive Agent Skills in Codex — route skills, run workflows, keep a local library, and ship with least-privilege packaging.",
+  "version": "0.4.3",
+  "description": "Work OS for productive Agent Skills in Codex - route skills, run workflows, keep a local library, and ship with least-privilege packaging.",
   "author": {
     "name": "Tlkh201313"
   },
@@ -19,7 +19,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "SkillsForge",
-    "shortDescription": "Productive Agent Skills Work OS for Codex — route, workflows, library, guarded package.",
+    "shortDescription": "Productive Agent Skills Work OS for Codex - route, workflows, library, guarded package.",
     "longDescription": "SkillsForge is a productivity Work OS for portable Agent Skills: packs, profiles, workflows, library recommendation, and operator terminals. Trust (validate, capability policy, guarded Codex packaging, evidence receipts) is the safety layer underneath. Hooks are host guardrails, not an OS sandbox.",
     "developerName": "Tlkh201313",
     "category": "Developer Tools",

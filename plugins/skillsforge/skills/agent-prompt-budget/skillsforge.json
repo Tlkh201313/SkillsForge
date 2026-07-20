@@ -8,12 +8,22 @@
       "run agent prompt budget",
       "agent prompt budget skill",
       "help with agent prompt budget",
-      "agentic agent prompt budget"
+      "agentic agent prompt budget",
+      "agent agent prompt budget",
+      "workflow agent prompt budget",
+      "orchestrate agent prompt budget",
+      "route agent prompt budget"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "single-step manual task",
+      "subagents forbidden by user",
+      "start extra agents when user forbids it",
+      "hide tool side effects",
+      "skip handoff evidence",
+      "expand context without a budget"
     ],
     "mode": "explicit",
     "pack": "agentic"

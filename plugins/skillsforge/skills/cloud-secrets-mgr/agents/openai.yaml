@@ -1,6 +1,6 @@
 interface:
   display_name: Cloud Secrets Mgr
-  short_description: Use when you need cloud secrets mgr in a SkillsForge cloud-devops workflow.
+  short_description: Use when doing cloud secrets mgr work for environment, CI, deployment, reliability, and operational readiness work and you need environment map, failing signal, command path, rollback option, and runb
   default_prompt: Use the cloud-secrets-mgr skill for this task.
 policy:
   allow_implicit_invocation: false

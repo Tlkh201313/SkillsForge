@@ -1,10 +1,10 @@
 # SkillsForge demo video
 
-Judge-facing demo video for GitHub / Devpost (~90s). Mirrors:
+Judge-facing demo video for GitHub / Devpost (2:22). Focus:
 
-`node plugins/skillsforge/bin/skillsforge.mjs demo`
+SkillsForge as an AI CLI development plugin: skill packs, custom commands, local HTML indexing, routing, token-efficient operator tools, reusable workflows, and multi-host AI CLI strategy. Trust validation remains the safety layer, not the headline.
 
-(Not published to npm — do not use `npx skillsforge`.)
+(Not published to npm - do not use `npx skillsforge`.)
 
 ## Committed asset
 
@@ -14,7 +14,41 @@ The rendered MP4 lives at:
 
 Poster still (when present): `assets/skillsforge-demo-poster.png`
 
-> **Note:** The Remotion source project was removed from this repo. Do not expect `video/` + `npm run video:render` to rebuild the clip here. Re-render offline if you need a new cut, then replace the committed MP4.
+Browser preview: `docs/demo-video.html`
+
+The Remotion source lives under `video/`. Generated audio/caption assets and `video/node_modules/` stay ignored. The generated MP4 and poster remain normal committed assets.
+
+Regenerate from the repository root:
+
+```sh
+cd video
+npm run audio
+python scripts/synthesize_voice.py --text public/voiceover.txt --media public/voiceover.mp3 --srt public/voiceover.srt --voice en-US-JennyNeural --rate +18% --pitch +0Hz
+npm run captions
+npm run still
+npm run render
+```
+
+After rendering, normalize final audio to roughly -16 LUFS while copying the video stream:
+
+```sh
+ffmpeg -y -i ../assets/video/skillsforge-demo.mp4 -c:v copy -af loudnorm=I=-16:TP=-1.5:LRA=11 -ar 48000 -c:a aac -b:a 192k ../assets/video/skillsforge-demo.normalized.mp4
+```
+
+## README / gallery assets
+
+Use these committed visuals in this order:
+
+| Asset | Use |
+|------|-----|
+| `assets/skillsforge-banner.svg` | GitHub README hero |
+| `assets/skillsforge-library-preview.png` | Product preview for local library / workflows / trust pipeline |
+| `assets/skillsforge-demo-poster.png` | Visible fallback when GitHub does not play committed MP4 inline |
+| `assets/skillsforge-universal-fanout.svg` | Host support and package-fidelity boundary |
+| `assets/skillsforge-star-map.svg` | Current 511 / 28 / 11 / 100 / 98 / 140 / 15 inventory map |
+| `assets/skillsforge-trust-pipeline.svg` | Safety layer explanation |
+
+The generated preview image intentionally has no embedded text claims; keep exact counts in Markdown/SVG text only.
 
 ## Upload
 
@@ -23,15 +57,19 @@ Poster still (when present): `assets/skillsforge-demo-poster.png`
 3. Paste URL into Devpost + `docs/submission.md`.
 4. Optional: attach `skillsforge-demo.mp4` / poster as GitHub release assets; paste `user-attachments` URL into README.
 
-## Beats (~90s)
+## Beats (2:22)
 
 | Time | Scene |
 |------|--------|
-| 0:00 | Thesis: Work OS for productive Agent Skills |
-| 0:12 | Scale + operator surfaces (lib / workflows / auto) |
-| 0:28 | Unsafe validate deny |
-| 0:44 | Safe validate + package |
-| 1:00 | Demo scoreboard / package-tree hash |
-| 1:16 | CTA: clone + `node plugins/skillsforge/bin/skillsforge.mjs demo` |
+| 0:00 | Thesis: AI CLI development plugin for vibe coders |
+| 0:10 | Problem: prompt sprawl, one-off scripts, context bloat, no routing |
+| 0:26 | Architecture: skill packs + custom commands + workflow OS |
+| 0:39 | Operator surface: `skillsforge vibe` and compact custom commands |
+| 0:50 | Local HTML index: searchable skill library and source details |
+| 1:05 | Routing/token efficiency: pick 1-3 skills, use `map` and `slim` |
+| 1:22 | Workflows: repeatable development playbooks and role handoffs |
+| 1:33 | Host strategy: Codex, Claude Code, Cursor, OpenCode, Gemini, custom CLIs |
+| 1:50 | Build Week: Codex + GPT-5.6 acceleration with human product direction |
+| 2:07 | CTA: clone + `node plugins/skillsforge/bin/skillsforge.mjs vibe` |
 
-Do not invent Session IDs in the video. Keep claim boundaries (hooks ≠ sandbox; receipts unsigned; demo scoreboard ≠ full trust receipt).
+Do not invent Session IDs in the video. Keep claim boundaries (hooks != sandbox; receipts unsigned; demo scoreboard != full trust receipt).

@@ -8,12 +8,22 @@
       "run agent context",
       "agent context skill",
       "help with agent context",
-      "agentic agent context"
+      "agentic agent context",
+      "agent agent context",
+      "workflow agent context",
+      "orchestrate agent context",
+      "route agent context"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "single-step manual task",
+      "subagents forbidden by user",
+      "start extra agents when user forbids it",
+      "hide tool side effects",
+      "skip handoff evidence",
+      "expand context without a budget"
     ],
     "mode": "explicit",
     "pack": "agentic"

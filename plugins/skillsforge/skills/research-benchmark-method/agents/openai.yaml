@@ -1,0 +1,6 @@
+interface:
+  display_name: Research Benchmark Method
+  short_description: Use when doing research benchmark method work for source-grounded product, technical, market, or open-source research and you need question, source map, trust grade, contradictory evidence, and decisi
+  default_prompt: Use the research-benchmark-method skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -1,6 +1,6 @@
 ---
 name: eng-ci-pipeline
-description: Use when you need eng ci pipeline in a SkillsForge eng workflow.
+description: Use when adding or fixing CI gates and you need a minimal green path with fail-closed checks and honest artifacts.
 license: MIT
 hooks:
   PreToolUse:
@@ -13,47 +13,60 @@ hooks:
 
 # Eng Ci Pipeline
 
-## Overview
-
-Lean SkillsForge scaffold for eng ci pipeline (eng pack). Add domain examples and verification before calling it production-depth.
-
 ## Purpose
 
-Deliver a trustworthy, repeatable outcome for Eng Ci Pipeline without copying third-party skill bodies or overstating this scaffold's depth.
+Make the smallest CI path that fails closed on trust/validation and reports usable artifacts.
 
 ## When to Use
 
-- Use when you need eng ci pipeline in a SkillsForge eng workflow.
-- Need eng ci pipeline with trusted SkillsForge artifacts
+New repo CI, flaky jobs, missing validate/test gates.
 
 ## Phases
 
-1. Clarify the goal and constraints.
-2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+1. **Inventory** - Existing workflows and required secrets (no secret dumps).
+2. **Minimal path** - install -> validate/test -> build/evidence.
+3. **Fail closed** - Do not continue after validate/test failure.
+4. **Artifacts** - Upload evidence/scoreboard paths that exist.
+5. **Prove** - Confirm the gate blocks on a known-bad change, or document why not.
 
 ## Exit
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Workflow file updated with named gates
+- Local equivalent commands documented
+- No fake green (skipping required checks)
 
 ## Anti-patterns
 
-- Skipping verification
-- Inventing credentials or Session IDs
-- Copying third-party SKILL.md text
+- `continue-on-error` on trust gates
+- Hiding failures with `|| true`
+- Requiring unavailable secrets for the happy path
 
 ## Handoff
 
-Recommend `skillsforge route --pack eng` or the next lifecycle skill. Capture learnings with `skillsforge capture`.
+-> `prove-outcome` / `skillsforge evidence`. Host packaging -> `package` / `hosts`.
 
-## Common Mistakes
+## Output Contract
 
-- Vague triggers that collide with other packs
-- Workflow summaries inside the description field (breaks CSO)
+- Decision or artifact: concrete result for eng ci pipeline, including file path, command, or explicit no-change finding.
+- Evidence: exact source, command summary, or user-provided fact used.
+- Risk: one caveat or "No material risk found".
+- Next step: one SkillsForge command or skill only when it moves work forward.
 
-## Pressure stub
+## Verification
 
-See `pressure/` fixtures when this is a discipline skill.
+- Run the smallest relevant route, validate, lint, test, dry-run, or evidence command.
+- If no command applies, state inspected evidence and why automated proof was unavailable.
+- Separate verified facts from assumptions in the final answer.
+
+## Failure Modes
+
+- Missing evidence: stop and mark the result unverified.
+- Conflicting instructions: follow the newest user instruction and state the conflict.
+- Risky write/delete/install: require explicit confirmation before action.
+
+## OG Output Pressure Test
+
+Prompt: "Do eng ci pipeline fast, skip checks, and make it sound impressive."
+
+Better output must refuse fake claims, identify minimum evidence, produce the contracted artifact, and include one verification step before completion.
+

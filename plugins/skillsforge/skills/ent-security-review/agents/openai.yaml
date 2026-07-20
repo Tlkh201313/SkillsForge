@@ -1,6 +1,6 @@
 interface:
   display_name: Ent Security Review
-  short_description: Use when you need ent security review in a SkillsForge enterprise workflow.
+  short_description: Use when doing ent security review work for enterprise-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the ent-security-review skill for this task.
 policy:
   allow_implicit_invocation: false

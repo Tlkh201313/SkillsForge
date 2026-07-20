@@ -13,96 +13,121 @@ Use SkillsForge as the trust and routing layer for Agent Skills.
 - Quality: `skillsforge quality --skill <dir>`
 - Evidence: `skillsforge evidence --out artifacts/evidence`
 
+## Token budget (AI CLIs - mandatory)
+
+Claude Code, Cursor, Codex, OpenCode, and Gemini agents **must** prefer compact SkillsForge operator commands over raw shell dumps. Huge `git status` / `git diff` / `npm test` / `rg` / multi-file reads burn context.
+
+**Prefer (in order):**
+
+1. `sf digest --query "<task>"` - one-shot status + recommend + token cost (or `skillsforge digest ...`)
+2. `sf map ...` - structural lookup instead of grep+multi-read
+   - `sf map index` once per clone (or when index missing)
+   - `sf map symbol|callers|impact <name>` / `sf map explore --query <text>`
+3. `sf slim ...` - compressed git/test/search stdout before it hits the model
+   - `sf slim status` / `sf slim diff` instead of raw git
+   - `sf slim test -- npm test` / `sf slim run -- <cmd>` / `sf slim rg -- <args>`
+   - `sf slim gain` to see estimated tokens saved (chars/4 - not API billing)
+4. `sf tokens --catalog --limit 10` before loading skill bodies; default catalog is **repo skills only**
+5. `sf next` when unsure what to run next
+6. `sf wb ...` only when slim/map do not cover the need; always pass `--limit`
+
+**Do not:** paste full test logs, full diffs, or whole catalogs into the prompt. Route first (`sf route` / `sf lib recommend`), then load **one** `SKILL.md`.
+
+Short aliases: `sf` = `skillsforge` after `npm link`. MCP hosts can call tools `map` and `slim` on the SkillsForge MCP server.
+
 ## Catalog
 
-SkillsForge catalog: **367** catalog entries, **26** packs, **10** profiles.
+SkillsForge catalog: **511** catalog entries, **28** packs, **11** profiles.
 
-Hero depth: trust spine + lifecycle + methodology skills are production-depth; domain packs are lean scaffolds.
+Hero depth: trust spine + lifecycle + methodology skills are production-depth; domain packs are contract-backed SkillsForge skills.
 
 ### Profiles
 - `core`: Default install for vibecoders (packs: trust, browse-catalog, lifecycle, methodology, roles, eng, design, os)
 - `design`: Design focus (packs: trust, design, roles, content)
 - `eng`: Engineering focus (packs: trust, methodology, eng, testing, lang, framework)
-- `full`: Everything -- broad trusted skill surface (packs: trust, browse-catalog, methodology, roles, lifecycle, eng, design, product, growth, research, docs, security, ops, os, agentic, lang, framework, data, testing, media, mobile, enterprise, content, legal-lite, finance-lite, cloud-devops)
+- `full`: Everything -- broad trusted skill surface (packs: trust, browse-catalog, builder, validation, methodology, roles, lifecycle, eng, design, product, growth, research, docs, security, ops, os, agentic, lang, framework, data, testing, media, mobile, enterprise, content, legal-lite, finance-lite, cloud-devops)
 - `growth`: Growth focus (packs: trust, growth, content, media)
 - `methodology`: Discipline only (packs: trust, methodology)
 - `ops`: Ops focus (packs: trust, ops, os, security, cloud-devops)
 - `product`: Product focus (packs: trust, product, research, growth)
 - `roles`: Role lenses (packs: trust, roles)
-- `vibe`: Magical moment — trust + lifecycle + browse (packs: trust, browse-catalog, lifecycle)
+- `vibe`: Magical moment - trust + lifecycle + browse (packs: trust, browse-catalog, lifecycle)
+- `vibecoder`: Vibe-coder builder surface for plugins, MCPs, proof, launch, and full-stack app work (packs: trust, browse-catalog, lifecycle, builder, validation, design, product, growth, eng, ops)
 
 ### Packs
-- `agentic` (14): Agentic workflows and crew patterns
+- `agentic` (16): Agentic workflows and crew patterns
 - `browse-catalog` (2): Discover SkillsForge packs and profiles
+- `builder` (18): AI CLI SDK, plugin, MCP, and full-stack builder workflows
 - `cloud-devops` (14): Cloud and DevOps basics
 - `content` (12): Content production
-- `data` (16): Data and analytics planning
-- `design` (18): Product design and UI craft
-- `docs` (12): Documentation and developer writing
-- `eng` (28): Software engineering patterns
+- `data` (17): Data and analytics planning
+- `design` (60): Product design and UI craft
+- `docs` (13): Documentation and developer writing
+- `eng` (44): Software engineering patterns
 - `enterprise` (12): Enterprise stakeholder and process lite
 - `finance-lite` (8): Lightweight finance notes for builders
 - `framework` (28): Framework lean patterns (original)
-- `growth` (16): Growth, SEO, retention, launch
+- `growth` (22): Growth, SEO, retention, launch
 - `lang` (30): Language-specific lean patterns (original)
 - `legal-lite` (8): Non-advice legal awareness helpers
 - `lifecycle` (14): Work OS spine from shape to prove and learn
-- `media` (16): Media and creative briefs
-- `methodology` (12): Discipline iron laws — brainstorm, plan, TDD, verify (original)
+- `media` (29): Media and creative briefs
+- `methodology` (12): Discipline iron laws - brainstorm, plan, TDD, verify (original)
 - `mobile` (10): Mobile release and store
-- `ops` (12): Operations and reliability
+- `ops` (14): Operations and reliability
 - `os` (8): Cross-platform OS helpers for agentic workstations
-- `product` (14): Product management and discovery
-- `research` (12): Research and competitive teardown
+- `product` (26): Product management and discovery
+- `research` (24): Research and competitive teardown
 - `roles` (16): Role lenses for product, eng, design, QA, security, ship
-- `security` (14): Security and privacy practices
+- `security` (15): Security and privacy practices
 - `testing` (16): Testing strategies
 - `trust` (5): SkillsForge trust spine (validate, forge, route, verify)
+- `validation` (18): Real-task proof, claim audit, launch readiness, and anti-slop gates
 
 ## Installed skills (sample)
 
-- `agent-babysit` — Use when you need agent babysit in a SkillsForge agentic workflow.
-- `agent-context` — Use when you need agent context in a SkillsForge agentic workflow.
-- `agent-crew` — Use when you need agent crew in a SkillsForge agentic workflow.
-- `agent-critique` — Use when you need agent critique in a SkillsForge agentic workflow.
-- `agent-eval-loop` — Use when you need agent eval loop in a SkillsForge agentic workflow.
-- `agent-fanout` — Use when you need agent fanout in a SkillsForge agentic workflow.
-- `agent-handoff` — Use when you need agent handoff in a SkillsForge agentic workflow.
-- `agent-memory-lite` — Use when you need agent memory lite in a SkillsForge agentic workflow.
-- `agent-parallel` — Use when you need agent parallel in a SkillsForge agentic workflow.
-- `agent-prompt-budget` — Use when you need agent prompt budget in a SkillsForge agentic workflow.
-- `agent-replay` — Use when you need agent replay in a SkillsForge agentic workflow.
-- `agent-sandbox` — Use when you need agent sandbox in a SkillsForge agentic workflow.
-- `agent-stop-gates` — Use when you need agent stop gates in a SkillsForge agentic workflow.
-- `agent-tool-policy` — Use when you need agent tool policy in a SkillsForge agentic workflow.
-- `author-capability` — Use when creating or editing a canonical SkillsForge skill so frontmatter, body sections, and the skillsforge.json sidec
-- `brainstorm-first` — Use when multiple approaches are still viable and the team needs a short option set with tradeoffs before locking a plan
-- `browse-catalog` — Use when discovering SkillsForge packs, profiles, or skill ids before installing or routing to a domain skill.
-- `capture-learning` — Use when you need capture learning in a SkillsForge lifecycle workflow.
-- `cloud-cdn` — Use when you need cloud cdn in a SkillsForge cloud-devops workflow.
-- `cloud-ci-providers` — Use when you need cloud ci providers in a SkillsForge cloud-devops workflow.
-- `cloud-cost-tags` — Use when you need cloud cost tags in a SkillsForge cloud-devops workflow.
-- `cloud-dns` — Use when you need cloud dns in a SkillsForge cloud-devops workflow.
-- `cloud-docker` — Use when you need cloud docker in a SkillsForge cloud-devops workflow.
-- `cloud-iac` — Use when you need cloud iac in a SkillsForge cloud-devops workflow.
-- `cloud-iam` — Use when you need cloud iam in a SkillsForge cloud-devops workflow.
-- `cloud-k8s-basics` — Use when you need cloud k8s basics in a SkillsForge cloud-devops workflow.
-- `cloud-networking` — Use when you need cloud networking in a SkillsForge cloud-devops workflow.
-- `cloud-observability` — Use when you need cloud observability in a SkillsForge cloud-devops workflow.
-- `cloud-queues` — Use when you need cloud queues in a SkillsForge cloud-devops workflow.
-- `cloud-secrets-mgr` — Use when you need cloud secrets mgr in a SkillsForge cloud-devops workflow.
-- `cloud-serverless` — Use when you need cloud serverless in a SkillsForge cloud-devops workflow.
-- `cloud-storage` — Use when you need cloud storage in a SkillsForge cloud-devops workflow.
-- `completeness-over-shortcut` — Use when a shortcut would skip artifacts, tests, or verify commands that the plan already required.
-- `content-blog` — Use when you need content blog in a SkillsForge content workflow.
-- `content-calendar` — Use when you need content calendar in a SkillsForge content workflow.
-- `content-case-study` — Use when you need content case study in a SkillsForge content workflow.
-- `content-cta` — Use when you need content cta in a SkillsForge content workflow.
-- `content-docs-voice` — Use when you need content docs voice in a SkillsForge content workflow.
-- `content-edit` — Use when you need content edit in a SkillsForge content workflow.
-- `content-longform` — Use when you need content longform in a SkillsForge content workflow.
+- `agent-babysit` - Use when doing agent babysit work for agent workflow planning, replay, routing, tool policy, and token-budget work and y
+- `agent-context` - Use when doing agent context work for agent workflow planning, replay, routing, tool policy, and token-budget work and y
+- `agent-crew` - Use when doing agent crew work for agent workflow planning, replay, routing, tool policy, and token-budget work and you
+- `agent-critique` - Use when doing agent critique work for agent workflow planning, replay, routing, tool policy, and token-budget work and
+- `agent-eval-loop` - Use when doing agent eval loop work for agent workflow planning, replay, routing, tool policy, and token-budget work and
+- `agent-fanout` - Use when doing agent fanout work for agent workflow planning, replay, routing, tool policy, and token-budget work and yo
+- `agent-handoff` - Use when doing agent handoff work for agent workflow planning, replay, routing, tool policy, and token-budget work and y
+- `agent-memory-lite` - Use when doing agent memory lite work for agent workflow planning, replay, routing, tool policy, and token-budget work a
+- `agent-parallel` - Use when doing agent parallel work for agent workflow planning, replay, routing, tool policy, and token-budget work and
+- `agent-prompt-budget` - Use when doing agent prompt budget work for agent workflow planning, replay, routing, tool policy, and token-budget work
+- `agent-replay` - Use when doing agent replay work for agent workflow planning, replay, routing, tool policy, and token-budget work and yo
+- `agent-sandbox` - Use when doing agent sandbox work for agent workflow planning, replay, routing, tool policy, and token-budget work and y
+- `agent-stop-gates` - Use when doing agent stop gates work for agent workflow planning, replay, routing, tool policy, and token-budget work an
+- `agent-tool-policy` - Use when doing agent tool policy work for agent workflow planning, replay, routing, tool policy, and token-budget work a
+- `agentic-orchestrator-plan` - Use when doing agentic orchestrator plan work for agent workflow planning, replay, routing, tool policy, and token-budge
+- `agentic-workflow-replay` - Use when doing agentic workflow replay work for agent workflow planning, replay, routing, tool policy, and token-budget
+- `author-capability` - Use when creating or editing a canonical SkillsForge skill so frontmatter, body sections, and the skillsforge.json sidec
+- `brainstorm-first` - Use when multiple approaches are still viable and the team needs a short option set with tradeoffs before locking a plan
+- `browse-catalog` - Use when discovering SkillsForge packs, profiles, or skill ids before installing or routing to a domain skill.
+- `build-agent-skill` - Use when doing build agent skill work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host matri
+- `build-ai-cli-sdk-project` - Use when doing build ai cli sdk project work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need hos
+- `build-claude-code-plugin` - Use when doing build claude code plugin work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need hos
+- `build-codex-plugin` - Use when doing build codex plugin work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host matr
+- `build-cursor-skill` - Use when doing build cursor skill work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host matr
+- `build-fullstack-admin` - Use when doing build fullstack admin work for full-stack SaaS, CRUD, auth, admin, MVP, and launch-proof builder work and
+- `build-fullstack-auth` - Use when doing build fullstack auth work for full-stack SaaS, CRUD, auth, admin, MVP, and launch-proof builder work and
+- `build-fullstack-crud` - Use when doing build fullstack crud work for full-stack SaaS, CRUD, auth, admin, MVP, and launch-proof builder work and
+- `build-fullstack-saas` - Use when doing build fullstack saas work for full-stack SaaS, CRUD, auth, admin, MVP, and launch-proof builder work and
+- `build-hermes-agent-pack` - Use when doing build hermes agent pack work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host
+- `build-localhost-tool-ui` - Use when doing build localhost tool ui work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host
+- `build-mcp-server` - Use when doing build mcp server work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host matrix
+- `build-mcp-tool-contract` - Use when doing build mcp tool contract work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host
+- `build-opencode-pack` - Use when doing build opencode pack work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host mat
+- `build-plugin-marketplace-entry` - Use when doing build plugin marketplace entry work for AI CLI, plugin, MCP, skill, or full-stack builder work and you ne
+- `build-powershell-agent-helper` - Use when doing build powershell agent helper work for AI CLI, plugin, MCP, skill, or full-stack builder work and you nee
+- `build-skill-library-index` - Use when doing build skill library index work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need ho
+- `build-zcode-pack` - Use when doing build zcode pack work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host matrix
+- `capture-learning` - Use when doing capture learning work for lifecycle-pack work and you need bounded artifact, evidence, risk note, and ver
+- `cloud-cdn` - Use when doing cloud cdn work for environment, CI, deployment, reliability, and operational readiness work and you need
+- `cloud-ci-providers` - Use when doing cloud ci providers work for environment, CI, deployment, reliability, and operational readiness work and
 
-… and 327 more.
+... and 459 more.
 
 
 ## Agents
@@ -209,7 +234,7 @@ Hero depth: trust spine + lifecycle + methodology skills are production-depth; d
 ## Complementary tools
 
 - Use Ruflo for multi-agent swarm orchestration if needed; SkillsForge does not clone swarm/MCP consensus.
-- Use SkillsForge for validate, forge, route, policy, package, and evidence.
+- Use SkillsForge for validate, forge, route, policy, package, evidence, **map**, and **slim**.
 
 ## Skill routing (short)
 

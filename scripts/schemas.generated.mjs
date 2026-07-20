@@ -733,6 +733,122 @@ export const schemas = Object.freeze({
       }
     }
   },
+  "skillsforge.config": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://skillsforge.local/schemas/skillsforge.config.schema.json",
+    "title": "SkillsForge Config",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "recommendThreshold": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20
+      },
+      "defaultHost": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "enum": [
+          "claude-code",
+          "cursor",
+          "codex",
+          "opencode",
+          "zcode",
+          "hermes",
+          "gemini",
+          null
+        ]
+      },
+      "library": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": [
+              "system",
+              "light",
+              "dark"
+            ]
+          },
+          "outDir": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cacheHostChecks": {
+            "type": "boolean"
+          },
+          "extraSkillRoots": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "project": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "selectedSkills": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "default": []
+          },
+          "defaultWorkflows": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "default": []
+          }
+        }
+      },
+      "session": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": true
+          },
+          "outDir": {
+            "type": "string",
+            "minLength": 1,
+            "default": "artifacts/skillsforge-session"
+          },
+          "maxEntries": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5000,
+            "default": 200
+          },
+          "tokenBudget": {
+            "type": "integer",
+            "minimum": 200,
+            "maximum": 10000,
+            "default": 1200
+          }
+        }
+      },
+      "mutations": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "allowByDefault": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
   "skillsforge.sidecar": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://skillsforge.local/schemas/skillsforge.sidecar.schema.json",

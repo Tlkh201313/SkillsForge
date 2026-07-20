@@ -1,0 +1,6 @@
+interface:
+  display_name: Build Skill Library Index
+  short_description: Use when doing build skill library index work for AI CLI, plugin, MCP, skill, or full-stack builder work and you need host matrix, interface contract, scaffold boundary, smoke command, and validation
+  default_prompt: Use the build-skill-library-index skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -8,12 +8,21 @@
       "run ops capacity",
       "ops capacity skill",
       "help with ops capacity",
-      "ops ops capacity"
+      "ops ops capacity",
+      "ci ops capacity",
+      "deploy ops capacity",
+      "env ops capacity"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "local UI mock only",
+      "ignore runbooks and alerts",
+      "change production without confirmation",
+      "hide failing checks",
+      "ignore rollback path",
+      "treat local success as deployed proof"
     ],
     "mode": "explicit",
     "pack": "ops"

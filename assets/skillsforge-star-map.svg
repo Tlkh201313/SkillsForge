@@ -1,77 +1,122 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
   <title id="title">SkillsForge star map</title>
-  <desc id="desc">A factual map of SkillsForge as a productivity Work OS: skills, workflows, library, hosts, CLI, MCP, with trust as a safety layer.</desc>
-  <rect width="1400" height="760" fill="#0d1117"/>
+  <desc id="desc">A factual map of SkillsForge as a productivity Work OS: skills, packs, profiles, workflows, agents, command shims, hosts, MCP, and PowerShell helpers.</desc>
   <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="0.52" stop-color="#eef6ff"/>
+      <stop offset="1" stop-color="#f7f3ff"/>
+    </linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0ea5e9"/>
+      <stop offset="0.45" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
     <style>
-      .label{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#e6edf3}
-      .muted{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#8b949e}
-      .mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;fill:#e6edf3}
-      .line{stroke:#30363d;stroke-width:2}
-      .accent{stroke:#2f81f7;stroke-width:3}
-      .ok{stroke:#3fb950;stroke-width:3}
-      .node{fill:#161b22;stroke:#30363d;stroke-width:2;rx:14}
-      .core{fill:#0969da;stroke:#58a6ff;stroke-width:3;rx:18}
+      .sans{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+      .mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+      .ink{fill:#0f172a}
+      .muted{fill:#475569}
+      .soft{fill:#64748b}
+      .panel{fill:#ffffff;stroke:#dbe3ee;stroke-width:1.5}
+      .node{fill:#ffffff;stroke:#dbe3ee;stroke-width:1.5}
+      .line{fill:none;stroke:#94a3b8;stroke-width:2.3}
+      .blue{fill:#eff6ff;stroke:#bfdbfe}
+      .green{fill:#ecfdf5;stroke:#bbf7d0}
+      .violet{fill:#f5f3ff;stroke:#ddd6fe}
+      .amber{fill:#fffbeb;stroke:#fde68a}
     </style>
   </defs>
-  <g opacity=".7">
-    <circle cx="120" cy="90" r="2" fill="#58a6ff"/>
-    <circle cx="240" cy="160" r="2" fill="#3fb950"/>
-    <circle cx="1180" cy="120" r="2" fill="#f0f6fc"/>
-    <circle cx="1020" cy="650" r="2" fill="#58a6ff"/>
-    <circle cx="1290" cy="580" r="2" fill="#3fb950"/>
-    <circle cx="370" cy="670" r="2" fill="#f0f6fc"/>
+
+  <rect width="1400" height="760" fill="url(#bg)"/>
+  <g opacity="0.6">
+    <circle cx="104" cy="82" r="2.2" fill="#2563eb"/>
+    <circle cx="242" cy="626" r="2.2" fill="#22c55e"/>
+    <circle cx="1252" cy="108" r="2.2" fill="#7c3aed"/>
+    <circle cx="1188" cy="660" r="2.2" fill="#0ea5e9"/>
+    <circle cx="708" cy="52" r="2.2" fill="#22c55e"/>
+    <circle cx="642" cy="706" r="2.2" fill="#2563eb"/>
   </g>
 
-  <rect class="core" x="548" y="298" width="304" height="128"/>
-  <text class="label" x="700" y="344" text-anchor="middle" font-size="34" font-weight="800">SkillsForge</text>
-  <text class="muted" x="700" y="378" text-anchor="middle" font-size="18">Productivity Work OS</text>
-  <text class="mono" x="700" y="406" text-anchor="middle" font-size="15">route · workflows · library · ship</text>
+  <rect x="66" y="44" width="1268" height="672" rx="30" fill="#ffffff" stroke="#dbe3ee" filter="url(#shadow)"/>
 
-  <rect class="node" x="82" y="82" width="250" height="116"/>
-  <text class="label" x="207" y="126" text-anchor="middle" font-size="26" font-weight="700">367 skills</text>
-  <text class="muted" x="207" y="158" text-anchor="middle" font-size="16">26 packs, 10 profiles</text>
-  <text class="mono" x="207" y="184" text-anchor="middle" font-size="13">skillsforge.json sidecars</text>
+  <g class="sans">
+    <text x="700" y="92" text-anchor="middle" class="ink" font-size="36" font-weight="850">SkillsForge star map</text>
+    <text x="700" y="124" text-anchor="middle" class="muted" font-size="16">Current repo inventory, generated from committed catalog and plugin files.</text>
+  </g>
 
-  <rect class="node" x="82" y="322" width="250" height="116"/>
-  <text class="label" x="207" y="366" text-anchor="middle" font-size="26" font-weight="700">100 workflows</text>
-  <text class="muted" x="207" y="398" text-anchor="middle" font-size="16">dry-run catalog</text>
-  <text class="mono" x="207" y="424" text-anchor="middle" font-size="13">skillsforge workflows</text>
+  <g>
+    <path class="line" d="M350 238 C440 278 510 328 584 368"/>
+    <path class="line" d="M350 390 C442 386 504 382 584 382"/>
+    <path class="line" d="M350 542 C446 492 514 438 584 396"/>
+    <path class="line" d="M816 368 C894 308 980 270 1050 238"/>
+    <path class="line" d="M816 382 C908 382 978 386 1050 390"/>
+    <path class="line" d="M816 396 C894 452 976 506 1050 542"/>
+  </g>
 
-  <rect class="node" x="82" y="562" width="250" height="116"/>
-  <text class="label" x="207" y="606" text-anchor="middle" font-size="26" font-weight="700">98 agents</text>
-  <text class="muted" x="207" y="638" text-anchor="middle" font-size="16">task specialists</text>
-  <text class="mono" x="207" y="664" text-anchor="middle" font-size="13">no auto-spawn required</text>
+  <g transform="translate(584 306)" class="sans">
+    <rect x="0" y="0" width="232" height="152" rx="28" fill="url(#core)"/>
+    <text x="116" y="58" text-anchor="middle" fill="#ffffff" font-size="33" font-weight="850">SkillsForge</text>
+    <text x="116" y="88" text-anchor="middle" fill="#dbeafe" font-size="16" font-weight="650">Productivity Work OS</text>
+    <text x="116" y="120" text-anchor="middle" fill="#f8fafc" font-size="14" class="mono">route | lib | auto | ship</text>
+  </g>
 
-  <rect class="node" x="1068" y="82" width="250" height="116"/>
-  <text class="label" x="1193" y="126" text-anchor="middle" font-size="26" font-weight="700">7 hosts</text>
-  <text class="muted" x="1193" y="158" text-anchor="middle" font-size="16">Codex, Claude, more</text>
-  <text class="mono" x="1193" y="184" text-anchor="middle" font-size="13">custom host supported</text>
+  <g class="sans">
+    <g transform="translate(130 178)">
+      <rect class="node blue" width="220" height="120" rx="18"/>
+      <text x="110" y="46" text-anchor="middle" class="ink" font-size="28" font-weight="850">511 skills</text>
+      <text x="110" y="76" text-anchor="middle" class="muted" font-size="15">28 packs, 11 profiles</text>
+      <text x="110" y="100" text-anchor="middle" class="soft mono" font-size="12">SKILL.md + sidecar</text>
+    </g>
+    <g transform="translate(130 330)">
+      <rect class="node green" width="220" height="120" rx="18"/>
+      <text x="110" y="46" text-anchor="middle" class="ink" font-size="28" font-weight="850">100 workflows</text>
+      <text x="110" y="76" text-anchor="middle" class="muted" font-size="15">dry-run catalog</text>
+      <text x="110" y="100" text-anchor="middle" class="soft mono" font-size="12">recommend | show | run</text>
+    </g>
+    <g transform="translate(130 482)">
+      <rect class="node violet" width="220" height="120" rx="18"/>
+      <text x="110" y="46" text-anchor="middle" class="ink" font-size="28" font-weight="850">98 agents</text>
+      <text x="110" y="76" text-anchor="middle" class="muted" font-size="15">task specialists</text>
+      <text x="110" y="100" text-anchor="middle" class="soft mono" font-size="12">opt-in, no auto-spawn</text>
+    </g>
 
-  <rect class="node" x="1068" y="322" width="250" height="116"/>
-  <text class="label" x="1193" y="366" text-anchor="middle" font-size="26" font-weight="700">124 commands</text>
-  <text class="muted" x="1193" y="398" text-anchor="middle" font-size="16">CLI + slash shims</text>
-  <text class="mono" x="1193" y="424" text-anchor="middle" font-size="13">wb, lib, auto, ps</text>
+    <g transform="translate(1050 178)">
+      <rect class="node blue" width="220" height="120" rx="18"/>
+      <text x="110" y="46" text-anchor="middle" class="ink" font-size="28" font-weight="850">7 hosts</text>
+      <text x="110" y="76" text-anchor="middle" class="muted" font-size="15">Codex, Claude, more</text>
+      <text x="110" y="100" text-anchor="middle" class="soft mono" font-size="12">custom host supported</text>
+    </g>
+    <g transform="translate(1050 330)">
+      <rect class="node green" width="220" height="120" rx="18"/>
+      <text x="110" y="46" text-anchor="middle" class="ink" font-size="28" font-weight="850">140 commands</text>
+      <text x="110" y="76" text-anchor="middle" class="muted" font-size="15">CLI + slash shims</text>
+      <text x="110" y="100" text-anchor="middle" class="soft mono" font-size="12">wb | lib | ps | auto</text>
+    </g>
+    <g transform="translate(1050 482)">
+      <rect class="node violet" width="220" height="120" rx="18"/>
+      <text x="110" y="46" text-anchor="middle" class="ink" font-size="28" font-weight="850">15 MCP tools</text>
+      <text x="110" y="76" text-anchor="middle" class="muted" font-size="15">read-only defaults</text>
+      <text x="110" y="100" text-anchor="middle" class="soft mono" font-size="12">route | index | proof</text>
+    </g>
+  </g>
 
-  <rect class="node" x="1068" y="562" width="250" height="116"/>
-  <text class="label" x="1193" y="606" text-anchor="middle" font-size="26" font-weight="700">7 MCP tools</text>
-  <text class="muted" x="1193" y="638" text-anchor="middle" font-size="16">trust + read-only index</text>
-  <text class="mono" x="1193" y="664" text-anchor="middle" font-size="13">no default writes</text>
+  <g class="sans">
+    <rect class="panel" x="468" y="168" width="464" height="84" rx="18"/>
+    <text x="700" y="202" text-anchor="middle" class="ink" font-size="21" font-weight="820">Operator surfaces</text>
+    <text x="700" y="230" text-anchor="middle" class="soft mono" font-size="13">vibe | lib | workflows | auto | wb | ps export</text>
+    <path class="line" d="M700 252 V306"/>
 
-  <path class="accent" d="M332 140 C440 180 480 260 548 330"/>
-  <path class="accent" d="M332 380 C430 380 475 368 548 362"/>
-  <path class="accent" d="M332 620 C438 565 486 474 548 396"/>
-  <path class="ok" d="M852 330 C938 250 972 172 1068 140"/>
-  <path class="ok" d="M852 362 C930 370 980 380 1068 380"/>
-  <path class="ok" d="M852 396 C930 470 986 566 1068 620"/>
+    <rect class="panel" x="468" y="512" width="464" height="84" rx="18"/>
+    <text x="700" y="546" text-anchor="middle" class="ink" font-size="21" font-weight="820">Local library</text>
+    <text x="700" y="574" text-anchor="middle" class="soft mono" font-size="13">skillsforge-library.html | skillsforge-ai-index.html</text>
+    <path class="line" d="M700 512 V458"/>
 
-  <rect class="node" x="470" y="56" width="460" height="98"/>
-  <text class="label" x="700" y="96" text-anchor="middle" font-size="24" font-weight="700">Operator surfaces</text>
-  <text class="mono" x="700" y="128" text-anchor="middle" font-size="14">lib | wb | auto | workflows | vibe | ps export</text>
-  <path class="line" d="M700 154 V298"/>
-
-  <rect class="node" x="470" y="606" width="460" height="98"/>
-  <text class="label" x="700" y="646" text-anchor="middle" font-size="24" font-weight="700">Local library</text>
-  <text class="mono" x="700" y="678" text-anchor="middle" font-size="14">skillsforge-library.html | skillsforge-ai-index.html</text>
-  <path class="line" d="M700 606 V426"/>
+    <rect class="panel amber" x="468" y="620" width="464" height="54" rx="15"/>
+    <text x="700" y="642" text-anchor="middle" class="ink" font-size="15" font-weight="800">Builder + validation + design depth</text>
+    <text x="700" y="662" text-anchor="middle" class="muted" font-size="13">18 builder skills, 18 validation skills, 60 design skills, 22 PowerShell helpers</text>
+  </g>
 </svg>

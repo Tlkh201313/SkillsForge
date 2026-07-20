@@ -8,12 +8,23 @@
       "run eng migrations",
       "eng migrations skill",
       "help with eng migrations",
-      "eng eng migrations"
+      "eng eng migrations",
+      "engineer eng migrations",
+      "fullstack eng migrations",
+      "code eng migrations",
+      "repo eng migrations"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

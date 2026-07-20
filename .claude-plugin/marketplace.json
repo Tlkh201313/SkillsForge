@@ -20,8 +20,8 @@
         "authoring"
       ],
       "strict": true,
-      "description": "Work OS for productive Agent Skills — route, workflows, library, multi-host install, with validate/package/receipts as the safety layer.",
-      "version": "0.4.1",
+      "description": "Work OS for productive Agent Skills - route, workflows, library, multi-host install, with validate/package/receipts as the safety layer.",
+      "version": "0.4.3",
       "author": {
         "name": "Tlkh201313",
         "url": "https://github.com/Tlkh201313"

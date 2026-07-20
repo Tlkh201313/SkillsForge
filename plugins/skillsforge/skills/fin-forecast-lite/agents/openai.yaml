@@ -1,6 +1,6 @@
 interface:
   display_name: Fin Forecast Lite
-  short_description: Use when you need fin forecast lite in a SkillsForge finance-lite workflow.
+  short_description: Use when doing fin forecast lite work for finance-lite-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the fin-forecast-lite skill for this task.
 policy:
   allow_implicit_invocation: false

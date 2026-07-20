@@ -8,12 +8,23 @@
       "run eng contracts",
       "eng contracts skill",
       "help with eng contracts",
-      "eng eng contracts"
+      "eng eng contracts",
+      "engineer eng contracts",
+      "fullstack eng contracts",
+      "code eng contracts",
+      "repo eng contracts"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

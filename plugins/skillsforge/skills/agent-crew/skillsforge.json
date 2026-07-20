@@ -8,12 +8,22 @@
       "run agent crew",
       "agent crew skill",
       "help with agent crew",
-      "agentic agent crew"
+      "agentic agent crew",
+      "agent agent crew",
+      "workflow agent crew",
+      "orchestrate agent crew",
+      "route agent crew"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "single-step manual task",
+      "subagents forbidden by user",
+      "start extra agents when user forbids it",
+      "hide tool side effects",
+      "skip handoff evidence",
+      "expand context without a budget"
     ],
     "mode": "explicit",
     "pack": "agentic"

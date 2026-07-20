@@ -1,0 +1,6 @@
+interface:
+  display_name: Validate Generated Artifacts
+  short_description: Use when doing validate generated artifacts work for real-task proof, claim audit, package verification, and launch readiness and you need claim list, evidence source, command result, pass/fail gate,
+  default_prompt: Use the validate-generated-artifacts skill for this task.
+policy:
+  allow_implicit_invocation: false

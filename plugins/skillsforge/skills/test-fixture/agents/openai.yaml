@@ -1,6 +1,6 @@
 interface:
   display_name: Test Fixture
-  short_description: Use when you need test fixture in a SkillsForge testing workflow.
+  short_description: Use when doing test fixture work for testing-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the test-fixture skill for this task.
 policy:
   allow_implicit_invocation: false

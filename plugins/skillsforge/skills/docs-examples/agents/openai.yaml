@@ -1,6 +1,6 @@
 interface:
   display_name: Docs Examples
-  short_description: Use when you need docs examples in a SkillsForge docs workflow.
+  short_description: Use when doing docs examples work for agent-facing docs, launch media, demo proof, and content production and you need audience, source facts, outline, asset path, claim proof, and publishing check be
   default_prompt: Use the docs-examples skill for this task.
 policy:
   allow_implicit_invocation: false

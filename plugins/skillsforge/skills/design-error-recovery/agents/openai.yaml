@@ -1,0 +1,6 @@
+interface:
+  display_name: Design Error Recovery
+  short_description: Use when doing design error recovery work for dense product UI, design system, motion, accessibility, and visual QA work and you need layout decision, component states, responsive proof, accessibility
+  default_prompt: Use the design-error-recovery skill for this task.
+policy:
+  allow_implicit_invocation: false

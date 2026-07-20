@@ -1,0 +1,6 @@
+interface:
+  display_name: Fullstack Background Jobs
+  short_description: Use when doing fullstack background jobs work for repo-grounded full-stack architecture, implementation planning, and engineering gates and you need system map, contract, affected files, test plan, ro
+  default_prompt: Use the fullstack-background-jobs skill for this task.
+policy:
+  allow_implicit_invocation: false

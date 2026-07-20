@@ -1,6 +1,6 @@
 interface:
   display_name: Research Desk
-  short_description: Use when you need research desk in a SkillsForge research workflow.
+  short_description: Use when doing research desk work for source-grounded product, technical, market, or open-source research and you need question, source map, trust grade, contradictory evidence, and decision summary b
   default_prompt: Use the research-desk skill for this task.
 policy:
   allow_implicit_invocation: false

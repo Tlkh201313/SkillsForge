@@ -1,6 +1,6 @@
 interface:
   display_name: Mobile Perf
-  short_description: Use when you need mobile perf in a SkillsForge mobile workflow.
+  short_description: Use when doing mobile perf work for mobile-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the mobile-perf skill for this task.
 policy:
   allow_implicit_invocation: false

@@ -39,7 +39,11 @@
   "recommendedSkills": [
     "design-anti-slop",
     "design-layout",
-    "design-system"
+    "design-system",
+    "build-localhost-tool-ui",
+    "design-openrouter-style-catalog",
+    "design-command-center",
+    "design-comparison-table"
   ],
   "recommendedAgents": [
     "ui-systems-designer",

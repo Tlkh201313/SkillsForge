@@ -1,0 +1,6 @@
+interface:
+  display_name: Fullstack Test Plan
+  short_description: Use when doing fullstack test plan work for repo-grounded full-stack architecture, implementation planning, and engineering gates and you need system map, contract, affected files, test plan, rollback
+  default_prompt: Use the fullstack-test-plan skill for this task.
+policy:
+  allow_implicit_invocation: false

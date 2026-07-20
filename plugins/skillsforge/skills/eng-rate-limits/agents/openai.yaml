@@ -1,6 +1,6 @@
 interface:
   display_name: Eng Rate Limits
-  short_description: Use when you need eng rate limits in a SkillsForge eng workflow.
+  short_description: Use when doing eng rate limits work for repo-grounded full-stack architecture, implementation planning, and engineering gates and you need system map, contract, affected files, test plan, rollback not
   default_prompt: Use the eng-rate-limits skill for this task.
 policy:
   allow_implicit_invocation: false

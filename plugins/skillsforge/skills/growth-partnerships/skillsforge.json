@@ -8,12 +8,20 @@
       "run growth partnerships",
       "growth partnerships skill",
       "help with growth partnerships",
-      "growth growth partnerships"
+      "growth growth partnerships",
+      "launch growth partnerships",
+      "seo growth partnerships",
+      "campaign growth partnerships"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "technical migration only",
+      "fake social proof",
+      "invent traffic numbers",
+      "spam outreach",
+      "optimize copy without a target segment"
     ],
     "mode": "explicit",
     "pack": "growth"

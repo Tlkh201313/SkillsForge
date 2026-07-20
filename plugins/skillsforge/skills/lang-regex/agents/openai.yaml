@@ -1,6 +1,6 @@
 interface:
   display_name: Lang Regex
-  short_description: Use when you need lang regex in a SkillsForge lang workflow.
+  short_description: Use when doing lang regex work for lang-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the lang-regex skill for this task.
 policy:
   allow_implicit_invocation: false

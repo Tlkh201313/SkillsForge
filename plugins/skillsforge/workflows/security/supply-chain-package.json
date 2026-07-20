@@ -39,7 +39,10 @@
   "recommendedSkills": [
     "sec-supply-chain",
     "legal-oss-notice",
-    "ship-release"
+    "ship-release",
+    "validate-plugin-package",
+    "security-agent-permission-review",
+    "research-open-source-license"
   ],
   "recommendedAgents": [
     "package-auditor",

@@ -8,12 +8,21 @@
       "run media alt text",
       "media alt text skill",
       "help with media alt text",
-      "media media alt text"
+      "media media alt text",
+      "docs media alt text",
+      "guide media alt text",
+      "demo media alt text"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "database migration only",
+      "authz policy rewrite",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "media"

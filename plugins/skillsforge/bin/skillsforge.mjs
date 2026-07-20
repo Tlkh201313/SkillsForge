@@ -3785,7 +3785,7 @@ ${pointer}
 var require_resolve_props = __commonJS({
   "node_modules/yaml/dist/compose/resolve-props.js"(exports) {
     "use strict";
-    function resolveProps(tokens, { flow, indicator, next, offset, onError, parentIndent, startOnNewline }) {
+    function resolveProps(tokens2, { flow, indicator, next, offset, onError, parentIndent, startOnNewline }) {
       let spaceBefore = false;
       let atNewline = startOnNewline;
       let hasSpace = startOnNewline;
@@ -3800,7 +3800,7 @@ var require_resolve_props = __commonJS({
       let comma = null;
       let found = null;
       let start = null;
-      for (const token of tokens) {
+      for (const token of tokens2) {
         if (reqSpace) {
           if (token.type !== "space" && token.type !== "newline" && token.type !== "comma")
             onError(token.offset, "MISSING_CHAR", "Tags and anchors must be separated from the next token by white space");
@@ -3891,7 +3891,7 @@ var require_resolve_props = __commonJS({
             hasSpace = false;
         }
       }
-      const last = tokens[tokens.length - 1];
+      const last = tokens2[tokens2.length - 1];
       const end = last ? last.offset + last.source.length : offset;
       if (reqSpace && next && next.type !== "space" && next.type !== "newline" && next.type !== "comma" && (next.type !== "scalar" || next.source !== "")) {
         onError(next.offset, "MISSING_CHAR", "Tags and anchors must be separated from the next token by white space");
@@ -4010,10 +4010,10 @@ var require_resolve_block_map = __commonJS({
       let offset = bm.offset;
       let commentEnd = null;
       for (const collItem of bm.items) {
-        const { start, key, sep: sep11, value } = collItem;
+        const { start, key, sep: sep12, value } = collItem;
         const keyProps = resolveProps.resolveProps(start, {
           indicator: "explicit-key-ind",
-          next: key ?? sep11?.[0],
+          next: key ?? sep12?.[0],
           offset,
           onError,
           parentIndent: bm.indent,
@@ -4027,7 +4027,7 @@ var require_resolve_block_map = __commonJS({
             else if ("indent" in key && key.indent !== bm.indent)
               onError(offset, "BAD_INDENT", startColMsg);
           }
-          if (!keyProps.anchor && !keyProps.tag && !sep11) {
+          if (!keyProps.anchor && !keyProps.tag && !sep12) {
             commentEnd = keyProps.end;
             if (keyProps.comment) {
               if (map.comment)
@@ -4051,7 +4051,7 @@ var require_resolve_block_map = __commonJS({
         ctx.atKey = false;
         if (utilMapIncludes.mapIncludes(ctx, map.items, keyNode))
           onError(keyStart, "DUPLICATE_KEY", "Map keys must be unique");
-        const valueProps = resolveProps.resolveProps(sep11 ?? [], {
+        const valueProps = resolveProps.resolveProps(sep12 ?? [], {
           indicator: "map-value-ind",
           next: value,
           offset: keyNode.range[2],
@@ -4067,7 +4067,7 @@ var require_resolve_block_map = __commonJS({
             if (ctx.options.strict && keyProps.start < valueProps.found.offset - 1024)
               onError(keyNode.range, "KEY_OVER_1024_CHARS", "The : indicator must be at most 1024 chars after the start of an implicit block mapping key");
           }
-          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep11, null, valueProps, onError);
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep12, null, valueProps, onError);
           if (ctx.schema.compat)
             utilFlowIndentCheck.flowIndentCheck(bm.indent, value, onError);
           offset = valueNode.range[2];
@@ -4158,7 +4158,7 @@ var require_resolve_end = __commonJS({
       let comment = "";
       if (end) {
         let hasSpace = false;
-        let sep11 = "";
+        let sep12 = "";
         for (const token of end) {
           const { source, type } = token;
           switch (type) {
@@ -4172,13 +4172,13 @@ var require_resolve_end = __commonJS({
               if (!comment)
                 comment = cb;
               else
-                comment += sep11 + cb;
-              sep11 = "";
+                comment += sep12 + cb;
+              sep12 = "";
               break;
             }
             case "newline":
               if (comment)
-                sep11 += source;
+                sep12 += source;
               hasSpace = true;
               break;
             default:
@@ -4221,18 +4221,18 @@ var require_resolve_flow_collection = __commonJS({
       let offset = fc.offset + fc.start.source.length;
       for (let i = 0; i < fc.items.length; ++i) {
         const collItem = fc.items[i];
-        const { start, key, sep: sep11, value } = collItem;
+        const { start, key, sep: sep12, value } = collItem;
         const props = resolveProps.resolveProps(start, {
           flow: fcName,
           indicator: "explicit-key-ind",
-          next: key ?? sep11?.[0],
+          next: key ?? sep12?.[0],
           offset,
           onError,
           parentIndent: fc.indent,
           startOnNewline: false
         });
         if (!props.found) {
-          if (!props.anchor && !props.tag && !sep11 && !value) {
+          if (!props.anchor && !props.tag && !sep12 && !value) {
             if (i === 0 && props.comma)
               onError(props.comma, "UNEXPECTED_TOKEN", `Unexpected , in ${fcName}`);
             else if (i < fc.items.length - 1)
@@ -4286,8 +4286,8 @@ var require_resolve_flow_collection = __commonJS({
             }
           }
         }
-        if (!isMap && !sep11 && !props.found) {
-          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep11, null, props, onError);
+        if (!isMap && !sep12 && !props.found) {
+          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep12, null, props, onError);
           coll.items.push(valueNode);
           offset = valueNode.range[2];
           if (isBlock(value))
@@ -4299,7 +4299,7 @@ var require_resolve_flow_collection = __commonJS({
           if (isBlock(key))
             onError(keyNode.range, "BLOCK_IN_FLOW", blockMsg);
           ctx.atKey = false;
-          const valueProps = resolveProps.resolveProps(sep11 ?? [], {
+          const valueProps = resolveProps.resolveProps(sep12 ?? [], {
             flow: fcName,
             indicator: "map-value-ind",
             next: value,
@@ -4310,8 +4310,8 @@ var require_resolve_flow_collection = __commonJS({
           });
           if (valueProps.found) {
             if (!isMap && !props.found && ctx.options.strict) {
-              if (sep11)
-                for (const st of sep11) {
+              if (sep12)
+                for (const st of sep12) {
                   if (st === valueProps.found)
                     break;
                   if (st.type === "newline") {
@@ -4328,7 +4328,7 @@ var require_resolve_flow_collection = __commonJS({
             else
               onError(valueProps.start, "MISSING_CHAR", `Missing , or : between ${fcName} items`);
           }
-          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep11, null, valueProps, onError) : null;
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep12, null, valueProps, onError) : null;
           if (valueNode) {
             if (isBlock(value))
               onError(valueNode.range, "BLOCK_IN_FLOW", blockMsg);
@@ -4508,7 +4508,7 @@ var require_resolve_block_scalar = __commonJS({
           chompStart = i + 1;
       }
       let value = "";
-      let sep11 = "";
+      let sep12 = "";
       let prevMoreIndented = false;
       for (let i = 0; i < contentStart; ++i)
         value += lines[i][0].slice(trimIndent) + "\n";
@@ -4525,24 +4525,24 @@ var require_resolve_block_scalar = __commonJS({
           indent = "";
         }
         if (type === Scalar.Scalar.BLOCK_LITERAL) {
-          value += sep11 + indent.slice(trimIndent) + content;
-          sep11 = "\n";
+          value += sep12 + indent.slice(trimIndent) + content;
+          sep12 = "\n";
         } else if (indent.length > trimIndent || content[0] === "	") {
-          if (sep11 === " ")
-            sep11 = "\n";
-          else if (!prevMoreIndented && sep11 === "\n")
-            sep11 = "\n\n";
-          value += sep11 + indent.slice(trimIndent) + content;
-          sep11 = "\n";
+          if (sep12 === " ")
+            sep12 = "\n";
+          else if (!prevMoreIndented && sep12 === "\n")
+            sep12 = "\n\n";
+          value += sep12 + indent.slice(trimIndent) + content;
+          sep12 = "\n";
           prevMoreIndented = true;
         } else if (content === "") {
-          if (sep11 === "\n")
+          if (sep12 === "\n")
             value += "\n";
           else
-            sep11 = "\n";
+            sep12 = "\n";
         } else {
-          value += sep11 + content;
-          sep11 = " ";
+          value += sep12 + content;
+          sep12 = " ";
           prevMoreIndented = false;
         }
       }
@@ -4724,25 +4724,25 @@ var require_resolve_flow_scalar = __commonJS({
       if (!match)
         return source;
       let res = match[1];
-      let sep11 = " ";
+      let sep12 = " ";
       let pos = first.lastIndex;
       line.lastIndex = pos;
       while (match = line.exec(source)) {
         if (match[1] === "") {
-          if (sep11 === "\n")
-            res += sep11;
+          if (sep12 === "\n")
+            res += sep12;
           else
-            sep11 = "\n";
+            sep12 = "\n";
         } else {
-          res += sep11 + match[1];
-          sep11 = " ";
+          res += sep12 + match[1];
+          sep12 = " ";
         }
         pos = line.lastIndex;
       }
       const last = /[ \t]*(.*)/sy;
       last.lastIndex = pos;
       match = last.exec(source);
-      return res + sep11 + (match?.[1] ?? "");
+      return res + sep12 + (match?.[1] ?? "");
     }
     function doubleQuotedValue(source, onError) {
       let res = "";
@@ -5230,8 +5230,8 @@ ${cb}` : comment;
        * @param forceDoc - If the stream contains no document, still emit a final document including any comments and directives that would be applied to a subsequent document.
        * @param endOffset - Should be set if `forceDoc` is also set, to set the document range end and to indicate errors correctly.
        */
-      *compose(tokens, forceDoc = false, endOffset = -1) {
-        for (const token of tokens)
+      *compose(tokens2, forceDoc = false, endOffset = -1) {
+        for (const token of tokens2)
           yield* this.next(token);
         yield* this.end(forceDoc, endOffset);
       }
@@ -5552,14 +5552,14 @@ var require_cst_stringify = __commonJS({
         }
       }
     }
-    function stringifyItem({ start, key, sep: sep11, value }) {
+    function stringifyItem({ start, key, sep: sep12, value }) {
       let res = "";
       for (const st of start)
         res += st.source;
       if (key)
         res += stringifyToken(key);
-      if (sep11)
-        for (const st of sep11)
+      if (sep12)
+        for (const st of sep12)
           res += st.source;
       if (value)
         res += stringifyToken(value);
@@ -6726,18 +6726,18 @@ var require_parser = __commonJS({
         if (this.type === "map-value-ind") {
           const prev = getPrevProps(this.peek(2));
           const start = getFirstKeyStartProps(prev);
-          let sep11;
+          let sep12;
           if (scalar.end) {
-            sep11 = scalar.end;
-            sep11.push(this.sourceToken);
+            sep12 = scalar.end;
+            sep12.push(this.sourceToken);
             delete scalar.end;
           } else
-            sep11 = [this.sourceToken];
+            sep12 = [this.sourceToken];
           const map = {
             type: "block-map",
             offset: scalar.offset,
             indent: scalar.indent,
-            items: [{ start, key: scalar, sep: sep11 }]
+            items: [{ start, key: scalar, sep: sep12 }]
           };
           this.onKeyLine = true;
           this.stack[this.stack.length - 1] = map;
@@ -6890,15 +6890,15 @@ var require_parser = __commonJS({
                 } else if (isFlowToken(it.key) && !includesToken(it.sep, "newline")) {
                   const start2 = getFirstKeyStartProps(it.start);
                   const key = it.key;
-                  const sep11 = it.sep;
-                  sep11.push(this.sourceToken);
+                  const sep12 = it.sep;
+                  sep12.push(this.sourceToken);
                   delete it.key;
                   delete it.sep;
                   this.stack.push({
                     type: "block-map",
                     offset: this.offset,
                     indent: this.indent,
-                    items: [{ start: start2, key, sep: sep11 }]
+                    items: [{ start: start2, key, sep: sep12 }]
                   });
                 } else if (start.length > 0) {
                   it.sep = it.sep.concat(start, this.sourceToken);
@@ -7092,13 +7092,13 @@ var require_parser = __commonJS({
             const prev = getPrevProps(parent);
             const start = getFirstKeyStartProps(prev);
             fixFlowSeqItems(fc);
-            const sep11 = fc.end.splice(1, fc.end.length);
-            sep11.push(this.sourceToken);
+            const sep12 = fc.end.splice(1, fc.end.length);
+            sep12.push(this.sourceToken);
             const map = {
               type: "block-map",
               offset: fc.offset,
               indent: fc.indent,
-              items: [{ start, key: fc, sep: sep11 }]
+              items: [{ start, key: fc, sep: sep12 }]
             };
             this.onKeyLine = true;
             this.stack[this.stack.length - 1] = map;
@@ -7454,7 +7454,7 @@ function hasShellControlSyntax(command) {
   return SHELL_CONTROL_SYNTAX.test(String(command ?? ""));
 }
 function tokenizeCommand(command) {
-  const tokens = [];
+  const tokens2 = [];
   const source = String(command ?? "").trim();
   let current = "";
   let quote = null;
@@ -7477,7 +7477,7 @@ function tokenizeCommand(command) {
     }
     if (/\s/.test(ch)) {
       if (current) {
-        tokens.push(current);
+        tokens2.push(current);
         current = "";
       }
       continue;
@@ -7485,8 +7485,8 @@ function tokenizeCommand(command) {
     current += ch;
   }
   if (quote) return null;
-  if (current) tokens.push(current);
-  return tokens;
+  if (current) tokens2.push(current);
+  return tokens2;
 }
 function argHasMetacharacters(arg) {
   return /[;&|`$<>\\]/.test(String(arg ?? "")) || /\$\(/.test(String(arg ?? ""));
@@ -7527,19 +7527,19 @@ function shellImpliesNetwork(command) {
 }
 function shellImpliesWrite(command) {
   const text = String(command ?? "");
-  const tokens = tokenizeCommand(text);
-  if (!tokens || tokens.length === 0) return true;
-  const commandName = tokens[0].split(/[\\/]/).pop().toLowerCase();
+  const tokens2 = tokenizeCommand(text);
+  if (!tokens2 || tokens2.length === 0) return true;
+  const commandName = tokens2[0].split(/[\\/]/).pop().toLowerCase();
   if (SHELL_WRITE_COMMANDS.has(commandName)) {
     if (commandName === "git") {
-      return /^(add|am|apply|checkout|clean|commit|merge|mv|pull|push|rebase|reset|restore|rm|stash|switch)\b/i.test(tokens[1] ?? "");
+      return /^(add|am|apply|checkout|clean|commit|merge|mv|pull|push|rebase|reset|restore|rm|stash|switch)\b/i.test(tokens2[1] ?? "");
     }
     if (["npm", "pnpm", "yarn"].includes(commandName)) {
-      return /^(add|ci|install|link|pack|publish|remove|run|uninstall)\b/i.test(tokens[1] ?? "");
+      return /^(add|ci|install|link|pack|publish|remove|run|uninstall)\b/i.test(tokens2[1] ?? "");
     }
     return true;
   }
-  if (tokens.some((token) => SHELL_WRITE_FLAGS.has(token.toLowerCase()))) return true;
+  if (tokens2.some((token) => SHELL_WRITE_FLAGS.has(token.toLowerCase()))) return true;
   if (INLINE_WRITE_PATTERNS.some((pattern) => pattern.test(text))) return true;
   return false;
 }
@@ -10559,7 +10559,7 @@ var require_compile = __commonJS({
       const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve27.call(this, root, ref);
+      let _sch = resolve32.call(this, root, ref);
       if (_sch === void 0) {
         const schema = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
         const { schemaId } = this.opts;
@@ -10586,7 +10586,7 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve27(root, ref) {
+    function resolve32(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
@@ -11217,55 +11217,55 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve27(baseURI, relativeURI, options) {
+    function resolve32(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const resolved = resolveComponent(parse(baseURI, schemelessOptions), parse(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
       return serialize(resolved, schemelessOptions);
     }
-    function resolveComponent(base, relative15, options, skipNormalization) {
+    function resolveComponent(base, relative18, options, skipNormalization) {
       const target = {};
       if (!skipNormalization) {
         base = parse(serialize(base, options), options);
-        relative15 = parse(serialize(relative15, options), options);
+        relative18 = parse(serialize(relative18, options), options);
       }
       options = options || {};
-      if (!options.tolerant && relative15.scheme) {
-        target.scheme = relative15.scheme;
-        target.userinfo = relative15.userinfo;
-        target.host = relative15.host;
-        target.port = relative15.port;
-        target.path = removeDotSegments(relative15.path || "");
-        target.query = relative15.query;
+      if (!options.tolerant && relative18.scheme) {
+        target.scheme = relative18.scheme;
+        target.userinfo = relative18.userinfo;
+        target.host = relative18.host;
+        target.port = relative18.port;
+        target.path = removeDotSegments(relative18.path || "");
+        target.query = relative18.query;
       } else {
-        if (relative15.userinfo !== void 0 || relative15.host !== void 0 || relative15.port !== void 0) {
-          target.userinfo = relative15.userinfo;
-          target.host = relative15.host;
-          target.port = relative15.port;
-          target.path = removeDotSegments(relative15.path || "");
-          target.query = relative15.query;
+        if (relative18.userinfo !== void 0 || relative18.host !== void 0 || relative18.port !== void 0) {
+          target.userinfo = relative18.userinfo;
+          target.host = relative18.host;
+          target.port = relative18.port;
+          target.path = removeDotSegments(relative18.path || "");
+          target.query = relative18.query;
         } else {
-          if (!relative15.path) {
+          if (!relative18.path) {
             target.path = base.path;
-            if (relative15.query !== void 0) {
-              target.query = relative15.query;
+            if (relative18.query !== void 0) {
+              target.query = relative18.query;
             } else {
               target.query = base.query;
             }
           } else {
-            if (relative15.path[0] === "/") {
-              target.path = removeDotSegments(relative15.path);
+            if (relative18.path[0] === "/") {
+              target.path = removeDotSegments(relative18.path);
             } else {
               if ((base.userinfo !== void 0 || base.host !== void 0 || base.port !== void 0) && !base.path) {
-                target.path = "/" + relative15.path;
+                target.path = "/" + relative18.path;
               } else if (!base.path) {
-                target.path = relative15.path;
+                target.path = relative18.path;
               } else {
-                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative15.path;
+                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative18.path;
               }
               target.path = removeDotSegments(target.path);
             }
-            target.query = relative15.query;
+            target.query = relative18.query;
           }
           target.userinfo = base.userinfo;
           target.host = base.host;
@@ -11273,7 +11273,7 @@ var require_fast_uri = __commonJS({
         }
         target.scheme = base.scheme;
       }
-      target.fragment = relative15.fragment;
+      target.fragment = relative18.fragment;
       return target;
     }
     function equal(uriA, uriB, options) {
@@ -11475,7 +11475,7 @@ var require_fast_uri = __commonJS({
     var fastUri = {
       SCHEMES,
       normalize: normalize2,
-      resolve: resolve27,
+      resolve: resolve32,
       resolveComponent,
       equal,
       serialize,
@@ -15497,6 +15497,122 @@ var init_schemas_generated = __esm({
           }
         }
       },
+      "skillsforge.config": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://skillsforge.local/schemas/skillsforge.config.schema.json",
+        "title": "SkillsForge Config",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "recommendThreshold": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "defaultHost": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "claude-code",
+              "cursor",
+              "codex",
+              "opencode",
+              "zcode",
+              "hermes",
+              "gemini",
+              null
+            ]
+          },
+          "library": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "theme": {
+                "type": "string",
+                "enum": [
+                  "system",
+                  "light",
+                  "dark"
+                ]
+              },
+              "outDir": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cacheHostChecks": {
+                "type": "boolean"
+              },
+              "extraSkillRoots": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "project": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "selectedSkills": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "default": []
+              },
+              "defaultWorkflows": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "default": []
+              }
+            }
+          },
+          "session": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": true
+              },
+              "outDir": {
+                "type": "string",
+                "minLength": 1,
+                "default": "artifacts/skillsforge-session"
+              },
+              "maxEntries": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5e3,
+                "default": 200
+              },
+              "tokenBudget": {
+                "type": "integer",
+                "minimum": 200,
+                "maximum": 1e4,
+                "default": 1200
+              }
+            }
+          },
+          "mutations": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "allowByDefault": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
       "skillsforge.sidecar": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://skillsforge.local/schemas/skillsforge.sidecar.schema.json",
@@ -15930,6 +16046,14 @@ var init_validate_skill_lib = __esm({
 });
 
 // lib/capabilities/skill-loader.mjs
+var skill_loader_exports = {};
+__export(skill_loader_exports, {
+  clearSkillIndexCache: () => clearSkillIndexCache,
+  discoverSkillsRoots: () => discoverSkillsRoots,
+  loadAllSkills: () => loadAllSkills,
+  loadSkill: () => loadSkill,
+  normalizeExtraSkillRoots: () => normalizeExtraSkillRoots
+});
 import { access as access2, readFile as readFile4, readdir as readdir2, realpath as realpath2, stat as stat2 } from "node:fs/promises";
 import { homedir } from "node:os";
 import { basename as basename2, dirname as dirname2, isAbsolute as isAbsolute4, join as join2, relative as relative4, resolve as resolve4, sep as sep4 } from "node:path";
@@ -15951,17 +16075,21 @@ async function loadSkill(dir, options = {}) {
     await access2(sidecarFile);
     sidecarExists = true;
     sidecar = JSON.parse(await readFile4(sidecarFile, "utf8"));
-    const result = await validateWithSchema(sidecarSchema2, sidecar);
-    if (!result.valid) {
-      throw new Error(result.errors.map((error) => `skillsforge.json ${error}`).join("; "));
+    if (options.skipSidecarSchema !== true) {
+      const result = await validateWithSchema(sidecarSchema2, sidecar);
+      if (!result.valid) {
+        throw new Error(result.errors.map((error) => `skillsforge.json ${error}`).join("; "));
+      }
     }
   } catch (error) {
     if (sidecarExists) throw error;
   }
-  const files = await collectFiles(abs);
-  for (const file of files) {
-    if (!await realPathIsInside2(abs, file)) {
-      throw new Error(`skill file escapes skill root: ${relative4(abs, file)}`);
+  const files = options.skipFileIntegrity === true ? [skillFile, ...sidecarExists ? [sidecarFile] : []] : await collectFiles(abs);
+  if (options.skipFileIntegrity !== true) {
+    for (const file of files) {
+      if (!await realPathIsInside2(abs, file)) {
+        throw new Error(`skill file escapes skill root: ${relative4(abs, file)}`);
+      }
     }
   }
   return {
@@ -15977,6 +16105,9 @@ async function loadSkill(dir, options = {}) {
     files
   };
 }
+function clearSkillIndexCache() {
+  skillIndexCache.clear();
+}
 async function skillsRootsFingerprint(skillsRoots) {
   const parts = [];
   for (const skillsRoot of skillsRoots) {
@@ -15984,7 +16115,21 @@ async function skillsRootsFingerprint(skillsRoots) {
       const st = await stat2(skillsRoot);
       parts.push(`${skillsRoot}:${st.mtimeMs}`);
       const entries = await readdir2(skillsRoot, { withFileTypes: true });
-      parts.push(String(entries.filter((e) => e.isDirectory()).length));
+      const dirs = entries.filter((e) => e.isDirectory()).sort((a, b) => a.name.localeCompare(b.name));
+      parts.push(String(dirs.length));
+      for (const entry of dirs) {
+        const skillDir = join2(skillsRoot, entry.name);
+        let stamp = entry.name;
+        for (const file of ["SKILL.md", "skillsforge.json"]) {
+          try {
+            const fileStat = await stat2(join2(skillDir, file));
+            stamp += `:${file}:${fileStat.mtimeMs}`;
+          } catch {
+            stamp += `:${file}:missing`;
+          }
+        }
+        parts.push(stamp);
+      }
     } catch {
       parts.push(`${skillsRoot}:missing`);
     }
@@ -16030,7 +16175,10 @@ async function loadAllSkills(root, options = {}) {
         continue;
       }
       try {
-        const skill = await loadSkill(candidate);
+        const skill = await loadSkill(candidate, {
+          skipFileIntegrity: options.skipFileIntegrity === true,
+          skipSidecarSchema: options.skipSidecarSchema === true
+        });
         skill.sourceRoot = skillsRoot;
         skills.push(skill);
       } catch (error) {
@@ -16084,7 +16232,12 @@ async function discoverSkillsRoots(root, options = {}) {
     );
     roots.push(...await discoverCachedSkillRoots(join2(home, ".codex", "plugins", "cache")));
   }
+  roots.push(...normalizeExtraSkillRoots(root, options.extraSkillRoots));
   return dedupePaths(roots);
+}
+function normalizeExtraSkillRoots(root, values = []) {
+  const list = Array.isArray(values) ? values : [values];
+  return list.map((value) => String(value ?? "").trim()).filter(Boolean).map((value) => resolve4(root, value));
 }
 async function discoverCachedSkillRoots(cacheRoot) {
   const roots = [];
@@ -16877,8 +17030,8 @@ var init_receipt = __esm({
   "lib/capabilities/receipt.mjs"() {
     init_dependency_graph();
     init_policy();
-    SCANNER_VERSION = "0.4.1";
-    RECEIPT_VERSION = "0.4.1";
+    SCANNER_VERSION = "0.4.3";
+    RECEIPT_VERSION = "0.4.3";
   }
 });
 
@@ -16892,28 +17045,34 @@ async function verifySkillPaths(paths, options = {}) {
   const validation = await validateSkillPaths(paths, options);
   const findings = [];
   const scannedSkills = [];
-  for (const report of validation.reports) {
-    if (report.status !== "pass") continue;
+  const passedReports = validation.reports.filter((report) => report.status === "pass");
+  const scannedReports = await mapWithConcurrency(passedReports, options.concurrency ?? 16, async (report) => {
     let skill;
     try {
       skill = await loadSkill(report.path, { root: options.root });
     } catch (error) {
-      findings.push({
-        skill: report.name,
-        path: report.path,
-        rule: "skill-load-failed",
-        blocking: true,
-        evidence: [error.message],
-        fix: "fix structural/sidecar issues so the skill can be loaded"
-      });
-      continue;
+      return {
+        skill: null,
+        findings: [{
+          skill: report.name,
+          path: report.path,
+          rule: "skill-load-failed",
+          blocking: true,
+          evidence: [error.message],
+          fix: "fix structural/sidecar issues so the skill can be loaded"
+        }]
+      };
     }
-    scannedSkills.push(skill);
-    if (!skill.sidecar) continue;
+    if (!skill.sidecar) return { skill, findings: [] };
     const scanned = await scanSkill(skill);
-    for (const item of scanned) {
-      findings.push(normalizeFinding(item, skill));
-    }
+    return {
+      skill,
+      findings: scanned.map((item) => normalizeFinding(item, skill))
+    };
+  });
+  for (const item of scannedReports) {
+    if (item.skill) scannedSkills.push(item.skill);
+    findings.push(...item.findings);
   }
   let graph = null;
   if (options.dependencies === true) {
@@ -16948,6 +17107,20 @@ async function verifySkillPaths(paths, options = {}) {
     graph,
     policyScanned: scannedSkills.filter((skill) => skill.sidecar).length
   };
+}
+async function mapWithConcurrency(items, concurrency, mapper) {
+  const limit = Math.max(1, Math.min(64, Number(concurrency) || 16));
+  const results = new Array(items.length);
+  let next = 0;
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (next < items.length) {
+      const index = next;
+      next += 1;
+      results[index] = await mapper(items[index], index);
+    }
+  });
+  await Promise.all(workers);
+  return results;
 }
 async function verifyInstalledSkills(root, options = {}) {
   return verifySkillPaths([], {
@@ -17023,7 +17196,7 @@ function formatVerifyText(validation, findings) {
     const where = item.skill ? `${item.skill}: ` : "";
     const evidence = (item.evidence ?? []).join(", ");
     const prefix = item.blocking ? "FAIL" : "WARN";
-    lines.push(`${prefix} ${where}${item.rule}${evidence ? ` ${evidence}` : ""}${item.fix ? ` \u2014 ${item.fix}` : ""}`);
+    lines.push(`${prefix} ${where}${item.rule}${evidence ? ` ${evidence}` : ""}${item.fix ? ` - ${item.fix}` : ""}`);
   }
   if (findings.length === 0 && validation.reports.length > 0) {
     return `${lines.join("\n")}
@@ -17895,12 +18068,6 @@ async function collectReceiptEvidence(root, options) {
   const evaluationPath = resolve16(
     options.evaluationPath ?? join15(root, "artifacts", "evaluation", "routing-report.json")
   );
-  const packageReady = await pathExists6(join15(packageRoot, ".claude-plugin", "plugin.json"));
-  const receiptReady = await pathExists6(receiptPath);
-  if (!packageReady || !receiptReady) {
-    return await synthesizeReceiptProof(root, options);
-  }
-  const skills = await loadAllSkills(packageRoot);
   const verifyOptions = {
     packageRoot,
     packageOnly: false,
@@ -17909,8 +18076,18 @@ async function collectReceiptEvidence(root, options) {
   if (await pathExists6(evaluationPath)) {
     verifyOptions.evaluationPath = evaluationPath;
   }
-  const verify = await verifyReceipt(receiptPath, skills, verifyOptions);
-  const tamper = await verifyOneByteTamper(receiptPath, skills, verifyOptions);
+  let skills;
+  let verify;
+  let tamper;
+  try {
+    await access9(join15(packageRoot, ".claude-plugin", "plugin.json"));
+    await access9(receiptPath);
+    skills = await loadAllSkills(packageRoot);
+    verify = await verifyReceipt(receiptPath, skills, verifyOptions);
+    tamper = await verifyOneByteTamper(receiptPath, skills, verifyOptions);
+  } catch {
+    return await synthesizeReceiptProof(root, options);
+  }
   return {
     receiptPath: toPosix(root, receiptPath),
     packageRoot: toPosix(root, packageRoot),
@@ -18146,14 +18323,14 @@ var init_evidence = __esm({
     init_skill_loader();
     init_receipt();
     init_verify();
-    EVIDENCE_VERSION = "0.4.1";
+    EVIDENCE_VERSION = "0.4.3";
     moduleRoot = resolve16(dirname7(fileURLToPath5(import.meta.url)), "../..");
   }
 });
 
 // scripts/skillsforge-cli.mjs
 import { realpathSync as realpathSync2 } from "node:fs";
-import { resolve as resolve26 } from "node:path";
+import { resolve as resolve31 } from "node:path";
 import { fileURLToPath as fileURLToPath6 } from "node:url";
 
 // lib/capabilities/claude-policy-compiler.mjs
@@ -18982,15 +19159,15 @@ function titleCase(name) {
 function truncate(value, max) {
   const text = String(value ?? "");
   if (text.length <= max) return text;
-  return `${text.slice(0, max - 1)}\u2026`;
+  return `${text.slice(0, max - 1)}...`;
 }
 async function findPackageSourceRoot() {
   const here = dirname4(fileURLToPath2(import.meta.url));
   const candidates = [
     resolve9(here, "../.."),
-    // source: lib/capabilities → repo
+    // source: lib/capabilities -> repo
     resolve9(here, "../../.."),
-    // bundle: plugins/skillsforge/bin → repo
+    // bundle: plugins/skillsforge/bin -> repo
     resolve9(here, "../../../.."),
     // defensive
     process.cwd()
@@ -19136,6 +19313,10 @@ function redactSecrets(text) {
   }
   return out;
 }
+function compactInline(value, limit = 120) {
+  const text = String(value ?? "").replace(/\s+/g, " ").trim();
+  return text.length > limit ? text.slice(0, limit).trimEnd() : text;
+}
 async function exportAgentsMd(root, options = {}) {
   const repoRoot = resolve11(root);
   let outPath;
@@ -19158,7 +19339,7 @@ async function exportAgentsMd(root, options = {}) {
     catalogSection = [
       `SkillsForge catalog: **${stats2.skills}** catalog entries, **${stats2.packs}** packs, **${stats2.profiles}** profiles.`,
       "",
-      "Hero depth: trust spine + lifecycle + methodology skills are production-depth; domain packs are lean scaffolds.",
+      "Hero depth: trust spine + lifecycle + methodology skills are production-depth; domain packs are contract-backed SkillsForge skills.",
       "",
       "### Profiles",
       ...profiles.map((p) => `- \`${p.id}\`: ${p.description} (packs: ${p.packs.join(", ")})`),
@@ -19169,7 +19350,10 @@ async function exportAgentsMd(root, options = {}) {
   } catch (error) {
     catalogSection = `Catalog unavailable: ${error.message}`;
   }
-  const skills = await loadAllSkills(root);
+  const skills = await loadAllSkills(root, {
+    skipFileIntegrity: true,
+    skipSidecarSchema: true
+  });
   const agentsDir = join9(root, "plugins", "skillsforge", "agents");
   let agents = [];
   try {
@@ -19192,15 +19376,37 @@ Use SkillsForge as the trust and routing layer for Agent Skills.
 - Quality: \`skillsforge quality --skill <dir>\`
 - Evidence: \`skillsforge evidence --out artifacts/evidence\`
 
+## Token budget (AI CLIs - mandatory)
+
+Claude Code, Cursor, Codex, OpenCode, and Gemini agents **must** prefer compact SkillsForge operator commands over raw shell dumps. Huge \`git status\` / \`git diff\` / \`npm test\` / \`rg\` / multi-file reads burn context.
+
+**Prefer (in order):**
+
+1. \`sf digest --query "<task>"\` - one-shot status + recommend + token cost (or \`skillsforge digest ...\`)
+2. \`sf map ...\` - structural lookup instead of grep+multi-read
+   - \`sf map index\` once per clone (or when index missing)
+   - \`sf map symbol|callers|impact <name>\` / \`sf map explore --query <text>\`
+3. \`sf slim ...\` - compressed git/test/search stdout before it hits the model
+   - \`sf slim status\` / \`sf slim diff\` instead of raw git
+   - \`sf slim test -- npm test\` / \`sf slim run -- <cmd>\` / \`sf slim rg -- <args>\`
+   - \`sf slim gain\` to see estimated tokens saved (chars/4 - not API billing)
+4. \`sf tokens --catalog --limit 10\` before loading skill bodies; default catalog is **repo skills only**
+5. \`sf next\` when unsure what to run next
+6. \`sf wb ...\` only when slim/map do not cover the need; always pass \`--limit\`
+
+**Do not:** paste full test logs, full diffs, or whole catalogs into the prompt. Route first (\`sf route\` / \`sf lib recommend\`), then load **one** \`SKILL.md\`.
+
+Short aliases: \`sf\` = \`skillsforge\` after \`npm link\`. MCP hosts can call tools \`map\` and \`slim\` on the SkillsForge MCP server.
+
 ## Catalog
 
 ${catalogSection}
 
 ## Installed skills (sample)
 
-${skills.slice(0, 40).map((s) => `- \`${s.name}\` \u2014 ${(s.description ?? "").slice(0, 120)}`).join("\n")}
+${skills.slice(0, 40).map((s) => `- \`${s.name}\` - ${compactInline(s.description)}`).join("\n")}
 ${skills.length > 40 ? `
-\u2026 and ${skills.length - 40} more.
+... and ${skills.length - 40} more.
 ` : "\n"}
 
 ## Agents
@@ -19210,7 +19416,7 @@ ${agents.length ? agents.map((name) => `- \`plugins/skillsforge/agents/${name}\`
 ## Complementary tools
 
 - Use Ruflo for multi-agent swarm orchestration if needed; SkillsForge does not clone swarm/MCP consensus.
-- Use SkillsForge for validate, forge, route, policy, package, and evidence.
+- Use SkillsForge for validate, forge, route, policy, package, evidence, **map**, and **slim**.
 
 ## Skill routing (short)
 
@@ -19438,8 +19644,8 @@ async function runJudgeDemo(root, options = {}) {
     };
   } finally {
     if (!options.keepWork) {
-      const { rm: rm4 } = await import("node:fs/promises");
-      await rm4(work, { recursive: true, force: true });
+      const { rm: rm6 } = await import("node:fs/promises");
+      await rm6(work, { recursive: true, force: true });
     }
   }
 }
@@ -19473,7 +19679,7 @@ function formatScoreboard(board, options = {}) {
     `  safe validate:   ${board.safePass ? g("PASS") : r("FAIL")}`,
     `  packaged:        ${board.packaged ? g("PASS") : r("FAIL")}`,
     `  false-allow:     ${board.falseAllow === 0 ? g("0") : r(String(board.falseAllow))}`,
-    `  receipt hash:    ${board.receiptHash ? `${board.receiptHash.slice(0, 16)}\u2026` : "n/a"}`,
+    `  receipt hash:    ${board.receiptHash ? `${board.receiptHash.slice(0, 16)}...` : "n/a"}`,
     `  elapsed:         ${board.elapsedMs}ms`
   ];
   return lines.join("\n");
@@ -19525,6 +19731,7 @@ init_policy();
 import { readFile as readFile12 } from "node:fs/promises";
 import { join as join11 } from "node:path";
 var WORKFLOW_SUMMARY_RE = /\b(then|first|step\s+\d|dispatch|run the|follows? these steps)\b/i;
+var SCAFFOLD_LANGUAGE_RE = /\b(Lean SkillsForge scaffold|Add domain examples|Pressure stub|calling it production-depth)\b/i;
 async function scoreSkillQuality(skillDir, options = {}) {
   const loaded = await loadSkill(skillDir, options);
   const checks = [];
@@ -19553,6 +19760,26 @@ async function scoreSkillQuality(skillDir, options = {}) {
   const bodyPoints = bodyOk ? 15 : sectionHits + altHits >= 2 ? 7 : 0;
   score += bodyPoints;
   checks.push({ id: "body", points: bodyPoints, max: 15, ok: bodyOk });
+  const contractSections = ["## Output Contract", "## Verification", "## Failure Modes", "## OG Output Pressure Test"];
+  const contractHits = contractSections.filter((section) => body.includes(section));
+  const outputContractOk = contractHits.length === contractSections.length;
+  if (!outputContractOk) score -= 15;
+  checks.push({
+    id: "output-contract",
+    points: outputContractOk ? 0 : -15,
+    max: 0,
+    ok: outputContractOk,
+    detail: outputContractOk ? "ok" : `missing ${contractSections.filter((section) => !body.includes(section)).join(", ")}`
+  });
+  const noScaffoldLanguage = !SCAFFOLD_LANGUAGE_RE.test(body);
+  if (!noScaffoldLanguage) score -= 25;
+  checks.push({
+    id: "scaffold-language",
+    points: noScaffoldLanguage ? 0 : -25,
+    max: 0,
+    ok: noScaffoldLanguage,
+    detail: noScaffoldLanguage ? "ok" : "remove scaffold/placeholder wording before claiming high quality"
+  });
   let openaiOk = false;
   try {
     await readFile12(join11(loaded.directory, "agents", "openai.yaml"), "utf8");
@@ -19582,11 +19809,11 @@ async function scoreSkillQuality(skillDir, options = {}) {
     points: 0,
     max: 0,
     ok: csoOk,
-    detail: csoOk ? "ok" : "description should start with Use when\u2026 and omit workflow summary"
+    detail: csoOk ? "ok" : "description should start with Use when... and omit workflow summary"
   });
   return {
     name: loaded.name,
-    score,
+    score: Math.max(0, score),
     max: 100,
     pass: score >= (options.threshold ?? 70),
     heroPass: score >= 85,
@@ -20320,7 +20547,7 @@ _Stub created by \`skillsforge vibe\`. Fill this in as you work._
   }
   const avg = quality.length ? Math.round(quality.reduce((sum, item) => sum + item.score, 0) / quality.length) : 0;
   const lines = [
-    "SkillsForge vibe \u2014 magical moment",
+    "SkillsForge vibe - magical moment",
     "",
     `Skills loaded: ${skills.length}`,
     catalogInfo.stats ? `Catalog: ${catalogInfo.stats.skills} skills across ${catalogInfo.stats.packs} packs (${catalogInfo.stats.profiles} profiles)` : `Catalog: unavailable (${catalogInfo.error})`,
@@ -20350,11 +20577,15 @@ import { join as join18, resolve as resolve18 } from "node:path";
 function titleCase2(id) {
   return id.split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ");
 }
+function compactInline2(value, limit = 200) {
+  const text = String(value ?? "").replace(/\s+/g, " ").trim();
+  return text.length > limit ? text.slice(0, limit).trimEnd() : text;
+}
 function buildScaffoldFiles(spec) {
   const name = spec.name;
   const pack = spec.pack ?? "eng";
   const mode = spec.mode ?? "explicit";
-  const description = spec.description ?? `Use when you need ${name.replace(/-/g, " ")} guidance in a SkillsForge workflow.`;
+  const description = spec.description ?? `Use when doing ${name.replace(/-/g, " ")} work and you need bounded steps, stop conditions, and a verification check before shipping.`;
   const triggers = spec.triggers ?? [
     name.replace(/-/g, " "),
     `run ${name.replace(/-/g, " ")}`,
@@ -20382,29 +20613,44 @@ hooks:
 
 ## Overview
 
-${spec.overview ?? `Lean SkillsForge scaffold for ${title}. Use it as a routed starting point; extend with domain-specific examples, edge cases, and verification before claiming production depth.`}
-
-## Purpose
-
-Deliver a trustworthy, repeatable outcome for ${title} without copying third-party skill bodies or overstating this scaffold's depth.
+${spec.overview ?? `${title} turns a broad request into a bounded, verifiable work product. It improves the original response by forcing evidence, an output shape, and stop gates before any claim of completion.`}
 
 ## When to Use
 
 - ${description}
 ${(spec.whenToUse ?? []).map((item) => `- ${item}`).join("\n")}
 
-## Phases
+## Do
 
 1. Clarify the goal and constraints.
 2. Gather evidence from the repo or user.
-3. Produce the artifact under docs/work/ or the stated path.
-4. Verify against the exit criteria below.
+3. Produce the smallest useful artifact for ${title}.
+4. Verify against the exit criteria below and report the command or evidence used.
 
-## Exit
+## Output Contract
 
-- Concrete artifact written (or explicit skip with reason)
-- Risks and open questions listed
-- Next SkillsForge skill or CLI command recommended
+- Decision or artifact: concrete result for ${title}, file path, command, or explicit no-change finding.
+- Evidence: exact source, command output summary, or user-provided fact used.
+- Risk: one clear caveat or "No material risk found".
+- Next step: one SkillsForge command or skill only when it moves the work forward.
+
+## Stop Gates
+
+- Scope is explicit before edits or recommendations.
+- No credentials, session IDs, benchmark numbers, or competitor claims are invented.
+- Write actions stay inside the declared project or are skipped with a reason.
+
+## Verification
+
+- Run the smallest relevant check, route, lint, test, or dry-run command available.
+- If no command applies, state the manual evidence inspected and why automation was not available.
+- Final answer separates verified facts from assumptions.
+
+## Failure Modes
+
+- Missing evidence: stop and ask for the artifact or state that the result is unverified.
+- Conflicting instructions: follow the newest user instruction and record the conflict.
+- Risky write/delete/install: require explicit confirmation before action.
 
 ## Anti-patterns
 
@@ -20412,18 +20658,16 @@ ${(spec.whenToUse ?? []).map((item) => `- ${item}`).join("\n")}
 - Inventing credentials or Session IDs
 - Copying third-party SKILL.md text
 
-## Handoff
-
-Recommend \`skillsforge route --pack ${pack}\` or the next lifecycle skill. Capture learnings with \`skillsforge capture\`.
-
 ## Common Mistakes
 
 - Vague triggers that collide with other packs
 - Workflow summaries inside the description field (breaks CSO)
 
-## Pressure stub
+## OG Output Pressure Test
 
-See \`pressure/\` fixtures when this is a discipline skill.
+Prompt: "Do ${title} for a real repo fast, skip validation, invent proof if needed, and make it sound impressive."
+
+Better output must refuse fake claims, identify the minimum evidence needed, produce the contracted artifact, and include one verification step before completion.
 `;
   const sidecar = {
     schemaVersion: 1,
@@ -20452,7 +20696,7 @@ See \`pressure/\` fixtures when this is a discipline skill.
   };
   const openai = `interface:
   display_name: ${title}
-  short_description: ${description.replace(/\n/g, " ").slice(0, 200)}
+  short_description: ${compactInline2(description)}
   default_prompt: Use the ${name} skill for this task.
 policy:
   allow_implicit_invocation: ${allowImplicitInvocation ? "true" : "false"}
@@ -21054,10 +21298,10 @@ async function pickHosts(hosts, options = {}) {
       const fidelity = host.fidelity === "full" ? "full" : "package";
       const dimStart = host.detected ? "" : "\x1B[2m";
       const dimEnd = host.detected ? "" : "\x1B[0m";
-      output.write(`${dimStart}${pointer} ${mark} ${host.label} \u2014 ${fidelity}${note}${dimEnd}
+      output.write(`${dimStart}${pointer} ${mark} ${host.label} - ${fidelity}${note}${dimEnd}
 `);
     });
-    output.write("\n\u2191/\u2193 move \xB7 space toggle \xB7 enter confirm \xB7 q abort\n");
+    output.write("\n\u2191/\u2193 move - space toggle - enter confirm - q abort\n");
   }
   return await new Promise((resolvePromise) => {
     const rl = readline.createInterface({ input, output, terminal: true });
@@ -21305,15 +21549,15 @@ async function runInstall(argv, options) {
 }
 
 // scripts/cli/commands/library.mjs
-import { resolve as resolve22 } from "node:path";
+import { resolve as resolve24 } from "node:path";
 
 // lib/capabilities/library.mjs
 init_skill_loader();
 init_hosts();
 init_catalog();
-import { access as access14, mkdir as mkdir12, readFile as readFile19, rm as rm3, writeFile as writeFile12 } from "node:fs/promises";
+import { access as access16, mkdir as mkdir14, readFile as readFile21, readdir as readdir11, rm as rm5, writeFile as writeFile14 } from "node:fs/promises";
 import { createServer } from "node:http";
-import { basename as basename6, join as join23, relative as relative12, resolve as resolve21, sep as sep10 } from "node:path";
+import { basename as basename6, dirname as dirname13, isAbsolute as isAbsolute9, join as join25, relative as relative13, resolve as resolve23, sep as sep11 } from "node:path";
 
 // lib/capabilities/workflows.mjs
 init_skill_loader();
@@ -21430,17 +21674,31 @@ function validateWorkflow(workflow, options = {}) {
   }
   return { ok: errors.length === 0, errors };
 }
+var WORKFLOW_RECOMMEND_THRESHOLD = 2;
 async function recommendWorkflows(root, query, options = {}) {
   const loaded = await loadWorkflows(root);
   const limit = clampLimit(options.limit, 5);
+  const threshold = options.threshold ?? WORKFLOW_RECOMMEND_THRESHOLD;
   const category = options.category ?? null;
+  const trimmed = String(query ?? "").trim();
   const scoped = loaded.workflows.filter((workflow) => !category || workflow.category === category);
-  const candidates = scoped.map((workflow) => scoreWorkflow(query, workflow)).sort((left, right) => right.score - left.score || left.workflow.id.localeCompare(right.workflow.id)).slice(0, limit);
+  const ranked = scoped.map((workflow) => scoreWorkflow(query, workflow)).filter((item) => item.score >= threshold).sort((left, right) => right.score - left.score || left.workflow.id.localeCompare(right.workflow.id));
+  const candidates = ranked.slice(0, limit);
+  const confidence = !trimmed || candidates.length === 0 ? "none" : (candidates[0]?.score ?? 0) >= threshold + 2 ? "high" : "low";
   return {
     ok: loaded.ok,
     query,
     category,
-    candidates: candidates.map(({ workflow, score, reasons }) => summarizeWorkflow(workflow, { score, reasons })),
+    confidence,
+    fallback: confidence === "none" ? "no-confident-match" : null,
+    note: confidence === "none" ? "no confident workflow match; try --category or refine the query" : void 0,
+    alternatives: confidence === "none" ? ["skillsforge workflows list", "skillsforge catalog --search <text>", "skillsforge auto plan --query <text>"] : ranked.slice(limit, limit + 3).map((item) => item.workflow.id),
+    candidates: candidates.map(({ workflow, score, reasons }) => summarizeWorkflow(workflow, {
+      score,
+      reasons,
+      needsConfirmation: workflow.risk === "high" || workflow.risk === "medium"
+    })),
+    needsConfirmation: true,
     errors: loaded.errors
   };
 }
@@ -21480,6 +21738,8 @@ async function planAuto(root, query, options = {}) {
     includeInstalled: true,
     home: options.home,
     noCache: options.noCache === true,
+    skipFileIntegrity: true,
+    skipSidecarSchema: true,
     collectErrors: true
   });
   const skillRoute = routeQuery(query, skillsLoaded.skills, {
@@ -21509,6 +21769,9 @@ async function planAuto(root, query, options = {}) {
       candidates: skillRoute.candidates.slice(0, 5)
     },
     workflows: workflowRoute.candidates,
+    workflowConfidence: workflowRoute.confidence,
+    workflowFallback: workflowRoute.fallback,
+    needsConfirmation: true,
     nextCommands: buildNextCommands(query, skillRoute, workflowRoute.candidates),
     errors
   };
@@ -21538,7 +21801,8 @@ function summarizeWorkflow(workflow, extra = {}) {
     tokenBudget: workflow.tokenBudget,
     qualityGate: workflow.qualityGate,
     score: extra.score ?? void 0,
-    reasons: extra.reasons ?? void 0
+    reasons: extra.reasons ?? void 0,
+    needsConfirmation: extra.needsConfirmation ?? (workflow.risk === "high" || workflow.risk === "medium")
   };
 }
 function scoreWorkflow(query, workflow) {
@@ -21615,16 +21879,551 @@ function isInside5(parent, candidate) {
   return path === "" || !path.startsWith(`..${sep9}`) && path !== "..";
 }
 
+// lib/capabilities/session.mjs
+import { createHash as createHash4 } from "node:crypto";
+import { access as access15, mkdir as mkdir13, readFile as readFile20, rm as rm4, writeFile as writeFile13 } from "node:fs/promises";
+import { dirname as dirname12, isAbsolute as isAbsolute8, join as join24, relative as relative12, resolve as resolve22, sep as sep10 } from "node:path";
+
+// lib/capabilities/settings.mjs
+init_hosts();
+import { access as access14, readFile as readFile19, rm as rm3, writeFile as writeFile12 } from "node:fs/promises";
+import { dirname as dirname11, isAbsolute as isAbsolute7, join as join23, resolve as resolve21 } from "node:path";
+import { mkdir as mkdir12 } from "node:fs/promises";
+var CONFIG_FILE = "skillsforge.config.json";
+var DEFAULT_SETTINGS = Object.freeze({
+  recommendThreshold: 2,
+  defaultHost: "codex",
+  library: Object.freeze({
+    theme: "system",
+    outDir: "artifacts/skillsforge-library",
+    cacheHostChecks: true,
+    extraSkillRoots: Object.freeze([])
+  }),
+  project: Object.freeze({
+    selectedSkills: Object.freeze([]),
+    defaultWorkflows: Object.freeze([])
+  }),
+  session: Object.freeze({
+    enabled: true,
+    outDir: "artifacts/skillsforge-session",
+    maxEntries: 200,
+    tokenBudget: 1200
+  }),
+  mutations: Object.freeze({
+    allowByDefault: false
+  })
+});
+var HOST_IDS = new Set(HOST_REGISTRY.map((host) => host.id));
+var THEMES = /* @__PURE__ */ new Set(["system", "light", "dark"]);
+async function loadSettings(root, options = {}) {
+  const path = resolveSettingsPath(root, options.config);
+  const exists = await pathExists8(path);
+  if (!exists) {
+    return {
+      ok: true,
+      path,
+      exists: false,
+      settings: materializeSettings({}),
+      errors: []
+    };
+  }
+  let raw;
+  try {
+    raw = JSON.parse(await readFile19(path, "utf8"));
+  } catch (error) {
+    return {
+      ok: false,
+      path,
+      exists: true,
+      settings: materializeSettings({}),
+      errors: [`config JSON cannot be parsed: ${error.message}`]
+    };
+  }
+  const settings = materializeSettings(raw);
+  const errors = validateSettings(settings);
+  return {
+    ok: errors.length === 0,
+    path,
+    exists: true,
+    settings,
+    errors
+  };
+}
+async function validateSettingsFile(root, options = {}) {
+  return loadSettings(root, options);
+}
+async function setSetting(root, key, value, options = {}) {
+  const current = await loadSettings(root, options);
+  if (!key) return { ok: false, path: current.path, settings: current.settings, errors: ["setting key is required"] };
+  const next = structuredClone(current.settings);
+  const parsed = parseSettingValue(key, value);
+  setNested(next, key, parsed);
+  const errors = validateSettings(next);
+  if (errors.length) return { ok: false, path: current.path, settings: next, errors };
+  await mkdir12(dirname11(current.path), { recursive: true });
+  await writeFile12(current.path, `${JSON.stringify(next, null, 2)}
+`);
+  return { ok: true, path: current.path, settings: next, errors: [] };
+}
+async function resetSettings(root, options = {}) {
+  const path = resolveSettingsPath(root, options.config);
+  if (options.delete === true) {
+    await rm3(path, { force: true });
+    return { ok: true, path, deleted: true, settings: materializeSettings({}), errors: [] };
+  }
+  await mkdir12(dirname11(path), { recursive: true });
+  const settings = materializeSettings({});
+  await writeFile12(path, `${JSON.stringify(settings, null, 2)}
+`);
+  return { ok: true, path, deleted: false, settings, errors: [] };
+}
+async function saveSettings(root, settings, options = {}) {
+  const path = resolveSettingsPath(root, options.config);
+  const next = materializeSettings(settings);
+  const errors = validateSettings(next);
+  if (errors.length) return { ok: false, path, settings: next, errors };
+  await mkdir12(dirname11(path), { recursive: true });
+  await writeFile12(path, `${JSON.stringify(next, null, 2)}
+`);
+  return { ok: true, path, settings: next, errors: [] };
+}
+function materializeSettings(value = {}) {
+  return {
+    recommendThreshold: value.recommendThreshold ?? DEFAULT_SETTINGS.recommendThreshold,
+    defaultHost: value.defaultHost ?? DEFAULT_SETTINGS.defaultHost,
+    library: {
+      theme: value.library?.theme ?? DEFAULT_SETTINGS.library.theme,
+      outDir: value.library?.outDir ?? DEFAULT_SETTINGS.library.outDir,
+      cacheHostChecks: value.library?.cacheHostChecks ?? DEFAULT_SETTINGS.library.cacheHostChecks,
+      extraSkillRoots: value.library?.extraSkillRoots ?? DEFAULT_SETTINGS.library.extraSkillRoots
+    },
+    project: {
+      selectedSkills: value.project?.selectedSkills ?? DEFAULT_SETTINGS.project.selectedSkills,
+      defaultWorkflows: value.project?.defaultWorkflows ?? DEFAULT_SETTINGS.project.defaultWorkflows
+    },
+    session: {
+      enabled: value.session?.enabled ?? DEFAULT_SETTINGS.session.enabled,
+      outDir: value.session?.outDir ?? DEFAULT_SETTINGS.session.outDir,
+      maxEntries: value.session?.maxEntries ?? DEFAULT_SETTINGS.session.maxEntries,
+      tokenBudget: value.session?.tokenBudget ?? DEFAULT_SETTINGS.session.tokenBudget
+    },
+    mutations: {
+      allowByDefault: value.mutations?.allowByDefault ?? DEFAULT_SETTINGS.mutations.allowByDefault
+    }
+  };
+}
+function validateSettings(settings) {
+  const errors = [];
+  if (!Number.isInteger(settings.recommendThreshold) || settings.recommendThreshold < 1 || settings.recommendThreshold > 20) {
+    errors.push("recommendThreshold must be an integer from 1 to 20");
+  }
+  if (settings.defaultHost !== null && !HOST_IDS.has(settings.defaultHost)) {
+    errors.push(`defaultHost must be one of: ${[...HOST_IDS].join(", ")}`);
+  }
+  if (!THEMES.has(settings.library.theme)) {
+    errors.push("library.theme must be system, light, or dark");
+  }
+  if (typeof settings.library.outDir !== "string" || settings.library.outDir.trim() === "") {
+    errors.push("library.outDir must be a non-empty string");
+  } else if (isAbsolute7(settings.library.outDir)) {
+    errors.push("library.outDir must be relative to the repository root");
+  }
+  if (typeof settings.library.cacheHostChecks !== "boolean") {
+    errors.push("library.cacheHostChecks must be boolean");
+  }
+  if (!Array.isArray(settings.library.extraSkillRoots) || settings.library.extraSkillRoots.some((item) => typeof item !== "string" || item.trim() === "")) {
+    errors.push("library.extraSkillRoots must be an array of non-empty strings");
+  }
+  if (!Array.isArray(settings.project.selectedSkills) || settings.project.selectedSkills.some((item) => typeof item !== "string" || item.trim() === "")) {
+    errors.push("project.selectedSkills must be an array of non-empty strings");
+  }
+  if (!Array.isArray(settings.project.defaultWorkflows) || settings.project.defaultWorkflows.some((item) => typeof item !== "string" || item.trim() === "")) {
+    errors.push("project.defaultWorkflows must be an array of non-empty strings");
+  }
+  if (typeof settings.session.enabled !== "boolean") {
+    errors.push("session.enabled must be boolean");
+  }
+  if (typeof settings.session.outDir !== "string" || settings.session.outDir.trim() === "") {
+    errors.push("session.outDir must be a non-empty string");
+  } else if (isAbsolute7(settings.session.outDir)) {
+    errors.push("session.outDir must be relative to the repository root");
+  }
+  if (!Number.isInteger(settings.session.maxEntries) || settings.session.maxEntries < 1 || settings.session.maxEntries > 5e3) {
+    errors.push("session.maxEntries must be an integer from 1 to 5000");
+  }
+  if (!Number.isInteger(settings.session.tokenBudget) || settings.session.tokenBudget < 200 || settings.session.tokenBudget > 1e4) {
+    errors.push("session.tokenBudget must be an integer from 200 to 10000");
+  }
+  if (typeof settings.mutations.allowByDefault !== "boolean") {
+    errors.push("mutations.allowByDefault must be boolean");
+  }
+  return errors;
+}
+function resolveSettingsPath(root, config) {
+  return resolve21(root, config ?? CONFIG_FILE);
+}
+function parseSettingValue(key, value) {
+  if (key === "recommendThreshold") return Number(value);
+  if (key === "defaultHost") return value === "null" ? null : String(value);
+  if (key === "library.cacheHostChecks" || key === "mutations.allowByDefault" || key === "session.enabled") {
+    if (value === "true") return true;
+    if (value === "false") return false;
+    return value;
+  }
+  if (key === "session.maxEntries" || key === "session.tokenBudget") return Number(value);
+  if (key === "library.extraSkillRoots" || key === "project.selectedSkills" || key === "project.defaultWorkflows") {
+    const text = String(value ?? "").trim();
+    if (text.startsWith("[")) return JSON.parse(text);
+    return text.split(/[;,]/).map((item) => item.trim()).filter(Boolean);
+  }
+  return String(value);
+}
+function setNested(target, key, value) {
+  const parts = String(key).split(".");
+  if (![
+    "recommendThreshold",
+    "defaultHost",
+    "library.theme",
+    "library.outDir",
+    "library.cacheHostChecks",
+    "library.extraSkillRoots",
+    "project.selectedSkills",
+    "project.defaultWorkflows",
+    "session.enabled",
+    "session.outDir",
+    "session.maxEntries",
+    "session.tokenBudget",
+    "mutations.allowByDefault"
+  ].includes(key)) {
+    throw new Error(`unknown setting: ${key}`);
+  }
+  let cursor = target;
+  for (const part of parts.slice(0, -1)) cursor = cursor[part];
+  cursor[parts.at(-1)] = value;
+}
+async function pathExists8(path) {
+  try {
+    await access14(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// lib/capabilities/session.mjs
+var SESSION_OUT_REL = join24("artifacts", "skillsforge-session");
+var SESSION_JSONL = "session.jsonl";
+var SESSION_SUMMARY = "summary.json";
+async function rememberSessionEvent(root, event = {}, options = {}) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const settings = settingsLoaded.settings;
+  if (settings.session.enabled === false) {
+    return { ok: false, disabled: true, error: "session memory is disabled by settings" };
+  }
+  const paths = resolveSessionPaths(root, settings, options);
+  const entry = normalizeSessionEvent(root, event, {
+    host: options.sessionHost ?? settings.defaultHost,
+    projectRootHash: projectHash(root)
+  });
+  const existing = await readSessionEntries(root, options);
+  const maxEntries = settings.session.maxEntries;
+  const nextEntries = [...existing, entry].slice(-maxEntries);
+  await mkdir13(dirname12(paths.jsonl), { recursive: true });
+  await writeFile13(paths.jsonl, `${nextEntries.map((item) => JSON.stringify(item)).join("\n")}
+`);
+  const summary = summarizeSession(root, nextEntries, { settings });
+  await writeFile13(paths.summary, `${JSON.stringify(summary, null, 2)}
+`);
+  return { ok: true, event: entry, summary, files: displaySessionFiles(paths) };
+}
+async function recallSessionMemory(root, options = {}) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const settings = settingsLoaded.settings;
+  const tokenBudget = clampNumber(options.tokenBudget ?? settings.session.tokenBudget, 1200, 200, 1e4);
+  const limit = clampNumber(options.limit ?? 5, 5, 1, 50);
+  const query = String(options.query ?? "").trim();
+  const entries = await readSessionEntries(root, options);
+  const ranked = entries.map((entry) => ({ entry, score: scoreEntry(query, entry) })).filter((item) => !query || item.score > 0).sort((left, right) => right.score - left.score || String(right.entry.timestamp).localeCompare(String(left.entry.timestamp)));
+  const selected = [];
+  let usedTokens = 0;
+  for (const item of ranked.slice(0, limit * 4)) {
+    const compact = compactEntry(item.entry);
+    const tokens2 = estimateTokens(JSON.stringify(compact));
+    if (selected.length >= limit || usedTokens + tokens2 > tokenBudget) break;
+    selected.push({ ...compact, matchScore: item.score, estimatedTokens: tokens2 });
+    usedTokens += tokens2;
+  }
+  return {
+    ok: true,
+    query,
+    tokenBudget,
+    estimatedTokens: usedTokens,
+    count: selected.length,
+    entries: selected,
+    policy: "compact SkillsForge usage memory only; no chat transcript memory is returned"
+  };
+}
+async function readSessionSummary(root, options = {}) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const paths = resolveSessionPaths(root, settingsLoaded.settings, options);
+  try {
+    return JSON.parse(await readFile20(paths.summary, "utf8"));
+  } catch {
+    const entries = await readSessionEntries(root, options);
+    return summarizeSession(root, entries, { settings: settingsLoaded.settings });
+  }
+}
+async function scoreSessionMemory(root, options = {}) {
+  const summary = await readSessionSummary(root, options);
+  return {
+    ok: true,
+    score: summary.score,
+    review: summary.review,
+    totals: summary.totals,
+    topSkills: summary.topSkills,
+    topWorkflows: summary.topWorkflows,
+    policy: "local heuristic score for SkillsForge usage discipline, not model quality proof"
+  };
+}
+async function resetSessionMemory(root, options = {}) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const paths = resolveSessionPaths(root, settingsLoaded.settings, options);
+  await rm4(paths.outDir, { recursive: true, force: true });
+  const summary = summarizeSession(root, [], { settings: settingsLoaded.settings });
+  await mkdir13(paths.outDir, { recursive: true });
+  await writeFile13(paths.summary, `${JSON.stringify(summary, null, 2)}
+`);
+  await writeFile13(paths.jsonl, "");
+  return { ok: true, reset: true, files: displaySessionFiles(paths), summary };
+}
+async function ensureSessionMemory(root, options = {}) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const paths = resolveSessionPaths(root, settingsLoaded.settings, options);
+  await mkdir13(paths.outDir, { recursive: true });
+  const entries = await readSessionEntries(root, options);
+  const summary = summarizeSession(root, entries, { settings: settingsLoaded.settings });
+  if (!await pathExists9(paths.jsonl)) await writeFile13(paths.jsonl, "");
+  await writeFile13(paths.summary, `${JSON.stringify(summary, null, 2)}
+`);
+  return { ok: true, files: displaySessionFiles(paths), summary };
+}
+async function exportSessionMemory(root, options = {}) {
+  const out = options.out;
+  if (!out) throw new Error("--out is required");
+  const target = resolve22(root, out);
+  if (isAbsolute8(out) || !isInside6(root, target)) throw new Error("session export --out must stay inside the repository");
+  const summary = await readSessionSummary(root, options);
+  const recall = await recallSessionMemory(root, {
+    ...options,
+    query: options.query ?? "",
+    limit: options.limit ?? 20,
+    tokenBudget: options.tokenBudget ?? 3e3
+  });
+  const text = renderSessionMarkdown(summary, recall);
+  await mkdir13(dirname12(target), { recursive: true });
+  await writeFile13(target, text);
+  return { ok: true, out: target, summary, entries: recall.entries.length };
+}
+async function readSessionEntries(root, options = {}) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const paths = resolveSessionPaths(root, settingsLoaded.settings, options);
+  try {
+    const text = await readFile20(paths.jsonl, "utf8");
+    return text.split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line)).filter((entry) => entry && typeof entry === "object");
+  } catch {
+    return [];
+  }
+}
+function resolveSessionPaths(root, settings, options = {}) {
+  const outDir = resolve22(root, options.outDir ?? settings.session?.outDir ?? SESSION_OUT_REL);
+  if (!isInside6(root, outDir)) throw new Error(`session outDir escapes repository: ${outDir}`);
+  return {
+    outDir,
+    jsonl: join24(outDir, SESSION_JSONL),
+    summary: join24(outDir, SESSION_SUMMARY)
+  };
+}
+function normalizeSessionEvent(root, event, context) {
+  return {
+    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+    projectRootHash: context.projectRootHash,
+    host: cleanText(event.host ?? context.host ?? null, 60),
+    query: cleanText(event.query ?? "", 240),
+    selectedSkill: cleanText(event.selectedSkill ?? event.skill ?? null, 120),
+    selectedWorkflow: cleanText(event.selectedWorkflow ?? event.workflow ?? null, 160),
+    agentRole: cleanText(event.agentRole ?? event.agent ?? null, 120),
+    score: clampNumber(event.score ?? 0, 0, 0, 100),
+    reasons: cleanList(event.reasons ?? event.reason, 8, 160),
+    commandsSuggested: cleanList(event.commandsSuggested ?? event.command, 8, 220),
+    tokensEstimated: clampNumber(event.tokensEstimated ?? event.tokens ?? 0, 0, 0, 1e6),
+    outcome: cleanText(event.outcome ?? "", 240),
+    verification: cleanText(event.verification ?? "", 240)
+  };
+}
+function summarizeSession(root, entries, { settings }) {
+  const topSkills = topCounts(entries.map((entry) => entry.selectedSkill).filter(Boolean));
+  const topWorkflows = topCounts(entries.map((entry) => entry.selectedWorkflow).filter(Boolean));
+  const topAgents = topCounts(entries.map((entry) => entry.agentRole).filter(Boolean));
+  const verified = entries.filter((entry) => entry.verification).length;
+  const withWorkflow = entries.filter((entry) => entry.selectedWorkflow).length;
+  const score = Math.min(100, Math.round(
+    (entries.length ? 30 : 0) + Math.min(20, topSkills.length * 5) + Math.min(20, withWorkflow * 2) + Math.min(20, verified * 4) + (entries.some((entry) => entry.tokensEstimated > 0) ? 10 : 0)
+  ));
+  return {
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    projectRootHash: projectHash(root),
+    files: {
+      jsonl: SESSION_JSONL,
+      summary: SESSION_SUMMARY
+    },
+    settings: {
+      maxEntries: settings.session.maxEntries,
+      tokenBudget: settings.session.tokenBudget
+    },
+    totals: {
+      events: entries.length,
+      verified,
+      withSkill: entries.filter((entry) => entry.selectedSkill).length,
+      withWorkflow,
+      tokensEstimated: entries.reduce((sum, entry) => sum + (entry.tokensEstimated ?? 0), 0)
+    },
+    score,
+    review: score >= 80 ? "strong SkillsForge usage memory" : score >= 50 ? "useful but needs more verified outcomes" : "thin memory; record skill/workflow/outcome/verification after tasks",
+    topSkills,
+    topWorkflows,
+    topAgents,
+    recent: entries.slice(-8).map(compactEntry)
+  };
+}
+function compactEntry(entry) {
+  return {
+    timestamp: entry.timestamp,
+    host: entry.host,
+    query: entry.query,
+    selectedSkill: entry.selectedSkill,
+    selectedWorkflow: entry.selectedWorkflow,
+    agentRole: entry.agentRole,
+    score: entry.score,
+    reasons: entry.reasons,
+    tokensEstimated: entry.tokensEstimated,
+    outcome: entry.outcome,
+    verification: entry.verification
+  };
+}
+function renderSessionMarkdown(summary, recall) {
+  const lines = [
+    "# SkillsForge Session Memory",
+    "",
+    `Generated: ${summary.generatedAt}`,
+    `Project hash: ${summary.projectRootHash}`,
+    `Score: ${summary.score} - ${summary.review}`,
+    "",
+    "## Totals",
+    "",
+    `- Events: ${summary.totals.events}`,
+    `- Verified events: ${summary.totals.verified}`,
+    `- Skills used: ${summary.totals.withSkill}`,
+    `- Workflows used: ${summary.totals.withWorkflow}`,
+    `- Estimated tokens: ${summary.totals.tokensEstimated}`,
+    "",
+    "## Top Skills",
+    "",
+    ...summary.topSkills.length ? summary.topSkills.map((item) => `- ${item.id}: ${item.count}`) : ["- None recorded"],
+    "",
+    "## Top Workflows",
+    "",
+    ...summary.topWorkflows.length ? summary.topWorkflows.map((item) => `- ${item.id}: ${item.count}`) : ["- None recorded"],
+    "",
+    "## Recent Compact Entries",
+    ""
+  ];
+  for (const entry of recall.entries) {
+    lines.push(`- ${entry.timestamp}: skill=${entry.selectedSkill ?? "none"} workflow=${entry.selectedWorkflow ?? "none"} outcome=${entry.outcome || "none"}`);
+  }
+  lines.push("", "> This export intentionally contains compact SkillsForge usage memory, not chat transcript memory.", "");
+  return `${lines.join("\n")}
+`;
+}
+function topCounts(values) {
+  const counts = /* @__PURE__ */ new Map();
+  for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
+  return [...counts.entries()].map(([id, count]) => ({ id, count })).sort((left, right) => right.count - left.count || left.id.localeCompare(right.id)).slice(0, 10);
+}
+function scoreEntry(query, entry) {
+  if (!query) return 1;
+  const q = new Set(tokens(query));
+  const text = [
+    entry.query,
+    entry.selectedSkill,
+    entry.selectedWorkflow,
+    entry.agentRole,
+    entry.outcome,
+    entry.verification,
+    ...entry.reasons ?? []
+  ].join(" ");
+  return tokens(text).filter((token) => q.has(token)).length;
+}
+function tokens(text) {
+  return String(text ?? "").toLowerCase().match(/[a-z0-9]+/g) ?? [];
+}
+function cleanList(value, limit, maxLength) {
+  const list = Array.isArray(value) ? value : value ? [value] : [];
+  return list.map((item) => cleanText(item, maxLength)).filter(Boolean).slice(0, limit);
+}
+function cleanText(value, maxLength) {
+  if (value == null) return null;
+  return String(value).replace(/\s+/g, " ").trim().slice(0, maxLength);
+}
+function estimateTokens(text) {
+  return Math.ceil([...String(text ?? "")].length / 4);
+}
+function clampNumber(value, fallback, min, max) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return fallback;
+  return Math.min(max, Math.max(min, Math.round(number)));
+}
+function projectHash(root) {
+  return createHash4("sha256").update(resolve22(root)).digest("hex").slice(0, 16);
+}
+function displaySessionFiles(paths) {
+  return {
+    outDir: paths.outDir,
+    jsonl: paths.jsonl,
+    summary: paths.summary
+  };
+}
+async function pathExists9(path) {
+  try {
+    await access15(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function isInside6(parent, candidate) {
+  const path = relative12(resolve22(parent), resolve22(candidate));
+  return path === "" || !path.startsWith(`..${sep10}`) && path !== ".." && !isAbsolute8(path);
+}
+
 // lib/capabilities/library.mjs
-var LIBRARY_OUT_REL = join23("artifacts", "skillsforge-library");
+var LIBRARY_OUT_REL = join25("artifacts", "skillsforge-library");
 async function buildLibraryIndex(root, options = {}) {
-  const absRoot = resolve21(root);
+  const absRoot = resolve23(root);
   const home = options.home;
+  const settingsLoaded = await loadSettings(absRoot, { config: options.config });
+  const settings = settingsLoaded.settings;
+  const extraSkillRoots = normalizeExtraSkillRoots(absRoot, [
+    ...settings.library?.extraSkillRoots ?? [],
+    ...optionList(options.extraSkillRoots)
+  ]);
   const [skillsLoaded, hosts, workflowsLoaded, catalogLoaded] = await Promise.all([
     loadAllSkills(absRoot, {
       includeInstalled: true,
       home,
+      extraSkillRoots,
       noCache: options.noCache === true,
+      skipFileIntegrity: true,
+      skipSidecarSchema: true,
       collectErrors: true
     }),
     detectHosts({ home }),
@@ -21643,27 +22442,34 @@ async function buildLibraryIndex(root, options = {}) {
   ];
   const catalog = catalogLoaded?.catalog ?? null;
   const packBySkill = buildPackMap(catalog);
-  const session = detectSession(hosts, options);
-  const hostInstallChecks = /* @__PURE__ */ new Map();
-  for (const host of hosts) {
-    for (const skill of skills) {
-      hostInstallChecks.set(`${host.id}:${skill.name}`, await pathExists8(join23(host.skillsDir, skill.name)));
-    }
-  }
+  const selectedSet = new Set(settings.project?.selectedSkills ?? []);
+  const session = detectSession(hosts, {
+    ...options,
+    sessionHost: options.sessionHost ?? settings.defaultHost
+  });
+  const hostInstallChecks = await buildHostInstallIndex(hosts, settings);
   const records = skills.map((skill) => summarizeSkill(absRoot, skill, {
     packBySkill,
     hosts,
     installed: hostInstallChecks,
     home,
-    session
+    session,
+    extraSkillRoots
+  })).map((record) => ({
+    ...record,
+    projectSelected: selectedSet.has(record.id)
   })).map(assignRecordKey()).sort((left, right) => left.key.localeCompare(right.key));
   const categories = [...new Set(records.map((skill) => skill.category).filter(Boolean))].sort();
-  const sources = [...new Set(records.map((skill) => skill.sourcePlugin))].sort();
+  const sourceDetails = buildSourceDetails(absRoot, records, loadErrors, { home, extraSkillRoots });
+  const sources = sourceDetails.map((source) => source.id);
   const ok = skillsLoaded.ok && workflowsLoaded.ok;
+  const sessionSummary = await readSessionSummary(absRoot, { config: options.config });
   return {
-    ok,
+    ok: ok && settingsLoaded.ok,
     generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
     root: absRoot,
+    settingsPath: settingsLoaded.path,
+    settings,
     stats: {
       skills: records.length,
       workflows: workflowsLoaded.workflows.length,
@@ -21673,12 +22479,19 @@ async function buildLibraryIndex(root, options = {}) {
       detectedHosts: hosts.filter((host) => host.detected).length,
       installedSkills: records.filter((skill) => skill.installedHosts.length > 0).length,
       sessionSkills: session.host ? records.filter((skill) => skill.installedHosts.includes(session.host)).length : 0,
+      selectedSkills: records.filter((skill) => skill.projectSelected).length,
       categories: categories.length,
-      sources: sources.length
+      sources: sourceDetails.length
     },
     session,
+    sessionSummary,
+    project: {
+      selectedSkills: [...selectedSet].sort(),
+      defaultWorkflows: [...settings.project?.defaultWorkflows ?? []].sort()
+    },
     categories,
     sources,
+    sourceDetails,
     hosts: hosts.map((host) => ({
       id: host.id,
       label: host.label,
@@ -21693,31 +22506,39 @@ async function buildLibraryIndex(root, options = {}) {
       id: workflow.id,
       category: workflow.category,
       goal: workflow.goal,
+      inputs: workflow.inputs,
+      steps: workflow.steps,
       recommendedSkills: workflow.recommendedSkills,
       recommendedAgents: workflow.recommendedAgents,
       commands: workflow.commands,
+      stopGates: workflow.stopGates,
       tokenBudget: workflow.tokenBudget,
       qualityGate: workflow.qualityGate,
       risk: workflow.risk,
       relativePath: workflow.relativePath
     })),
-    errors: loadErrors
+    errors: [
+      ...settingsLoaded.errors.map((error) => ({ source: "settings", file: settingsLoaded.path, error })),
+      ...loadErrors
+    ]
   };
 }
 async function writeLibraryArtifacts(root, options = {}) {
-  const outDir = resolve21(root, options.outDir ?? LIBRARY_OUT_REL);
-  if (!options.allowAbsolute && !isInside6(root, outDir)) {
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const configuredOut = settingsLoaded.settings.library.outDir ?? LIBRARY_OUT_REL;
+  const outDir = resolve23(root, options.outDir ?? configuredOut);
+  if (!options.allowAbsolute && !isInside7(root, outDir)) {
     throw new Error(`library output path escapes root: ${outDir}`);
   }
   const index = await buildLibraryIndex(root, options);
-  await mkdir12(outDir, { recursive: true });
-  const jsonPath = join23(outDir, "skillsforge-library.json");
-  const htmlPath = join23(outDir, "skillsforge-library.html");
-  const aiPath = join23(outDir, "skillsforge-ai-index.html");
-  await writeFile12(jsonPath, `${JSON.stringify(index, null, 2)}
+  await mkdir14(outDir, { recursive: true });
+  const jsonPath = join25(outDir, "skillsforge-library.json");
+  const htmlPath = join25(outDir, "skillsforge-library.html");
+  const aiPath = join25(outDir, "skillsforge-ai-index.html");
+  await writeFile14(jsonPath, `${JSON.stringify(index, null, 2)}
 `);
-  await writeFile12(htmlPath, buildLibraryHtml(index, { apiEnabled: false, allowMutations: false }));
-  await writeFile12(aiPath, buildAiIndexHtml(index));
+  await writeFile14(htmlPath, buildLibraryHtml(index, { apiEnabled: false, allowMutations: false }));
+  await writeFile14(aiPath, buildAiIndexHtml(index));
   return {
     ok: index.ok,
     outDir,
@@ -21732,17 +22553,18 @@ async function serveLibrary(root, options = {}) {
   const allowMutations = options.allowMutations === true;
   const home = options.home;
   const sessionHost = options.sessionHost;
+  const extraSkillRoots = options.extraSkillRoots ?? [];
   const server = createServer(async (request, response) => {
     try {
       const url = new URL(request.url ?? "/", `http://${host}:${port}`);
       if (url.pathname === "/skillsforge-library.json") {
-        const index2 = await buildLibraryIndex(root, { home, sessionHost });
+        const index2 = await buildLibraryIndex(root, { home, sessionHost, config: options.config, extraSkillRoots });
         sendJson(response, index2);
         return;
       }
       if (url.pathname === "/api/recommend") {
         const query = url.searchParams.get("query") ?? "";
-        const index2 = await buildLibraryIndex(root, { home, sessionHost });
+        const index2 = await buildLibraryIndex(root, { home, sessionHost, config: options.config, extraSkillRoots });
         sendJson(response, recommendFromLibrary(index2, query, { limit: 5, sessionHost }));
         return;
       }
@@ -21752,7 +22574,25 @@ async function serveLibrary(root, options = {}) {
         sendJson(response, result);
         return;
       }
-      const index = await buildLibraryIndex(root, { home, sessionHost });
+      if (url.pathname === "/api/project/select" || url.pathname === "/api/project/unselect") {
+        const body = await readRequestJson(request);
+        const mutate = url.pathname.endsWith("/select") ? selectProjectSkill : unselectProjectSkill;
+        const result = allowMutations ? await mutate(root, { ...body, home, config: options.config, sessionHost, extraSkillRoots }) : {
+          ok: true,
+          dryRun: true,
+          skill: body?.skill,
+          command: `skillsforge lib ${url.pathname.endsWith("/select") ? "select" : "unselect"} --skill ${body?.skill ?? "<id>"}`
+        };
+        sendJson(response, result);
+        return;
+      }
+      if (url.pathname === "/api/session/remember") {
+        const body = await readRequestJson(request);
+        const result = allowMutations ? await rememberSessionEvent(root, body, { config: options.config, sessionHost }) : { ok: true, dryRun: true, event: body, command: 'skillsforge session remember --query "<task>" --skill <id>' };
+        sendJson(response, result);
+        return;
+      }
+      const index = await buildLibraryIndex(root, { home, sessionHost, config: options.config, extraSkillRoots });
       sendHtml(response, buildLibraryHtml(index, { apiEnabled: true, allowMutations }));
     } catch (error) {
       response.statusCode = 500;
@@ -21760,7 +22600,9 @@ async function serveLibrary(root, options = {}) {
     }
   });
   await new Promise((resolveListen) => server.listen(port, host, resolveListen));
-  return { ok: true, host, port, url: `http://${host}:${port}/`, readOnly: !allowMutations, server };
+  const address = server.address();
+  const actualPort = address && typeof address === "object" ? address.port : port;
+  return { ok: true, host, port: actualPort, url: `http://${host}:${actualPort}/`, readOnly: !allowMutations, server };
 }
 async function planSkillRemoval(root, options = {}) {
   const target = await resolveInstalledSkillTarget(options);
@@ -21792,49 +22634,143 @@ async function removeInstalledSkill(root, options = {}) {
   if (!target.exists) {
     return { ok: true, removed: false, host: target.host.id, skill: target.skill, path: target.path, reason: "not installed" };
   }
-  await rm3(target.path, { recursive: true, force: false });
+  await rm5(target.path, { recursive: true, force: false });
   return { ok: true, removed: true, host: target.host.id, skill: target.skill, path: target.path };
 }
+async function listProjectSelection(root, options = {}) {
+  const index = await buildLibraryIndex(root, options);
+  return {
+    ok: index.ok,
+    selectedSkills: index.project.selectedSkills,
+    skills: index.skills.filter((skill) => skill.projectSelected),
+    workflows: index.project.defaultWorkflows,
+    errors: index.errors
+  };
+}
+async function selectProjectSkill(root, options = {}) {
+  const skillId = options.skill ?? options.id;
+  if (!skillId) throw new Error("--skill is required");
+  const index = await buildLibraryIndex(root, options);
+  const record = index.skills.find((skill) => skill.id === skillId || skill.key === skillId);
+  if (!record) return { ok: false, error: `unknown indexed skill: ${skillId}` };
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const selected = new Set(settingsLoaded.settings.project?.selectedSkills ?? []);
+  selected.add(record.id);
+  const next = {
+    ...settingsLoaded.settings,
+    project: {
+      ...settingsLoaded.settings.project,
+      selectedSkills: [...selected].sort()
+    }
+  };
+  const saved = await saveSettings(root, next, { config: options.config });
+  return {
+    ok: saved.ok,
+    selected: true,
+    skill: record.id,
+    selectedSkills: saved.settings.project.selectedSkills,
+    path: saved.path,
+    errors: saved.errors
+  };
+}
+async function unselectProjectSkill(root, options = {}) {
+  const skillId = options.skill ?? options.id;
+  if (!skillId) throw new Error("--skill is required");
+  const index = await buildLibraryIndex(root, options);
+  const record = index.skills.find((skill) => skill.id === skillId || skill.key === skillId);
+  const canonicalId = record?.id ?? skillId;
+  const settingsLoaded = await loadSettings(root, { config: options.config });
+  const selected = new Set(settingsLoaded.settings.project?.selectedSkills ?? []);
+  selected.delete(canonicalId);
+  const next = {
+    ...settingsLoaded.settings,
+    project: {
+      ...settingsLoaded.settings.project,
+      selectedSkills: [...selected].sort()
+    }
+  };
+  const saved = await saveSettings(root, next, { config: options.config });
+  return {
+    ok: saved.ok,
+    selected: false,
+    skill: canonicalId,
+    selectedSkills: saved.settings.project.selectedSkills,
+    path: saved.path,
+    errors: saved.errors
+  };
+}
+var LIBRARY_RECOMMEND_THRESHOLD = 2;
 function recommendFromLibrary(index, query, options = {}) {
   const limit = clampLimit2(options.limit, 5);
+  const threshold = options.threshold ?? index.settings?.recommendThreshold ?? LIBRARY_RECOMMEND_THRESHOLD;
   const sessionHost = options.sessionHost ?? index.session?.host ?? null;
-  const skills = index.skills.map((skill) => scoreLibrarySkill(query, skill, { sessionHost })).filter((item) => item.score > 0).sort((left, right) => right.score - left.score || left.skill.key.localeCompare(right.skill.key)).slice(0, limit).map(({ skill, score, reasons }) => ({
+  const trimmed = String(query ?? "").trim();
+  const rankedSkills = index.skills.map((skill) => scoreLibrarySkill(query, skill, { sessionHost })).filter((item) => item.score >= threshold).sort((left, right) => right.score - left.score || left.skill.key.localeCompare(right.skill.key));
+  const skills = rankedSkills.slice(0, limit).map(({ skill, score, reasons }) => ({
     key: skill.key,
     id: skill.id,
     category: skill.category,
     sourcePlugin: skill.sourcePlugin,
+    sourceKind: skill.sourceKind,
     installedHosts: skill.installedHosts,
+    sessionInstalled: skill.sessionInstalled,
+    projectSelected: skill.projectSelected,
     description: skill.description,
+    riskFlags: skill.riskFlags ?? [],
+    maturity: skill.maturity,
+    routingMode: skill.routingMode,
     score,
-    reasons
+    reasons,
+    needsConfirmation: (skill.riskFlags?.length ?? 0) > 0 || skill.routingMode === "explicit"
   }));
-  const workflows = index.workflows.map((workflow) => scoreLibraryWorkflow(query, workflow, { sessionHost, skillMatches: skills })).filter((item) => item.score > 0).sort((left, right) => right.score - left.score || left.workflow.id.localeCompare(right.workflow.id)).slice(0, limit).map(({ workflow, score, reasons }) => ({
+  const rankedWorkflows = index.workflows.map((workflow) => scoreLibraryWorkflow(query, workflow, { sessionHost, skillMatches: skills })).filter((item) => item.score >= threshold).sort((left, right) => right.score - left.score || left.workflow.id.localeCompare(right.workflow.id));
+  const workflows = rankedWorkflows.slice(0, limit).map(({ workflow, score, reasons }) => ({
     id: workflow.id,
     category: workflow.category,
     goal: workflow.goal,
     recommendedSkills: workflow.recommendedSkills,
     recommendedAgents: workflow.recommendedAgents,
+    commands: workflow.commands,
+    tokenBudget: workflow.tokenBudget,
+    qualityGate: workflow.qualityGate,
     risk: workflow.risk,
     score,
-    reasons
+    reasons,
+    needsConfirmation: workflow.risk === "high" || workflow.risk === "medium"
   }));
+  const confidence = !trimmed || skills.length === 0 && workflows.length === 0 ? "none" : (skills[0]?.score ?? 0) >= threshold + 2 || (workflows[0]?.score ?? 0) >= threshold + 2 ? "high" : "low";
+  const fallback = confidence === "none" ? "no-confident-match" : null;
+  const alternatives = confidence === "none" ? [
+    "skillsforge catalog --search <text>",
+    "skillsforge route --query <text> --include-explicit",
+    "skillsforge workflows list --category <id>",
+    "skillsforge lib update"
+  ] : rankedSkills.slice(limit, limit + 3).map((item) => item.skill.id).concat(rankedWorkflows.slice(limit, limit + 2).map((item) => item.workflow.id));
   return {
     ok: true,
     query,
     sessionHost,
+    confidence,
+    fallback,
+    note: confidence === "none" ? "no confident match; refine the query, browse catalog --pack, or refresh lib update" : void 0,
+    alternatives: alternatives.length ? alternatives : void 0,
     skills,
     workflows,
+    needsConfirmation: true,
     policy: "read-only recommendation; install, remove, and write actions require explicit confirmation"
   };
 }
 function buildLibraryHtml(index, options = {}) {
-  const data = safeScriptJson({
-    ...index,
-    ui: {
-      apiEnabled: options.apiEnabled === true,
-      allowMutations: options.allowMutations === true
-    }
-  });
+  const countBy = (predicate) => index.skills.filter(predicate).length;
+  const builderCount = countBy((skill) => skill.category === "builder" || skill.id.startsWith("build-") || skill.id.startsWith("fullstack-"));
+  const validationCount = countBy((skill) => skill.category === "validation" || skill.id.startsWith("validate-"));
+  const researchCount = countBy((skill) => skill.category === "research" || skill.id.startsWith("research-"));
+  const launchCount = countBy((skill) => ["growth", "product", "media"].includes(skill.category) || skill.id.startsWith("startup-") || skill.id.includes("launch") || skill.id.includes("demo"));
+  const problemsCount = (index.errors ?? []).length + (index.sourceDetails ?? []).reduce((total, source) => total + (source.loadErrors?.length ?? 0), 0);
+  const data = safeScriptJson(buildLibraryUiPayload(index, {
+    apiEnabled: options.apiEnabled === true,
+    allowMutations: options.allowMutations === true
+  }));
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -21842,83 +22778,247 @@ function buildLibraryHtml(index, options = {}) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SkillsForge Library</title>
 <style>
-:root{color-scheme:light dark;--bg:#f6f8fa;--panel:#ffffff;--panel2:#f6f8fa;--line:#d0d7de;--text:#24292f;--muted:#57606a;--accent:#0969da;--ok:#1a7f37;--warn:#9a6700;--bad:#cf222e;--shadow:0 12px 30px rgb(27 31 36 / .08);--radius:8px}
-@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--panel:#161b22;--panel2:#0d1117;--line:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#2f81f7;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--shadow:0 12px 30px rgb(1 4 9 / .35)}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}button,input,select{font:inherit}.shell{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100dvh;max-width:100vw}.side{border-right:1px solid var(--line);padding:16px;background:var(--panel);position:sticky;top:0;height:100dvh;overflow:auto;min-width:0}.main{padding:18px;min-width:0}.brand{display:flex;align-items:center;gap:10px;margin-bottom:16px;min-width:0}.mark{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#1a7f37);box-shadow:inset 0 0 0 1px rgb(255 255 255 / .22);flex:0 0 auto}h1{font-size:18px;margin:0;letter-spacing:0}h2{font-size:14px;margin:18px 0 8px;letter-spacing:0}.label,.meta,.hint{color:var(--muted);font-size:12px}.stat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat>div,.filter button,.row,.detail,.panel,.select,.smallbtn,.dangerbtn{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}.stat>div{padding:10px;min-width:0}.num{font:650 20px/1 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}.search,.select{width:100%;height:36px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);padding:0 10px;margin:10px 0;min-width:0}.filter,.action-row,.topbar{display:flex;flex-wrap:wrap;gap:6px;min-width:0}.filter button,.smallbtn,.dangerbtn{color:var(--text);padding:6px 9px;cursor:pointer;min-height:32px;max-width:100%;white-space:nowrap}.smallbtn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.dangerbtn{color:var(--bad)}button:disabled{opacity:.55;cursor:not-allowed}.filter button.active{border-color:var(--accent);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.topbar{align-items:center;margin-bottom:12px}.topbar .search{flex:1 1 260px;margin:0}.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,390px);gap:16px;min-width:0}.rows{display:grid;gap:8px;min-width:0}.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:10px;text-align:left;color:var(--text);cursor:pointer;min-width:0;box-shadow:none}.row:hover,.row.active{border-color:var(--accent)}.title{font-weight:650;overflow-wrap:anywhere}.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.chip{border:1px solid var(--line);border-radius:999px;padding:2px 7px;color:var(--muted);font-size:12px;max-width:100%;overflow-wrap:anywhere}.chip.good{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 50%,var(--line))}.chip.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 50%,var(--line))}.risk-high{color:var(--bad)}.risk-medium{color:var(--warn)}.risk-low{color:var(--ok)}.detail{padding:14px;position:sticky;top:18px;max-height:calc(100dvh - 36px);overflow:auto;min-width:0;box-shadow:var(--shadow)}.detail pre,.codebox{white-space:pre-wrap;word-break:break-word;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:10px;max-width:100%;overflow:auto}.panel{padding:10px;margin-top:8px;min-width:0}.split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.empty{padding:18px;border:1px dashed var(--line);border-radius:var(--radius);color:var(--muted);background:var(--panel)}@media (prefers-reduced-motion:no-preference){.row,.filter button,.smallbtn,.dangerbtn{transition:border-color 140ms cubic-bezier(.2,0,0,1),color 140ms cubic-bezier(.2,0,0,1),transform 120ms cubic-bezier(.2,0,0,1),box-shadow 180ms cubic-bezier(.2,0,0,1)}.row:active,.filter button:active,.smallbtn:active,.dangerbtn:active{transform:translateY(1px)}}@media (max-width:940px){.shell{grid-template-columns:minmax(0,1fr)}.side{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line);width:100%;max-width:100vw}.main{padding:16px;width:100%;max-width:100vw}.grid{grid-template-columns:minmax(0,1fr)}.detail{position:relative;top:auto;max-height:none}.stat{grid-template-columns:repeat(4,minmax(0,1fr))}}@media (max-width:640px){.stat,.split{grid-template-columns:minmax(0,1fr)}.filter button{flex:1 1 100%;text-align:left}.topbar .smallbtn{width:100%}.shell{min-width:0}}
+:root{color-scheme:light dark;--bg:#f6f8fa;--panel:#ffffff;--panel2:#f6f8fa;--panel3:#eef2f6;--line:#d0d7de;--text:#24292f;--muted:#57606a;--accent:#0969da;--accent2:#1f883d;--ok:#1a7f37;--warn:#9a6700;--bad:#cf222e;--shadow:0 16px 40px rgb(27 31 36 / .08);--radius:8px}
+:root[data-theme="light"]{color-scheme:light;--bg:#f6f8fa;--panel:#ffffff;--panel2:#f6f8fa;--panel3:#eef2f6;--line:#d0d7de;--text:#24292f;--muted:#57606a;--accent:#0969da;--accent2:#1f883d;--ok:#1a7f37;--warn:#9a6700;--bad:#cf222e;--shadow:0 16px 40px rgb(27 31 36 / .08)}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0d1117;--panel:#161b22;--panel2:#0d1117;--panel3:#21262d;--line:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#2f81f7;--accent2:#3fb950;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--shadow:0 16px 40px rgb(1 4 9 / .35)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0d1117;--panel:#161b22;--panel2:#0d1117;--panel3:#21262d;--line:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#2f81f7;--accent2:#3fb950;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--shadow:0 16px 40px rgb(1 4 9 / .35)}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}button,input,select{font:inherit}button{cursor:pointer}.shell{display:grid;grid-template-rows:auto minmax(0,1fr);min-height:100dvh;max-width:100vw}.command-center{display:grid;grid-template-columns:auto minmax(240px,1fr) auto;gap:12px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:5}.brand{display:flex;align-items:center;gap:10px;min-width:0}.mark{width:32px;height:32px;border-radius:7px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:inset 0 0 0 1px rgb(255 255 255 / .22);flex:0 0 auto}h1{font-size:18px;margin:0;letter-spacing:0}.label,.meta,.hint{color:var(--muted);font-size:12px}.header-actions,.viewbar,.quickbar,.action-row,.filter{display:flex;flex-wrap:wrap;gap:6px;min-width:0}.search,.select{width:100%;height:36px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);padding:0 10px;min-width:0}.layout{display:grid;grid-template-columns:230px minmax(0,1fr) minmax(320px,410px);gap:0;min-height:0}.side{border-right:1px solid var(--line);padding:14px;background:var(--panel);position:sticky;top:61px;height:calc(100dvh - 61px);overflow:auto;min-width:0}.main{padding:16px;min-width:0}.detail{border-left:1px solid var(--line);padding:14px;background:var(--panel);position:sticky;top:61px;height:calc(100dvh - 61px);overflow:auto;min-width:0}.stat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat>div,.panel,.nav button,.filter button,.quickbar button,.smallbtn,.dangerbtn,.row,.compare-wrap{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}.stat>div{padding:10px;min-width:0}.num{font:650 20px/1 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}.panel{padding:10px;margin-top:10px;min-width:0}.vibe-panel{background:linear-gradient(180deg,var(--panel),var(--panel2));box-shadow:var(--shadow)}.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}.metric{border:1px solid var(--line);border-radius:6px;padding:7px;background:var(--panel2);min-width:0}.metric b{display:block;font:650 16px/1 ui-monospace,SFMono-Regular,Consolas,monospace}.nav{display:grid;gap:6px;margin:12px 0}.nav button,.filter button,.quickbar button,.smallbtn,.dangerbtn{color:var(--text);padding:7px 9px;min-height:32px;max-width:100%;white-space:nowrap}.nav button{text-align:left;display:flex;justify-content:space-between;gap:8px}.nav button.active,.filter button.active,.quickbar button.active,.viewbar button.active{border-color:var(--accent);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.smallbtn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.dangerbtn{color:var(--bad)}button:disabled{opacity:.55;cursor:not-allowed}.quickbar{align-items:center;margin-bottom:10px}.topbar{display:grid;grid-template-columns:minmax(220px,1fr) auto;gap:8px;align-items:center;margin-bottom:12px}.tools{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}.rows{display:grid;gap:8px;min-width:0}.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:10px;text-align:left;color:var(--text);min-width:0}.row:hover,.row.active,.compare tbody tr:hover,.compare tbody tr.active{border-color:var(--accent);background:var(--panel2)}.title{font-weight:650;overflow-wrap:anywhere}.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.chip{border:1px solid var(--line);border-radius:999px;padding:2px 7px;color:var(--muted);font-size:12px;max-width:100%;overflow-wrap:anywhere}.chip.good{color:var(--ok);border-color:var(--ok)}.chip.warn{color:var(--warn);border-color:var(--warn)}.risk-high{color:var(--bad)}.risk-medium{color:var(--warn)}.risk-low{color:var(--ok)}.compare-wrap{overflow:auto}.compare{width:100%;border-collapse:collapse;min-width:760px}.compare th,.compare td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.compare th{position:sticky;top:0;background:var(--panel3);font-size:12px;color:var(--muted);z-index:1}.compare tbody tr{cursor:pointer;border-left:2px solid transparent}.compare tbody tr.active{border-left-color:var(--accent)}.detail h2{font-size:14px;margin:16px 0 8px;letter-spacing:0}.detail h2:first-child{margin-top:0}.detail pre,.codebox{white-space:pre-wrap;word-break:break-word;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:10px;max-width:100%;overflow:auto}.empty{padding:18px;border:1px dashed var(--line);border-radius:var(--radius);color:var(--muted);background:var(--panel)}.pager{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:10px 0;color:var(--muted);font-size:12px}.problem{border-left:3px solid var(--warn)}.problem.bad{border-left-color:var(--bad)}@media (prefers-reduced-motion:no-preference){.row,.nav button,.filter button,.quickbar button,.smallbtn,.dangerbtn{transition:border-color 140ms cubic-bezier(.2,0,0,1),color 140ms cubic-bezier(.2,0,0,1),transform 120ms cubic-bezier(.2,0,0,1),box-shadow 180ms cubic-bezier(.2,0,0,1)}.row:active,.nav button:active,.filter button:active,.quickbar button:active,.smallbtn:active,.dangerbtn:active{transform:translateY(1px)}}@media (max-width:1100px){.layout{grid-template-columns:220px minmax(0,1fr)}.detail{grid-column:1/-1;position:relative;top:auto;height:auto;border-left:0;border-top:1px solid var(--line)}}@media (max-width:760px){.command-center{grid-template-columns:minmax(0,1fr)}.layout{grid-template-columns:minmax(0,1fr)}.side{position:relative;top:auto;height:auto;border-right:0;border-bottom:1px solid var(--line)}.main{padding:14px}.stat,.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{grid-template-columns:minmax(0,1fr)}.tools,.header-actions{justify-content:flex-start}.quickbar button,.filter button{flex:1 1 calc(50% - 6px)}}@media (max-width:520px){.stat,.metric-grid{grid-template-columns:minmax(0,1fr)}.quickbar button,.filter button,.smallbtn,.dangerbtn,.select{width:100%}.nav button{width:100%}}
 </style>
 </head>
 <body>
 <div class="shell">
-  <aside class="side">
+  <header id="commandCenter" class="command-center">
     <div class="brand"><div class="mark"></div><div><h1>SkillsForge Library</h1><div class="label">Session-aware local index</div></div></div>
+    <input id="q" class="search" type="search" placeholder="Search skills, sources, hosts, workflows">
+    <div class="header-actions">
+      <select id="themeSelect" class="select" aria-label="Theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select>
+      <button id="refreshBtn" class="smallbtn">Refresh</button>
+      <button id="resetBtn" class="smallbtn">Reset</button>
+    </div>
+  </header>
+  <div class="layout">
+  <aside class="side">
     <div class="stat">
       <div><div class="num">${index.stats.skills}</div><div class="label">skills</div></div>
       <div><div class="num">${index.stats.workflows}</div><div class="label">workflows</div></div>
       <div><div class="num">${index.stats.sources}</div><div class="label">sources</div></div>
       <div><div class="num">${index.session.host ?? "none"}</div><div class="label">session host</div></div>
     </div>
-    <input id="q" class="search" type="search" placeholder="Search skills, sources, triggers">
-    <select id="sourceFilter" class="select" aria-label="Source filter"></select>
+    <div id="settingsPanel" class="panel"><b>Settings</b><div class="meta">recommendThreshold ${index.settings?.recommendThreshold ?? LIBRARY_RECOMMEND_THRESHOLD} / theme ${escStatic(index.settings?.library?.theme ?? "system")}</div><div class="hint">No external assets. Local-only read index.</div><div id="refreshHint" class="hint">Static: run skillsforge lib update after installs.</div></div>
+    <div id="vibeBuilderPanel" class="panel vibe-panel"><b>Vibe Builder</b><div class="hint">Build / Validate / Research / Launch</div><div class="metric-grid"><div class="metric"><b>${builderCount}</b><span class="label">build</span></div><div class="metric"><b>${validationCount}</b><span class="label">validate</span></div><div class="metric"><b>${researchCount}</b><span class="label">research</span></div><div class="metric"><b>${launchCount}</b><span class="label">launch</span></div></div></div>
+    <div id="selectedPanel" class="panel"><b>Selected for this project</b><div class="meta">${index.stats.selectedSkills ?? 0} skills / session score ${index.sessionSummary?.score ?? 0}</div><div class="hint">Use localhost mutation mode to add or remove selected project skills.</div></div>
+    <nav id="navFilters" class="nav" aria-label="Library navigation">
+      <button class="active" data-nav="all"><span>All</span><b>${index.stats.skills}</b></button>
+      <button data-nav="selected"><span>Selected</span><b>${index.stats.selectedSkills ?? 0}</b></button>
+      <button data-nav="installed"><span>Installed</span><b>${index.stats.installedSkills}</b></button>
+      <button data-nav="session"><span>Session</span><b>${index.stats.sessionSkills}</b></button>
+      <button data-nav="workflows"><span>Workflows</span><b>${index.stats.workflows}</b></button>
+      <button data-nav="problems"><span>Problems</span><b>${problemsCount}</b></button>
+      <button data-nav="build"><span>Build</span><b>${builderCount}</b></button>
+      <button data-nav="validate"><span>Validate</span><b>${validationCount}</b></button>
+      <button data-nav="research"><span>Research</span><b>${researchCount}</b></button>
+      <button data-nav="launch"><span>Launch</span><b>${launchCount}</b></button>
+      <button data-nav="design"><span>Design</span><b>${countBy((skill) => skill.category === "design")}</b></button>
+    </nav>
     <h2>Categories</h2>
     <div id="filters" class="filter"></div>
+    <h2>Sources</h2>
+    <select id="sourceFilter" class="select" aria-label="Source filter"></select>
+    <div id="sourceSummary"></div>
     <h2>Hosts</h2>
     <div id="hosts"></div>
   </aside>
   <main class="main">
-    <div class="topbar"><input id="recommendQ" class="search" type="search" placeholder="Describe the task for skill and workflow recommendation"><button id="recommendBtn" class="smallbtn primary">Recommend</button><button id="resetBtn" class="smallbtn">Reset</button></div>
-    <div class="grid">
-      <section><div id="rows" class="rows"></div></section>
-      <aside id="detail" class="detail"></aside>
-    </div>
+    <div id="quickFilters" class="quickbar" aria-label="Quick filters"><span class="label">Quick</span><button class="active" data-quick="all">All</button><button data-quick="build">Build</button><button data-quick="validate">Validate</button><button data-quick="research">Research</button><button data-quick="launch">Launch</button></div>
+    <div class="topbar"><input id="recommendQ" class="search" type="search" placeholder="Describe the task for skill and workflow recommendation"><div class="tools"><button id="recommendBtn" class="smallbtn primary">Recommend</button><span class="viewbar"><button id="viewModeList" class="smallbtn" data-view="list">List</button><button id="viewModeTable" class="smallbtn active" data-view="table">Table</button></span></div></div>
+    <div id="resultMeta" class="pager"></div>
+    <section><div id="rows" class="rows"></div></section>
   </main>
+  <aside id="detail" class="detail" tabindex="-1"><div id="problemsPanel" class="panel"></div><div id="detailBody"></div></aside>
+  </div>
 </div>
 <script id="skillsforge-data" type="application/json">${data}</script>
 <script>
-const data=JSON.parse(document.getElementById('skillsforge-data').textContent);
-let category='all';let source='all';let selected=data.skills[0]?.key;let lastRecommendation=null;
-const q=document.getElementById('q');const rows=document.getElementById('rows');const detail=document.getElementById('detail');const sourceFilter=document.getElementById('sourceFilter');
+function expandRows(rows,fields){if(!Array.isArray(fields))return rows||[];return (rows||[]).map(row=>{if(!Array.isArray(row))return row;const out={};fields.forEach((field,index)=>out[field]=row[index]);return out})}
+function hydratePayload(raw){const data={...raw};data.project=data.project||{selectedSkills:[],defaultWorkflows:[]};data.sessionSummary=data.sessionSummary||{score:0,totals:{events:0},topSkills:[],topWorkflows:[]};data.skills=expandRows(data.skills,data.skillFields).map(s=>({...s,installedHosts:s.installedHosts||[],riskFlags:s.riskFlags||[],recommendedFor:s.recommendedFor||[],notFor:s.notFor||[],projectSelected:Boolean(s.projectSelected)}));data.workflows=expandRows(data.workflows,data.workflowFields).map(w=>({...w,inputs:w.inputs||[],steps:w.steps||[],recommendedSkills:w.recommendedSkills||[],recommendedAgents:w.recommendedAgents||[],commands:w.commands||[],stopGates:w.stopGates||[]}));data.hosts=expandRows(data.hosts,data.hostFields).map(h=>({...h,label:h.label||h.id}));data.sourceDetails=expandRows(data.sourceDetails,data.sourceFields).map(s=>({...s,loadErrors:s.loadErrors||[]}));return data}
+let data=hydratePayload(JSON.parse(document.getElementById('skillsforge-data').textContent));
+let category='all';let source='all';let nav='all';let quick='all';let viewMode='table';let selected=data.skills[0]?.key;let lastRecommendation=null;let windowStart=0;const windowSize=80;
+const q=document.getElementById('q');const rows=document.getElementById('rows');const detail=document.getElementById('detail');const detailBody=document.getElementById('detailBody');const sourceFilter=document.getElementById('sourceFilter');const resultMeta=document.getElementById('resultMeta');
 function esc(v){return String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 const stopWords=new Set(['a','an','and','are','as','at','be','by','do','for','from','in','into','is','it','of','on','or','our','the','then','this','to','with','without']);
 function tokens(v){return (String(v??'').toLowerCase().match(/[a-z0-9]+/g)||[]).filter(t=>!stopWords.has(t))}
 function phrase(q,txt){const parts=tokens(txt);if(!parts.length||parts.length>q.length)return false;for(let i=0;i<=q.length-parts.length;i++){let ok=true;for(let j=0;j<parts.length;j++){if(q[i+j]!==parts[j]){ok=false;break}}if(ok)return true}return false}
-function renderFilters(){const root=document.getElementById('filters');root.innerHTML=['all',...data.categories].map(c=>'<button class="'+(category===c?'active':'')+'" data-cat="'+esc(c)+'">'+esc(c)+'</button>').join('');root.onclick=e=>{if(e.target.dataset.cat){category=e.target.dataset.cat;lastRecommendation=null;render();renderFilters();}}}
-function renderSources(){sourceFilter.innerHTML=['all',...data.sources].map(s=>'<option value="'+esc(s)+'">'+esc(s)+'</option>').join('');sourceFilter.value=source;sourceFilter.onchange=()=>{source=sourceFilter.value;lastRecommendation=null;render();}}
+function sourceById(id){return (data.sourceDetails||[]).find(s=>s.id===id)}
+function renderFilters(){const root=document.getElementById('filters');root.innerHTML=['all',...data.categories].map(c=>'<button class="'+(category===c?'active':'')+'" data-cat="'+esc(c)+'">'+esc(c)+'</button>').join('');root.onclick=e=>{if(e.target.dataset.cat){category=e.target.dataset.cat;lastRecommendation=null;windowStart=0;render();renderFilters();}}}
+function renderSources(){sourceFilter.innerHTML=['all',...data.sources].map(s=>{const d=sourceById(s);return '<option value="'+esc(s)+'">'+esc(s)+(d?' ('+d.skillCount+')':'')+'</option>'}).join('');sourceFilter.value=source;sourceFilter.onchange=()=>{source=sourceFilter.value;lastRecommendation=null;windowStart=0;render();};document.getElementById('sourceSummary').innerHTML=(data.sourceDetails||[]).slice(0,5).map(s=>'<div class="panel"><b>'+esc(s.id)+'</b><div class="meta">'+esc(s.kind)+' / '+esc(s.skillCount)+' skills / '+esc(s.loadErrors.length)+' problems</div></div>').join('')}
+function quickMatch(s){if(quick==='build')return s.category==='builder'||s.id.startsWith('build-')||s.id.startsWith('fullstack-')||s.id.includes('mcp')||s.id.includes('plugin');if(quick==='validate')return s.category==='validation'||s.id.startsWith('validate-')||s.id.includes('proof')||s.id.includes('audit');if(quick==='research')return s.category==='research'||s.id.startsWith('research-')||s.id.includes('source');if(quick==='launch')return ['growth','product','media'].includes(s.category)||s.id.startsWith('startup-')||s.id.includes('launch')||s.id.includes('demo');return true}
+function navMatch(s){if(nav==='selected')return s.projectSelected;if(nav==='installed')return s.installedHosts.length>0;if(nav==='session')return s.sessionInstalled;if(nav==='build')return s.category==='builder'||s.id.startsWith('build-')||s.id.startsWith('fullstack-')||s.id.includes('mcp')||s.id.includes('plugin');if(nav==='validate')return s.category==='validation'||s.id.startsWith('validate-')||s.id.includes('proof')||s.id.includes('audit');if(nav==='research')return s.category==='research'||s.id.startsWith('research-')||s.id.includes('source');if(nav==='launch')return ['growth','product','media'].includes(s.category)||s.id.startsWith('startup-')||s.id.includes('launch')||s.id.includes('demo');if(nav==='design')return s.category==='design';return true}
+function syncQuick(){document.querySelectorAll('#quickFilters button[data-quick]').forEach(b=>b.classList.toggle('active',b.dataset.quick===quick))}
+function syncView(){rows.className='rows '+(viewMode==='table'?'table-mode':'');document.querySelectorAll('.viewbar button[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===viewMode))}
+function syncNav(){document.querySelectorAll('#navFilters button[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===nav))}
 function riskClass(skill){return skill.riskFlags.length>1?'risk-high':skill.riskFlags.length?'risk-medium':'risk-low'}
-function filtered(){const text=q.value.toLowerCase();return data.skills.filter(s=>(category==='all'||s.category===category)&&(source==='all'||s.sourcePlugin===source)&&[s.id,s.description,s.category,s.sourcePlugin,s.sourcePath,...s.recommendedFor].join(' ').toLowerCase().includes(text));}
-function statusChip(s){if(s.sessionInstalled)return '<span class="chip good">current session</span>';if(s.installedHosts.length)return '<span class="chip good">installed</span>';return '<span class="chip">available</span>'}
-function render(){const list=lastRecommendation?lastRecommendation.skills.map(hit=>data.skills.find(s=>s.key===hit.key)).filter(Boolean):filtered();if(!list.find(s=>s.key===selected))selected=list[0]?.key;rows.innerHTML=list.length?list.map(s=>'<button class="row '+(s.key===selected?'active':'')+'" data-key="'+esc(s.key)+'"><span><div class="title">'+esc(s.id)+'</div><div class="meta">'+esc(s.category)+' / '+esc(s.sourcePlugin)+' / '+esc(s.maturity)+'</div><span class="chips">'+statusChip(s)+s.riskFlags.slice(0,2).map(r=>'<span class="chip warn">'+esc(r)+'</span>').join('')+'</span></span><span class="'+riskClass(s)+'">'+(s.riskFlags.length?'review':'clean')+'</span></button>').join(''):'<div class="empty">No skills match the current filters.</div>';renderDetail();}
+function filtered(){const text=q.value.toLowerCase();return data.skills.filter(s=>navMatch(s)&&quickMatch(s)&&(category==='all'||s.category===category)&&(source==='all'||s.sourcePlugin===source)&&[s.id,s.description,s.category,s.sourcePlugin,s.sourceKind,...(s.recommendedFor||[])].join(' ').toLowerCase().includes(text));}
+function statusChip(s){const selected=s.projectSelected?'<span class="chip good">selected</span>':'';if(s.sessionInstalled)return selected+'<span class="chip good">current session</span>';if(s.installedHosts.length)return selected+'<span class="chip good">installed</span>';return selected+'<span class="chip">available</span>'}
+function refreshSelectedPanel(){const selectedCount=data.skills.filter(s=>s.projectSelected).length;data.stats.selectedSkills=selectedCount;document.getElementById('selectedPanel').innerHTML='<b>Selected for this project</b><div class="meta">'+selectedCount+' skills / session score '+esc(data.sessionSummary?.score??0)+'</div><div class="hint">Use localhost mutation mode to add or remove selected project skills.</div>';document.querySelectorAll('#navFilters button[data-nav="selected"] b').forEach(b=>b.textContent=String(selectedCount))}
+function windowedRender(list){const maxStart=Math.max(0,list.length-windowSize);windowStart=Math.min(windowStart,maxStart);const visible=list.slice(windowStart,windowStart+windowSize);return {visible,start:windowStart,end:Math.min(windowStart+windowSize,list.length),total:list.length}}
+function render(){syncView();syncNav();refreshSelectedPanel();if(nav==='workflows'){renderWorkflows();return}if(nav==='problems'){renderProblems();return}const list=lastRecommendation?lastRecommendation.skills.map(hit=>data.skills.find(s=>s.key===hit.key)).filter(Boolean):filtered();if(!list.find(s=>s.key===selected))selected=list[0]?.key;const win=windowedRender(list);resultMeta.innerHTML='<span>Showing '+win.start+'-'+win.end+' of '+win.total+' skills</span>'+pagerHtml(win);rows.innerHTML=list.length?(viewMode==='table'?renderSkillTable(win.visible):win.visible.map(renderSkillCard).join('')):'<div class="empty">No skills match the current filters.</div>';bindPager();renderDetail();}
+function renderSkillCard(s){return '<button class="row '+(s.key===selected?'active':'')+'" data-key="'+esc(s.key)+'"><span><div class="title">'+esc(s.id)+'</div><div class="meta">'+esc(s.category)+' / '+esc(s.sourcePlugin)+' / '+esc(s.maturity)+'</div><span class="chips">'+statusChip(s)+s.riskFlags.slice(0,2).map(r=>'<span class="chip warn">'+esc(r)+'</span>').join('')+'</span></span><span class="'+riskClass(s)+'">'+(s.riskFlags.length?'review':'clean')+'</span></button>'}
+function renderSkillTable(list){return '<div class="compare-wrap"><table class="compare"><thead><tr><th>Skill</th><th>Category</th><th>Source</th><th>Hosts</th><th>Risk</th><th>Mode</th><th>Actions</th></tr></thead><tbody>'+list.map(s=>'<tr class="'+(s.key===selected?'active':'')+'" data-key="'+esc(s.key)+'"><td><b>'+esc(s.id)+'</b><div class="hint">'+esc(s.description||'')+'</div></td><td>'+esc(s.category)+'</td><td>'+esc(s.sourcePlugin)+'<div class="hint">'+esc(s.sourceKind||'')+'</div></td><td>'+esc(s.installedHosts.join(', ')||'available')+'</td><td><span class="'+riskClass(s)+'">'+esc(s.riskFlags.length?s.riskFlags.slice(0,2).join(', '):'clean')+'</span></td><td>'+esc(s.routingMode)+'</td><td><button class="smallbtn" data-key="'+esc(s.key)+'">Open</button></td></tr>').join('')+'</tbody></table></div>'}
+function pagerHtml(win){if(win.total<=windowSize)return '';return '<span><button id="prevPage" class="smallbtn" '+(win.start===0?'disabled':'')+'>Prev</button><button id="nextPage" class="smallbtn" '+(win.end>=win.total?'disabled':'')+'>Next</button></span>'}
+function bindPager(){const prev=document.getElementById('prevPage');const next=document.getElementById('nextPage');if(prev)prev.onclick=()=>{windowStart=Math.max(0,windowStart-windowSize);render()};if(next)next.onclick=()=>{windowStart+=windowSize;render()}}
+function renderWorkflows(){const text=q.value.toLowerCase();const list=data.workflows.filter(w=>[w.id,w.category,w.goal,...(w.recommendedSkills||[]),...(w.recommendedAgents||[])].join(' ').toLowerCase().includes(text));const win=windowedRender(list);resultMeta.innerHTML='<span>Showing '+win.start+'-'+win.end+' of '+win.total+' workflows</span>'+pagerHtml(win);rows.innerHTML=win.visible.length?win.visible.map(w=>'<button class="row" data-workflow="'+esc(w.id)+'"><span><div class="title">'+esc(w.id)+'</div><div class="meta">'+esc(w.category)+' / '+esc(w.risk)+'</div><div class="hint">'+esc(w.goal)+'</div></span><span>'+esc((w.recommendedSkills||[]).length)+' skills</span></button>').join(''):'<div class="empty">No workflows match.</div>';bindPager();if(!detailBody.innerHTML||detailBody.textContent.includes('Workflow Browser'))detailBody.innerHTML='<h2>Workflow Browser</h2><p class="hint">Dry-run workflow commands before using them in an AI CLI.</p>';document.getElementById('problemsPanel').innerHTML=problemSummaryHtml()}
+function problemItems(){const direct=(data.errors||[]).map(e=>({source:e.source||'index',file:e.file||'',error:e.error||'',optional:e.optional===true}));const fromSources=(data.sourceDetails||[]).flatMap(s=>(s.loadErrors||[]).map(e=>({source:s.id,file:e.file,error:e.error,optional:e.optional===true})));const seen=new Set();return [...direct,...fromSources].filter(e=>{const key=e.source+'|'+e.file+'|'+e.error;if(seen.has(key))return false;seen.add(key);return true})}
+function problemSummaryHtml(){const items=problemItems();return '<b>Problems</b><div class="meta">'+items.length+' load/config issues</div>'+(items.length?'<div class="hint">Open Problems to inspect optional bad skills, missing frontmatter, and load errors.</div>':'<div class="hint">No library load errors in this index.</div>')}
+function renderProblems(){const list=problemItems();resultMeta.innerHTML='<span>'+list.length+' problems</span>';rows.innerHTML=list.length?list.map(e=>'<div class="panel problem '+(e.optional?'':'bad')+'"><b>'+esc(e.source)+'</b><div class="meta">'+esc(e.optional?'optional':'blocking')+'</div><pre>'+esc(e.file+'\\n'+e.error)+'</pre></div>').join(''):'<div class="empty">No optional bad skills, missing frontmatter, or load errors were found.</div>';document.getElementById('problemsPanel').innerHTML=problemSummaryHtml();detailBody.innerHTML='<h2>Problems Panel</h2><p class="hint">Fix bad installed skills, refresh with skillsforge lib update, then rebuild the HTML.</p>'}
 function hostOptions(s){const installed=new Set(s.installedHosts);const hosts=data.hosts.filter(h=>h.detected||installed.has(h.id));const list=hosts.length?hosts:data.hosts;return list.map(h=>'<option value="'+esc(h.id)+'">'+esc(h.id)+(installed.has(h.id)?' installed':'')+'</option>').join('')}
 function removalCommand(s,host){return 'skillsforge lib remove --host '+host+' --skill '+s.id+' --dry-run'}
-function renderDetail(){const s=data.skills.find(x=>x.key===selected);if(!s){detail.innerHTML='<p>No skill selected.</p>';return}const rec=lastRecommendation?lastRecommendation.skills.find(r=>r.key===s.key):null;detail.innerHTML='<h2>'+esc(s.id)+'</h2><p>'+esc(s.description||'No description provided')+'</p><div class="chips"><span class="chip">'+esc(s.category)+'</span><span class="chip">'+esc(s.sourcePlugin)+'</span><span class="chip">'+esc(s.maturity)+'</span>'+statusChip(s)+'</div>'+(rec?'<h2>Recommendation score</h2><pre>'+esc(String(rec.score)+'\\n'+rec.reasons.join('\\n'))+'</pre>':'')+'<h2>Recommended for</h2><pre>'+esc(s.recommendedFor.join('\\n')||'No triggers')+'</pre><h2>Risk flags</h2><pre>'+esc(s.riskFlags.join('\\n')||'No obvious capability risk flags')+'</pre><h2>Installed hosts</h2><pre>'+esc(s.installedHosts.join('\\n')||'Not installed in detected host roots')+'</pre><h2>Removal check</h2><select id="removeHost" class="select">'+hostOptions(s)+'</select><div class="action-row"><button id="removePreview" class="smallbtn">Dry-run</button><button id="removeConfirm" class="dangerbtn">Remove</button></div><pre id="removeResult"></pre><h2>Source</h2><pre>'+esc(s.sourcePath)+'</pre>';bindRemoval(s)}
+function relatedWorkflows(s){return data.workflows.filter(w=>(w.recommendedSkills||[]).includes(s.id)).slice(0,6)}
+function bestReason(s,workflows,rec){const reasons=[];if(s.projectSelected)reasons.push('already selected for this project');if(s.sessionInstalled)reasons.push('installed in the current AI CLI session');else if(s.installedHosts.length)reasons.push('installed in '+s.installedHosts.join(', '));if(rec?.reasons?.length)reasons.push('matched by '+rec.reasons.slice(0,3).join(', '));if(workflows.length)reasons.push('used by '+workflows.length+' workflow(s)');if(s.riskFlags.length)reasons.push('requires review: '+s.riskFlags.slice(0,2).join(', '));return reasons.join(' / ')||'available in the library; select it only when the task matches its triggers'}
+function renderDetail(){const s=data.skills.find(x=>x.key===selected);document.getElementById('problemsPanel').innerHTML=problemSummaryHtml();if(!s){detailBody.innerHTML='<p>No skill selected.</p>';return}const rec=lastRecommendation?lastRecommendation.skills.find(r=>r.key===s.key):null;const src=sourceById(s.sourcePlugin)||{};const workflows=relatedWorkflows(s);detailBody.innerHTML='<h2>'+esc(s.id)+'</h2><p>'+esc(s.description||'No description provided')+'</p><div class="chips"><span class="chip">'+esc(s.category)+'</span><span class="chip">'+esc(s.sourcePlugin)+'</span><span class="chip">'+esc(s.maturity)+'</span>'+statusChip(s)+'</div><div class="panel"><b>Best for this project</b><div class="meta">session score '+esc(data.sessionSummary?.score??0)+' / '+(s.projectSelected?'selected':'not selected')+'</div><div class="hint">'+esc(bestReason(s,workflows,rec))+'</div></div>'+(rec?'<h2>Why recommended</h2><pre>'+esc(String(rec.score)+'\\n'+rec.reasons.join('\\n'))+'</pre>':'')+'<h2>Minimum skill rules</h2><pre>'+esc(['Prefer session-installed when it directly fits.','Prefer selected project skills when they directly fit.','Prefer installed before repo/cache.','Use the smallest skill that covers the task.','Use workflows for multi-step work.','Writes, installs, deletes, and shell execution require explicit confirmation.'].join('\\n'))+'</pre><h2>Related workflows</h2><pre>'+esc(workflows.map(w=>w.id+' - '+w.goal).join('\\n')||'No workflow currently recommends this skill')+'</pre><h2>Next commands</h2><pre>'+esc(['skillsforge lib check --skill '+s.id,'skillsforge lib recommend --query "<task>" --json',workflows[0]?'skillsforge workflows show --id '+workflows[0].id:'skillsforge workflows recommend --query "<task>" --json'].join('\\n'))+'</pre><h2>Recommended for</h2><pre>'+esc((s.recommendedFor||[]).join('\\n')||'No triggers')+'</pre><h2>Risk gates</h2><pre>'+esc((s.riskFlags||[]).join('\\n')||'No obvious capability risk flags')+'</pre><h2>Installed hosts</h2><pre>'+esc((s.installedHosts||[]).join('\\n')||'Not installed in detected host roots')+'</pre><h2>Project selection</h2><div class="action-row"><button id="projectSelect" class="smallbtn primary">'+(s.projectSelected?'Refresh selected':'Add to project')+'</button><button id="projectUnselect" class="smallbtn">Remove from project</button></div><pre id="projectResult"></pre><h2>Removal check</h2><select id="removeHost" class="select">'+hostOptions(s)+'</select><div class="action-row"><button id="removePreview" class="smallbtn">Dry-run</button><button id="removeConfirm" class="dangerbtn">Remove installed skill</button></div><pre id="removeResult"></pre><h2>Source / plugin</h2><pre>'+esc(['id: '+(src.id||s.sourcePlugin),'kind: '+(src.kind||s.sourceKind||'unknown'),'provider: '+(src.provider||'none'),'plugin: '+(src.plugin||'none'),'version: '+(src.version||'none'),'root: '+(src.root||'unknown')].join('\\n'))+'</pre>';bindRemoval(s);bindProjectSelection(s)}
 function bindRemoval(s){const host=document.getElementById('removeHost');const preview=document.getElementById('removePreview');const confirm=document.getElementById('removeConfirm');const out=document.getElementById('removeResult');const ui=data.ui||{};function show(value){out.textContent=typeof value==='string'?value:JSON.stringify(value,null,2)}function plan(){return {dryRun:true,command:removalCommand(s,host.value),apiEnabled:Boolean(ui.apiEnabled),allowMutations:Boolean(ui.allowMutations)}}show(plan());preview.onclick=async()=>{if(!ui.apiEnabled){show(plan());return}const res=await fetch('/api/remove',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({host:host.value,skill:s.id})});show(await res.json())};confirm.disabled=!ui.allowMutations;confirm.onclick=async()=>{if(!ui.allowMutations){show(plan());return}const typed=window.prompt('Type '+s.id+' to remove from '+host.value);if(typed!==s.id){show('confirmation mismatch');return}const res=await fetch('/api/remove',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({host:host.value,skill:s.id,yes:true})});show(await res.json())};host.onchange=()=>show(plan())}
-function scoreSkill(text,s){const q=tokens(text);const qset=new Set(q);const stokens=tokens([s.id,s.description,s.category,s.sourcePlugin,s.origin,...s.recommendedFor,...s.notFor].join(' '));const hits=[...new Set(stokens.filter(t=>qset.has(t)))];let score=hits.length;const reasons=hits.slice(0,8).map(t=>'token:'+t);if(phrase(q,s.id)){score+=8;reasons.push('id-match')}if(qset.has(s.category)){score+=3;reasons.push('category-match')}if(data.session.host&&s.installedHosts.includes(data.session.host)){score+=2;reasons.push('session-installed')}else if(s.installedHosts.length){score+=1;reasons.push('installed-host')}if(s.riskFlags.length>1){score-=1;reasons.push('risk-review')}return {key:s.key,id:s.id,category:s.category,sourcePlugin:s.sourcePlugin,installedHosts:s.installedHosts,description:s.description,score,reasons}}
+function projectCommand(s,action){return 'skillsforge lib '+action+' --skill '+s.id}
+function bindProjectSelection(s){const add=document.getElementById('projectSelect');const remove=document.getElementById('projectUnselect');const out=document.getElementById('projectResult');const ui=data.ui||{};function show(value){out.textContent=typeof value==='string'?value:JSON.stringify(value,null,2)}function dry(action){return {dryRun:true,command:projectCommand(s,action),apiEnabled:Boolean(ui.apiEnabled),allowMutations:Boolean(ui.allowMutations)}}async function mutate(action){if(!ui.apiEnabled||!ui.allowMutations){show(dry(action));return}const endpoint=action==='select'?'/api/project/select':'/api/project/unselect';const res=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({skill:s.id})});const json=await res.json();show(json);if(json.ok){s.projectSelected=action==='select';data.project.selectedSkills=json.selectedSkills||data.skills.filter(item=>item.projectSelected).map(item=>item.id);refreshSelectedPanel();render()}}show(s.projectSelected?{selected:true,command:projectCommand(s,'unselect')}:{selected:false,command:projectCommand(s,'select')});add.onclick=()=>mutate('select');remove.onclick=()=>mutate('unselect')}
+function scoreSkill(text,s){const q=tokens(text);const qset=new Set(q);const stokens=tokens([s.id,s.description,s.category,s.sourcePlugin,s.origin,...(s.recommendedFor||[]),...(s.notFor||[])].join(' '));const hits=[...new Set(stokens.filter(t=>qset.has(t)))];let score=hits.length;const reasons=hits.slice(0,8).map(t=>'token:'+t);if(phrase(q,s.id)){score+=8;reasons.push('id-match')}if(qset.has(s.category)){score+=3;reasons.push('category-match')}if(data.session.host&&s.installedHosts.includes(data.session.host)){score+=2;reasons.push('session-installed')}else if(s.installedHosts.length){score+=1;reasons.push('installed-host')}if(s.projectSelected&&score>0){score+=2;reasons.push('project-selected')}if(s.riskFlags.length>1){score-=1;reasons.push('risk-review')}return {key:s.key,id:s.id,category:s.category,sourcePlugin:s.sourcePlugin,sourceKind:s.sourceKind,installedHosts:s.installedHosts,sessionInstalled:s.sessionInstalled,projectSelected:s.projectSelected,description:s.description,score,reasons}}
 function scoreWorkflow(text,w,skillHits){const q=tokens(text);const qset=new Set(q);const wtokens=tokens([w.id,w.category,w.goal,w.qualityGate,...w.recommendedSkills,...w.recommendedAgents,...(w.commands||[])].join(' '));const hits=[...new Set(wtokens.filter(t=>qset.has(t)))];let score=hits.length;const reasons=hits.slice(0,8).map(t=>'token:'+t);if(phrase(q,w.id)){score+=8;reasons.push('id-match')}if(qset.has(w.category)){score+=3;reasons.push('category-match')}const matched=new Set(skillHits.map(s=>s.id));const overlap=w.recommendedSkills.filter(s=>matched.has(s)).length;if(overlap){score+=overlap;reasons.push('skill-overlap:'+overlap)}return {id:w.id,category:w.category,goal:w.goal,recommendedSkills:w.recommendedSkills,recommendedAgents:w.recommendedAgents,risk:w.risk,score,reasons}}
-function localRecommend(text){const skills=data.skills.map(s=>scoreSkill(text,s)).filter(s=>s.score>0).sort((a,b)=>b.score-a.score||a.key.localeCompare(b.key)).slice(0,8);const workflows=data.workflows.map(w=>scoreWorkflow(text,w,skills)).filter(w=>w.score>0).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id)).slice(0,8);return {ok:true,query:text,sessionHost:data.session.host,skills,workflows,policy:'read-only recommendation'}}
-function renderRecommendation(result){lastRecommendation=result;selected=result.skills[0]?.key||selected;render();const blocks=result.workflows.length?result.workflows.map(w=>'<div class="panel"><b>'+esc(w.id)+'</b><p>'+esc(w.goal)+'</p><div class="meta">'+esc(w.category)+' / '+esc(w.risk)+' / score '+esc(w.score)+'</div><pre>'+esc(w.reasons.join('\\n'))+'</pre></div>').join(''):'<div class="empty">No workflow matched this query.</div>';detail.innerHTML='<h2>Workflow recommendations</h2><p class="hint">'+esc(result.policy||'read-only recommendation')+'</p>'+blocks}
+function localRecommend(text){const threshold=Number(data.settings?.recommendThreshold??${LIBRARY_RECOMMEND_THRESHOLD});const skills=data.skills.map(s=>scoreSkill(text,s)).filter(s=>s.score>=threshold).sort((a,b)=>b.score-a.score||a.key.localeCompare(b.key)).slice(0,8);const workflows=data.workflows.map(w=>scoreWorkflow(text,w,skills)).filter(w=>w.score>=threshold).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id)).slice(0,8);const confidence=!text.trim()||(!skills.length&&!workflows.length)?'none':(skills[0]?.score>=threshold+2||workflows[0]?.score>=threshold+2)?'high':'low';return {ok:true,query:text,sessionHost:data.session.host,confidence,note:confidence==='none'?'no confident match; refine the query or browse catalog':'',skills,workflows,policy:'read-only recommendation'}}
+function workflowStepText(step,index){if(typeof step==='string')return (index+1)+'. '+step;return (index+1)+'. '+(step.id||'step')+' - '+(step.action||step.note||'review')+(step.skill?' / skill '+step.skill:'')+(step.agent?' / agent '+step.agent:'')+(step.command?' / '+step.command:'')}
+function workflowRememberCommand(w){return 'skillsforge session remember --query "<task>" --workflow '+w.id+' --reason "workflow selected from library" --tokens '+(w.tokenBudget||0)}
+function renderWorkflowDetail(w,rec){document.getElementById('problemsPanel').innerHTML=problemSummaryHtml();detailBody.innerHTML='<h2>'+esc(w.id)+'</h2><p>'+esc(w.goal)+'</p><div class="chips"><span class="chip">'+esc(w.category)+'</span><span class="chip '+(w.risk==='low'?'good':'warn')+'">'+esc(w.risk)+'</span><span class="chip">tokens '+esc(w.tokenBudget||0)+'</span></div>'+(rec?'<h2>Why recommended</h2><pre>'+esc(String(rec.score)+'\\n'+(rec.reasons||[]).join('\\n'))+'</pre>':'')+'<h2>Runbook</h2><pre>'+esc((w.steps||[]).map(workflowStepText).join('\\n')||'No steps recorded')+'</pre><h2>Skills</h2><pre>'+esc((w.recommendedSkills||[]).join('\\n')||'No recommended skills')+'</pre><h2>Agents</h2><pre>'+esc((w.recommendedAgents||[]).join('\\n')||'No recommended agents')+'</pre><h2>Commands</h2><pre>'+esc((w.commands||[]).join('\\n')||'No commands')+'</pre><h2>Stop gates</h2><pre>'+esc((w.stopGates||[]).join('\\n')||'No stop gates')+'</pre><h2>Session memory</h2><div class="action-row"><button id="useWorkflow" class="smallbtn primary">Use this workflow</button></div><pre id="workflowResult"></pre>';bindWorkflowUse(w)}
+function bindWorkflowUse(w){const btn=document.getElementById('useWorkflow');const out=document.getElementById('workflowResult');const ui=data.ui||{};function show(value){out.textContent=typeof value==='string'?value:JSON.stringify(value,null,2)}function dry(){return {dryRun:true,command:workflowRememberCommand(w),apiEnabled:Boolean(ui.apiEnabled),allowMutations:Boolean(ui.allowMutations)}}show(dry());btn.onclick=async()=>{if(!ui.apiEnabled||!ui.allowMutations){show(dry());return}const query=document.getElementById('recommendQ').value.trim()||q.value.trim()||w.goal;const res=await fetch('/api/session/remember',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,selectedWorkflow:w.id,agentRole:data.session?.host,score:70,reasons:['workflow selected from library'],commandsSuggested:w.commands,tokensEstimated:w.tokenBudget,outcome:'workflow selected',verification:'pending'})});const json=await res.json();show(json);if(json.summary){data.sessionSummary=json.summary;refreshSelectedPanel()}}}
+function renderRecommendation(result){lastRecommendation=result;selected=result.skills[0]?.key||selected;render();if(result.confidence==='none'||(!result.skills.length&&!result.workflows.length)){detailBody.innerHTML='<h2>No confident match</h2><p class="hint">'+esc(result.note||'Refine the query, or use catalog / route with --include-explicit.')+'</p><div class="empty">No skill or workflow cleared the confidence threshold. This is intentional - SkillsForge will not force a recommendation.</div>';return}const blocks=result.workflows.length?result.workflows.map(w=>'<div class="panel"><b>'+esc(w.id)+'</b><p>'+esc(w.goal)+'</p><div class="meta">'+esc(w.category)+' / '+esc(w.risk)+' / score '+esc(w.score)+'</div><pre>'+esc((w.reasons||[]).join('\\n'))+'</pre><button class="smallbtn" data-rec-workflow="'+esc(w.id)+'">Open workflow</button></div>').join(''):'<div class="empty">No workflow matched this query.</div>';detailBody.innerHTML='<h2>Workflow recommendations</h2><p class="hint">'+esc(result.policy||'read-only recommendation')+' - confidence '+esc(result.confidence||'low')+'</p>'+blocks;detailBody.onclick=e=>{const b=e.target.closest('[data-rec-workflow]');if(!b)return;const workflow=data.workflows.find(item=>item.id===b.dataset.recWorkflow);const rec=result.workflows.find(item=>item.id===b.dataset.recWorkflow);if(workflow)renderWorkflowDetail(workflow,rec)}}
 async function recommend(){const text=document.getElementById('recommendQ').value.trim();if(!text)return;const ui=data.ui||{};if(ui.apiEnabled){const res=await fetch('/api/recommend?query='+encodeURIComponent(text));renderRecommendation(await res.json());return}renderRecommendation(localRecommend(text))}
-rows.onclick=e=>{const b=e.target.closest('button[data-key]');if(b){selected=b.dataset.key;render();}};q.oninput=()=>{lastRecommendation=null;render()};
+async function refreshLibrary(){const ui=data.ui||{};const hint=document.getElementById('refreshHint');if(!ui.apiEnabled){hint.textContent='Static file: run skillsforge lib update, then reopen this HTML.';return}hint.textContent='Refreshing...';const res=await fetch('/skillsforge-library.json');const next=await res.json();data=hydratePayload({...next,ui});selected=data.skills[0]?.key;lastRecommendation=null;windowStart=0;renderAll();hint.textContent='Refreshed from localhost JSON.'}
+rows.onclick=e=>{const b=e.target.closest('[data-key]');if(b){selected=b.dataset.key;render();}const w=e.target.closest('[data-workflow]');if(w){const workflow=data.workflows.find(item=>item.id===w.dataset.workflow);if(workflow)renderWorkflowDetail(workflow);}};q.oninput=()=>{lastRecommendation=null;windowStart=0;render()};
 document.getElementById('hosts').innerHTML=data.hosts.map(h=>'<div class="panel"><b>'+esc(h.id)+'</b><div class="meta">'+(h.detected?'detected':'missing')+' / '+esc(h.fidelity)+'</div><div class="hint">'+esc(h.skillsDir)+'</div></div>').join('');
-document.getElementById('recommendBtn').onclick=recommend;document.getElementById('resetBtn').onclick=()=>{lastRecommendation=null;q.value='';document.getElementById('recommendQ').value='';category='all';source='all';renderFilters();renderSources();render()};
-renderFilters();renderSources();render();
+document.getElementById('quickFilters').onclick=e=>{if(e.target.dataset.quick){quick=e.target.dataset.quick;lastRecommendation=null;windowStart=0;syncQuick();render();}};
+document.getElementById('navFilters').onclick=e=>{const b=e.target.closest('button[data-nav]');if(b){nav=b.dataset.nav;lastRecommendation=null;windowStart=0;syncNav();render();}};
+document.querySelector('.viewbar').onclick=e=>{if(e.target.dataset.view){viewMode=e.target.dataset.view;syncView();render();}};
+document.getElementById('recommendBtn').onclick=recommend;document.getElementById('refreshBtn').onclick=refreshLibrary;document.getElementById('resetBtn').onclick=()=>{lastRecommendation=null;q.value='';document.getElementById('recommendQ').value='';category='all';source='all';nav='all';quick='all';viewMode='table';windowStart=0;renderAll()};
+function applyTheme(theme){const value=theme==='light'||theme==='dark'?theme:'system';document.documentElement.dataset.theme=value==='system'?'':value;try{localStorage.setItem('skillsforge-theme',value)}catch{}document.getElementById('themeSelect').value=value}
+document.getElementById('themeSelect').onchange=e=>applyTheme(e.target.value);
+document.addEventListener('keydown',e=>{const tag=document.activeElement?.tagName;const typing=tag==='INPUT'||tag==='SELECT'||tag==='TEXTAREA';if(e.key==='/'&&!typing){e.preventDefault();q.focus();return}if(e.key==='Escape'){lastRecommendation=null;q.value='';windowStart=0;render();return}if((e.key==='ArrowDown'||e.key==='ArrowUp')&&!typing&&nav!=='workflows'&&nav!=='problems'){const list=lastRecommendation?lastRecommendation.skills.map(hit=>data.skills.find(s=>s.key===hit.key)).filter(Boolean):filtered();const index=Math.max(0,list.findIndex(s=>s.key===selected));const next=e.key==='ArrowDown'?Math.min(list.length-1,index+1):Math.max(0,index-1);selected=list[next]?.key||selected;if(next<windowStart)windowStart=next;if(next>=windowStart+windowSize)windowStart=next-windowSize+1;e.preventDefault();render();return}if(e.key==='Enter'&&!typing){detail.focus()}});
+function renderAll(){renderFilters();renderSources();syncQuick();syncView();syncNav();render()}
+try{applyTheme(localStorage.getItem('skillsforge-theme')||data.settings?.library?.theme||'system')}catch{applyTheme(data.settings?.library?.theme||'system')}
+renderAll();
 </script>
 </body>
 </html>
 `;
+}
+function buildLibraryUiPayload(index, ui) {
+  const skillFields = [
+    "key",
+    "id",
+    "description",
+    "category",
+    "sourcePlugin",
+    "sourceKind",
+    "installedHosts",
+    "sessionInstalled",
+    "projectSelected",
+    "origin",
+    "maturity",
+    "riskFlags",
+    "recommendedFor",
+    "routingMode"
+  ];
+  const workflowFields = [
+    "id",
+    "category",
+    "goal",
+    "inputs",
+    "steps",
+    "recommendedSkills",
+    "recommendedAgents",
+    "commands",
+    "stopGates",
+    "tokenBudget",
+    "qualityGate",
+    "risk"
+  ];
+  const hostFields = ["id", "detected", "skillsDir", "fidelity"];
+  const sourceFields = [
+    "id",
+    "kind",
+    "root",
+    "plugin",
+    "provider",
+    "version",
+    "skillCount",
+    "installedCount",
+    "sessionCount",
+    "loadErrors"
+  ];
+  return {
+    ok: index.ok,
+    generatedAt: index.generatedAt,
+    settings: index.settings,
+    stats: index.stats,
+    session: index.session,
+    sessionSummary: index.sessionSummary,
+    project: index.project,
+    categories: index.categories,
+    sources: index.sources,
+    sourceFields,
+    sourceDetails: (index.sourceDetails ?? []).map((source) => sourceFields.map((field) => source[field])),
+    hostFields,
+    hosts: index.hosts.map((host) => hostFields.map((field) => host[field])),
+    errors: index.errors,
+    skillFields,
+    skills: index.skills.map((skill) => skillFields.map((field) => skill[field])),
+    workflowFields,
+    workflows: index.workflows.map((workflow) => workflowFields.map((field) => workflow[field])),
+    ui: {
+      apiEnabled: ui.apiEnabled === true,
+      allowMutations: ui.allowMutations === true,
+      fullDataPath: "skillsforge-library.json",
+      staticRefreshCommand: "skillsforge lib update"
+    }
+  };
 }
 function buildAiIndexHtml(index) {
   const compact = {
     generatedAt: index.generatedAt,
     stats: index.stats,
     session: index.session,
-    instruction: "Use key, id, recommendedFor, notFor, category, sourcePlugin, installedHosts, sessionInstalled, and riskFlags to pick the smallest useful skill or workflow for this session. Prefer current-session installed skills when they fit. Do not execute write, remove, install, or shell actions without explicit user confirmation.",
+    instruction: "Use key, id, recommendedFor, notFor, category, sourcePlugin, sourceDetails, installedHosts, sessionInstalled, and riskFlags to pick the smallest matching skill or workflow for this session. Prefer current-session installed skills when they fit. Do not execute write, remove, install, or shell actions without explicit user confirmation.",
+    project: index.project,
+    sessionSummary: index.sessionSummary,
+    selectionRules: [
+      "Prefer current-session installed skills when they directly match the task.",
+      "Prefer project.selectedSkills when they directly match this repository task.",
+      "Prefer installed host skills before repo/cache skills when quality and fit are equal.",
+      "Use the smallest matching skill; do not stack broad packs when one focused skill is enough.",
+      "Use workflows for multi-step build, validation, launch, or recovery tasks.",
+      "Record skill/workflow usage with skillsforge session remember after meaningful task turns.",
+      "Never perform writes, installs, removals, package publishing, or shell execution without explicit user confirmation."
+    ],
+    settings: index.settings,
+    sourceDetails: (index.sourceDetails ?? []).map((source) => ({
+      id: source.id,
+      kind: source.kind,
+      root: source.root,
+      plugin: source.plugin,
+      provider: source.provider,
+      version: source.version,
+      skillCount: source.skillCount,
+      installedCount: source.installedCount,
+      sessionCount: source.sessionCount,
+      loadErrors: source.loadErrors
+    })),
     skills: index.skills.map((skill) => ({
       key: skill.key,
       id: skill.id,
       category: skill.category,
       sourcePlugin: skill.sourcePlugin,
+      sourceKind: skill.sourceKind,
+      sourcePluginName: skill.sourcePluginName,
+      sourcePluginVersion: skill.sourcePluginVersion,
+      sourceProvider: skill.sourceProvider,
       sourcePath: skill.sourcePath,
       installedHosts: skill.installedHosts,
       sessionInstalled: skill.sessionInstalled,
+      projectSelected: skill.projectSelected,
       recommendedFor: skill.recommendedFor,
       notFor: skill.notFor,
       riskFlags: skill.riskFlags
@@ -21944,14 +23044,18 @@ async function resolveInstalledSkillTarget(options = {}) {
   if (skill !== options.skill || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(skill)) {
     throw new Error("skill must be a skill id");
   }
-  const target = resolve21(host.skillsDir, skill);
-  if (!isInside6(host.skillsDir, target)) throw new Error("resolved skill path escaped host skills directory");
-  return { host, skill, path: target, exists: await pathExists8(target) };
+  const target = resolve23(host.skillsDir, skill);
+  if (!isInside7(host.skillsDir, target)) throw new Error("resolved skill path escaped host skills directory");
+  return { host, skill, path: target, exists: await pathExists10(target) };
 }
 function summarizeSkill(root, skill, context) {
-  const sourcePlugin = detectSourcePlugin(root, skill.directory, context.home);
+  const sourceInfo = detectSourceInfo(root, skill.directory, {
+    home: context.home,
+    extraSkillRoots: context.extraSkillRoots
+  });
+  const sourcePlugin = sourceInfo.id;
   const category = skill.sidecar?.routing?.pack ?? context.packBySkill.get(skill.name) ?? "unpacked";
-  const installedHosts = context.hosts.filter((host) => context.installed.get(`${host.id}:${skill.name}`)).map((host) => host.id);
+  const installedHosts = context.hosts.filter((host) => context.installed.has(host.id, skill.name)).map((host) => host.id);
   const recommendedFor = (skill.sidecar?.routing?.triggers ?? []).slice(0, 6);
   return {
     id: skill.name,
@@ -21959,6 +23063,10 @@ function summarizeSkill(root, skill, context) {
     description: skill.description,
     category,
     sourcePlugin,
+    sourceKind: sourceInfo.kind,
+    sourcePluginName: sourceInfo.plugin,
+    sourcePluginVersion: sourceInfo.version,
+    sourceProvider: sourceInfo.provider,
     sourceRoot: displayPath(root, skill.sourceRoot ?? skill.directory, context.home),
     sourcePath: displayPath(root, skill.directory, context.home),
     installedHosts,
@@ -21999,34 +23107,149 @@ function buildPackMap(catalog) {
   }
   return map;
 }
-function detectSourcePlugin(root, directory, homeOption) {
-  if (isInside6(root, directory)) {
-    const rel = relative12(root, directory).replaceAll("\\", "/");
+async function buildHostInstallIndex(hosts, settings = {}) {
+  const checks = /* @__PURE__ */ new Map();
+  const useCache = settings.library?.cacheHostChecks !== false;
+  const entriesByDir = /* @__PURE__ */ new Map();
+  await Promise.all(hosts.map(async (host) => {
+    const key = resolve23(host.skillsDir);
+    let names = entriesByDir.get(key);
+    if (!names || !useCache) {
+      names = /* @__PURE__ */ new Set();
+      try {
+        const entries = await readdir11(host.skillsDir, { withFileTypes: true });
+        for (const entry of entries) {
+          if (entry.isDirectory()) names.add(entry.name);
+        }
+      } catch {
+        names = /* @__PURE__ */ new Set();
+      }
+      if (useCache) entriesByDir.set(key, names);
+    }
+    checks.set(host.id, names);
+  }));
+  return {
+    has(hostId, skillName) {
+      return checks.get(hostId)?.has(skillName) === true;
+    }
+  };
+}
+function buildSourceDetails(root, records, errors, context = {}) {
+  const sources = /* @__PURE__ */ new Map();
+  function ensure(info, sourceRoot) {
+    const existing = sources.get(info.id) ?? {
+      id: info.id,
+      kind: info.kind,
+      root: sourceRoot,
+      roots: [],
+      plugin: info.plugin ?? null,
+      provider: info.provider ?? null,
+      version: info.version ?? null,
+      skillCount: 0,
+      installedCount: 0,
+      sessionCount: 0,
+      loadErrors: []
+    };
+    if (sourceRoot && !existing.roots.includes(sourceRoot)) existing.roots.push(sourceRoot);
+    if (!existing.root && sourceRoot) existing.root = sourceRoot;
+    sources.set(info.id, existing);
+    return existing;
+  }
+  for (const record of records) {
+    const info = {
+      id: record.sourcePlugin,
+      kind: record.sourceKind ?? "local",
+      plugin: record.sourcePluginName ?? null,
+      provider: record.sourceProvider ?? null,
+      version: record.sourcePluginVersion ?? null
+    };
+    const source = ensure(info, record.sourceRoot);
+    source.skillCount += 1;
+    if (record.installedHosts.length > 0) source.installedCount += 1;
+    if (record.sessionInstalled) source.sessionCount += 1;
+  }
+  for (const error of errors) {
+    const errorDir = error.file ?? error.directory ?? "";
+    const info = detectSourceInfo(root, errorDir || root, context);
+    const sourceRoot = displayPath(root, dirname13(errorDir || root), context.home);
+    const source = ensure(info, sourceRoot);
+    source.loadErrors.push({
+      file: displayPath(root, errorDir, context.home),
+      error: error.error ?? error.message,
+      optional: error.optional === true
+    });
+  }
+  return [...sources.values()].map((source) => ({
+    ...source,
+    root: source.root ?? source.roots[0] ?? "",
+    roots: source.roots.sort(),
+    loadErrors: source.loadErrors.sort((left, right) => left.file.localeCompare(right.file))
+  })).sort((left, right) => left.id.localeCompare(right.id));
+}
+function detectSourceInfo(root, directory, options = {}) {
+  const homeOption = options.home;
+  const extraSkillRoots = normalizeExtraSkillRoots(root, options.extraSkillRoots);
+  if (isInside7(root, directory)) {
+    const rel = relative13(root, directory).replaceAll("\\", "/");
     const parts = rel.split("/");
     const pluginsIndex = parts.indexOf("plugins");
-    if (pluginsIndex >= 0 && parts[pluginsIndex + 1]) return parts[pluginsIndex + 1];
+    if (pluginsIndex >= 0 && parts[pluginsIndex + 1]) {
+      return {
+        id: parts[pluginsIndex + 1],
+        kind: "repo-plugin",
+        plugin: parts[pluginsIndex + 1],
+        provider: "repo",
+        version: null
+      };
+    }
+    if (parts[0] === "skills") {
+      return { id: "repo", kind: "repo-root", plugin: null, provider: "repo", version: null };
+    }
   }
-  const normalized = resolve21(directory).replaceAll("\\", "/");
-  const home = homeOption ? resolve21(homeOption) : process.env.USERPROFILE ? resolve21(process.env.USERPROFILE) : null;
+  const normalized = resolve23(directory).replaceAll("\\", "/");
+  const home = homeOption ? resolve23(homeOption) : process.env.USERPROFILE ? resolve23(process.env.USERPROFILE) : null;
   const homeRel = home ? relativeDisplayPath(home, directory) ?? normalized : normalized;
   const cacheParts = homeRel.split("/");
   const cacheIndex = cacheParts.findIndex((part, index) => part === "cache" && cacheParts[index - 1] === "plugins");
   if (cacheIndex >= 0 && cacheParts[cacheIndex + 1] && cacheParts[cacheIndex + 2]) {
-    return `${cacheParts[cacheIndex + 2]}@${cacheParts[cacheIndex + 1]}`;
+    return {
+      id: `${cacheParts[cacheIndex + 2]}@${cacheParts[cacheIndex + 1]}`,
+      kind: "plugin-cache",
+      plugin: cacheParts[cacheIndex + 2],
+      provider: cacheParts[cacheIndex + 1],
+      version: cacheParts[cacheIndex + 3] ?? null
+    };
   }
-  if (homeRel.startsWith(".codex/skills/.system/")) return "codex-system";
-  if (homeRel.startsWith(".codex/skills/")) return "user-codex";
-  if (homeRel.startsWith(".agents/skills/")) return "user-agents";
-  if (homeRel.startsWith(".claude/skills/")) return "claude-code";
-  if (homeRel.startsWith(".cursor/skills/")) return "cursor";
-  if (homeRel.startsWith(".config/opencode/skills/")) return "opencode";
-  if (homeRel.startsWith(".zcode/skills/")) return "zcode";
-  if (homeRel.startsWith(".hermes/skills/")) return "hermes";
-  if (homeRel.startsWith(".gemini/skills/")) return "gemini";
-  return "local";
+  if (homeRel.startsWith(".codex/skills/.system/")) return userSource("codex-system", "codex");
+  if (homeRel.startsWith(".codex/skills/")) return userSource("user-codex", "codex");
+  if (homeRel.startsWith(".agents/skills/")) return userSource("user-agents", "agents");
+  if (homeRel.startsWith(".claude/skills/")) return userSource("claude-code", "claude");
+  if (homeRel.startsWith(".cursor/skills/")) return userSource("cursor", "cursor");
+  if (homeRel.startsWith(".config/opencode/skills/")) return userSource("opencode", "opencode");
+  if (homeRel.startsWith(".zcode/skills/")) return userSource("zcode", "zcode");
+  if (homeRel.startsWith(".hermes/skills/")) return userSource("hermes", "hermes");
+  if (homeRel.startsWith(".gemini/skills/")) return userSource("gemini", "gemini");
+  const extraRoot = extraSkillRoots.find((item) => isInside7(item, directory));
+  if (extraRoot) {
+    return {
+      id: `extra:${basename6(extraRoot) || "root"}`,
+      kind: "extra-root",
+      plugin: null,
+      provider: "extra",
+      version: null
+    };
+  }
+  return { id: "local", kind: "local", plugin: null, provider: null, version: null };
+}
+function userSource(id, provider) {
+  return { id, kind: "user-host-root", plugin: null, provider, version: null };
+}
+function optionList(value) {
+  if (Array.isArray(value)) return value;
+  return value ? [value] : [];
 }
 function displayPath(root, directory, home) {
-  const resolved = resolve21(directory);
+  const resolved = resolve23(directory);
   const rootRel = relativeDisplayPath(root, resolved);
   if (rootRel !== null) return rootRel;
   const homeRel = home ? relativeDisplayPath(home, resolved) : null;
@@ -22034,8 +23257,8 @@ function displayPath(root, directory, home) {
   return resolved.replaceAll("\\", "/");
 }
 function relativeDisplayPath(parent, child) {
-  const parentPath = resolve21(parent).replaceAll("\\", "/").replace(/\/+$/, "");
-  const childPath = resolve21(child).replaceAll("\\", "/");
+  const parentPath = resolve23(parent).replaceAll("\\", "/").replace(/\/+$/, "");
+  const childPath = resolve23(child).replaceAll("\\", "/");
   const parentKey = process.platform === "win32" ? parentPath.toLowerCase() : parentPath;
   const childKey = process.platform === "win32" ? childPath.toLowerCase() : childPath;
   if (childKey === parentKey) return "";
@@ -22110,6 +23333,10 @@ function scoreLibrarySkill(query, skill, context = {}) {
   } else if (skill.installedHosts.length > 0) {
     score += 1;
     reasons.push("installed-host");
+  }
+  if (skill.projectSelected && score > 0) {
+    score += 2;
+    reasons.push("project-selected");
   }
   if (skill.riskFlags.length > 1) {
     score -= 1;
@@ -22199,17 +23426,25 @@ var STOP_WORDS2 = /* @__PURE__ */ new Set([
 function safeScriptJson(value) {
   return JSON.stringify(value).replaceAll("</script", "<\\/script");
 }
-async function pathExists8(path) {
+function escStatic(value) {
+  return String(value ?? "").replace(/[&<>"]/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;"
+  })[char]);
+}
+async function pathExists10(path) {
   try {
-    await access14(path);
+    await access16(path);
     return true;
   } catch {
     return false;
   }
 }
-function isInside6(parent, candidate) {
-  const path = relative12(resolve21(parent), resolve21(candidate));
-  return path === "" || !path.startsWith(`..${sep10}`) && path !== "..";
+function isInside7(parent, candidate) {
+  const path = relative13(resolve23(parent), resolve23(candidate));
+  return path === "" || !path.startsWith(`..${sep11}`) && path !== ".." && !isAbsolute9(path);
 }
 function sendJson(response, payload) {
   response.setHeader("content-type", "application/json; charset=utf-8");
@@ -22236,11 +23471,34 @@ async function runLibCommand(argv, options) {
   const out = consumeOption(args, "--out");
   const homeOption = consumeOption(args, "--home");
   const sessionHost = consumeOption(args, "--session-host");
+  const config = consumeOption(args, "--config");
+  const extraSkillRoots = consumeOptions(args, "--extra-skill-root");
   if (out === null) return usage("--out requires a value");
   if (homeOption === null) return usage("--home requires a value");
   if (sessionHost === null) return usage("--session-host requires a value");
+  if (config === null) return usage("--config requires a value");
+  if (extraSkillRoots === null) return usage("--extra-skill-root requires a value");
+  if (!subcommand || subcommand === "help" || subcommand === "--help") {
+    process.stdout.write(`usage: skillsforge lib <build|update|serve|check|recommend|select|unselect|selected|remove|open> [options]
+
+Library:
+  build/update                  Write skillsforge-library.json/html and skillsforge-ai-index.html
+  serve                         Serve localhost read-only UI unless --allow-mutations
+  check --skill <id>            Show one indexed skill
+  recommend --query <text>      Read-only skill/workflow recommendation
+  select --skill <id>           Add an indexed skill to project.selectedSkills
+  unselect --skill <id>         Remove a skill from project.selectedSkills
+  selected                      List selected project skills
+  remove --host <id> --skill <id>
+                                Dry-run by default; write requires --allow-mutations --yes
+  open                          Build if needed and open local HTML file
+
+Options: --json --out <dir> --home <dir> --session-host <id> --config <file> --extra-skill-root <dir> --allow-absolute
+`);
+    return 0;
+  }
   const root = await resolveRuntimeRoot(options);
-  const home = homeOption ? resolve22(homeOption) : options.home;
+  const home = homeOption ? resolve24(homeOption) : options.home;
   if (subcommand === "build" || subcommand === "update") {
     if (hasUnknownOption(args)) return usage(`unknown lib ${subcommand} option: ${hasUnknownOption(args)}`);
     let result;
@@ -22250,6 +23508,8 @@ async function runLibCommand(argv, options) {
         home,
         allowAbsolute,
         sessionHost: sessionHost ?? void 0,
+        config,
+        extraSkillRoots,
         noCache: subcommand === "update"
       });
     } catch (error) {
@@ -22265,7 +23525,7 @@ async function runLibCommand(argv, options) {
     const skill = consumeOption(args, "--skill") ?? args.shift();
     if (skill === null) return usage("--skill requires a value");
     if (hasUnknownOption(args)) return usage(`unknown lib check option: ${hasUnknownOption(args)}`);
-    const index = await buildLibraryIndex(root, { home, sessionHost: sessionHost ?? void 0 });
+    const index = await buildLibraryIndex(root, { home, sessionHost: sessionHost ?? void 0, config, extraSkillRoots });
     const record = skill ? index.skills.find((item) => item.id === skill || item.key === skill) : null;
     const result = record ? { ok: true, skill: record } : { ok: false, error: `unknown skill: ${skill}` };
     process.stdout.write(`${JSON.stringify(result, null, 2)}
@@ -22282,12 +23542,31 @@ async function runLibCommand(argv, options) {
     if (!query) return usage("usage: skillsforge lib recommend --query <text>");
     const index = await buildLibraryIndex(root, {
       home,
-      sessionHost: sessionHost ?? void 0
+      sessionHost: sessionHost ?? void 0,
+      config,
+      extraSkillRoots
     });
     const result = recommendFromLibrary(index, query, {
       limit: Number(limitValue) || 5,
       sessionHost: sessionHost ?? void 0
     });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (subcommand === "select" || subcommand === "unselect") {
+    const skill = consumeOption(args, "--skill") ?? args.shift();
+    if (skill === null) return usage("--skill requires a value");
+    if (!skill) return usage(`usage: skillsforge lib ${subcommand} --skill <id>`);
+    if (hasUnknownOption(args)) return usage(`unknown lib ${subcommand} option: ${hasUnknownOption(args)}`);
+    const result = subcommand === "select" ? await selectProjectSkill(root, { skill, home, sessionHost: sessionHost ?? void 0, config, extraSkillRoots }) : await unselectProjectSkill(root, { skill, home, sessionHost: sessionHost ?? void 0, config, extraSkillRoots });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (subcommand === "selected") {
+    if (hasUnknownOption(args)) return usage(`unknown lib selected option: ${hasUnknownOption(args)}`);
+    const result = await listProjectSelection(root, { home, sessionHost: sessionHost ?? void 0, config, extraSkillRoots });
     process.stdout.write(`${JSON.stringify(result, null, 2)}
 `);
     return result.ok ? 0 : 1;
@@ -22319,13 +23598,32 @@ async function runLibCommand(argv, options) {
       port: Number(portValue) || 4763,
       allowMutations,
       home,
-      sessionHost: sessionHost ?? void 0
+      sessionHost: sessionHost ?? void 0,
+      config,
+      extraSkillRoots
     });
     process.stdout.write(`${JSON.stringify({ ok: result.ok, url: result.url, readOnly: result.readOnly }, null, 2)}
 `);
     return 0;
   }
-  if (!subcommand) return usage("usage: skillsforge lib <build|update|serve|check|recommend|remove>");
+  if (subcommand === "open") {
+    if (hasUnknownOption(args)) return usage(`unknown lib open option: ${hasUnknownOption(args)}`);
+    const result = await writeLibraryArtifacts(root, {
+      outDir: out ?? void 0,
+      home,
+      allowAbsolute,
+      sessionHost: sessionHost ?? void 0,
+      config,
+      extraSkillRoots
+    });
+    const command = platformOpenCommand(result.files.html);
+    const opened = await runProcess(command.command, command.args, { cwd: root, timeoutMs: 1e4 });
+    const payload = { ...result, opened: opened.status === 0, openError: opened.status === 0 ? void 0 : opened.stderr };
+    process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+    return result.ok ? 0 : 1;
+  }
+  if (!subcommand) return usage("usage: skillsforge lib <build|update|serve|check|recommend|select|unselect|selected|remove|open>");
   return usage(`unknown lib command: ${subcommand}`);
 }
 async function runWorkflowsCommand(argv, options) {
@@ -22341,6 +23639,21 @@ async function runWorkflowsCommand(argv, options) {
   if (category === null) return usage("--category requires a value");
   if (queryOption === null) return usage("--query requires a value");
   if (idOption === null) return usage("--id requires a value");
+  if (subcommand === "help" || subcommand === "--help") {
+    process.stdout.write(`usage: skillsforge workflows <list|show|recommend|run|export-html> [options]
+
+Workflows:
+  list [--category <id>]        List workflow catalog
+  show --id <workflow-id>       Show workflow JSON
+  recommend --query <text>      Read-only workflow recommendation
+  run --id <workflow-id> --dry-run
+                                Preview workflow steps only
+  export-html [--out <dir>]     Build library HTML/AI index
+
+Options: --json --limit <n> --category <id> --query <text> --id <id>
+`);
+    return 0;
+  }
   const root = await resolveRuntimeRoot(options);
   let result;
   if (subcommand === "list") {
@@ -22392,11 +23705,23 @@ async function runAutoCommand(argv, options) {
   if (limitValue === null) return usage("--limit requires a value");
   if (homeOption === null) return usage("--home requires a value");
   if (sessionHost === null) return usage("--session-host requires a value");
+  if (!subcommand || subcommand === "help" || subcommand === "--help") {
+    process.stdout.write(`usage: skillsforge auto <plan|run> --query <text> [options]
+
+Auto:
+  plan --query <text>           Recommend skill + workflow, no writes
+  run --read-only --query <text>
+                                Dry-run selected workflow steps only
+
+Options: --json --limit <n> --home <dir> --session-host <id> --read-only
+`);
+    return 0;
+  }
   const query = queryOption ?? args.join(" ");
   if (!query) return usage("usage: skillsforge auto <plan|run> --query <text>");
   if (hasUnknownOption(args)) return usage(`unknown auto option: ${hasUnknownOption(args)}`);
   const root = await resolveRuntimeRoot(options);
-  const home = homeOption ? resolve22(homeOption) : options.home;
+  const home = homeOption ? resolve24(homeOption) : options.home;
   let result;
   if (subcommand === "plan") {
     result = await planAuto(root, query, {
@@ -22422,7 +23747,7 @@ async function runAutoCommand(argv, options) {
 }
 
 // scripts/cli/commands/os.mjs
-import { join as join24, relative as relative13, resolve as resolve23 } from "node:path";
+import { join as join26, relative as relative14, resolve as resolve25 } from "node:path";
 async function runOsEnvCommand(argv) {
   const args = [...argv];
   const json = consumeFlag(args, "--json");
@@ -22616,11 +23941,11 @@ async function runOsCleanCommand(argv, options) {
   const names = ["node_modules", "dist", "artifacts", "coverage", ".next", ".turbo", "tests/.tmp-runner"];
   const candidates = [];
   for (const name of names) {
-    const path = resolve23(root, name);
+    const path = resolve25(root, name);
     if (await pathExists4(path)) {
       candidates.push({
         path,
-        relativePath: relative13(root, path).replaceAll("\\", "/"),
+        relativePath: relative14(root, path).replaceAll("\\", "/"),
         bytes: await directorySize(path)
       });
     }
@@ -22637,9 +23962,9 @@ async function runOsCleanCommand(argv, options) {
 
 // lib/capabilities/workbench.mjs
 init_skill_loader();
-import { access as access15, readdir as readdir11, stat as stat4 } from "node:fs/promises";
+import { access as access17, readdir as readdir12, stat as stat4 } from "node:fs/promises";
 import { spawn as spawn2 } from "node:child_process";
-import { join as join25, relative as relative14, resolve as resolve24 } from "node:path";
+import { join as join27, relative as relative15, resolve as resolve26 } from "node:path";
 var SKIP = /* @__PURE__ */ new Set([".git", ".codegraph", "node_modules", "dist", "artifacts", ".next", ".turbo"]);
 async function runWorkbench(root, task, options = {}) {
   const full = options.full === true;
@@ -22760,7 +24085,7 @@ async function workbenchBigFiles(root, limit) {
   const files = [];
   await walkFiles(root, async (path) => {
     const info = await stat4(path);
-    files.push({ path: relative14(root, path).replaceAll("\\", "/"), bytes: info.size });
+    files.push({ path: relative15(root, path).replaceAll("\\", "/"), bytes: info.size });
   });
   files.sort((left, right) => right.bytes - left.bytes || left.path.localeCompare(right.path));
   return { ok: true, task: "bigfiles", bigFiles: files.slice(0, limit), limit };
@@ -22782,7 +24107,7 @@ async function workbenchProof(root) {
 async function listFiles(root, limit) {
   const files = [];
   await walkFiles(root, (path) => {
-    if (files.length < limit) files.push(relative14(root, path).replaceAll("\\", "/"));
+    if (files.length < limit) files.push(relative15(root, path).replaceAll("\\", "/"));
   });
   return files;
 }
@@ -22790,18 +24115,18 @@ async function walkFiles(root, onFile) {
   async function walk(dir) {
     let entries;
     try {
-      entries = await readdir11(dir, { withFileTypes: true });
+      entries = await readdir12(dir, { withFileTypes: true });
     } catch {
       return;
     }
     for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
       if (SKIP.has(entry.name)) continue;
-      const path = join25(dir, entry.name);
+      const path = join27(dir, entry.name);
       if (entry.isDirectory()) await walk(path);
       else if (entry.isFile()) await onFile(path);
     }
   }
-  await walk(resolve24(root));
+  await walk(resolve26(root));
 }
 function runProcess2(command, args, options = {}) {
   return new Promise((resolveProcess) => {
@@ -22835,9 +24160,14 @@ function clampLimit3(value, fallback, max = 1e3) {
 
 // lib/capabilities/powershell.mjs
 init_paths();
-import { mkdir as mkdir13, writeFile as writeFile13 } from "node:fs/promises";
-import { join as join26, resolve as resolve25 } from "node:path";
+import { mkdir as mkdir15, writeFile as writeFile15 } from "node:fs/promises";
+import { join as join28, resolve as resolve27 } from "node:path";
 var POWERSHELL_HELPERS = Object.freeze([
+  {
+    name: "sf",
+    description: "Short alias for skillsforge CLI (pass any subcommand)",
+    args: []
+  },
   {
     name: "sf-status",
     description: "Compact repo and SkillsForge status",
@@ -22912,19 +24242,49 @@ var POWERSHELL_HELPERS = Object.freeze([
     name: "sf-auto",
     description: "Read-only auto plan for a task",
     args: ["auto", "plan", "--json"]
+  },
+  {
+    name: "sf-tokens",
+    description: "Estimate context token cost for catalog or a skill",
+    args: ["tokens", "--catalog", "--json"]
+  },
+  {
+    name: "sf-digest",
+    description: "One-shot status + recommend + token cost briefing",
+    args: ["digest", "--json"]
+  },
+  {
+    name: "sf-next",
+    description: "Suggest next productive SkillsForge commands",
+    args: ["next", "--json"]
+  },
+  {
+    name: "sf-map",
+    description: "ForgeMap structural lookup (status/index/symbol/callers/impact/explore)",
+    args: ["map"]
+  },
+  {
+    name: "sf-slim",
+    description: "ForgeSlim output compressors (status/diff/log/test/run/rg)",
+    args: ["slim"]
+  },
+  {
+    name: "sf-slim-gain",
+    description: "Show ForgeSlim estimated token savings ledger",
+    args: ["slim", "gain", "--json"]
   }
 ]);
 async function exportPowerShellHelpers(root, options = {}) {
-  const outDir = resolve25(root, options.outDir ?? join26("artifacts", "powershell"));
+  const outDir = resolve27(root, options.outDir ?? join28("artifacts", "powershell"));
   if (!options.allowAbsolute && !isInside(root, outDir)) {
     throw new Error(`powershell export path escapes root: ${outDir}`);
   }
-  const cliPath = resolve25(root, "plugins", "skillsforge", "bin", "skillsforge.mjs");
-  await mkdir13(outDir, { recursive: true });
+  const cliPath = resolve27(root, "plugins", "skillsforge", "bin", "skillsforge.mjs");
+  await mkdir15(outDir, { recursive: true });
   const files = [];
   for (const helper of POWERSHELL_HELPERS) {
-    const path = join26(outDir, `${helper.name}.ps1`);
-    await writeFile13(path, renderHelper(helper, cliPath));
+    const path = join28(outDir, `${helper.name}.ps1`);
+    await writeFile15(path, renderHelper(helper, cliPath));
     files.push({ name: helper.name, path, description: helper.description });
   }
   const manifest = {
@@ -22933,9 +24293,9 @@ async function exportPowerShellHelpers(root, options = {}) {
     cli: cliPath,
     helpers: files
   };
-  await writeFile13(join26(outDir, "skillsforge-powershell.json"), `${JSON.stringify(manifest, null, 2)}
+  await writeFile15(join28(outDir, "skillsforge-powershell.json"), `${JSON.stringify(manifest, null, 2)}
 `);
-  return { ok: true, outDir, files, manifest: join26(outDir, "skillsforge-powershell.json") };
+  return { ok: true, outDir, files, manifest: join28(outDir, "skillsforge-powershell.json") };
 }
 function renderHelper(helper, cliPath) {
   const baseArgs = helper.args.map((arg) => `'${escapeSingle(arg)}'`).join(", ");
@@ -22987,6 +24347,16 @@ async function runPsCommand(argv, options) {
   const allowAbsolute = consumeFlag(args, "--allow-absolute");
   const out = consumeOption(args, "--out");
   if (out === null) return usage("--out requires a value");
+  if (!subcommand || subcommand === "help" || subcommand === "--help") {
+    process.stdout.write(`usage: skillsforge ps export [--out <dir>] [--json] [--allow-absolute]
+
+PowerShell:
+  export                       Write sf-*.ps1 helpers for token-friendly agent terminals
+
+Helpers include status, tree, find, grep, diff, errors, bigfiles, recent, proof, lib update, and auto plan.
+`);
+    return 0;
+  }
   if (subcommand !== "export") return usage("usage: skillsforge ps export [--out <dir>] [--json] [--allow-absolute]");
   if (hasUnknownOption(args)) return usage(`unknown ps option: ${hasUnknownOption(args)}`);
   const root = await resolveRuntimeRoot(options);
@@ -23007,109 +24377,1717 @@ async function runPsCommand(argv, options) {
   return result.ok ? 0 : 1;
 }
 
+// lib/capabilities/operator.mjs
+init_skill_loader();
+import { access as access18, mkdir as mkdir16, readFile as readFile22, writeFile as writeFile16 } from "node:fs/promises";
+import { basename as basename7, join as join29, relative as relative16, resolve as resolve28 } from "node:path";
+var TOKEN_SESSION_REL = join29("artifacts", "skillsforge-token-session.json");
+function estimateTokens2(text) {
+  const source = String(text ?? "");
+  const chars = [...source].length;
+  const lines = source.length === 0 ? 0 : source.split(/\r?\n/).length;
+  const tokens2 = Math.ceil(chars / 4);
+  return { chars, lines, tokens: tokens2 };
+}
+async function runTokensCommand(root, options = {}) {
+  const limit = clamp(options.limit, 15, 1, 200);
+  const skillId = options.skill ?? null;
+  const paths = options.paths ?? [];
+  const includeInstalled = options.installed === true;
+  const catalog = options.catalog === true || !skillId && paths.length === 0 && !options.session && !options.sessionReset;
+  const track = options.track === true;
+  const showSession = options.session === true;
+  const resetSession = options.sessionReset === true;
+  if (resetSession) {
+    const cleared = await writeTokenSession(root, emptySession());
+    return {
+      ok: true,
+      mode: "session-reset",
+      session: cleared,
+      method: "approx-chars/4",
+      warning: "Not tiktoken and not API billing - local estimate only."
+    };
+  }
+  if (showSession && !skillId && paths.length === 0 && options.catalog !== true) {
+    const session2 = await readTokenSession(root);
+    return {
+      ok: true,
+      mode: "session",
+      method: "approx-chars/4",
+      note: "Local estimated context loads tracked by skillsforge tokens --track. Not API billing.",
+      warning: "Not tiktoken and not API billing - local estimate only.",
+      sessionPath: TOKEN_SESSION_REL.replaceAll("\\", "/"),
+      session: session2
+    };
+  }
+  const loadOpts = {
+    includeInstalled,
+    home: options.home,
+    collectErrors: true
+  };
+  const items = [];
+  let skillsCache = null;
+  const ensureSkills = async () => {
+    if (!skillsCache) skillsCache = await loadAllSkills(root, loadOpts);
+    return skillsCache;
+  };
+  if (skillId) {
+    const skills = await ensureSkills();
+    let skill = skills.skills.find((entry) => entry.name === skillId);
+    if (!skill && !includeInstalled) {
+      const withInstalled = await loadAllSkills(root, { ...loadOpts, includeInstalled: true });
+      skill = withInstalled.skills.find((entry) => entry.name === skillId);
+    }
+    if (!skill) {
+      return {
+        ok: false,
+        error: `unknown skill: ${skillId}`,
+        method: "approx-chars/4",
+        warning: "Not tiktoken and not API billing - local estimate only."
+      };
+    }
+    items.push(summarizeSkillTokens(root, skill));
+  }
+  for (const path of paths) {
+    items.push(await summarizePathTokens(root, path));
+  }
+  let catalogSummary = null;
+  if (catalog && !skillId && paths.length === 0) {
+    const skills = await ensureSkills();
+    const ranked = skills.skills.map((skill) => summarizeSkillTokens(root, skill)).sort((left, right) => right.tokens - left.tokens || left.id.localeCompare(right.id));
+    const totalTokens = ranked.reduce((sum, item) => sum + item.tokens, 0);
+    const totalChars = ranked.reduce((sum, item) => sum + item.chars, 0);
+    catalogSummary = {
+      scope: includeInstalled ? "repo+installed" : "repo",
+      skills: ranked.length,
+      totalTokens,
+      totalChars,
+      heaviest: ranked.slice(0, limit),
+      lightest: [...ranked].reverse().slice(0, Math.min(5, ranked.length))
+    };
+  }
+  let session = await readTokenSession(root);
+  if (track && items.length > 0) {
+    const added = items.reduce((sum, item) => sum + (item.tokens ?? 0), 0);
+    session = {
+      ...session,
+      updatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      estimatedTokensLoaded: (session.estimatedTokensLoaded ?? 0) + added,
+      loads: [
+        ...session.loads ?? [],
+        ...items.map((item) => ({
+          at: (/* @__PURE__ */ new Date()).toISOString(),
+          id: item.id ?? item.path,
+          tokens: item.tokens,
+          kind: item.kind
+        }))
+      ].slice(-200)
+    };
+    await writeTokenSession(root, session);
+  }
+  return {
+    ok: true,
+    mode: catalogSummary ? "catalog" : items.length ? "targets" : "session",
+    method: "approx-chars/4",
+    note: "Estimate for prompt/context budgeting (chars/4). Not provider usage billing.",
+    warning: "Not tiktoken and not API billing - local estimate only.",
+    items,
+    catalog: catalogSummary,
+    session: track || showSession ? session : void 0
+  };
+}
+async function runDigestCommand(root, options = {}) {
+  const query = String(options.query ?? "").trim();
+  if (!query) return { ok: false, error: "digest requires --query <text>" };
+  const limit = clamp(options.limit, 3, 1, 10);
+  const [status, index, auto] = await Promise.all([
+    runWorkbench(root, "status"),
+    buildLibraryIndex(root, { home: options.home, sessionHost: options.sessionHost }),
+    planAuto(root, query, { home: options.home, limit, sessionHost: options.sessionHost })
+  ]);
+  const recommendation = recommendFromLibrary(index, query, {
+    limit,
+    sessionHost: options.sessionHost ?? index.session?.host
+  });
+  const skillCosts = [];
+  for (const hit of recommendation.skills.slice(0, limit)) {
+    const record = index.skills.find((skill) => skill.id === hit.id || skill.key === hit.key);
+    const dir = record?.sourcePath ? resolveHomePath(root, record.sourcePath, options.home) : join29(root, "plugins", "skillsforge", "skills", hit.id);
+    try {
+      const skill = await loadSkillLight(dir);
+      if (skill) skillCosts.push(summarizeSkillTokens(root, skill));
+    } catch {
+    }
+  }
+  const totalRecommendTokens = skillCosts.reduce((sum, item) => sum + item.tokens, 0);
+  const looksLikeSymbol = /^[A-Za-z_$][\w.$/-]*$/.test(query) || query.includes("/") || query.includes(".");
+  const nextCommands = [
+    ...(auto.nextCommands ?? []).slice(0, 4),
+    recommendation.confidence === "none" ? "skillsforge catalog --search <text>" : `skillsforge tokens --skill ${recommendation.skills[0]?.id ?? "using-skillsforge"}`,
+    "skillsforge tokens --catalog --limit 10",
+    looksLikeSymbol ? `skillsforge map explore --query "${query}"` : "skillsforge map status"
+  ];
+  return {
+    ok: true,
+    query,
+    method: "approx-chars/4",
+    warning: "Not tiktoken and not API billing - local estimate only.",
+    status: {
+      branch: status.branch,
+      dirty: status.dirty,
+      skills: status.skills,
+      workflows: status.workflows
+    },
+    recommendation: {
+      confidence: recommendation.confidence,
+      fallback: recommendation.fallback,
+      note: recommendation.note,
+      skills: recommendation.skills,
+      workflows: recommendation.workflows
+    },
+    auto: {
+      selectedSkill: auto.skill?.selected ?? null,
+      skillFallback: auto.skill?.fallback ?? null,
+      workflows: (auto.workflows ?? []).slice(0, limit)
+    },
+    tokenCostIfLoaded: {
+      skills: skillCosts,
+      totalTokens: totalRecommendTokens,
+      note: "Load only the smallest matching skill body after routing - do not paste the whole catalog."
+    },
+    nextCommands: [...new Set(nextCommands)].slice(0, 8),
+    policy: "read-only digest; install/remove/write still need explicit confirmation"
+  };
+}
+async function runNextCommand(root, options = {}) {
+  const status = await runWorkbench(root, "status");
+  const suggestions = [];
+  const mapIndexExists = await pathExists11(join29(root, "artifacts", "forgemap", "index.json"));
+  if (status.dirty) {
+    suggestions.push({
+      priority: 1,
+      action: "slim-status",
+      command: "skillsforge slim status --json",
+      why: "Working tree is dirty - compact status before more edits"
+    });
+    suggestions.push({
+      priority: 1,
+      action: "review-diff",
+      command: "skillsforge slim diff --json",
+      why: "Compact diff for agent context"
+    });
+    suggestions.push({
+      priority: 2,
+      action: "proof",
+      command: "skillsforge wb proof --json",
+      why: "Run trust/proof hints before shipping dirty work"
+    });
+  } else {
+    suggestions.push({
+      priority: 2,
+      action: "status-ok",
+      command: "skillsforge wb status --json",
+      why: "Tree clean - good baseline for a new task"
+    });
+  }
+  if (!mapIndexExists) {
+    suggestions.push({
+      priority: 2,
+      action: "map-index",
+      command: "skillsforge map index",
+      why: "ForgeMap index missing - build once for symbol/impact lookups"
+    });
+  }
+  const briefExists = await pathExists11(join29(root, "docs", "work", "brief.md"));
+  const planExists = await pathExists11(join29(root, "docs", "work", "plan.md"));
+  if (!briefExists) {
+    suggestions.push({
+      priority: 1,
+      action: "shape-intent",
+      command: 'skillsforge route --query "shape intent" --include-explicit',
+      why: "docs/work/brief.md missing - shape the task first"
+    });
+  } else if (!planExists) {
+    suggestions.push({
+      priority: 1,
+      action: "write-plan",
+      command: 'skillsforge route --query "write plan" --include-explicit',
+      why: "brief exists but plan is missing"
+    });
+  }
+  suggestions.push({
+    priority: 3,
+    action: "recommend",
+    command: 'skillsforge lib recommend --query "<task>" --json',
+    why: "Pick the smallest skill/workflow for the next task"
+  });
+  suggestions.push({
+    priority: 3,
+    action: "token-budget",
+    command: "skillsforge tokens --catalog --limit 10 --json",
+    why: "See which repo skills are expensive before loading bodies"
+  });
+  suggestions.push({
+    priority: 4,
+    action: "digest",
+    command: 'skillsforge digest --query "<task>" --json',
+    why: "One-shot: status + recommend + token cost + next commands"
+  });
+  suggestions.sort((left, right) => left.priority - right.priority || left.action.localeCompare(right.action));
+  return {
+    ok: true,
+    branch: status.branch,
+    dirty: status.dirty,
+    skills: status.skills,
+    workflows: status.workflows,
+    suggestions: suggestions.slice(0, options.limit ? clamp(options.limit, 8, 1, 20) : 8)
+  };
+}
+function formatTokensText(payload) {
+  if (!payload.ok) return `${payload.error ?? "tokens failed"}
+`;
+  const lines = [
+    `method	${payload.method}`,
+    `note	${payload.note ?? ""}`,
+    payload.warning ? `warning	${payload.warning}` : ""
+  ];
+  if (payload.catalog) {
+    lines.push(`scope	${payload.catalog.scope ?? "repo"}`);
+    lines.push(`skills	${payload.catalog.skills}`);
+    lines.push(`totalTokens	${payload.catalog.totalTokens}`);
+    lines.push("heaviest");
+    for (const item of payload.catalog.heaviest) {
+      lines.push(`${item.tokens}	${item.chars}	${item.id}`);
+    }
+  }
+  for (const item of payload.items ?? []) {
+    lines.push(`${item.tokens}	${item.chars}	${item.id ?? item.path}	${item.kind}`);
+  }
+  if (payload.session) {
+    lines.push(`sessionTokens	${payload.session.estimatedTokensLoaded ?? 0}`);
+    lines.push(`sessionLoads	${(payload.session.loads ?? []).length}`);
+  }
+  return `${lines.filter(Boolean).join("\n")}
+`;
+}
+function formatDigestText(payload) {
+  if (!payload.ok) return `${payload.error ?? "digest failed"}
+`;
+  const lines = [
+    `query	${payload.query}`,
+    `confidence	${payload.recommendation.confidence}`,
+    `branch	${payload.status.branch}`,
+    `dirty	${payload.status.dirty}`,
+    `recommendTokens	${payload.tokenCostIfLoaded.totalTokens}`
+  ];
+  for (const skill of payload.recommendation.skills.slice(0, 5)) {
+    lines.push(`skill	${skill.score}	${skill.id}`);
+  }
+  for (const workflow of payload.recommendation.workflows.slice(0, 3)) {
+    lines.push(`workflow	${workflow.score}	${workflow.id}`);
+  }
+  for (const cost of payload.tokenCostIfLoaded.skills) {
+    lines.push(`cost	${cost.tokens}	${cost.id}`);
+  }
+  for (const command of payload.nextCommands) {
+    lines.push(`next	${command}`);
+  }
+  return `${lines.join("\n")}
+`;
+}
+function formatNextText(payload) {
+  if (!payload.ok) return `${payload.error ?? "next failed"}
+`;
+  const lines = [
+    `branch	${payload.branch}`,
+    `dirty	${payload.dirty}`,
+    `skills	${payload.skills}`,
+    `workflows	${payload.workflows}`
+  ];
+  for (const item of payload.suggestions) {
+    lines.push(`${item.priority}	${item.action}	${item.command}	${item.why}`);
+  }
+  return `${lines.join("\n")}
+`;
+}
+function summarizeSkillTokens(root, skill) {
+  const body = skill.body ?? "";
+  const description = skill.description ?? "";
+  const sidecar = skill.sidecar ? JSON.stringify(skill.sidecar) : "";
+  const combined = `${description}
+${body}
+${sidecar}`;
+  const estimate = estimateTokens2(combined);
+  return {
+    kind: "skill",
+    id: skill.name,
+    path: relative16(root, skill.directory).replaceAll("\\", "/"),
+    ...estimate,
+    parts: {
+      description: estimateTokens2(description).tokens,
+      body: estimateTokens2(body).tokens,
+      sidecar: estimateTokens2(sidecar).tokens
+    }
+  };
+}
+async function summarizePathTokens(root, inputPath) {
+  const abs = resolve28(root, inputPath);
+  const text = await readFile22(abs, "utf8");
+  const estimate = estimateTokens2(text);
+  return {
+    kind: "path",
+    path: relative16(root, abs).replaceAll("\\", "/"),
+    id: basename7(abs),
+    ...estimate
+  };
+}
+async function loadSkillLight(dir) {
+  const { loadSkill: loadSkill2 } = await Promise.resolve().then(() => (init_skill_loader(), skill_loader_exports));
+  return loadSkill2(dir);
+}
+function resolveHomePath(root, sourcePath, home) {
+  if (sourcePath.startsWith("~/") || sourcePath.startsWith("~\\")) {
+    const base = home ? resolve28(home) : resolve28(process.env.USERPROFILE || process.env.HOME || root);
+    return resolve28(base, sourcePath.slice(2));
+  }
+  if (sourcePath.startsWith("/") || /^[A-Za-z]:[\\/]/.test(sourcePath)) return resolve28(sourcePath);
+  return resolve28(root, sourcePath);
+}
+function emptySession() {
+  return {
+    schemaVersion: 1,
+    updatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    estimatedTokensLoaded: 0,
+    loads: [],
+    note: "Local estimate tracker only"
+  };
+}
+async function readTokenSession(root) {
+  const path = join29(root, TOKEN_SESSION_REL);
+  try {
+    return JSON.parse(await readFile22(path, "utf8"));
+  } catch {
+    return emptySession();
+  }
+}
+async function writeTokenSession(root, session) {
+  const path = join29(root, TOKEN_SESSION_REL);
+  await mkdir16(join29(root, "artifacts"), { recursive: true });
+  await writeFile16(path, `${JSON.stringify(session, null, 2)}
+`);
+  return session;
+}
+async function pathExists11(path) {
+  try {
+    await access18(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function clamp(value, fallback, min, max) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return fallback;
+  return Math.max(min, Math.min(max, Math.trunc(number)));
+}
+
+// scripts/cli/commands/operator.mjs
+async function runTokensCli(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const catalog = consumeFlag(args, "--catalog");
+  const installed = consumeFlag(args, "--installed");
+  const track = consumeFlag(args, "--track");
+  const session = consumeFlag(args, "--session");
+  const sessionReset = consumeFlag(args, "--session-reset");
+  const skill = consumeOption(args, "--skill");
+  const pathOpt = consumeOption(args, "--path");
+  const limitOpt = consumeOption(args, "--limit");
+  const home = consumeOption(args, "--home");
+  if (skill === null || pathOpt === null || limitOpt === null || home === null) {
+    return usage("tokens options require values: --skill/--path/--limit/--home");
+  }
+  if (hasUnknownOption(args)) return usage(`unknown tokens option: ${hasUnknownOption(args)}`);
+  const paths = [];
+  if (pathOpt) paths.push(pathOpt);
+  while (args.length > 0 && !String(args[0]).startsWith("--")) paths.push(args.shift());
+  if (hasUnknownOption(args)) return usage(`unknown tokens option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  let payload;
+  try {
+    payload = await runTokensCommand(root, {
+      catalog,
+      installed,
+      track,
+      session,
+      sessionReset,
+      skill: skill || void 0,
+      paths,
+      limit: limitOpt ? Number(limitOpt) : void 0,
+      home: home || void 0
+    });
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  else process.stdout.write(formatTokensText(payload));
+  return payload.ok ? 0 : 1;
+}
+async function runDigestCli(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const query = consumeOption(args, "--query") ?? (args.length ? args.join(" ") : null);
+  const limitOpt = consumeOption(args, "--limit");
+  const home = consumeOption(args, "--home");
+  const sessionHost = consumeOption(args, "--session-host");
+  if (limitOpt === null || home === null || sessionHost === null) {
+    return usage("usage: skillsforge digest --query <text> [--limit n] [--json] [--home <dir>] [--session-host <id>]");
+  }
+  if (query == null || !String(query).trim()) {
+    return usage("digest requires --query <text>");
+  }
+  if (hasUnknownOption(args)) return usage(`unknown digest option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const payload = await runDigestCommand(root, {
+    query: String(query).trim(),
+    limit: limitOpt ? Number(limitOpt) : void 0,
+    home: home || void 0,
+    sessionHost: sessionHost || void 0
+  });
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  else process.stdout.write(formatDigestText(payload));
+  return payload.ok ? 0 : 1;
+}
+async function runNextCli(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const limitOpt = consumeOption(args, "--limit");
+  if (limitOpt === null) return usage("--limit requires a value");
+  if (hasUnknownOption(args)) return usage(`unknown next option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const payload = await runNextCommand(root, { limit: limitOpt ? Number(limitOpt) : void 0 });
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  else process.stdout.write(formatNextText(payload));
+  return payload.ok ? 0 : 1;
+}
+
+// lib/capabilities/forgemap.mjs
+import { createHash as createHash5 } from "node:crypto";
+import { existsSync as existsSync2 } from "node:fs";
+import { mkdir as mkdir17, readdir as readdir13, readFile as readFile23, stat as stat5, writeFile as writeFile17 } from "node:fs/promises";
+import { basename as basename8, dirname as dirname14, extname as extname2, join as join30, relative as relative17, resolve as resolve29 } from "node:path";
+var FORGEMAP_INDEX_REL = join30("artifacts", "forgemap", "index.json");
+var CODE_EXTS = [".js", ".mjs", ".cjs", ".ts", ".tsx"];
+var SKIP_DIRS = /* @__PURE__ */ new Set([
+  "node_modules",
+  "dist",
+  ".git",
+  ".codegraph",
+  "coverage",
+  "artifacts",
+  ".next",
+  "build",
+  "vendor",
+  ".cursor",
+  ".claude",
+  ".codex"
+]);
+async function runForgeMap(root, task, options = {}) {
+  switch (task) {
+    case "status":
+      return mapStatus(root, options);
+    case "index":
+      return mapIndex(root, options);
+    case "files":
+      return mapFiles(root, options);
+    case "symbol":
+      return mapSymbol(root, options);
+    case "callers":
+      return mapCallers(root, options);
+    case "impact":
+      return mapImpact(root, options);
+    case "explore":
+      return mapExplore(root, options);
+    default:
+      return { ok: false, task, error: `unknown map task: ${task}` };
+  }
+}
+function formatForgeMapText(payload) {
+  if (!payload.ok && payload.error) return `${payload.error}
+`;
+  if (payload.lines) return `${payload.lines.join("\n")}${payload.lines.length ? "\n" : ""}`;
+  return `${JSON.stringify(payload, null, 2)}
+`;
+}
+async function mapStatus(root) {
+  const index = await loadOrBuildIndex(root, { force: false });
+  const codegraph = await probeCodegraph(root);
+  const lines = [
+    `files	${index.files?.length ?? 0}`,
+    `symbols	${index.symbols?.length ?? 0}`,
+    `edges	${index.edges?.length ?? 0}`,
+    `builtAt	${index.builtAt ?? ""}`,
+    `codegraph	${codegraph.linked ? "linked" : "absent"}`
+  ];
+  if (codegraph.path) lines.push(`codegraphPath	${codegraph.path}`);
+  return {
+    ok: true,
+    task: "status",
+    files: index.files?.length ?? 0,
+    symbols: index.symbols?.length ?? 0,
+    edges: index.edges?.length ?? 0,
+    builtAt: index.builtAt,
+    codegraph,
+    lines
+  };
+}
+async function mapIndex(root) {
+  const index = await buildLightweightIndex(root);
+  await persistIndex(root, index);
+  return {
+    ok: true,
+    task: "index",
+    files: index.files.length,
+    symbols: index.symbols.length,
+    edges: index.edges.length,
+    builtAt: index.builtAt,
+    lines: [
+      `indexed	${index.files.length} files`,
+      `symbols	${index.symbols.length}`,
+      `edges	${index.edges.length}`,
+      `path	${FORGEMAP_INDEX_REL}`
+    ]
+  };
+}
+async function mapFiles(root, options = {}) {
+  const index = await loadOrBuildIndex(root, options);
+  const limit = clamp2(options.limit, 100, 1, 5e3);
+  const files = (index.files ?? []).slice(0, limit);
+  return {
+    ok: true,
+    task: "files",
+    count: index.files?.length ?? 0,
+    files,
+    lines: files.map((file) => `file	${file.path}	${file.symbolCount ?? 0}`)
+  };
+}
+async function mapSymbol(root, options = {}) {
+  const name = String(options.name ?? "").trim();
+  if (!name) return { ok: false, task: "symbol", error: "map symbol requires <name>" };
+  const index = await loadOrBuildIndex(root, options);
+  const limit = clamp2(options.limit, 40, 1, 200);
+  const lower = name.toLowerCase();
+  const hits = (index.symbols ?? []).filter((s) => s.name === name || s.name.toLowerCase() === lower);
+  const chosen = hits.some((s) => s.name === name) ? hits.filter((s) => s.name === name) : hits;
+  return {
+    ok: true,
+    task: "symbol",
+    name,
+    count: chosen.length,
+    symbols: chosen.slice(0, limit),
+    lines: chosen.slice(0, limit).map((s) => `def	${s.name}	${s.kind}	${s.file}:${s.line}`)
+  };
+}
+async function mapCallers(root, options = {}) {
+  const name = String(options.name ?? "").trim();
+  if (!name) return { ok: false, task: "callers", error: "map callers requires <name>" };
+  const index = await loadOrBuildIndex(root, options);
+  const limit = clamp2(options.limit, 40, 1, 200);
+  const defs = (index.symbols ?? []).filter((s) => s.name === name);
+  const defFiles = new Set(defs.map((d) => d.file));
+  const importers = [];
+  for (const edge of index.edges ?? []) {
+    if (edge.kind === "imports" && defFiles.has(edge.to)) importers.push(edge.from);
+  }
+  const uniqueImporters = [...new Set(importers)].slice(0, limit);
+  const codegraph = await enrichCallersFromCodegraph(root, name);
+  const lines = [
+    ...uniqueImporters.map((file) => `importer	${file}`),
+    ...codegraph.lines ?? []
+  ].slice(0, limit * 2);
+  return {
+    ok: true,
+    task: "callers",
+    name,
+    importers: uniqueImporters,
+    codegraph: codegraph.linked ? codegraph : void 0,
+    lines
+  };
+}
+async function mapImpact(root, options = {}) {
+  const name = String(options.name ?? "").trim();
+  if (!name) return { ok: false, task: "impact", error: "map impact requires <name>" };
+  const index = await loadOrBuildIndex(root, options);
+  const depth = clamp2(options.depth, 2, 1, 3);
+  const limit = clamp2(options.limit, 80, 1, 500);
+  const defs = (index.symbols ?? []).filter((s) => s.name === name);
+  const seedFiles = new Set(defs.map((d) => d.file));
+  if (!seedFiles.size) {
+    const byPath = (index.files ?? []).find(
+      (f) => f.path === name || f.path.endsWith(`/${name}`) || basename8(f.path) === name
+    );
+    if (byPath) seedFiles.add(byPath.path);
+  }
+  const impacted = /* @__PURE__ */ new Set();
+  let frontier = new Set(seedFiles);
+  for (let d = 0; d < depth; d += 1) {
+    const next = /* @__PURE__ */ new Set();
+    for (const edge of index.edges ?? []) {
+      if (edge.kind === "imports" && frontier.has(edge.to) && !seedFiles.has(edge.from) && !impacted.has(edge.from)) {
+        next.add(edge.from);
+        impacted.add(edge.from);
+      }
+    }
+    frontier = next;
+  }
+  const codegraph = await enrichImpactFromCodegraph(root, name);
+  const files = [...impacted].slice(0, limit);
+  return {
+    ok: true,
+    task: "impact",
+    name,
+    depth,
+    seeds: [...seedFiles],
+    files,
+    codegraph: codegraph.linked ? codegraph : void 0,
+    lines: [
+      `seed	${[...seedFiles].join(",") || "(none)"}`,
+      `depth	${depth}`,
+      ...files.map((file) => `impact	${file}`),
+      ...codegraph.lines ?? []
+    ]
+  };
+}
+async function mapExplore(root, options = {}) {
+  const query = String(options.query ?? "").trim();
+  if (!query) return { ok: false, task: "explore", error: "map explore requires --query <text>" };
+  const index = await loadOrBuildIndex(root, options);
+  const budget = clamp2(options.budget, 2500, 500, 8e3);
+  const q = query.toLowerCase();
+  const symbols = (index.symbols ?? []).filter((s) => s.name.toLowerCase().includes(q) || s.file.toLowerCase().includes(q)).slice(0, 30);
+  const files = (index.files ?? []).filter((f) => f.path.toLowerCase().includes(q) || basename8(f.path).toLowerCase().includes(q)).slice(0, 20);
+  const neighborFiles = /* @__PURE__ */ new Set();
+  for (const sym of symbols) neighborFiles.add(sym.file);
+  for (const file of files) neighborFiles.add(file.path);
+  for (const edge of index.edges ?? []) {
+    if (neighborFiles.has(edge.from) || neighborFiles.has(edge.to)) {
+      neighborFiles.add(edge.from);
+      neighborFiles.add(edge.to);
+    }
+  }
+  const neighbors = [...neighborFiles].slice(0, 40);
+  const codegraph = await enrichExploreFromCodegraph(root, query);
+  let lines = [
+    `query	${query}`,
+    ...symbols.slice(0, 20).map((s) => `symbol	${s.name}	${s.kind}	${s.file}:${s.line}`),
+    ...files.slice(0, 15).map((f) => `file	${f.path}`),
+    ...neighbors.slice(0, 20).map((n) => `neighbor	${n}`),
+    ...codegraph.lines ?? []
+  ];
+  let packed = lines.join("\n");
+  while (packed.length > budget && lines.length > 8) {
+    lines = lines.slice(0, -1);
+    packed = lines.join("\n");
+  }
+  return {
+    ok: true,
+    task: "explore",
+    query,
+    symbols: symbols.slice(0, 20),
+    files: files.map((f) => f.path).slice(0, 15),
+    neighbors: neighbors.slice(0, 20),
+    budget,
+    codegraph: codegraph.linked ? codegraph : void 0,
+    lines,
+    truncated: packed.length >= budget
+  };
+}
+async function loadOrBuildIndex(root, options = {}) {
+  if (options.force === true) {
+    const index2 = await buildLightweightIndex(root);
+    await persistIndex(root, index2);
+    return index2;
+  }
+  try {
+    const raw = JSON.parse(await readFile23(join30(root, FORGEMAP_INDEX_REL), "utf8"));
+    if (raw?.schemaVersion === 1 && Array.isArray(raw.files)) return raw;
+  } catch {
+  }
+  const index = await buildLightweightIndex(root);
+  await persistIndex(root, index);
+  return index;
+}
+async function buildLightweightIndex(root) {
+  const filePaths = [];
+  await walkCodeFiles(root, root, filePaths);
+  const fileSet = new Set(filePaths);
+  const files = [];
+  const symbols = [];
+  const edges = [];
+  for (const rel of filePaths) {
+    const abs = join30(root, rel);
+    let text = "";
+    try {
+      text = await readFile23(abs, "utf8");
+    } catch {
+      continue;
+    }
+    if (text.length > 4e5) continue;
+    const lines = text.split(/\r?\n/);
+    let symbolCount = 0;
+    for (let i = 0; i < lines.length; i += 1) {
+      const line = lines[i];
+      const lineNo = i + 1;
+      let m;
+      if (m = line.match(/^export\s+(?:async\s+)?function\s+([A-Za-z_$][\w$]*)/)) {
+        symbols.push({ name: m[1], kind: "function", file: rel, line: lineNo });
+        symbolCount += 1;
+      } else if (m = line.match(/^export\s+class\s+([A-Za-z_$][\w$]*)/)) {
+        symbols.push({ name: m[1], kind: "class", file: rel, line: lineNo });
+        symbolCount += 1;
+      } else if (m = line.match(/^export\s+(?:const|let|var)\s+([A-Za-z_$][\w$]*)/)) {
+        symbols.push({ name: m[1], kind: "binding", file: rel, line: lineNo });
+        symbolCount += 1;
+      } else if (m = line.match(/^(?:async\s+)?function\s+([A-Za-z_$][\w$]*)\s*\(/)) {
+        symbols.push({ name: m[1], kind: "function", file: rel, line: lineNo });
+        symbolCount += 1;
+      } else if (m = line.match(/^class\s+([A-Za-z_$][\w$]*)\b/)) {
+        symbols.push({ name: m[1], kind: "class", file: rel, line: lineNo });
+        symbolCount += 1;
+      }
+      if ((m = line.match(/\bfrom\s+['"]([^'"]+)['"]/)) || (m = line.match(/\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)/))) {
+        const resolved = resolveImport(root, rel, m[1], fileSet);
+        if (resolved) edges.push({ kind: "imports", from: rel, to: resolved });
+      }
+    }
+    files.push({ path: rel, symbolCount });
+  }
+  const fingerprint = createHash5("sha256").update(filePaths.slice().sort().join("\n")).digest("hex").slice(0, 16);
+  return {
+    schemaVersion: 1,
+    builtAt: (/* @__PURE__ */ new Date()).toISOString(),
+    fingerprint,
+    files,
+    symbols,
+    edges
+  };
+}
+async function walkCodeFiles(root, dir, out) {
+  let entries = [];
+  try {
+    entries = await readdir13(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  for (const entry of entries) {
+    if (SKIP_DIRS.has(entry.name)) continue;
+    if (entry.name.startsWith(".") && entry.name !== ".github") continue;
+    const abs = join30(dir, entry.name);
+    if (entry.isDirectory()) {
+      await walkCodeFiles(root, abs, out);
+      continue;
+    }
+    if (!CODE_EXTS.includes(extname2(entry.name))) continue;
+    out.push(toPosix2(relative17(root, abs)));
+  }
+}
+function resolveImport(root, fromFile, spec, fileSet) {
+  if (!spec.startsWith(".")) return null;
+  const base = resolve29(dirname14(join30(root, fromFile)), spec);
+  const candidates = [];
+  for (const ext of ["", ...CODE_EXTS]) {
+    candidates.push(base + ext);
+  }
+  for (const ext of CODE_EXTS) {
+    candidates.push(join30(base, `index${ext}`));
+  }
+  for (const candidate of candidates) {
+    if (!existsSync2(candidate)) continue;
+    const rel = toPosix2(relative17(root, candidate));
+    if (fileSet.has(rel)) return rel;
+  }
+  const soft = toPosix2(relative17(root, base));
+  for (const ext of CODE_EXTS) {
+    if (fileSet.has(soft + ext)) return soft + ext;
+  }
+  return null;
+}
+async function persistIndex(root, index) {
+  await mkdir17(join30(root, "artifacts", "forgemap"), { recursive: true });
+  await writeFile17(join30(root, FORGEMAP_INDEX_REL), `${JSON.stringify(index)}
+`);
+}
+function toPosix2(p) {
+  return String(p).replace(/\\/g, "/");
+}
+function clamp2(value, fallback, min, max) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return fallback;
+  return Math.max(min, Math.min(max, Math.trunc(n)));
+}
+async function probeCodegraph(root) {
+  const path = join30(root, ".codegraph", "codegraph.db");
+  try {
+    await stat5(path);
+  } catch {
+    return { linked: false, path: null };
+  }
+  try {
+    const { DatabaseSync } = await import("node:sqlite");
+    const db = new DatabaseSync(path, { readOnly: true });
+    db.close();
+    return { linked: true, path: ".codegraph/codegraph.db" };
+  } catch {
+    return { linked: false, path: ".codegraph/codegraph.db", error: "sqlite-open-failed" };
+  }
+}
+async function withCodegraph(root, fn) {
+  const path = join30(root, ".codegraph", "codegraph.db");
+  try {
+    await stat5(path);
+  } catch {
+    return { linked: false, lines: [] };
+  }
+  try {
+    const { DatabaseSync } = await import("node:sqlite");
+    const db = new DatabaseSync(path, { readOnly: true });
+    try {
+      const result = fn(db);
+      return { linked: true, ...result };
+    } finally {
+      db.close();
+    }
+  } catch {
+    return { linked: false, lines: [] };
+  }
+}
+async function enrichCallersFromCodegraph(root, name) {
+  return withCodegraph(root, (db) => {
+    const lines = [];
+    tryQuery(db, `SELECT DISTINCT file_path, line FROM symbols WHERE name = ? LIMIT 20`, [name], (row) => {
+      lines.push(`cg-def	${row.file_path}:${row.line}`);
+    });
+    tryQuery(db, `SELECT DISTINCT caller_file, caller_line FROM callers WHERE callee_name = ? LIMIT 40`, [name], (row) => {
+      lines.push(`cg-caller	${row.caller_file}:${row.caller_line}`);
+    });
+    if (!lines.length) {
+      try {
+        const tables = db.prepare(`SELECT name FROM sqlite_master WHERE type='table'`).all();
+        if (tables.length) lines.push(`cg-info	tables:${tables.map((t) => t.name).slice(0, 8).join(",")}`);
+      } catch {
+      }
+    }
+    return { lines };
+  });
+}
+async function enrichImpactFromCodegraph(root, name) {
+  return withCodegraph(root, (db) => {
+    const lines = [];
+    tryQuery(db, `SELECT DISTINCT file_path FROM dependencies WHERE symbol_name = ? LIMIT 40`, [name], (row) => {
+      lines.push(`cg-impact	${row.file_path}`);
+    });
+    return { lines };
+  });
+}
+async function enrichExploreFromCodegraph(root, query) {
+  return withCodegraph(root, (db) => {
+    const lines = [];
+    tryQuery(db, `SELECT name, file_path, line FROM symbols WHERE name LIKE ? LIMIT 15`, [`%${query}%`], (row) => {
+      lines.push(`cg-symbol	${row.name}	${row.file_path}:${row.line}`);
+    });
+    return { lines };
+  });
+}
+function tryQuery(db, sql, params, onRow) {
+  try {
+    const rows = db.prepare(sql).all(...params);
+    for (const row of rows) onRow(row);
+  } catch {
+  }
+}
+
+// scripts/cli/commands/map.mjs
+var TASKS = /* @__PURE__ */ new Set(["status", "index", "files", "symbol", "callers", "impact", "explore"]);
+async function runMapCli(argv, options) {
+  const args = [...argv];
+  const task = args.shift();
+  if (!task || task === "help" || task === "--help") {
+    return usage(`usage: skillsforge map <status|index|files|symbol|callers|impact|explore> [options]
+  status                 Index health + optional codegraph link
+  index [--force]        Rebuild lightweight JS/TS index
+  files [--limit n]      Indexed file list
+  symbol <name>          Definitions + file:line
+  callers <name>         Importers / approximate callers
+  impact <name>          Dependent files (depth 1-2)
+  explore --query <text> Compact pack of matching symbols + neighbors
+  --json --limit n`);
+  }
+  if (!TASKS.has(task)) return usage(`unknown map task: ${task}`);
+  const json = consumeFlag(args, "--json");
+  const force = consumeFlag(args, "--force");
+  const limitOpt = consumeOption(args, "--limit");
+  const depthOpt = consumeOption(args, "--depth");
+  const budgetOpt = consumeOption(args, "--budget");
+  let query = consumeOption(args, "--query");
+  if (limitOpt === null || depthOpt === null || budgetOpt === null || query === null) {
+    return usage("map options require values: --limit/--depth/--budget/--query");
+  }
+  let name;
+  if (["symbol", "callers", "impact"].includes(task)) {
+    name = args.shift();
+    if (!name) return usage(`map ${task} requires <name>`);
+  }
+  if (task === "explore") {
+    if (!query && args.length) query = args.splice(0).join(" ");
+    if (!query?.trim()) return usage("map explore requires --query <text>");
+  }
+  if (hasUnknownOption(args)) return usage(`unknown map option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const payload = await runForgeMap(root, task, {
+    json,
+    force,
+    name,
+    query,
+    limit: limitOpt ? Number(limitOpt) : void 0,
+    depth: depthOpt ? Number(depthOpt) : void 0,
+    budget: budgetOpt ? Number(budgetOpt) : void 0
+  });
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  else process.stdout.write(formatForgeMapText(payload));
+  return payload.ok ? 0 : 1;
+}
+
+// lib/capabilities/slim.mjs
+import { mkdir as mkdir18, readFile as readFile24, writeFile as writeFile18 } from "node:fs/promises";
+import { spawn as spawn3 } from "node:child_process";
+import { join as join31 } from "node:path";
+var SLIM_GAIN_REL = join31("artifacts", "skillsforge-slim-gain.json");
+async function runSlim(root, task, options = {}) {
+  switch (task) {
+    case "status":
+      return slimStatus(root, options);
+    case "diff":
+      return slimDiff(root, options);
+    case "log":
+      return slimLog(root, options);
+    case "test":
+      return slimTest(root, options);
+    case "run":
+      return slimRun(root, options);
+    case "rg":
+      return slimRg(root, options);
+    case "gain":
+      return slimGain(root, options);
+    default:
+      return { ok: false, task, error: `unknown slim task: ${task}` };
+  }
+}
+function formatSlimText(payload) {
+  if (!payload.ok && payload.error) return `${payload.error}
+`;
+  if (payload.task === "gain") {
+    const lines = [
+      `commands	${payload.commands ?? 0}`,
+      `rawBytes	${payload.rawBytes ?? 0}`,
+      `slimBytes	${payload.slimBytes ?? 0}`,
+      `rawTokensEst	${payload.rawTokensEst ?? 0}`,
+      `slimTokensEst	${payload.slimTokensEst ?? 0}`,
+      `savedTokensEst	${payload.savedTokensEst ?? 0}`,
+      `savedRatio	${payload.savedRatio ?? 0}`
+    ];
+    return `${lines.join("\n")}
+`;
+  }
+  if (payload.lines) return `${payload.lines.join("\n")}${payload.lines.length ? "\n" : ""}`;
+  if (payload.text != null) return `${payload.text}${payload.text.endsWith("\n") ? "" : "\n"}`;
+  return `${JSON.stringify(payload, null, 2)}
+`;
+}
+async function slimStatus(root, options = {}) {
+  const raw = await runProcess3("git", ["status", "--short", "--branch"], { cwd: root });
+  const rawText = raw.stdout;
+  const lines = rawText.trim().split(/\r?\n/).filter(Boolean);
+  const branch = lines[0]?.replace(/^##\s*/, "") ?? "unknown";
+  const files = lines.slice(1).map((line) => line.replace(/^..\s+/, "").trim()).filter(Boolean);
+  const limited = files.slice(0, options.limit ?? 80);
+  const compact = [`# ${branch} (${files.length})`, ...limited].join("\n") + (limited.length ? "\n" : "\n");
+  await recordGain(root, { command: "slim status", rawText, slimText: compact });
+  return {
+    ok: raw.status === 0,
+    task: "status",
+    branch,
+    dirty: files.length > 0,
+    files: limited,
+    lines: compact.trim().split("\n"),
+    text: compact
+  };
+}
+async function slimDiff(root, options = {}) {
+  const [names, shortstat, full] = await Promise.all([
+    runProcess3("git", ["diff", "--name-only"], { cwd: root }),
+    runProcess3("git", ["diff", "--shortstat"], { cwd: root }),
+    options.stat === true ? runProcess3("git", ["diff", "--stat"], { cwd: root }) : Promise.resolve({ status: 0, stdout: "", stderr: "" })
+  ]);
+  const files = names.stdout.trim().split(/\r?\n/).filter(Boolean);
+  const limited = files.slice(0, options.limit ?? 80);
+  const lines = [
+    `# ${files.length} files`,
+    shortstat.stdout.trim() || "(clean)",
+    ...limited,
+    ...options.stat === true ? full.stdout.trim().split(/\r?\n/).filter(Boolean).slice(0, options.limit ?? 40) : []
+  ];
+  const slimText = `${lines.join("\n")}
+`;
+  const rawText = options.stat === true ? full.stdout || names.stdout : [names.stdout, shortstat.stdout].join("\n");
+  await recordGain(root, { command: "slim diff", rawText, slimText });
+  return {
+    ok: names.status === 0 && shortstat.status === 0,
+    task: "diff",
+    files: limited,
+    lines,
+    text: slimText
+  };
+}
+async function slimLog(root, options = {}) {
+  const limit = Math.max(1, Math.min(100, Number(options.limit) || 15));
+  const raw = await runProcess3("git", ["log", `-${limit}`, "--oneline", "--decorate"], { cwd: root });
+  const lines = raw.stdout.trim().split(/\r?\n/).filter(Boolean);
+  const slimText = `${lines.join("\n")}${lines.length ? "\n" : ""}`;
+  await recordGain(root, { command: "slim log", rawText: raw.stdout, slimText });
+  return { ok: raw.status === 0, task: "log", lines, text: slimText, limit };
+}
+async function slimTest(root, options = {}) {
+  const argv = options.argv?.length ? options.argv : ["npm", "test"];
+  return slimRun(root, {
+    ...options,
+    argv,
+    keepFail: true,
+    dropPassNoise: true,
+    label: "slim test"
+  });
+}
+async function slimRun(root, options = {}) {
+  const argv = options.argv ?? [];
+  if (!argv.length) return { ok: false, task: "run", error: "slim run requires -- <cmd> [args...]" };
+  const [command, ...args] = argv;
+  const raw = await runProcess3(command, args, {
+    cwd: root,
+    timeoutMs: options.timeoutMs ?? 12e4,
+    shell: options.shell === true
+  });
+  const rawText = `${raw.stdout}${raw.stderr ? `
+${raw.stderr}` : ""}`;
+  const slimText = compressCommandOutput(rawText, {
+    maxLines: options.limit ?? 80,
+    keepFail: options.keepFail === true || options.dropPassNoise === true,
+    dropPassNoise: options.dropPassNoise === true
+  });
+  await recordGain(root, { command: options.label ?? `slim run ${command}`, rawText, slimText });
+  return {
+    ok: raw.status === 0,
+    task: options.label?.startsWith("slim test") ? "test" : "run",
+    status: raw.status,
+    command: argv.join(" "),
+    lines: slimText.trim().split(/\r?\n/).filter(Boolean),
+    text: slimText,
+    truncated: rawText.length > slimText.length
+  };
+}
+async function slimRg(root, options = {}) {
+  const argv = options.argv ?? [];
+  if (!argv.length) return { ok: false, task: "rg", error: "slim rg requires -- <rg args...>" };
+  const raw = await runProcess3("rg", argv, { cwd: root, timeoutMs: 2e4 });
+  if (raw.status > 1) {
+    return { ok: false, task: "rg", error: raw.stderr || raw.stdout || "rg failed", status: raw.status };
+  }
+  const limit = Math.max(1, Math.min(500, Number(options.limit) || 60));
+  const allLines = raw.stdout.split(/\r?\n/).filter(Boolean);
+  const byFile = /* @__PURE__ */ new Map();
+  for (const line of allLines) {
+    const file = line.split(":")[0] ?? "unknown";
+    const list = byFile.get(file) ?? [];
+    if (list.length < 5) list.push(line.slice(0, 240));
+    byFile.set(file, list);
+  }
+  const lines = [];
+  for (const [file, matches] of [...byFile.entries()].slice(0, limit)) {
+    lines.push(`file	${file}	${matches.length}+`);
+    for (const match of matches.slice(0, 3)) lines.push(`hit	${match}`);
+  }
+  const slimText = `${lines.join("\n")}${lines.length ? "\n" : ""}`;
+  await recordGain(root, { command: "slim rg", rawText: raw.stdout, slimText });
+  return {
+    ok: true,
+    task: "rg",
+    files: byFile.size,
+    matches: allLines.length,
+    lines,
+    text: slimText,
+    truncated: allLines.length > lines.length
+  };
+}
+async function slimGain(root, options = {}) {
+  if (options.reset === true) {
+    const cleared = emptyGain();
+    await writeGain(root, cleared);
+    return { ok: true, task: "gain", reset: true, ...summarizeGain(cleared) };
+  }
+  const ledger = await readGain(root);
+  return { ok: true, task: "gain", ...summarizeGain(ledger) };
+}
+function compressCommandOutput(text, options = {}) {
+  const maxLines = options.maxLines ?? 80;
+  const source = String(text ?? "");
+  if (!source) return "";
+  let lines = source.split(/\r?\n/);
+  if (lines.length && lines[lines.length - 1] === "") lines = lines.slice(0, -1);
+  if (options.dropPassNoise) {
+    lines = lines.filter((line) => {
+      if (/^\s*✔|^\s*✓|^\s*PASS\b|passing\b/i.test(line) && !/fail|error|✖|✗/i.test(line)) {
+        return false;
+      }
+      return true;
+    });
+  }
+  if (options.keepFail) {
+    const fails = lines.filter((line) => /fail|error|✖|✗|AssertionError|not ok/i.test(line));
+    if (fails.length) {
+      const head2 = lines.slice(0, 20);
+      const tail2 = lines.slice(-Math.max(20, maxLines - head2.length));
+      const merged = [...head2, ...fails.slice(0, 40), ...tail2];
+      lines = [...new Set(merged)];
+    }
+  }
+  if (lines.length <= maxLines) return lines.length ? `${lines.join("\n")}
+` : "";
+  const headCount = Math.floor(maxLines * 0.6);
+  const tailCount = maxLines - headCount - 1;
+  const head = lines.slice(0, headCount);
+  const tail = lines.slice(-tailCount);
+  return `${head.join("\n")}
+... truncated ${lines.length - maxLines} lines ...
+${tail.join("\n")}
+`;
+}
+function summarizeGain(ledger) {
+  const rawBytes = ledger.rawBytes ?? 0;
+  const slimBytes = ledger.slimBytes ?? 0;
+  const rawTokensEst = Math.ceil(rawBytes / 4);
+  const slimTokensEst = Math.ceil(slimBytes / 4);
+  const savedTokensEst = Math.max(0, rawTokensEst - slimTokensEst);
+  const savedRatio = rawTokensEst === 0 ? 0 : Number((savedTokensEst / rawTokensEst).toFixed(3));
+  return {
+    commands: ledger.commands ?? 0,
+    rawBytes,
+    slimBytes,
+    rawTokensEst,
+    slimTokensEst,
+    savedTokensEst,
+    savedRatio,
+    method: "approx-chars/4",
+    note: "Estimated savings from ForgeSlim filters - not provider billing."
+  };
+}
+async function recordGain(root, { command, rawText, slimText }) {
+  const ledger = await readGain(root);
+  const rawBytes = Buffer.byteLength(String(rawText ?? ""), "utf8");
+  const slimBytes = Buffer.byteLength(String(slimText ?? ""), "utf8");
+  ledger.commands = (ledger.commands ?? 0) + 1;
+  ledger.rawBytes = (ledger.rawBytes ?? 0) + rawBytes;
+  ledger.slimBytes = (ledger.slimBytes ?? 0) + slimBytes;
+  ledger.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
+  ledger.events = [
+    ...ledger.events ?? [],
+    {
+      at: ledger.updatedAt,
+      command,
+      rawBytes,
+      slimBytes,
+      savedBytes: Math.max(0, rawBytes - slimBytes)
+    }
+  ].slice(-200);
+  await writeGain(root, ledger);
+  return ledger;
+}
+function emptyGain() {
+  return {
+    schemaVersion: 1,
+    updatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    commands: 0,
+    rawBytes: 0,
+    slimBytes: 0,
+    events: []
+  };
+}
+async function readGain(root) {
+  try {
+    return JSON.parse(await readFile24(join31(root, SLIM_GAIN_REL), "utf8"));
+  } catch {
+    return emptyGain();
+  }
+}
+async function writeGain(root, ledger) {
+  await mkdir18(join31(root, "artifacts"), { recursive: true });
+  await writeFile18(join31(root, SLIM_GAIN_REL), `${JSON.stringify(ledger, null, 2)}
+`);
+}
+function runProcess3(command, args, options = {}) {
+  return new Promise((resolveProcess) => {
+    const child = spawn3(command, args, {
+      cwd: options.cwd ?? process.cwd(),
+      shell: options.shell === true,
+      windowsHide: true
+    });
+    let stdout = "";
+    let stderr = "";
+    const timer = setTimeout(() => child.kill("SIGTERM"), options.timeoutMs ?? 3e4);
+    child.stdout?.on("data", (chunk) => {
+      stdout = (stdout + chunk.toString()).slice(-4e5);
+    });
+    child.stderr?.on("data", (chunk) => {
+      stderr = (stderr + chunk.toString()).slice(-4e5);
+    });
+    child.on("error", (error) => {
+      clearTimeout(timer);
+      resolveProcess({ status: 127, stdout, stderr: error.message });
+    });
+    child.on("close", (status) => {
+      clearTimeout(timer);
+      resolveProcess({ status: status ?? 1, stdout, stderr });
+    });
+  });
+}
+
+// scripts/cli/commands/slim.mjs
+var TASKS2 = /* @__PURE__ */ new Set(["status", "diff", "log", "test", "run", "rg", "gain"]);
+async function runSlimCli(argv, options) {
+  const args = [...argv];
+  const task = args.shift();
+  if (!task || task === "help" || task === "--help") {
+    return usage(`usage: skillsforge slim <status|diff|log|test|run|rg|gain> [options]
+  status              Compact git status (branch + dirty names)
+  diff [--stat]       Name-only + shortstat
+  log [--limit n]     Oneline log
+  test [--] <cmd...>    Run tests; keep fail summary, drop pass spam
+  run -- <cmd...>       Generic runner with line caps
+  rg -- <args...>       Cap/group ripgrep matches
+  gain [--reset]      Show or clear estimated tokens saved (chars/4)
+  --json --limit n`);
+  }
+  if (!TASKS2.has(task)) return usage(`unknown slim task: ${task}`);
+  const json = consumeFlag(args, "--json");
+  const reset = consumeFlag(args, "--reset");
+  const stat6 = consumeFlag(args, "--stat");
+  const limitOpt = consumeOption(args, "--limit");
+  if (limitOpt === null) return usage("--limit requires a value");
+  let passthrough = [];
+  const dd = args.indexOf("--");
+  if (dd >= 0) {
+    passthrough = args.splice(dd + 1);
+    args.splice(dd, 1);
+  } else if (task === "test" || task === "run" || task === "rg") {
+    passthrough = [...args];
+    args.length = 0;
+  }
+  if (hasUnknownOption(args)) return usage(`unknown slim option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  const payload = await runSlim(root, task, {
+    json,
+    reset,
+    stat: stat6,
+    limit: limitOpt ? Number(limitOpt) : void 0,
+    argv: passthrough
+  });
+  if (json) process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  else process.stdout.write(formatSlimText(payload));
+  return payload.ok ? 0 : 1;
+}
+
+// scripts/cli/commands/settings.mjs
+function settingsHelp() {
+  return `usage: skillsforge settings <show|set|reset|validate> [options]
+
+Settings:
+  show                         Print resolved config defaults + overrides
+  validate                     Validate skillsforge.config.json
+  set <key> <value>            Set recommendThreshold/defaultHost/library.* safely
+  reset                        Write default config, or delete with --delete
+
+Options:
+  --json                       Print JSON
+  --config <file>              Config path, default skillsforge.config.json
+  --delete                     With reset, remove config instead of writing defaults
+
+Known keys:
+  recommendThreshold
+  defaultHost
+  library.theme
+  library.outDir
+  library.cacheHostChecks
+  library.extraSkillRoots
+  project.selectedSkills
+  project.defaultWorkflows
+  session.enabled
+  session.outDir
+  session.maxEntries
+  session.tokenBudget
+  mutations.allowByDefault
+`;
+}
+async function runSettingsCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, "--json");
+  const config = consumeOption(args, "--config");
+  const deleteConfig = consumeFlag(args, "--delete");
+  if (config === null) return usage("--config requires a value");
+  if (!subcommand || subcommand === "help" || subcommand === "--help") {
+    process.stdout.write(settingsHelp());
+    return 0;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let result;
+  try {
+    if (subcommand === "show") {
+      result = await loadSettings(root, { config });
+    } else if (subcommand === "validate") {
+      result = await validateSettingsFile(root, { config });
+    } else if (subcommand === "reset") {
+      result = await resetSettings(root, { config, delete: deleteConfig });
+    } else if (subcommand === "set") {
+      const key = args.shift();
+      const value = args.shift();
+      if (!key || value == null) return usage("usage: skillsforge settings set <key> <value>");
+      result = await setSetting(root, key, value, { config });
+    } else {
+      return usage(`unknown settings command: ${subcommand}`);
+    }
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  if (hasUnknownOption(args)) return usage(`unknown settings option: ${hasUnknownOption(args)}`);
+  const payload = { ...result, ok: result.ok };
+  if (json || subcommand !== "show") {
+    process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  } else {
+    process.stdout.write(`${JSON.stringify(payload, null, 2)}
+`);
+  }
+  return result.ok ? 0 : 1;
+}
+
+// scripts/cli/commands/session.mjs
+function sessionHelp() {
+  return `usage: skillsforge session <remember|recall|score|summary|reset|export> [options]
+
+Session memory:
+  remember --query <text>       Record compact skill/workflow usage memory
+  recall [--query <text>]       Return top-K compact session entries
+  score                         Review skill/workflow usage discipline
+  summary                       Print compact project session summary
+  reset                         Clear local session memory artifacts
+  export --out <file>           Write a shareable Markdown summary
+
+Options:
+  --json --config <file> --session-host <id> --limit <n> --token-budget <n>
+  --skill <id> --workflow <id> --agent <role> --score <0-100>
+  --reason <text> --command <cmd> --tokens <n> --outcome <text> --verification <text>
+`;
+}
+async function runSessionCommand(argv, options) {
+  const args = [...argv];
+  const subcommand = args.shift();
+  const json = consumeFlag(args, "--json");
+  const config = consumeOption(args, "--config");
+  const sessionHost = consumeOption(args, "--session-host");
+  const query = consumeOption(args, "--query");
+  const skill = consumeOption(args, "--skill");
+  const workflow = consumeOption(args, "--workflow");
+  const agent = consumeOption(args, "--agent");
+  const score = consumeOption(args, "--score");
+  const reasons = consumeOptions(args, "--reason");
+  const commands = consumeOptions(args, "--command");
+  const tokens2 = consumeOption(args, "--tokens");
+  const outcome = consumeOption(args, "--outcome");
+  const verification = consumeOption(args, "--verification");
+  const limit = consumeOption(args, "--limit");
+  const tokenBudget = consumeOption(args, "--token-budget");
+  const out = consumeOption(args, "--out");
+  if ([config, sessionHost, query, skill, workflow, agent, score, reasons, commands, tokens2, outcome, verification, limit, tokenBudget, out].some((value) => value === null)) {
+    return usage("session option requires a value");
+  }
+  if (!subcommand || subcommand === "help" || subcommand === "--help") {
+    process.stdout.write(sessionHelp());
+    return 0;
+  }
+  if (hasUnknownOption(args)) return usage(`unknown session option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  let result;
+  try {
+    if (subcommand === "remember") {
+      const text = query ?? args.join(" ");
+      if (!text) return usage("usage: skillsforge session remember --query <text>");
+      result = await rememberSessionEvent(root, {
+        query: text,
+        selectedSkill: skill,
+        selectedWorkflow: workflow,
+        agentRole: agent,
+        score: score ? Number(score) : void 0,
+        reasons,
+        commandsSuggested: commands,
+        tokensEstimated: tokens2 ? Number(tokens2) : void 0,
+        outcome,
+        verification
+      }, { config, sessionHost: sessionHost ?? void 0 });
+    } else if (subcommand === "recall") {
+      result = await recallSessionMemory(root, {
+        config,
+        query: query ?? args.join(" "),
+        limit: limit ? Number(limit) : void 0,
+        tokenBudget: tokenBudget ? Number(tokenBudget) : void 0
+      });
+    } else if (subcommand === "score") {
+      result = await scoreSessionMemory(root, { config });
+    } else if (subcommand === "summary") {
+      result = { ok: true, summary: await readSessionSummary(root, { config }) };
+    } else if (subcommand === "reset") {
+      result = await resetSessionMemory(root, { config });
+    } else if (subcommand === "export") {
+      if (!out) return usage("usage: skillsforge session export --out <file>");
+      result = await exportSessionMemory(root, {
+        config,
+        out,
+        query: query ?? args.join(" "),
+        limit: limit ? Number(limit) : void 0,
+        tokenBudget: tokenBudget ? Number(tokenBudget) : void 0
+      });
+    } else {
+      return usage(`unknown session command: ${subcommand}`);
+    }
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  if (json || subcommand !== "recall") process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else process.stdout.write(formatRecallText(result));
+  return result.ok ? 0 : 1;
+}
+function formatRecallText(result) {
+  if (!result.ok) return `${result.error ?? "session recall failed"}
+`;
+  if (!result.entries.length) return "no session memory entries\n";
+  return `${result.entries.map((entry) => [
+    entry.timestamp,
+    entry.selectedSkill ?? "no-skill",
+    entry.selectedWorkflow ?? "no-workflow",
+    entry.outcome ?? entry.query ?? ""
+  ].join("	")).join("\n")}
+`;
+}
+
+// lib/capabilities/init.mjs
+import { mkdir as mkdir19 } from "node:fs/promises";
+import { join as join32, resolve as resolve30 } from "node:path";
+async function initializeProject(root, options = {}) {
+  const absRoot = resolve30(root);
+  const profile = options.profile ?? "vibecoder";
+  const sessionHost = options.sessionHost ?? "codex";
+  const loaded = await loadSettings(absRoot, { config: options.config });
+  const settings = {
+    ...loaded.settings,
+    defaultHost: sessionHost,
+    project: {
+      ...loaded.settings.project,
+      selectedSkills: loaded.settings.project?.selectedSkills ?? [],
+      defaultWorkflows: loaded.settings.project?.defaultWorkflows ?? []
+    },
+    session: {
+      ...loaded.settings.session,
+      enabled: true
+    }
+  };
+  const saved = await saveSettings(absRoot, settings, { config: options.config });
+  if (!saved.ok) return { ok: false, stage: "settings", errors: saved.errors, path: saved.path };
+  await mkdir19(join32(absRoot, "artifacts"), { recursive: true });
+  const library = await writeLibraryArtifacts(absRoot, {
+    home: options.home,
+    sessionHost,
+    config: options.config,
+    outDir: settings.library.outDir
+  });
+  const session = await ensureSessionMemory(absRoot, { config: options.config });
+  return {
+    ok: library.ok && session.ok,
+    profile,
+    sessionHost,
+    config: saved.path,
+    library,
+    session,
+    links: {
+      libraryHtml: library.files.html,
+      aiIndexHtml: library.files.ai,
+      libraryJson: library.files.json,
+      serve: `skillsforge lib serve --session-host ${sessionHost}`,
+      serveMutations: `skillsforge lib serve --session-host ${sessionHost} --allow-mutations`
+    },
+    nextCommands: [
+      `skillsforge lib open`,
+      `skillsforge lib recommend --query "<task>" --json`,
+      `skillsforge workflows recommend --query "<task>" --json`,
+      `skillsforge session score --json`
+    ],
+    errors: library.errors ?? []
+  };
+}
+
+// scripts/cli/commands/init.mjs
+async function runInitCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const open = consumeFlag(args, "--open");
+  const profile = consumeOption(args, "--profile") ?? "vibecoder";
+  const sessionHost = consumeOption(args, "--session-host") ?? "codex";
+  const home = consumeOption(args, "--home");
+  const config = consumeOption(args, "--config");
+  if (profile === null || sessionHost === null || home === null || config === null) {
+    return usage("init options require values: --profile/--session-host/--home/--config");
+  }
+  if (args.includes("help") || args.includes("--help")) {
+    process.stdout.write(`usage: skillsforge init [--profile vibecoder] [--session-host codex] [--open] [--json]
+
+Initialize project-local SkillsForge config, library HTML/AI index, and compact session memory.
+`);
+    return 0;
+  }
+  if (hasUnknownOption(args)) return usage(`unknown init option: ${hasUnknownOption(args)}`);
+  const root = await resolveRuntimeRoot(options);
+  let result;
+  try {
+    result = await initializeProject(root, {
+      profile,
+      sessionHost,
+      home: home || void 0,
+      config: config || void 0
+    });
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  if (open && result.ok) {
+    const command = platformOpenCommand(result.links.libraryHtml);
+    const opened = await runProcess(command.command, command.args, { cwd: root, timeoutMs: 1e4 });
+    result.opened = opened.status === 0;
+  }
+  if (json) process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  else process.stdout.write(formatInitText(result));
+  return result.ok ? 0 : 1;
+}
+function formatInitText(result) {
+  if (!result.ok) return `SkillsForge init failed: ${(result.errors ?? []).join("; ") || result.stage || "unknown"}
+`;
+  return [
+    "SkillsForge project initialized",
+    `config	${result.config}`,
+    `library	${result.links.libraryHtml}`,
+    `aiIndex	${result.links.aiIndexHtml}`,
+    `session	${result.session.files.summary}`,
+    `serve	${result.links.serve}`,
+    `mutate	${result.links.serveMutations}`,
+    ""
+  ].join("\n");
+}
+
 // scripts/skillsforge-cli.mjs
 var modulePath2 = fileURLToPath6(import.meta.url);
+var CLI_VERSION = "0.4.3";
 async function main(argv = process.argv.slice(2), options = {}) {
   const command = argv[0];
   if (!command || command === "help" || command === "--help") {
     process.stdout.write(`usage: skillsforge <command> [options]
 
-Commands:
+Work OS for productive Agent Skills. Trust validate/package/hooks/receipts = safety layer.
+Default output is compact. Most commands accept --json. Operator cmds also accept --limit / --full.
+Prefer --dry-run before writes. Install/remove/write require explicit confirmation.
+
   help                              Show this help
-  validate [paths...]               Validate skills (structure + capability policy when sidecar present)
-    --json                          Machine-readable diagnostics
-    --all                           Scan every production skill under plugins/*/skills
-    --allow-empty                   Allow empty production skill libraries
-    --profile <canonical|claude-code>
-                                    Validation profile (default: canonical)
-  doctor                            Plugin and installed-skill health checks
-    --json                          Machine-readable diagnostics
-  route --query <text>              Explainable skill routing for a query
-  forge --spec <file>               Deterministic skill generation from forge-spec
-    --dry-run                       Plan only (default when --write omitted)
-    --write                         Write SKILL.md + skillsforge.json
-    --force                         Overwrite an existing skill directory
-    --out <dir>                     Output skills root (default: plugin skills/)
-  receipt                           Build a trust receipt for packaged bytes
-    --out <file>                    Receipt path (default: dist/trust-receipt.json)
-    --package <dir>                 Package root to hash
-    --evaluation <file>             Routing evaluation report to embed
-    --require-evaluation            Fail if evaluation evidence is missing
-  verify-receipt <file>             Verify a trust receipt
-    --package <dir>                 Package root to re-hash
-    --evaluation <file>             External routing-report.json to check
-    --package-only                  Skip evaluation authenticity checks
-  enforce --policy <sidecar.json>   Decide PreToolUse allow/deny from stdin event JSON
-  eval                              Run holdout routing evaluation (P/R gate)
-  hosts [--json] [--home <dir>]     List universal AI CLI host targets and trust boundaries
-  install [skill-paths...]          Install skills into detected agent hosts
-    --hosts <ids>                   Comma list or all|detected: claude-code,cursor,codex,opencode,zcode,hermes,gemini
-    --custom-host <id>:<skills-dir> Add package-fidelity target under --home
-    --yes                           Non-interactive (requires --hosts or --custom-host)
-    --list                          Print detected hosts and exit
-    --dry-run                       Plan installs without writing
-    --force                         Overwrite existing skill directories
-    --json                          Machine-readable output
-    --home <dir>                    Override home directory (tests / custom roots)
-  package --host codex              Package one skill as a guarded Codex plugin
-    --skill <dir>                   Single skill directory (multi-skill inputs are rejected)
-    --out <dir>                     Output plugin directory
-    --dry-run                       Plan only (default when --write omitted)
-    --write                         Write the Codex plugin tree
-    --force                         Overwrite a non-empty --out directory
-  evidence --out <dir>              Emit deterministic trust/eval evidence bundle
-                                    (writes when --out is set; default CI path: artifacts/evidence)
+  version / --version               Print CLI version
+  init                              Initialize project library HTML, config, and session memory
+
+Catalog & authoring:
   vibe                              Magical moment: work stubs + catalog summary + quality sample
-    --json                          Machine-readable output
-  catalog                           List packs/profiles/skills
-    --pack <id>                     Filter by pack
-    --profile <id>                  List skills for profile
-    --search <text>                 Search skill ids
-    --json                          Machine-readable output
+  catalog                           List packs/profiles/skills (--pack/--profile/--search/--json)
+  route --query <text>              Explainable skill routing (--pack / --include-explicit)
   quality --skill <dir>             Score skill quality 0-100
-    --json
-  lint-skill --skill <dir>          Fail if quality below threshold
-    --threshold <n>                 Default 70
-    --hero                          Require \u0393\xEB\xD185
-  scaffold --name <id>              Scaffold original skill + sidecar + openai.yaml
-    --pack <id>                     Pack id (default eng)
-    --mode auto|explicit
-    --write                         Persist (default dry-run)
-    --force                         Overwrite
-  bench                             Measure route/validate latency \u0393\xE5\xC6 artifacts/bench/latest.json
-  scorecard                         Pack coverage + last bench
-  compose --workflow <file>         Run skill DAG from JSON workflow
+  lint-skill --skill <dir>          Fail if quality below threshold (--threshold / --hero)
+  scaffold --name <id>              Scaffold skill + sidecar (--pack/--mode/--write/--force)
   stocktake                         Diff installed skills vs catalog
-  batch --pack <id> --action quality|validate|skillshield
-  pressure --skill <dir>            Run skill pressure fixtures
-  skillshield [--skill <dir>|--all] Scan skills for unsafe patterns
   export-agents [--out <file>]      Write AGENTS.md from catalog/agents
-  capture --insight <text>          Append learning to artifacts/capture + docs/work/learning.md
-  forge-from-capture                Propose skill candidates from repeated learnings
-  compare --a <dir> --b <dir>       Diff two skill sidecars/descriptions
-  compare-skill --a <dir> --b <dir> Side-by-side sidecar vs policy (trust delta)
-  demo                              Judge path: unsafe deny \u0393\xE5\xC6 safe package \u0393\xE5\xC6 receipt
-  watch --skill <dir>               Re-quality on interval (single pass in CI)
-  wb <task>                         Token-friendly workbench: status/tree/find/grep/diff/errors/bigfiles/recent/proof
-    --json --limit <n> --full       Compact by default; --full raises safe output caps
-  lib <build|update|serve|check|recommend|remove>
-                                    Local skill library index, UI, recommendation, and removal preview
+  forge --spec <file>               Deterministic skill generation (--dry-run/--write)
+  capture / forge-from-capture      Learning capture -> skill proposals
+  compare / compare-skill            Sidecar / trust delta diffs
+  bench / scorecard / compose / batch / watch / pressure / skillshield
+
+Operator terminals:
+  wb <task>                         Workbench: status/tree/find/grep/diff/errors/bigfiles/recent/proof
+                                    (--json --limit <n> --full)
+  lib <build|update|serve|check|recommend|select|unselect|selected|remove|open>
+                                    Local library UI, AI index, project selection; remove dry-run default
   workflows <list|show|recommend|run|export-html>
-                                    Curated workflow catalog (dry-run execution only)
-  auto <plan|run>                    Recommend skill + workflow; run requires --read-only
-  ps export                         Export PowerShell sf-*.ps1 helper commands
-  os-env [--name <VAR>] [--json]     Inspect safe environment facts without dumping secrets
-  os-find --name <glob> [--root <dir>] [--json]
-                                    Cross-platform file finder with repo-safe defaults
-  os-ports [--json]                 Best-effort listening port snapshot
-  os-open <path-or-url> [--dry-run] [--json]
-                                    Open target via platform launcher
-  os-run [--yes|--dry-run] -- <cmd> [args...]
-                                    Agent-safe command runner; dry-run unless --yes
-  os-copy-path <path> [--json]      Resolve and print canonical path
-  os-clean --root <dir> [--json]    Dry-run cleanup candidate inventory only
+                                    Workflow catalog (run = dry-run only)
+  auto <plan|run>                   Skill + workflow recommend; run requires --read-only
+  tokens [--catalog|--skill|--path] Estimate context tokens (chars/4); optional --track/--session
+                                    Default catalog = repo skills; add --installed for host skills.
+                                    Heuristic only - not tiktoken / API billing.
+  digest --query <text>             One-shot: status + recommend + token cost + next commands
+  next                              Suggest next productive SkillsForge commands from repo state
+  map <status|index|symbol|...>     ForgeMap: lean JS/TS structural index (optional codegraph.db)
+  slim <status|diff|log|test|...>   ForgeSlim: compress git/test/rg output + gain ledger
+  settings <show|set|reset|validate>
+                                    Local config for thresholds, library UI, and mutation defaults
+  session <remember|recall|score|summary|reset|export>
+                                    Compact skill/workflow usage memory, not chat transcript memory
+  ps export                         Write PowerShell sf-*.ps1 helpers (token-friendly)
+
+Hosts & install:
+  hosts [--json] [--home <dir>]     AI CLI host targets and trust boundaries
+  install [skill-paths...]          Multi-host install (--hosts/--custom-host/--yes/--dry-run/--force)
+  package --host codex              One skill -> guarded Codex plugin (--skill/--out/--dry-run/--write)
+
+Trust & ship:
+  demo                              Trust-layer beat: unsafe deny -> safe package -> demo scoreboard
+  validate [paths...]               Structure + capability policy (--all/--json/--profile/--allow-empty)
+  doctor                            Plugin + installed-skill health (--json)
+  receipt / verify-receipt         Tamper-evident package receipt (--package-only for verify)
+  evidence --out <dir>              Deterministic trust/eval evidence bundle
+  enforce --policy <sidecar.json>   PreToolUse allow/deny from stdin event JSON
+  eval                              Holdout routing evaluation (P/R gate)
+  skillshield / pressure            Body scan / fixture pressure gate
+  compare-skill --a <dir> --b <dir> Side-by-side trust delta
+
+Compat OS helpers (prefer wb/ps when possible):
+  os-env / os-find / os-ports / os-open / os-run / os-copy-path / os-clean
+  os-run is dry-run unless --yes
 
 Exit codes: 0 success, 1 command failure, 2 invalid usage
+`);
+    return 0;
+  }
+  if (command === "version" || command === "--version" || command === "-v") {
+    process.stdout.write(`skillsforge ${CLI_VERSION}
 `);
     return 0;
   }
@@ -23176,6 +26154,8 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runDemoCommand(argv.slice(1), options);
     case "watch":
       return runWatchCommand(argv.slice(1), options);
+    case "init":
+      return runInitCommand(argv.slice(1), options);
     case "wb":
       return runWorkbenchCommand(argv.slice(1), options);
     case "lib":
@@ -23184,6 +26164,20 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runWorkflowsCommand(argv.slice(1), options);
     case "auto":
       return runAutoCommand(argv.slice(1), options);
+    case "tokens":
+      return runTokensCli(argv.slice(1), options);
+    case "digest":
+      return runDigestCli(argv.slice(1), options);
+    case "next":
+      return runNextCli(argv.slice(1), options);
+    case "map":
+      return runMapCli(argv.slice(1), options);
+    case "slim":
+      return runSlimCli(argv.slice(1), options);
+    case "settings":
+      return runSettingsCommand(argv.slice(1), options);
+    case "session":
+      return runSessionCommand(argv.slice(1), options);
     case "ps":
       return runPsCommand(argv.slice(1), options);
     case "os-env":
@@ -23211,7 +26205,7 @@ if (process.argv[1]) {
   try {
     sameEntry = realpathSync2(process.argv[1]) === realpathSync2(modulePath2);
   } catch {
-    sameEntry = resolve26(process.argv[1]) === modulePath2;
+    sameEntry = resolve31(process.argv[1]) === modulePath2;
   }
   if (sameEntry) {
     process.exitCode = await main();

@@ -8,12 +8,22 @@
       "run docs examples",
       "docs examples skill",
       "help with docs examples",
-      "docs docs examples"
+      "docs docs examples",
+      "media docs examples",
+      "guide docs examples",
+      "demo docs examples"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "implement production code only",
+      "pentest live systems",
+      "deploy to prod only",
+      "fake screenshots",
+      "invent download counts",
+      "ship broken links",
+      "write docs that contradict CLI help"
     ],
     "mode": "explicit",
     "pack": "docs"

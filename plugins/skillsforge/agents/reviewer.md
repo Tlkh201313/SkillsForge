@@ -13,7 +13,7 @@ Structured review before QA/ship.
 1. Map diff files to plan tasks.
 2. On skill changes: `validate`, `skillshield --skill <dir>`, confirm routing modes.
 3. Write severity-tagged notes to `docs/work/findings.md`.
-4. Verdict: APPROVE or REQUEST CHANGES — no soft passes on validate FAIL.
+4. Verdict: APPROVE or REQUEST CHANGES - no soft passes on validate FAIL.
 
 ## CLI
 

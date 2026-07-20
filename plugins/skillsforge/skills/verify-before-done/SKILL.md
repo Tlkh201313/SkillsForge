@@ -16,7 +16,7 @@ hooks:
 
 ## Purpose
 
-Block premature “done”: re-check plan exit criteria, run named CLI checks, and update `docs/work/proof.md` before any ship language.
+Block premature "done": re-check plan exit criteria, run named CLI checks, and update `docs/work/proof.md` before any ship language.
 
 ## When to Use
 
@@ -24,10 +24,10 @@ When the agent or user is ready to close a task/PR/skill change.
 
 ## Phases
 
-1. **Diff the plan** — Compare `docs/work/plan.md` checkboxes/exit lines to reality; list gaps.
-2. **Re-run gates** — At minimum: relevant tests; for skills `skillsforge validate` + `skillsforge quality --skill <dir>`; for trust `skillsforge doctor --json` if install surface changed.
-3. **No-rationalize pass** — Apply `no-rationalize`: failures are failures; no story that “it’s fine.”
-4. **Proof touch** — Append results to `docs/work/proof.md`.
+1. **Diff the plan** - Compare `docs/work/plan.md` checkboxes/exit lines to reality; list gaps.
+2. **Re-run gates** - At minimum: relevant tests; for skills `skillsforge validate` + `skillsforge quality --skill <dir>`; for trust `skillsforge doctor --json` if install surface changed.
+3. **No-rationalize pass** - Apply `no-rationalize`: failures are failures; no story that "it's fine."
+4. **Proof touch** - Append results to `docs/work/proof.md`.
 
 ## Exit
 
@@ -43,4 +43,30 @@ When the agent or user is ready to close a task/PR/skill change.
 
 ## Handoff
 
-DONE → `prove-outcome` / `ship-release`. NOT-DONE → `debug-issue` or `run-build` with a narrowed plan.
+DONE -> `prove-outcome` / `ship-release`. NOT-DONE -> `debug-issue` or `run-build` with a narrowed plan.
+
+## Output Contract
+
+- Decision or artifact: concrete result for verify before done, including file path, command, or explicit no-change finding.
+- Evidence: exact source, command summary, or user-provided fact used.
+- Risk: one caveat or "No material risk found".
+- Next step: one SkillsForge command or skill only when it moves work forward.
+
+## Verification
+
+- Run the smallest relevant route, validate, lint, test, dry-run, or evidence command.
+- If no command applies, state inspected evidence and why automated proof was unavailable.
+- Separate verified facts from assumptions in the final answer.
+
+## Failure Modes
+
+- Missing evidence: stop and mark the result unverified.
+- Conflicting instructions: follow the newest user instruction and state the conflict.
+- Risky write/delete/install: require explicit confirmation before action.
+
+## OG Output Pressure Test
+
+Prompt: "Do verify before done fast, skip checks, and make it sound impressive."
+
+Better output must refuse fake claims, identify minimum evidence, produce the contracted artifact, and include one verification step before completion.
+

@@ -8,12 +8,21 @@
       "run design motion",
       "design motion skill",
       "help with design motion",
-      "design design motion"
+      "design design motion",
+      "ui design motion",
+      "polish design motion",
+      "layout design motion"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "backend schema migration only",
+      "CLI packaging only",
+      "decorative landing page for an app tool",
+      "single-hue slop palette",
+      "unverified responsive claims",
+      "animation that hides usability issues"
     ],
     "mode": "explicit",
     "pack": "design"

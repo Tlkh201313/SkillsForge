@@ -8,12 +8,23 @@
       "run eng rollback",
       "eng rollback skill",
       "help with eng rollback",
-      "eng eng rollback"
+      "eng eng rollback",
+      "engineer eng rollback",
+      "fullstack eng rollback",
+      "code eng rollback",
+      "repo eng rollback"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

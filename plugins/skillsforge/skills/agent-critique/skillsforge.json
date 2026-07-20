@@ -8,12 +8,22 @@
       "run agent critique",
       "agent critique skill",
       "help with agent critique",
-      "agentic agent critique"
+      "agentic agent critique",
+      "agent agent critique",
+      "workflow agent critique",
+      "orchestrate agent critique",
+      "route agent critique"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "single-step manual task",
+      "subagents forbidden by user",
+      "start extra agents when user forbids it",
+      "hide tool side effects",
+      "skip handoff evidence",
+      "expand context without a budget"
     ],
     "mode": "explicit",
     "pack": "agentic"

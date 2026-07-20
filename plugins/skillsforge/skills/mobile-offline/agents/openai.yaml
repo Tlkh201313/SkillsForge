@@ -1,6 +1,6 @@
 interface:
   display_name: Mobile Offline
-  short_description: Use when you need mobile offline in a SkillsForge mobile workflow.
+  short_description: Use when doing mobile offline work for mobile-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the mobile-offline skill for this task.
 policy:
   allow_implicit_invocation: false

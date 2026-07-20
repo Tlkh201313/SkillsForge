@@ -1,0 +1,25 @@
+SkillsForge is an AI CLI development plugin for vibe coders who want more than another folder of prompts.
+
+The goal is to turn chaotic AI-assisted coding into a structured development system.
+
+Today, useful skills are scattered across repos, chats, snippets, and one-off scripts. Developers repeat prompts, waste context, lose workflow steps, and have no clean way to route a task to the right capability.
+
+SkillsForge is built as a work OS around AI CLIs.
+
+First: the skill library. It ships hundreds of reusable capabilities grouped into packs for engineering, product, design, ops, media, research, launch, and more.
+
+Second: custom commands. Instead of long prompts, operators get compact entrypoints for routing, mapping code, slimming logs, checking tokens, recommending workflows, building the local library, and moving to the next useful step.
+
+Third: the local HTML index. SkillsForge builds a searchable skill library on the machine, with source details for repo skills, installed skills, plugin cache skills, and custom roots. Humans and agents can discover what exists before burning context.
+
+Fourth: routing and token efficiency. A user asks for a development outcome. SkillsForge selects the right small set of skills and workflows instead of dumping the whole catalog into the model. Map tools expose structure. Slim tools compress status, diffs, test logs, and search results.
+
+Fifth: workflows. SkillsForge recommends repeatable playbooks: shape intent, pick skills, run commands, call the right role, leave artifacts, and verify before shipping.
+
+The host strategy is portable: Codex first, deep Claude Code support, and package-fidelity paths for Cursor, OpenCode, Gemini, and custom local AI CLIs.
+
+There is still a trust layer underneath: validation, packaging, receipts, and guardrails. But that is the foundation, not the headline.
+
+This Build Week version used Codex and GPT-5.6 to accelerate implementation, review, video production, and verification. The product direction stayed human: build a development plugin that can compete with the best AI CLI ecosystems by being more structured, more local, and more token efficient.
+
+Clone the repo and run SkillsForge vibe. Then try catalog, route, lib, workflows, map, slim, digest, and next. This is a development tool layer for the vibe coding community.

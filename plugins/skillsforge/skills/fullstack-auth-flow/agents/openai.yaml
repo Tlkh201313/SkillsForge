@@ -1,0 +1,6 @@
+interface:
+  display_name: Fullstack Auth Flow
+  short_description: Use when doing fullstack auth flow work for repo-grounded full-stack architecture, implementation planning, and engineering gates and you need system map, contract, affected files, test plan, rollback
+  default_prompt: Use the fullstack-auth-flow skill for this task.
+policy:
+  allow_implicit_invocation: false

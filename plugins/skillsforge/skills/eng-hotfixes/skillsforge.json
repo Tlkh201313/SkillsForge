@@ -8,12 +8,23 @@
       "run eng hotfixes",
       "eng hotfixes skill",
       "help with eng hotfixes",
-      "eng eng hotfixes"
+      "eng eng hotfixes",
+      "engineer eng hotfixes",
+      "fullstack eng hotfixes",
+      "code eng hotfixes",
+      "repo eng hotfixes"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "design mockups only",
+      "marketing copy only",
+      "finance ledger only",
+      "rewrite unrelated architecture",
+      "ignore existing patterns",
+      "skip tests for shared behavior",
+      "invent runtime guarantees"
     ],
     "mode": "explicit",
     "pack": "eng"

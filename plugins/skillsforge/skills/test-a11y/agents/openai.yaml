@@ -1,6 +1,6 @@
 interface:
   display_name: Test A11y
-  short_description: Use when you need test a11y in a SkillsForge testing workflow.
+  short_description: Use when doing test a11y work for testing-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the test-a11y skill for this task.
 policy:
   allow_implicit_invocation: false

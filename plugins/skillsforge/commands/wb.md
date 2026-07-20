@@ -7,10 +7,11 @@ allowed-tools: "Bash(node *),Read"
 
 # /skillsforge:wb
 
-Use the compact workbench before broad manual file reads.
+Use the compact workbench when ForgeSlim/ForgeMap do not cover the need.
+Prefer `/skillsforge:slim` for git/test/rg and `/skillsforge:map` for symbol/impact lookups first.
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/bin/skillsforge.mjs" wb $ARGUMENTS
 ```
 
-Prefer `--json` when another tool needs structured output.
+Prefer `--json` when another tool needs structured output. Always pass `--limit` unless `--full` is required.

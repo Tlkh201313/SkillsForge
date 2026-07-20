@@ -1,6 +1,6 @@
 interface:
   display_name: Lang Bash
-  short_description: Use when you need lang bash in a SkillsForge lang workflow.
+  short_description: Use when doing lang bash work for lang-pack work and you need bounded artifact, evidence, risk note, and verification command before claiming progress.
   default_prompt: Use the lang-bash skill for this task.
 policy:
   allow_implicit_invocation: false

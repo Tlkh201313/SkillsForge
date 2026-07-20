@@ -13,6 +13,19 @@ The important boundary: package-fidelity hosts get complete skill directories an
 | Package fidelity | Cursor, OpenCode, ZCode, Hermes, Gemini | Copies validated skill packages and strips incompatible Claude-only frontmatter where needed | Not claimed |
 | Custom package target | Any local AI CLI with a skills folder | Copies validated packages into a user-declared path under `--home` | Not claimed |
 
+## Claude Code startup and lazy loading
+
+SkillsForge should stay named, selectable, and low-lag in Claude Code. The plugin manifest advertises the plugin; it does not paste every SkillsForge skill body into the startup prompt. The SessionStart hook prints only a compact status line and command hint. Individual `SKILL.md` bodies stay on disk and are loaded when a matching skill or `/skillsforge:*` command is invoked.
+
+For large catalogs, route before reading:
+
+```sh
+sf route --query "review a demo video"
+sf lib recommend --query "build an MCP plugin and validate launch"
+sf tokens --catalog --limit 10
+sf digest --query "safe refactor this repo"
+```
+
 ## Inspect hosts
 
 ```sh
@@ -117,3 +130,33 @@ node ./plugins/skillsforge/bin/skillsforge.mjs ps export
 
 The generated `sf-*.ps1` scripts call the bundled CLI and keep output compact for agents.
 The export includes repo helpers (`sf-status`, `sf-grep`, `sf-diff`) plus library/workflow helpers (`sf-lib-update`, `sf-recommend`, `sf-workflow`, `sf-auto`).
+
+## Updating installed plugins
+
+Current repo version: **0.4.3**. Updating is explicit; SkillsForge does not auto-replace a user's installed plugin.
+
+Codex refreshes marketplace snapshots, then the user can reinstall the plugin if desired:
+
+```sh
+codex plugin marketplace upgrade
+codex plugin list --json
+codex plugin remove skillsforge@skillsforge-marketplace --json
+codex plugin add skillsforge@skillsforge-marketplace --json
+```
+
+Claude Code has a direct plugin update command:
+
+```text
+/plugin update skillsforge@skillsforge-marketplace
+```
+
+For a local clone:
+
+```sh
+git fetch --tags
+git pull --ff-only
+npm ci
+npm run build
+npm link
+sf doctor
+```

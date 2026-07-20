@@ -8,12 +8,22 @@
       "run agent replay",
       "agent replay skill",
       "help with agent replay",
-      "agentic agent replay"
+      "agentic agent replay",
+      "agent agent replay",
+      "workflow agent replay",
+      "orchestrate agent replay",
+      "route agent replay"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "single-step manual task",
+      "subagents forbidden by user",
+      "start extra agents when user forbids it",
+      "hide tool side effects",
+      "skip handoff evidence",
+      "expand context without a budget"
     ],
     "mode": "explicit",
     "pack": "agentic"

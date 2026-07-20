@@ -1,0 +1,6 @@
+interface:
+  display_name: Media Video Hook Retention
+  short_description: Use when doing media video hook retention work for token-efficient video, Remotion, demo-review, frame-reading, audio-caption, and launch-media QA work and you need video brief, timestamped findings,
+  default_prompt: Use the media-video-hook-retention skill for this task.
+policy:
+  allow_implicit_invocation: false

@@ -8,12 +8,21 @@
       "run research user journey",
       "research user journey skill",
       "help with research user journey",
-      "research research user journey"
+      "research research user journey",
+      "map research user journey",
+      "compare research user journey",
+      "source trust research user journey"
     ],
     "antiTriggers": [
       "install skillsforge plugin",
       "unrelated coding task",
-      "write application code only"
+      "write application code only",
+      "local bug fix with no external question",
+      "unsupported claim generation only",
+      "invent market stats",
+      "use unattributed competitor claims",
+      "ship recommendations without source quality",
+      "research already answered by local code"
     ],
     "mode": "explicit",
     "pack": "research"
