@@ -32,6 +32,7 @@
     "vibe": "node plugins/skillsforge/bin/skillsforge.mjs vibe",
     "quality": "node plugins/skillsforge/bin/skillsforge.mjs quality",
     "bench": "node plugins/skillsforge/bin/skillsforge.mjs bench",
+    "proof:output": "node plugins/skillsforge/bin/skillsforge.mjs output-proof --json",
     "check": "npm run validate:repo && npm run validate && npm test && npm run eval && npm run build:check && npm run build && npm run build:dist && npm run demo && npm run smoke:dist && npm run validate:host && npm run evidence -- --out artifacts/evidence"
   },
   "files": [

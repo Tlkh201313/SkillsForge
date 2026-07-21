@@ -26,6 +26,22 @@ The preview is an illustrative product visual with no embedded text claims. Sour
 
 Full surface map: **[docs/features.md](docs/features.md)**.
 
+## See the skill effect
+
+The same task can produce a plausible but underspecified answer, or an answer with an explicit scope, output contract, evidence path, verification command, risk boundary, and next step. SkillsForge ships a deterministic, GitHub-readable proof of that response-shape change:
+
+| Baseline | After applying SkillsForge contracts |
+|---|---|
+| "Add the command, update the README, test it, and commit." | Names the task, files and commands, evidence to gather, verification gates, unsupported claims, and the next dry-run step. |
+
+Read the full **[baseline vs SkillsForge output proof](docs/output-proof.md)**. Reproduce it without a model or network:
+
+```sh
+node plugins/skillsforge/bin/skillsforge.mjs output-proof --json
+```
+
+This is contract coverage evidence, not a fabricated LLM benchmark. A real model comparison must hold model, host, context, and task constant and publish the raw responses plus a blinded rubric.
+
 ---
 
 ## Demo video
@@ -338,6 +354,7 @@ Exit codes: `0` success - `1` failure - `2` invalid usage.
 | `enforce` | PreToolUse allow/deny from stdin |
 | `skillshield` / `pressure` | Body scan / fixture pressure gate |
 | `compare-skill` | Side-by-side trust delta |
+| `output-proof` | Baseline vs SkillsForge output-contract evidence |
 | `forge` / `scaffold` | Deterministic skill generation |
 | `eval` | Holdout routing evaluation |
 
@@ -393,6 +410,7 @@ npm run check
 | [docs/hackathon-demo.md](docs/hackathon-demo.md) | Timed judge script |
 | [docs/competitive-matrix.md](docs/competitive-matrix.md) | Claim boundaries |
 | [docs/submit-checklist.md](docs/submit-checklist.md) | Human submit gates |
+| [docs/output-proof.md](docs/output-proof.md) | Baseline vs SkillsForge response-shape proof |
 | [docs/roadmap-next.md](docs/roadmap-next.md) | Post-0.4.3 priorities |
 
 ---

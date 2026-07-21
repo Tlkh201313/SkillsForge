@@ -55,7 +55,7 @@ Magical moment: `skillsforge init --profile vibecoder --session-host codex` - th
 
 ### Catalog & authoring
 
-`catalog`, `vibe`, `scaffold`, `stocktake`, `batch`, `compare`, `compare-skill`, `export-agents`, `capture`, `forge-from-capture`, `watch`, `bench`, `scorecard`, `compose`, `route`, `quality`
+`catalog`, `vibe`, `scaffold`, `stocktake`, `batch`, `compare`, `compare-skill`, `output-proof`, `export-agents`, `capture`, `forge-from-capture`, `watch`, `bench`, `scorecard`, `compose`, `route`, `quality`
 
 ### Operator terminals
 

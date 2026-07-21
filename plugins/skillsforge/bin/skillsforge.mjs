@@ -10559,7 +10559,7 @@ var require_compile = __commonJS({
       const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve32.call(this, root, ref);
+      let _sch = resolve33.call(this, root, ref);
       if (_sch === void 0) {
         const schema = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
         const { schemaId } = this.opts;
@@ -10586,7 +10586,7 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve32(root, ref) {
+    function resolve33(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
@@ -11217,7 +11217,7 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve32(baseURI, relativeURI, options) {
+    function resolve33(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const resolved = resolveComponent(parse(baseURI, schemelessOptions), parse(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
@@ -11475,7 +11475,7 @@ var require_fast_uri = __commonJS({
     var fastUri = {
       SCHEMES,
       normalize: normalize2,
-      resolve: resolve32,
+      resolve: resolve33,
       resolveComponent,
       equal,
       serialize,
@@ -18330,7 +18330,7 @@ var init_evidence = __esm({
 
 // scripts/skillsforge-cli.mjs
 import { realpathSync as realpathSync2 } from "node:fs";
-import { resolve as resolve31 } from "node:path";
+import { resolve as resolve32 } from "node:path";
 import { fileURLToPath as fileURLToPath6 } from "node:url";
 
 // lib/capabilities/claude-policy-compiler.mjs
@@ -26011,6 +26011,218 @@ function formatInitText(result) {
   ].join("\n");
 }
 
+// lib/capabilities/output-proof.mjs
+init_catalog();
+import { mkdir as mkdir20, readFile as readFile25, writeFile as writeFile19 } from "node:fs/promises";
+import { join as join33, resolve as resolve31 } from "node:path";
+var DEFAULT_TASK = "Add a CLI command to an AI developer plugin and document it for GitHub.";
+var PROOF_SKILLS = [
+  "build-ai-cli-sdk-project",
+  "validate-cli-help",
+  "docs-agent-facing-guide",
+  "validate-readme-claims"
+];
+var RUBRIC = [
+  ["Scope", "Names the requested task and constraints before proposing work."],
+  ["Output contract", "Defines the artifact, files, commands, or decision the agent must produce."],
+  ["Evidence", "Names concrete repository evidence or commands instead of asserting completion."],
+  ["Verification", "Includes a smallest useful test, check, or dry-run command."],
+  ["Boundaries", "States unsupported claims, risks, and write or host limits."],
+  ["Next step", "Ends with one actionable follow-up that moves the task forward."]
+];
+async function runOutputProof(root, options = {}) {
+  const repositoryRoot2 = resolve31(root);
+  const task = String(options.task ?? DEFAULT_TASK).trim() || DEFAULT_TASK;
+  const { catalog } = await loadCatalog(repositoryRoot2);
+  const stats2 = catalogStats(catalog);
+  const catalogSkills = new Set(
+    Object.values(catalog.packs ?? {}).flatMap((pack) => pack.skills ?? [])
+  );
+  const missingSkills = PROOF_SKILLS.filter((skill) => !catalogSkills.has(skill));
+  if (missingSkills.length > 0) {
+    return {
+      ok: false,
+      task,
+      error: `output proof skills missing from catalog: ${missingSkills.join(", ")}`,
+      missingSkills
+    };
+  }
+  const packageJson = JSON.parse(await readFile25(join33(repositoryRoot2, "package.json"), "utf8"));
+  const version = String(packageJson.version ?? "unknown");
+  const baseline = buildBaseline(task);
+  const improved = buildImproved(task, { version, stats: stats2 });
+  const checks = RUBRIC.map(([name, description], index) => ({
+    name,
+    description,
+    baseline: false,
+    skillsforge: true,
+    evidence: index === 0 ? "Fixture contract" : "Generated response contract"
+  }));
+  const summary = {
+    baseline: { score: 0, max: RUBRIC.length },
+    skillsforge: { score: RUBRIC.length, max: RUBRIC.length },
+    metric: "contract coverage, not model quality or user conversion"
+  };
+  const result = {
+    ok: true,
+    task,
+    version,
+    stats: stats2,
+    selectedSkills: PROOF_SKILLS,
+    baseline,
+    improved,
+    checks,
+    summary,
+    note: "This deterministic fixture proves output shape and evidence requirements. It does not claim an LLM benchmark."
+  };
+  const outDir = resolve31(options.outDir ?? join33(repositoryRoot2, "artifacts", "output-proof"));
+  await mkdir20(outDir, { recursive: true });
+  const jsonPath = join33(outDir, "output-proof.json");
+  const markdownPath = join33(outDir, "output-proof.md");
+  await writeFile19(jsonPath, `${JSON.stringify(result, null, 2)}
+`);
+  await writeFile19(markdownPath, renderOutputProof(result));
+  return { ...result, paths: { json: jsonPath, markdown: markdownPath } };
+}
+function buildBaseline(task) {
+  return [
+    "Add the command, update the README, test it, and then commit the changes.",
+    "",
+    `Task acknowledged: ${task}`
+  ].join("\n");
+}
+function buildImproved(task, { version, stats: stats2 }) {
+  return [
+    `Task: ${task}`,
+    "",
+    "Scope:",
+    "- Add the command without changing existing command behavior.",
+    "- Document the user path for GitHub readers and keep claims tied to repository evidence.",
+    "- Keep write, install, and host-specific behavior explicit before execution.",
+    "",
+    "Output contract:",
+    "- CLI help entry and JSON output for the new command.",
+    "- Focused implementation files, regression tests, and one GitHub-ready usage section.",
+    "- A short evidence note separating verified facts, assumptions, and remaining risk.",
+    "",
+    "Evidence to gather:",
+    `- Read the current SkillsForge ${version} package and catalog (${stats2.skills} catalog skills, ${stats2.packs} packs, ${stats2.profiles} profiles).`,
+    "- Inspect the existing command dispatcher, help text, host matrix, and README claim rules.",
+    "",
+    "Verification:",
+    "- Run the focused command test and the repository claim validator.",
+    "- Run `npm run check` before claiming the feature is shipped.",
+    "- Attach the command output or generated artifact path to the final report.",
+    "",
+    "Boundaries:",
+    "- Do not invent benchmark scores, installed-host support, or user outcomes.",
+    "- Do not silently install, delete, or mutate a host configuration.",
+    "- Mark any model-quality result as unmeasured unless a real controlled run exists.",
+    "",
+    "Next step:",
+    "- Route the task to the smallest matching build, validation, and docs skills, then run the dry-run workflow before editing."
+  ].join("\n");
+}
+function renderOutputProof(result) {
+  const checked = result.checks.map((check) => `| ${check.name} | No | Yes | ${check.description} |`).join("\n");
+  const skills = result.selectedSkills.map((skill) => `- \`${skill}\``).join("\n");
+  return `# Output Proof: baseline vs SkillsForge
+
+> Generated by \`sf output-proof\` from the current repository catalog. This is a deterministic contract fixture, not a model benchmark or a claim about persuasion, conversion, or universal output quality.
+
+## Task
+
+${result.task}
+
+## What changed in the response shape
+
+The baseline is intentionally short and plausible, but it leaves the agent to guess scope, evidence, verification, and safety boundaries. The SkillsForge version applies the output contracts used by these real catalog skills:
+
+${skills}
+
+## Baseline response
+
+\`\`\`text
+${result.baseline}
+\`\`\`
+
+## SkillsForge-assisted response
+
+\`\`\`text
+${result.improved}
+\`\`\`
+
+## Deterministic contract check
+
+| Dimension | Baseline | SkillsForge | Meaning |
+| --- | --- | --- | --- |
+${checked}
+
+**Result:** baseline ${result.summary.baseline.score}/${result.summary.baseline.max}; SkillsForge ${result.summary.skillsforge.score}/${result.summary.skillsforge.max}. The metric is contract coverage only, not an LLM quality score.
+
+## Why this helps in practice
+
+The improvement is useful because an agent has fewer critical decisions left implicit:
+
+- A builder knows what to change and what must remain compatible.
+- A reviewer can inspect named evidence and run the smallest stated check.
+- A GitHub reader can distinguish shipped behavior from assumptions and future work.
+- The response stays compact because it names only the relevant skills and proof commands instead of dumping the full catalog.
+
+## Reproduce it
+
+From the repository root:
+
+\`\`\`sh
+node plugins/skillsforge/bin/skillsforge.mjs output-proof --json
+\`\`\`
+
+The command writes:
+
+- \`artifacts/output-proof/output-proof.md\`
+- \`artifacts/output-proof/output-proof.json\`
+
+For a real model comparison, run the same task with the same model, host, temperature, and context budget. Save both raw responses, then score them with a blinded rubric. This repository does not report that experiment until those inputs exist.
+`;
+}
+
+// scripts/cli/commands/output-proof.mjs
+async function runOutputProofCommand(argv, options) {
+  const args = [...argv];
+  const json = consumeFlag(args, "--json");
+  const task = consumeOption(args, "--task");
+  const out = consumeOption(args, "--out");
+  const allowAbsolute = consumeFlag(args, "--allow-absolute");
+  if (task === null || out === null) {
+    process.stderr.write("option requires a value\n");
+    return 2;
+  }
+  const root = await resolveRuntimeRoot(options);
+  let outDir;
+  try {
+    outDir = out ? resolveUserPath(root, out, allowAbsolute) : void 0;
+  } catch (error) {
+    process.stderr.write(`${error.message}
+`);
+    return 1;
+  }
+  const result = await runOutputProof(root, { task: task ?? void 0, outDir });
+  if (json) {
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  } else if (result.ok) {
+    process.stdout.write(`Output proof: ${result.summary.baseline.score}/${result.summary.baseline.max} -> ${result.summary.skillsforge.score}/${result.summary.skillsforge.max} contract coverage
+`);
+    process.stdout.write(`Markdown: ${result.paths.markdown}
+JSON: ${result.paths.json}
+`);
+  } else {
+    process.stdout.write(`${JSON.stringify(result, null, 2)}
+`);
+  }
+  return result.ok ? 0 : 1;
+}
+
 // scripts/skillsforge-cli.mjs
 var modulePath2 = fileURLToPath6(import.meta.url);
 var CLI_VERSION = "0.4.3";
@@ -26039,6 +26251,7 @@ Catalog & authoring:
   forge --spec <file>               Deterministic skill generation (--dry-run/--write)
   capture / forge-from-capture      Learning capture -> skill proposals
   compare / compare-skill            Sidecar / trust delta diffs
+  output-proof                      Generate a baseline vs SkillsForge output contract proof
   bench / scorecard / compose / batch / watch / pressure / skillshield
 
 Operator terminals:
@@ -26150,6 +26363,8 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
       return runCompareCommand(argv.slice(1), options);
     case "compare-skill":
       return runCompareSkillCommand(argv.slice(1), options);
+    case "output-proof":
+      return runOutputProofCommand(argv.slice(1), options);
     case "demo":
       return runDemoCommand(argv.slice(1), options);
     case "watch":
@@ -26205,7 +26420,7 @@ if (process.argv[1]) {
   try {
     sameEntry = realpathSync2(process.argv[1]) === realpathSync2(modulePath2);
   } catch {
-    sameEntry = resolve31(process.argv[1]) === modulePath2;
+    sameEntry = resolve32(process.argv[1]) === modulePath2;
   }
   if (sameEntry) {
     process.exitCode = await main();
