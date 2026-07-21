@@ -88,8 +88,27 @@ test('bundled CLI help lists every subcommand', () => {
     encoding: 'utf8'
   });
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'hosts', 'help', 'install', 'wb', 'lib', 'workflows', 'auto', 'ps', 'tokens', 'digest', 'next', 'map', 'slim', 'settings', 'init', 'session']) {
+  for (const name of ['validate', 'doctor', 'route', 'forge', 'receipt', 'verify-receipt', 'enforce', 'eval', 'hosts', 'help', 'install', 'wb', 'lib', 'workflows', 'auto', 'ps', 'tokens', 'digest', 'next', 'map', 'slim', 'settings', 'init', 'session', 'output-proof']) {
     assert.match(result.stdout, new RegExp(`\\b${name}\\b`));
+  }
+});
+
+test('bundled CLI generates an output-proof artifact with JSON metadata', async () => {
+  const { mkdtemp, readFile, rm } = await import('node:fs/promises');
+  const { tmpdir } = await import('node:os');
+  const outDir = await mkdtemp(join(tmpdir(), 'sf-output-proof-cli-'));
+  try {
+    const result = spawnSync(process.execPath, [cli, 'output-proof', '--json', '--allow-absolute', '--out', outDir], {
+      cwd: process.cwd(),
+      encoding: 'utf8'
+    });
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    const payload = JSON.parse(result.stdout);
+    assert.equal(payload.ok, true);
+    assert.equal(payload.summary.skillsforge.score, payload.summary.skillsforge.max);
+    assert.match(await readFile(join(outDir, 'output-proof.md'), 'utf8'), /SkillsForge-assisted response/);
+  } finally {
+    await rm(outDir, { recursive: true, force: true });
   }
 });
 

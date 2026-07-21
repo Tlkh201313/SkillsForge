@@ -27,6 +27,7 @@ import { runSlimCli } from './cli/commands/slim.mjs';
 import { runSettingsCommand } from './cli/commands/settings.mjs';
 import { runSessionCommand } from './cli/commands/session.mjs';
 import { runInitCommand } from './cli/commands/init.mjs';
+import { runOutputProofCommand } from './cli/commands/output-proof.mjs';
 
 export { enforcePolicy, exportPortableSkill };
 
@@ -58,6 +59,7 @@ Catalog & authoring:
   forge --spec <file>               Deterministic skill generation (--dry-run/--write)
   capture / forge-from-capture      Learning capture -> skill proposals
   compare / compare-skill            Sidecar / trust delta diffs
+  output-proof                      Generate a baseline vs SkillsForge output contract proof
   bench / scorecard / compose / batch / watch / pressure / skillshield
 
 Operator terminals:
@@ -141,6 +143,7 @@ Exit codes: 0 success, 1 command failure, 2 invalid usage
     case 'forge-from-capture': return runForgeFromCaptureCommand(argv.slice(1), options);
     case 'compare': return runCompareCommand(argv.slice(1), options);
     case 'compare-skill': return runCompareSkillCommand(argv.slice(1), options);
+    case 'output-proof': return runOutputProofCommand(argv.slice(1), options);
     case 'demo': return runDemoCommand(argv.slice(1), options);
     case 'watch': return runWatchCommand(argv.slice(1), options);
     case 'init': return runInitCommand(argv.slice(1), options);
